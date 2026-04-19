@@ -19,7 +19,7 @@ struct _FsearchDatabaseChunkedArray {
     DynamicArray *chunks;
 
     uint32_t num_entries;
-    uint32_t ideal_entries_per_chunk;
+    uint32_t target_chunk_size;
 
     FsearchDatabaseIndexProperty sort_order;
     FsearchDatabaseIndexProperty secondary_sort_order;
@@ -39,6 +39,8 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseChunkedArray,
                     fsearch_database_chunked_array,
                     fsearch_database_chunked_array_ref,
                     fsearch_database_chunked_array_unref)
+
+#define TARGET_CHUNK_SIZE 2048
 
 static int32_t
 chunk_compare_func(DynamicArray **chunk_ptr, FsearchDatabaseEntry **entry_ptr, FsearchDatabaseChunkedArray *self) {
@@ -66,7 +68,7 @@ get_chunk_for_entry(FsearchDatabaseChunkedArray *self,
     uint32_t chunk_idx = 0;
     if (darray_get_num_items(self->chunks) == 0) {
         // There's no chunk -> add one
-        darray_insert_item(self->chunks, darray_new_full(self->ideal_entries_per_chunk, self->entry_free_func), 0);
+        darray_insert_item(self->chunks, darray_new_full(self->target_chunk_size, self->entry_free_func), 0);
         chunk_idx = 0;
     }
     else if (darray_get_num_items(self->chunks) == 1) {
@@ -100,11 +102,11 @@ count_num_entries(DynamicArray *chunks) {
 }
 
 static DynamicArray *
-split_chunk(DynamicArray *chunk, uint32_t ideal_entries_per_chunk, GDestroyNotify entry_free_func) {
+split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entry_free_func) {
     g_assert(chunk);
 
     const uint32_t num_items_in_chunk = darray_get_num_items(chunk);
-    if (num_items_in_chunk <= ideal_entries_per_chunk) {
+    if (num_items_in_chunk <= target_chunk_size) {
         DynamicArray *chunks = darray_new(1);
         DynamicArray *chunk_copy = darray_copy(chunk);
         darray_set_free_func(chunk_copy, entry_free_func);
@@ -112,7 +114,7 @@ split_chunk(DynamicArray *chunk, uint32_t ideal_entries_per_chunk, GDestroyNotif
         return chunks;
     }
 
-    const uint32_t num_chunks = ceil(num_items_in_chunk / (double)ideal_entries_per_chunk);
+    const uint32_t num_chunks = ceil(num_items_in_chunk / (double)target_chunk_size);
     const uint32_t num_items_per_chunk = floor(num_items_in_chunk / (double)num_chunks);
 
     g_debug("[chunk] splitting: %d", num_items_in_chunk);
@@ -147,11 +149,11 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
         return;
     }
 
-    if (darray_get_num_items(chunk) < 2 * self->ideal_entries_per_chunk) {
+    if (darray_get_num_items(chunk) < 2 * self->target_chunk_size) {
         return;
     }
 
-    g_autoptr(DynamicArray) splitted = split_chunk(chunk, self->ideal_entries_per_chunk, self->entry_free_func);
+    g_autoptr(DynamicArray) splitted = split_chunk(chunk, self->target_chunk_size, self->entry_free_func);
 
     g_debug("[balance_chunk] split idx %d with %d entries into %d chunks",
             chunk_idx,
@@ -181,7 +183,7 @@ fsearch_database_chunked_array_new(DynamicArray *array,
 
     FsearchDatabaseChunkedArray *self = g_slice_new0(FsearchDatabaseChunkedArray);
 
-    self->ideal_entries_per_chunk = 2048;
+    self->target_chunk_size = TARGET_CHUNK_SIZE;
 
     self->sort_order = sort_order;
     self->secondary_sort_order = secondary_sort_order;
@@ -206,7 +208,7 @@ fsearch_database_chunked_array_new(DynamicArray *array,
     self->num_entries = darray_get_num_items(array);
 
     self->entry_free_func = entry_free_func;
-    self->chunks = split_chunk(array, self->ideal_entries_per_chunk, self->entry_free_func);
+    self->chunks = split_chunk(array, self->target_chunk_size, self->entry_free_func);
 
     self->ref_count = 1;
 
