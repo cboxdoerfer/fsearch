@@ -33,21 +33,21 @@ struct _FsearchListView {
     guint vscroll_policy : 1;
 
     GtkGesture *multi_press_gesture;
-    GtkGesture *bin_drag_gesture;
-    GtkGesture *header_drag_gesture;
+    GtkGesture *rubberband_drag_gesture;
+    GtkGesture *col_resize_drag_gesture;
 
-    gboolean bin_drag_mode;
-    gboolean col_resize_mode;
+    gboolean rubberband_drag_mode;
+    gboolean col_resize_drag_mode;
 
     FsearchListviewRubberbandState rubberband_state;
 
     gint drag_column_pos;
-    gint x_drag_started;
+    gint col_resize_start_x_view;
 
-    gint x_bin_drag_started;
-    gint y_bin_drag_started;
-    gint x_bin_drag_offset;
-    gint y_bin_drag_offset;
+    gint rubberband_start_x_canvas;
+    gint rubberband_start_y_canvas;
+    gint rubberband_drag_offset_x;
+    gint rubberband_drag_offset_y;
 
     guint scroll_timeout;
 
@@ -200,11 +200,12 @@ fsearch_list_view_get_columns_effective_width(FsearchListView *view) {
 
 static gboolean
 is_row_idx_fully_in_view(FsearchListView *view, int row_idx) {
-    const int y_view_start = floor(get_vscroll_pos(view));
-    const int y_view_end = y_view_start + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
-    const int y_row = row_idx * view->row_height;
+    const int y_scroll_top_canvas = floor(get_vscroll_pos(view));
+    const int y_scroll_bottom_canvas = y_scroll_top_canvas + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->
+                                       header_height;
+    const int y_row_canvas = row_idx * view->row_height;
 
-    if (y_row > y_view_start && y_row + view->row_height < y_view_end) {
+    if (y_row_canvas > y_scroll_top_canvas && y_row_canvas + view->row_height < y_scroll_bottom_canvas) {
         return TRUE;
     }
     return FALSE;
@@ -331,17 +332,17 @@ static void
 fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, double *y1, double *x2, double *y2) {
     gdouble x_drag_start = 0;
     gdouble y_drag_start = 0;
-    gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->bin_drag_gesture), &x_drag_start, &y_drag_start);
+    gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), &x_drag_start, &y_drag_start);
 
-    const gdouble x_drag_start_diff = view->x_bin_drag_started - x_drag_start - get_hscroll_pos(view);
-    const gdouble y_drag_start_diff = view->y_bin_drag_started - y_drag_start - get_vscroll_pos(view)
+    const gdouble x_drag_start_diff = view->rubberband_start_x_canvas - x_drag_start - get_hscroll_pos(view);
+    const gdouble y_drag_start_diff = view->rubberband_start_y_canvas - y_drag_start - get_vscroll_pos(view)
                                       + view->header_height;
 
-    *x1 = view->x_bin_drag_started;
-    *y1 = view->y_bin_drag_started;
+    *x1 = view->rubberband_start_x_canvas;
+    *y1 = view->rubberband_start_y_canvas;
 
-    *x2 = view->x_bin_drag_started + view->x_bin_drag_offset - x_drag_start_diff;
-    *y2 = view->y_bin_drag_started + view->y_bin_drag_offset - y_drag_start_diff;
+    *x2 = view->rubberband_start_x_canvas + view->rubberband_drag_offset_x - x_drag_start_diff;
+    *y2 = view->rubberband_start_y_canvas + view->rubberband_drag_offset_y - y_drag_start_diff;
 }
 
 static void
@@ -417,13 +418,13 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
     const int y_scroll_offset = -get_vscroll_pos(view);
     const int bin_window_width = gdk_window_get_width(view->bin_window);
 
-    int x_offset = x_scroll_offset;
+    int x_draw_start_view = x_scroll_offset;
     const int x_rtl_offset = bin_window_width - columns_width;
     if (fsearch_list_view_is_text_dir_rtl(view)) {
-        x_offset += x_rtl_offset;
+        x_draw_start_view += x_rtl_offset;
     }
 
-    const int y_offset = y_scroll_offset % view->row_height + view->header_height;
+    const int y_draw_start_view = y_scroll_offset % view->row_height + view->header_height;
     const int first_visible_row = floor(-y_scroll_offset / (double)view->row_height);
     const int num_rows_in_view = (int)ceil(view_rect.height / (double)view->row_height) + 1;
 
@@ -439,8 +440,8 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         }
         cairo_rectangle_int_t row_rect;
 
-        row_rect.x = x_offset;
-        row_rect.y = y_offset + i * view->row_height;
+        row_rect.x = x_draw_start_view;
+        row_rect.y = y_draw_start_view + i * view->row_height;
         row_rect.width = MIN(columns_width, bin_window_width);
         row_rect.height = view->row_height;
 
@@ -477,8 +478,8 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         gtk_style_context_set_state(context, flags);
         gtk_render_focus(context,
                          cr,
-                         x_offset,
-                         y_offset + (view->cursor_idx - first_visible_row) * view->row_height,
+                         x_draw_start_view,
+                         y_draw_start_view + (view->cursor_idx - first_visible_row) * view->row_height,
                          columns_width,
                          view->row_height);
         gtk_style_context_restore(context);
@@ -488,7 +489,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         gtk_style_context_save(context);
         gtk_style_context_add_class(context, GTK_STYLE_CLASS_SEPARATOR);
 
-        uint32_t line_x = x_offset;
+        uint32_t line_x_view = x_draw_start_view;
         for (GList *col = columns; col != NULL; col = col->next) {
             FsearchListViewColumn *column = col->data;
 
@@ -498,13 +499,13 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
             if (!column->visible) {
                 continue;
             }
-            line_x += column->effective_width;
-            gtk_render_line(context, cr, line_x, view_rect.y, line_x, view_rect.y + view_rect.height);
+            line_x_view += column->effective_width;
+            gtk_render_line(context, cr, line_x_view, view_rect.y, line_x_view, view_rect.y + view_rect.height);
         }
         gtk_style_context_restore(context);
     }
 
-    if (view->bin_drag_mode && view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
+    if (view->rubberband_drag_mode && view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
         cairo_save(cr);
         gtk_style_context_save(context);
         gtk_style_context_remove_class(context, GTK_STYLE_CLASS_VIEW);
@@ -512,18 +513,21 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
         gdouble x_drag_start = 0;
         gdouble y_drag_start = 0;
-        gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->bin_drag_gesture), &x_drag_start, &y_drag_start);
+        gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), &x_drag_start, &y_drag_start);
 
-        const gdouble x_drag_start_diff = view->x_bin_drag_started - x_drag_start + x_scroll_offset;
-        const gdouble y_drag_start_diff = view->y_bin_drag_started - y_drag_start + y_scroll_offset + view->
+        const gdouble x_drag_start_diff = view->rubberband_start_x_canvas - x_drag_start + x_scroll_offset;
+        const gdouble y_drag_start_diff = view->rubberband_start_y_canvas - y_drag_start + y_scroll_offset + view->
                                           header_height;
 
-        const double x1 = x_offset + view_rect.x + view->x_bin_drag_started;
-        const double y1 = y_scroll_offset + view_rect.y + view->y_bin_drag_started;
+        const double x1 = x_draw_start_view + view_rect.x + view->rubberband_start_x_canvas;
+        const double y1 = y_scroll_offset + view_rect.y + view->rubberband_start_y_canvas;
 
-        const double x2 = x_offset + view_rect.x + view->x_bin_drag_started + view->x_bin_drag_offset -
+        const double x2 = x_draw_start_view + view_rect.x + view->rubberband_start_x_canvas + view->
+                          rubberband_drag_offset_x
+                          -
                           x_drag_start_diff;
-        const double y2 = y_scroll_offset + view_rect.y + view->y_bin_drag_started + view->y_bin_drag_offset
+        const double y2 = y_scroll_offset + view_rect.y + view->rubberband_start_y_canvas + view->
+                          rubberband_drag_offset_y
                           - y_drag_start_diff;
 
         GdkRectangle rect = {};
@@ -596,14 +600,14 @@ fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
     }
 
     int view_height = gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
-    int y_row = view->row_height * row_idx;
-    int y_view_start = (int)floor(get_vscroll_pos(view)) + view->header_height;
+    int y_row_canvas = view->row_height * row_idx;
+    int y_scroll_top_canvas = (int)floor(get_vscroll_pos(view));
 
-    if (y_view_start >= y_row - view->row_height) {
-        gtk_adjustment_set_value(view->vadjustment, y_row);
+    if (y_scroll_top_canvas >= y_row_canvas - view->row_height) {
+        gtk_adjustment_set_value(view->vadjustment, y_row_canvas);
     }
     else {
-        gtk_adjustment_set_value(view->vadjustment, y_row - view_height + view->row_height);
+        gtk_adjustment_set_value(view->vadjustment, y_row_canvas - view_height + view->row_height);
     }
 }
 
@@ -718,8 +722,8 @@ fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modif
 static void
 on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                                                  gint n_press,
-                                                 gdouble x,
-                                                 gdouble y,
+                                                 gdouble x_view,
+                                                 gdouble y_view,
                                                  FsearchListView *view) {
     guint button_pressed = gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
 
@@ -735,7 +739,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         gtk_widget_grab_focus(GTK_WIDGET(view));
     }
 
-    if (y < view->header_height) {
+    if (y_view < view->header_height) {
         gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_DENIED);
         return;
     }
@@ -749,7 +753,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
     fsearch_list_view_get_selection_modifiers(view, &modify_selection, &extend_selection);
 
-    int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
+    int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y_view);
 
     // In modify selection mode (i.e. while Ctrl is pressed) the selection must not be cleared
     if (!is_row_idx_valid(view, row_idx) && !modify_selection) {
@@ -786,7 +790,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 fsearch_list_view_selection_clear_silent(view);
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
                 if (view->single_click_activate) {
-                    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
+                    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
                     if (col) {
                         g_signal_emit(view,
                                       signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
@@ -801,7 +805,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         }
 
         if (n_press == 2 && !view->single_click_activate) {
-            FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
+            FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
             if (col) {
                 g_signal_emit(view,
                               signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
@@ -855,13 +859,13 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
                                           gdouble offset_y,
                                           FsearchListView *view) {
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
-    if (view->bin_drag_mode) {
-        view->bin_drag_mode = FALSE;
+    if (view->rubberband_drag_mode) {
+        view->rubberband_drag_mode = FALSE;
         view->rubberband_state = RUBBERBAND_SELECT_INACTIVE;
-        view->x_bin_drag_started = -1;
-        view->y_bin_drag_started = -1;
-        view->x_bin_drag_offset = -1;
-        view->y_bin_drag_offset = -1;
+        view->rubberband_start_x_canvas = -1;
+        view->rubberband_start_y_canvas = -1;
+        view->rubberband_drag_offset_x = -1;
+        view->rubberband_drag_offset_y = -1;
         view->rubberband_start_idx = UNSET_ROW;
         view->rubberband_end_idx = UNSET_ROW;
         view->rubberband_extend = FALSE;
@@ -968,16 +972,16 @@ rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int p
 
 static void
 update_rubberband_selection(FsearchListView *view) {
-    if (!view->bin_drag_mode) {
+    if (!view->rubberband_drag_mode) {
         return;
     }
     gdouble offset_x;
     gdouble offset_y;
-    gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->bin_drag_gesture), &offset_x, &offset_y);
+    gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), &offset_x, &offset_y);
     view->highlight_cursor_idx = FALSE;
     view->rubberband_state = RUBBERBAND_SELECT_ACTIVE;
-    view->x_bin_drag_offset = offset_x;
-    view->y_bin_drag_offset = offset_y;
+    view->rubberband_drag_offset_x = offset_x;
+    view->rubberband_drag_offset_y = offset_y;
 
     double x1, y1, x2, y2;
     fsearch_list_view_get_rubberband_points(view, &x1, &y1, &x2, &y2);
@@ -1017,29 +1021,29 @@ update_rubberband_selection(FsearchListView *view) {
 static gboolean
 vertical_autoscroll(gpointer data) {
     FsearchListView *view = data;
-    if (!gtk_gesture_is_recognized(view->bin_drag_gesture)) {
+    if (!gtk_gesture_is_recognized(view->rubberband_drag_gesture)) {
         goto out;
     }
-    double y_drag_start = 0;
-    if (!gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_start)) {
+    double y_drag_start_view = 0;
+    if (!gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), NULL, &y_drag_start_view)) {
         goto out;
     }
     double y_drag_offset = 0;
-    if (!gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_offset)) {
+    if (!gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), NULL, &y_drag_offset)) {
         goto out;
     }
 
-    const double y_drag_point = y_drag_start + y_drag_offset;
+    const double y_drag_current_view = y_drag_start_view + y_drag_offset;
     const double view_height = gtk_widget_get_allocated_height(GTK_WIDGET(view));
 
     double scroll_offset = 0;
-    if (y_drag_point < view->header_height) {
+    if (y_drag_current_view < view->header_height) {
         // the cursor is above the view -> scroll up
-        scroll_offset = y_drag_point - view->header_height;
+        scroll_offset = y_drag_current_view - view->header_height;
     }
-    else if (y_drag_point > view_height) {
+    else if (y_drag_current_view > view_height) {
         // the cursor is below the view -> scroll down
-        scroll_offset = y_drag_point - view_height;
+        scroll_offset = y_drag_current_view - view_height;
     }
 
     if (scroll_offset == 0) {
@@ -1075,7 +1079,7 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     //     return;
     // }
 
-    if (view->bin_drag_mode == FALSE) {
+    if (view->rubberband_drag_mode == FALSE) {
         return;
     }
     update_rubberband_selection(view);
@@ -1085,17 +1089,17 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
 
 static void
 on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
-                                            gdouble start_x,
-                                            gdouble start_y,
+                                            gdouble start_x_view,
+                                            gdouble start_y_view,
                                             FsearchListView *view) {
-    if (start_y > view->header_height && !view->single_click_activate) {
+    if (start_y_view > view->header_height && !view->single_click_activate) {
         if (!gtk_widget_has_focus(GTK_WIDGET(view))) {
             gtk_widget_grab_focus(GTK_WIDGET(view));
         }
 
-        view->x_bin_drag_started = start_x + get_hscroll_pos(view);
-        view->y_bin_drag_started = start_y + get_vscroll_pos(view) - view->header_height;
-        view->bin_drag_mode = TRUE;
+        view->rubberband_start_x_canvas = start_x_view + get_hscroll_pos(view);
+        view->rubberband_start_y_canvas = start_y_view + get_vscroll_pos(view) - view->header_height;
+        view->rubberband_drag_mode = TRUE;
         view->rubberband_state = RUBBERBAND_SELECT_WAITING;
         fsearch_list_view_get_selection_modifiers(view, &view->rubberband_modify, &view->rubberband_extend);
         gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
@@ -1108,8 +1112,8 @@ on_fsearch_list_view_header_drag_gesture_end(GtkGestureDrag *gesture,
                                              gdouble offset_y,
                                              FsearchListView *view) {
     // GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
-    if (view->col_resize_mode) {
-        view->col_resize_mode = FALSE;
+    if (view->col_resize_drag_mode) {
+        view->col_resize_drag_mode = FALSE;
         view->drag_column_pos = -1;
     }
 }
@@ -1137,15 +1141,14 @@ on_fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
     }
 
     GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
-    if (view->col_resize_mode) {
+    if (view->col_resize_drag_mode) {
         GList *c = g_list_nth(columns, view->drag_column_pos);
         if (!c) {
             return;
         }
 
         FsearchListViewColumn *col = c->data;
-        col->width = x - view->x_drag_started;
-        col->width = MAX(30, col->width);
+        col->width = x - view->col_resize_start_x_view;
         col->width = MAX(MIN_COLUMN_WIDTH, col->width);
         gtk_widget_queue_resize(GTK_WIDGET(view));
     }
@@ -1172,10 +1175,10 @@ on_fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
             continue;
         }
 
-        view->col_resize_mode = TRUE;
+        view->col_resize_drag_mode = TRUE;
 
         view->drag_column_pos = col_pos;
-        view->x_drag_started = start_x - column->effective_width;
+        view->col_resize_start_x_view = start_x - column->effective_width;
 
         if (!gtk_widget_has_focus(GTK_WIDGET(view))) {
             gtk_widget_grab_focus(GTK_WIDGET(view));
@@ -1283,13 +1286,17 @@ fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
 }
 
 static gboolean
-fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip *tooltip) {
+fsearch_list_view_query_tooltip(GtkWidget *widget,
+                                int x_view,
+                                int y_view,
+                                gboolean keyboard_mode,
+                                GtkTooltip *tooltip) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     if (!view->query_tooltip_func) {
         return FALSE;
     }
-    int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
-    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
+    int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y_view);
+    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
     if (row_idx < 0 || !col) {
         return FALSE;
     }
@@ -1361,13 +1368,13 @@ update_hovered_idx_for_current_cursor_position(FsearchListView *view) {
     if (!pointer_device) {
         return;
     }
-    gint x_pointer = 0;
-    gint y_pointer = 0;
+    gint x_pointer_canvas = 0;
+    gint y_pointer_canvas = 0;
     const int view_width = gtk_widget_get_allocated_width(GTK_WIDGET(view));
-    const int x_view_in_bin_window = get_hscroll_pos(view);
-    gdk_window_get_device_position(view->bin_window, pointer_device, &x_pointer, &y_pointer, NULL);
-    if (x_pointer >= x_view_in_bin_window && x_pointer <= view_width) {
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y_pointer);
+    const int x_scroll_left_canvas = get_hscroll_pos(view);
+    gdk_window_get_device_position(view->bin_window, pointer_device, &x_pointer_canvas, &y_pointer_canvas, NULL);
+    if (x_pointer_canvas >= x_scroll_left_canvas && x_pointer_canvas <= view_width) {
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y_pointer_canvas);
     }
 }
 
@@ -1561,7 +1568,7 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
         header_button_rect.width = column->width;
         header_button_rect.height = view->header_height;
 
-        if (column->expand && !view->col_resize_mode) {
+        if (column->expand && !view->col_resize_drag_mode) {
             header_button_rect.width += x_extra_space;
         }
         x += header_button_rect.width;
@@ -1701,7 +1708,8 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         view->hovered_idx = UNSET_ROW;
     }
     else {
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)event->y);
+        const gint y_event_canvas = (gint)event->y;
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y_event_canvas);
 
         if (view->single_click_activate && view->hovered_idx >= 0) {
             g_autoptr(GdkCursor) cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
@@ -1856,8 +1864,8 @@ fsearch_list_view_destroy(GtkWidget *widget) {
     g_list_free(g_steal_pointer(&view->columns_reversed));
     g_list_free_full(g_steal_pointer(&view->columns), (GDestroyNotify)fsearch_list_view_column_unref);
     g_clear_object(&view->multi_press_gesture);
-    g_clear_object(&view->bin_drag_gesture);
-    g_clear_object(&view->header_drag_gesture);
+    g_clear_object(&view->rubberband_drag_gesture);
+    g_clear_object(&view->col_resize_drag_gesture);
 
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->destroy(widget);
 }
@@ -1951,27 +1959,30 @@ fsearch_list_view_init(FsearchListView *view) {
                      G_CALLBACK(on_fsearch_list_view_multi_press_gesture_released),
                      view);
 
-    view->bin_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
-    g_signal_connect(view->bin_drag_gesture,
+    view->rubberband_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
+    g_signal_connect(view->rubberband_drag_gesture,
                      "drag-begin",
                      G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_begin),
                      view);
-    g_signal_connect(view->bin_drag_gesture,
+    g_signal_connect(view->rubberband_drag_gesture,
                      "drag-update",
                      G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_update),
                      view);
-    g_signal_connect(view->bin_drag_gesture, "drag-end", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end), view);
+    g_signal_connect(view->rubberband_drag_gesture,
+                     "drag-end",
+                     G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end),
+                     view);
 
-    view->header_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
-    g_signal_connect(view->header_drag_gesture,
+    view->col_resize_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
+    g_signal_connect(view->col_resize_drag_gesture,
                      "drag-begin",
                      G_CALLBACK(on_fsearch_list_view_header_drag_gesture_begin),
                      view);
-    g_signal_connect(view->header_drag_gesture,
+    g_signal_connect(view->col_resize_drag_gesture,
                      "drag-update",
                      G_CALLBACK(on_fsearch_list_view_header_drag_gesture_update),
                      view);
-    g_signal_connect(view->header_drag_gesture,
+    g_signal_connect(view->col_resize_drag_gesture,
                      "drag-end",
                      G_CALLBACK(on_fsearch_list_view_header_drag_gesture_end),
                      view);
