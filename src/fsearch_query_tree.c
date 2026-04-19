@@ -154,7 +154,8 @@ print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
         return;
     }
     g_debug("[QueryParser]");
-    g_debug(" * global_flags: %s", query_flags_to_string_expressive(flags));
+    g_autofree char *query_flags_string = query_flags_to_string_expressive(flags);
+    g_debug(" * global_flags: %s", query_flags_string);
     g_debug(" * input: %s", input);
     g_autoptr(GString) result_str = g_string_new(" * output: ");
     for (GList *n = result; n != NULL; n = n->next) {
