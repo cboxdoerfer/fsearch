@@ -478,7 +478,7 @@ perform_search(FsearchApplicationWindow *win) {
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
     FsearchFilter *filter = get_active_filter(win);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    FsearchQuery *query = fsearch_query_new(text, filter, config->filters, get_query_flags(), "test");
+    g_autoptr(FsearchQuery) query = fsearch_query_new(text, filter, config->filters, get_query_flags(), "test");
     if (win->work_search) {
         fsearch_database_work_cancel(win->work_search);
     }

@@ -358,7 +358,7 @@ FsearchDatabaseSearchInfo *
 fsearch_database_search_view_get_info(FsearchDatabaseSearchView *view) {
     g_return_val_if_fail(view, NULL);
     return fsearch_database_search_info_new(view->id,
-                                            fsearch_query_ref(view->query),
+                                            view->query,
                                             search_view_get_num_file_results(view),
                                             search_view_get_num_folder_results(view),
                                             fsearch_selection_get_num_selected(view->file_selection),
