@@ -747,7 +747,7 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_include_page(FsearchDatabasePreferencesWidget *self) {
-    FsearchDatabaseIncludeManager *include_manager = fsearch_database_info_get_include_manager(self->info);
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_info_get_include_manager(self->info);
     if (!include_manager) {
         return;
     }
@@ -769,7 +769,7 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
-    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_info_get_exclude_manager(self->info);
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_info_get_exclude_manager(self->info);
     if (!exclude_manager) {
         return;
     }
@@ -826,6 +826,7 @@ static void
 fsearch_database_preferences_widget_dispose(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
+    g_clear_pointer(&self->info, fsearch_database_info_unref);
     g_clear_object(&self->db);
     g_clear_object(&self->exclude_type_model);
     g_clear_object(&self->exclude_scope_model);
