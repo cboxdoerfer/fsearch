@@ -588,7 +588,8 @@ database_load(FsearchDatabase *self) {
     signal_emit0(self, SIGNAL_LOAD_STARTED);
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
-    const bool res = fsearch_database_file_load(g_file_get_path(self->file), NULL, &store, index_store_event_cb, self);
+    g_autofree char *file_path = g_file_get_path(self->file);
+    const bool res = fsearch_database_file_load(file_path, NULL, &store, index_store_event_cb, self);
 
     if (!res) {
         store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
