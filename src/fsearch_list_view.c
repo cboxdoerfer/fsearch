@@ -994,13 +994,16 @@ update_rubberband_selection(FsearchListView *view) {
     if (!view->rubberband_drag_mode) {
         return;
     }
-    gdouble offset_x;
-    gdouble offset_y;
-    gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), &offset_x, &offset_y);
+    gdouble rubberband_drag_offset_x;
+    gdouble rubberband_drag_offset_y;
+    gtk_gesture_drag_get_offset(
+        GTK_GESTURE_DRAG(view->rubberband_drag_gesture),
+        &rubberband_drag_offset_x,
+        &rubberband_drag_offset_y);
     view->highlight_cursor_idx = FALSE;
     view->rubberband_state = RUBBERBAND_SELECT_ACTIVE;
-    view->rubberband_drag_offset_x = offset_x;
-    view->rubberband_drag_offset_y = offset_y;
+    view->rubberband_drag_offset_x = rubberband_drag_offset_x;
+    view->rubberband_drag_offset_y = rubberband_drag_offset_y;
 
     double x1, y1, x2, y2;
     fsearch_list_view_get_rubberband_points(view, &x1, &y1, &x2, &y2);
