@@ -114,14 +114,15 @@ index_root_reappear_poll_cb(gpointer user_data) {
         return G_SOURCE_CONTINUE;
     }
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+    g_mutex_lock(&self->mutex);
 
     g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(self->folder_chunks);
     g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(self->file_chunks);
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
+
+    g_mutex_unlock(&self->mutex);
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
 
     index_stop_root_reappearance_polling(self);
@@ -247,6 +248,7 @@ process_queued_events(FsearchDatabaseIndex *self) {
     double last_time = 0.0;
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+    g_mutex_lock(&self->mutex);
 
     uint32_t num_skipped = 0;
     uint32_t processed_count = 0;
@@ -263,15 +265,18 @@ process_queued_events(FsearchDatabaseIndex *self) {
         const double elapsed = g_timer_elapsed(timer, NULL);
         if (elapsed - last_time > 0.2) {
             g_debug("interrupt event processing for a while...");
+            g_mutex_unlock(&self->mutex);
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
             last_time = elapsed;
             g_usleep(G_USEC_PER_SEC * 0.05);
             g_debug("continue event processing...");
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+            g_mutex_lock(&self->mutex);
         }
         process_event(self, event);
     }
 
+    g_mutex_unlock(&self->mutex);
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
 
     const double process_time = g_timer_elapsed(timer, NULL);
@@ -686,9 +691,6 @@ process_queued_events_cb(gpointer user_data) {
     if (g_atomic_int_get(&self->monitor) == 0 || g_atomic_int_get(&self->initialized) == 0) {
         return G_SOURCE_CONTINUE;
     }
-
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
 
     process_queued_events(self);
 
