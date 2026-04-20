@@ -1,7 +1,17 @@
 #include "fsearch_list_view.h"
-#include "pango/pango-attributes.h"
-#include "pango/pango-layout.h"
+
+#include <cairo.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkkeysyms.h>
+#include <glib.h>
+#include <glibconfig.h>
+#include <gobject/gobject.h>
+#include <gtk/gtk.h>
 #include <math.h>
+#include <pango/pango-attributes.h>
+#include <pango/pango-layout.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
