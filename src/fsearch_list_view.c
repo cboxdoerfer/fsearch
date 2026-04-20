@@ -198,11 +198,20 @@ fsearch_list_view_get_columns_effective_width(FsearchListView *view) {
     return width;
 }
 
+static inline int
+get_y_scroll_top_in_canvas(FsearchListView *view) {
+    return floor(get_vscroll_pos(view));
+}
+
+static inline int
+get_y_scroll_bottom_in_canvas(FsearchListView *view) {
+    return get_y_scroll_top_in_canvas(view) + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
+}
+
 static gboolean
 is_row_idx_fully_in_view(FsearchListView *view, int row_idx) {
-    const int y_scroll_top_canvas = floor(get_vscroll_pos(view));
-    const int y_scroll_bottom_canvas = y_scroll_top_canvas + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->
-                                       header_height;
+    const int y_scroll_top_canvas = get_y_scroll_top_in_canvas(view);
+    const int y_scroll_bottom_canvas = get_y_scroll_bottom_in_canvas(view);
     const int y_row_canvas = row_idx * view->row_height;
 
     if (y_row_canvas > y_scroll_top_canvas && y_row_canvas + view->row_height < y_scroll_bottom_canvas) {
@@ -217,13 +226,13 @@ get_row_rect_in_view(FsearchListView *view, int row_idx, cairo_rectangle_int_t *
         return FALSE;
     }
 
-    const int y_view_start = floor(get_vscroll_pos(view));
-    const int y_view_end = y_view_start + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
-    const int y_row = row_idx * view->row_height;
+    const int y_scroll_top_canvas = get_y_scroll_top_in_canvas(view);
+    const int y_scroll_bottom_canvas = get_y_scroll_bottom_in_canvas(view);
+    const int y_row_canvas = row_idx * view->row_height;
 
-    if (y_view_start - view->row_height < y_row && y_row < y_view_end) {
+    if (y_scroll_top_canvas - view->row_height < y_row_canvas && y_row_canvas < y_scroll_bottom_canvas) {
         rec->x = 0;
-        rec->y = y_row - y_view_start;
+        rec->y = y_row_canvas - y_scroll_top_canvas;
         rec->width = gdk_window_get_width(view->bin_window);
         rec->height = view->row_height;
         return TRUE;
