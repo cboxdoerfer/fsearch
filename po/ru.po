@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-16 19:25+0200\n"
-"PO-Revision-Date: 2026-04-16 09:09+0000\n"
+"PO-Revision-Date: 2026-04-22 14:09+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -406,7 +406,7 @@ msgstr "Учитывать регистр"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "Распространяется на"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
 #: src/menus.ui:219 src/menus.ui:267
@@ -1610,24 +1610,24 @@ msgid "Select a Filter"
 msgstr "Выбрать фильтр"
 
 #: src/fsearch_window_actions.c:98
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] "Вы действительно хотите открыть %'d файл(а/ов)?"
-msgstr[1] "Вы действительно хотите открыть %'d файл(а/ов)?"
-msgstr[2] "Вы действительно хотите открыть %'d файл(а/ов)?"
+msgstr[0] "Вы действительно хотите открыть %'d файл?"
+msgstr[1] "Вы действительно хотите открыть %'d файла?"
+msgstr[2] "Вы действительно хотите открыть %'d файлов?"
 
 #: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "Открыть файл(ы)…"
 
 #: src/fsearch_window_actions.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] "Вы действительно хотите удалить %'d файл(а/ов)?"
-msgstr[1] "Вы действительно хотите удалить %'d файл(а/ов)?"
-msgstr[2] "Вы действительно хотите удалить %'d файл(а/ов)?"
+msgstr[0] "Вы действительно хотите удалить %'d файл?"
+msgstr[1] "Вы действительно хотите удалить %'d файла?"
+msgstr[2] "Вы действительно хотите удалить %'d файлов?"
 
 #: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
@@ -1643,20 +1643,20 @@ msgid "Something went wrong."
 msgstr "Что-то пошло не так."
 
 #: src/fsearch_window_actions.c:232
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %'d file."
 msgid_plural "Deleted %'d files."
-msgstr[0] "Удалено файлов: %'d."
-msgstr[1] "Удалено файлов: %'d."
-msgstr[2] "Удалено файлов: %'d."
+msgstr[0] "Удалён %'d файл."
+msgstr[1] "Удалено %'d файла."
+msgstr[2] "Удалено %'d файлов"
 
 #: src/fsearch_window_actions.c:235
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %'d file to the trash."
 msgid_plural "Moved %'d files to the trash."
-msgstr[0] "Перемещено файлов в корзину: %'d."
-msgstr[1] "Перемещено файлов в корзину: %'d."
-msgstr[2] "Перемещено файлов в корзину: %'d."
+msgstr[0] "Перемещён в корзину %'d файл."
+msgstr[1] "Перемещено в корзину %'d файла."
+msgstr[2] "Перемещено в корзину %'d файлов."
 
 #: src/fsearch_window_actions.c:245
 msgid ""
@@ -1667,12 +1667,12 @@ msgstr ""
 "В дальнейшем это будет исправлено."
 
 #: src/fsearch_window_actions.c:271
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] "Вы действительно хотите открыть окно свойств файла %'d?"
-msgstr[1] "Вы действительно хотите открыть окно свойств файла %'d?"
-msgstr[2] "Вы действительно хотите открыть окно свойств файла %'d?"
+msgstr[0] "Вы действительно хотите открыть %'d окно свойств файла?"
+msgstr[1] "Вы действительно хотите открыть %'d окна свойств файла?"
+msgstr[2] "Вы действительно хотите открыть %'d окон свойств файла?"
 
 #: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
