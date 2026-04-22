@@ -1,0 +1,86 @@
+[package]
+name = "fsearch"
+version = "0.1.0"
+edition = "2021"
+authors = ["FSearch Rust Port"]
+description = "A fast file search utility in Rust"
+rust-version = "1.80"
+
+[dependencies]
+# Core async runtime
+tokio = { version = "1.40", features = ["full", "rt-multi-thread"] }
+
+# Concurrency and parallel processing
+rayon = "1.10"
+dashmap = "6.1"
+crossbeam = "0.8"
+
+# File system operations
+walkdir = "2.5"
+ignore = "0.4"
+notify = "7.0"
+
+# Regular expressions and string matching
+regex = { version = "1.11", features = ["perf"] }
+aho-corasick = "1.1"
+glob = "0.3"
+fuzzy-matcher = "0.3"
+
+# Serialization for database persistence
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+
+# CLI and logging
+clap = { version = "4.5", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Memory optimization
+compact_str = { version = "0.8", features = ["serde"] }
+arrow = "53.3"
+arrow2 = "0.5"
+
+# Path handling and encoding
+camino = { version = "1.1", features = ["serde"] }
+path-absolutize = "3.1"
+bstr = "1.11"
+
+# Time handling
+time = { version = "0.3", features = ["serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Utilities
+thiserror = "2.0"
+anyhow = "1.0"
+once_cell = "1.20"
+parking_lot = "0.12"
+memmap2 = "0.9"
+bumpalo = { version = "3.16", features = ["collections"] }
+
+# GUI support
+eframe = "0.29"
+egui = "0.29"
+egui_extras = { version = "0.29" }
+font-kit = "0.14"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release-with-debug]
+inherits = "release"
+strip = false
+debug = true
+
+[dev-dependencies]
+criterion = "0.5"
+tempfile = "3.13"
+proptest = "1.5"
+
+# [[bench]]
+# name = "search_benchmark"
+# harness = false
