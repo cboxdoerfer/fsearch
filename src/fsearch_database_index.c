@@ -75,12 +75,6 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex,
                     fsearch_database_index_unref)
 
 static void
-process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event);
-
-static void
-process_queued_events(FsearchDatabaseIndex *self);
-
-static void
 propagate_event(FsearchDatabaseIndex *self,
                 FsearchDatabaseIndexEventKind kind,
                 DynamicArray *folders,
@@ -158,6 +152,14 @@ propagate_event(FsearchDatabaseIndex *self,
     g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, NULL);
     self->event_func(self, event, self->event_func_data);
 }
+
+// region Index Store Worker Functions
+
+static void
+process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event);
+
+static void
+process_queued_events(FsearchDatabaseIndex *self);
 
 static inline bool
 is_create_event(FsearchFolderMonitorEventKind kind) {
@@ -696,6 +698,8 @@ process_queued_events_cb(gpointer user_data) {
 
     return G_SOURCE_CONTINUE;
 }
+
+// endregion
 
 static void
 index_free(FsearchDatabaseIndex *self) {
