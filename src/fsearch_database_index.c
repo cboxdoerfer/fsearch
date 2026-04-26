@@ -809,6 +809,8 @@ fsearch_database_index_new_with_content(uint32_t id,
                                                            NULL,
                                                            (GDestroyNotify)db_entry_free_no_unparent);
 
+    g_atomic_int_set(&self->initialized, 1);
+
     self->ref_count = 1;
 
     return self;
