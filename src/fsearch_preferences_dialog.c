@@ -124,6 +124,14 @@ update_config(FsearchPreferencesDialog *self) {
     self->config->search_as_you_type = gtk_toggle_button_get_active(self->search_as_you_type_button);
     self->config->hide_results_on_empty_search = gtk_toggle_button_get_active(self->hide_results_button);
     self->config->show_dialog_failed_opening = gtk_toggle_button_get_active(self->show_dialog_failed_opening);
+    self->config->update_database_on_launch =
+        fsearch_database_preferences_widget_get_update_database_on_launch(self->database_pref_widget);
+    self->config->update_database_every =
+        fsearch_database_preferences_widget_get_update_database_every(self->database_pref_widget);
+    self->config->update_database_every_hours =
+        fsearch_database_preferences_widget_get_update_database_every_hours(self->database_pref_widget);
+    self->config->update_database_every_minutes =
+        fsearch_database_preferences_widget_get_update_database_every_minutes(self->database_pref_widget);
 
     self->config_old->action_after_file_open = gtk_combo_box_get_active(self->action_after_file_open);
 
@@ -213,6 +221,12 @@ fsearch_preferences_dialog_constructed(GObject *object) {
     self->database_pref_widget = fsearch_database_preferences_widget_new(self->db);
     gtk_notebook_append_page(self->main_notebook, GTK_WIDGET(self->database_pref_widget), gtk_label_new(_("Database")));
     gtk_widget_show(GTK_WIDGET(self->database_pref_widget));
+    fsearch_database_preferences_widget_set_update_database_on_launch(self->database_pref_widget,
+                                                                      self->config_old->update_database_on_launch);
+    fsearch_database_preferences_widget_set_update_database_every(self->database_pref_widget,
+                                                                  self->config_old->update_database_every,
+                                                                  self->config_old->update_database_every_hours,
+                                                                  self->config_old->update_database_every_minutes);
 
     gtk_toggle_button_set_active(self->enable_dark_theme_button, self->config_old->enable_dark_theme);
     gtk_toggle_button_set_active(self->show_menubar_button, !self->config_old->show_menubar);
