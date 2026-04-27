@@ -40,6 +40,11 @@ struct _FsearchDatabasePreferencesWidget {
     GtkWidget *exclude_path_entry;
     GtkTreeSelection *exclude_selection;
     GtkToggleButton *exclude_hidden_items_button;
+    GtkToggleButton *rescan_after_load_button;
+    GtkToggleButton *rescan_scheduled_checkbutton;
+    GtkSpinButton *rescan_scheduled_hours_spin_button;
+    GtkSpinButton *rescan_scheduled_minutes_spin_button;
+    GtkWidget *rescan_scheduled_spin_box;
     // Models for dropdown menus
     GtkListStore *exclude_type_model;
     GtkListStore *exclude_scope_model;
@@ -792,6 +797,13 @@ populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
 }
 
 static void
+on_rescan_scheduled_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    const gboolean enabled = gtk_toggle_button_get_active(button);
+    gtk_widget_set_sensitive(self->rescan_scheduled_spin_box, enabled);
+}
+
+static void
 fsearch_database_preferences_widget_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
@@ -880,6 +892,11 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_path_entry);
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, rescan_after_load_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, rescan_scheduled_checkbutton);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, rescan_scheduled_hours_spin_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, rescan_scheduled_minutes_spin_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, rescan_scheduled_spin_box);
 
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_path_button_clicked);
@@ -894,6 +911,12 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
 static void
 fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self) {
     gtk_widget_init_template(GTK_WIDGET(self));
+
+    g_signal_connect(self->rescan_scheduled_checkbutton,
+                     "toggled",
+                     G_CALLBACK(on_rescan_scheduled_toggled),
+                     self);
+    on_rescan_scheduled_toggled(self->rescan_scheduled_checkbutton, self);
 
     init_include_page(self);
     init_exclude_page(self);
@@ -992,4 +1015,45 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
         gtk_toggle_button_get_active(self->exclude_hidden_items_button));
 
     return g_steal_pointer(&exclude_manager);
+}
+
+void
+fsearch_database_preferences_widget_set_update_database_on_launch(FsearchDatabasePreferencesWidget *self, bool enabled) {
+    g_return_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self));
+    gtk_toggle_button_set_active(self->rescan_after_load_button, enabled);
+}
+
+bool
+fsearch_database_preferences_widget_get_update_database_on_launch(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self), false);
+    return gtk_toggle_button_get_active(self->rescan_after_load_button);
+}
+
+void
+fsearch_database_preferences_widget_set_update_database_every(FsearchDatabasePreferencesWidget *self, bool enabled, uint32_t hours, uint32_t minutes) {
+    g_return_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self));
+    gtk_toggle_button_set_active(self->rescan_scheduled_checkbutton, enabled);
+    gtk_spin_button_set_value(self->rescan_scheduled_hours_spin_button, (double)hours);
+    gtk_spin_button_set_value(self->rescan_scheduled_minutes_spin_button, (double)minutes);
+    on_rescan_scheduled_toggled(self->rescan_scheduled_checkbutton, self);
+}
+
+bool
+fsearch_database_preferences_widget_get_update_database_every(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self), false);
+    return gtk_toggle_button_get_active(self->rescan_scheduled_checkbutton);
+}
+
+uint32_t
+fsearch_database_preferences_widget_get_update_database_every_hours(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self), 0);
+    const int value = gtk_spin_button_get_value_as_int(self->rescan_scheduled_hours_spin_button);
+    return value < 0 ? 0u : (uint32_t)value;
+}
+
+uint32_t
+fsearch_database_preferences_widget_get_update_database_every_minutes(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(FSEARCH_IS_DATABASE_PREFERENCES_WIDGET(self), 0);
+    const int value = gtk_spin_button_get_value_as_int(self->rescan_scheduled_minutes_spin_button);
+    return value < 0 ? 0u : (uint32_t)value;
 }

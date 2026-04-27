@@ -601,6 +601,8 @@ database_load(FsearchDatabase *self) {
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = g_steal_pointer(&store);
 
+    fsearch_database_index_store_start_monitoring(self->store);
+
     signal_emit(self,
                 SIGNAL_LOAD_FINISHED,
                 database_get_info(self),
@@ -635,7 +637,6 @@ database_work_queue_thread(gpointer data) {
             break;
         case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
             database_load(self);
-            database_rescan(self);
             break;
         case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
             FsearchDatabaseEntryInfo *info = NULL;

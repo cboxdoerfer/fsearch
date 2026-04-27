@@ -551,8 +551,7 @@ fsearch_application_activate(GApplication *app) {
     database_auto_update_init(self);
 
     if (self->config->update_database_on_launch) {
-        // TODO: implement
-        // database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
+        g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
     }
 }
 
