@@ -48,7 +48,6 @@ struct _FsearchConfig {
     bool auto_search_in_path;
     bool auto_match_case;
     bool search_as_you_type;
-    bool show_base_2_units;
 
     // Applications
     char *folder_open_cmd;
@@ -59,6 +58,7 @@ struct _FsearchConfig {
     int32_t window_height;
 
     // Interface
+    bool show_base_2_units;
     bool highlight_search_terms;
     bool single_click_open;
     bool launch_desktop_files;
