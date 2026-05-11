@@ -25,6 +25,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_list_view.h"
 #include "fsearch_statusbar.h"
+#include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "fsearch_preview.h"
@@ -559,6 +560,11 @@ open_path_list_callback(gboolean result, const char *error_message, gpointer use
     }
 }
 
+static bool
+has_folder_open_cmd(FsearchConfig *config) {
+    return config->folder_open_cmd && !fsearch_string_is_empty(config->folder_open_cmd);
+}
+
 void
 fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
@@ -570,15 +576,16 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
     g_autoptr(GString) error_message = g_string_sized_new(8192);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
+    const bool folder_open_cmd_exists = has_folder_open_cmd(config);
     GList *paths = NULL;
-    if (open_parent_folder && !config->folder_open_cmd) {
+    if (open_parent_folder && !folder_open_cmd_exists) {
         fsearch_application_window_selection_for_each(win, collect_selected_entry_parent_path, &paths);
     }
     else {
         fsearch_application_window_selection_for_each(win, collect_selected_entry_path, &paths);
     }
 
-    if (open_parent_folder && config->folder_open_cmd) {
+    if (open_parent_folder && folder_open_cmd_exists) {
         fsearch_file_utils_open_path_list_with_command(paths, config->folder_open_cmd, error_message);
 
         if (error_message->len == 0) {
