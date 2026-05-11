@@ -41,7 +41,9 @@ fsearch_database_exclude_new(const char *pattern,
         g_autoptr(GError) error = NULL;
         self->regex = g_regex_new(self->pattern, 0, 0, &error);
         if (!self->regex) {
-            g_debug("[exclude] invalid regex pattern '%s': %s", self->pattern, error ? error->message : "unknown error");
+            g_debug("[exclude] invalid regex pattern '%s': %s",
+                    self->pattern,
+                    error ? error->message : "unknown error");
         }
     }
 
@@ -130,7 +132,10 @@ fsearch_database_exclude_get_target(FsearchDatabaseExclude *self) {
 }
 
 gboolean
-fsearch_database_exclude_matches(FsearchDatabaseExclude *self, const char *path, const char *basename, gboolean is_dir) {
+fsearch_database_exclude_matches(FsearchDatabaseExclude *self,
+                                 const char *path,
+                                 const char *basename,
+                                 gboolean is_dir) {
     g_return_val_if_fail(self != NULL, FALSE);
     g_return_val_if_fail(self->ref_count > 0, FALSE);
     g_return_val_if_fail(path != NULL, FALSE);
@@ -153,6 +158,88 @@ fsearch_database_exclude_matches(FsearchDatabaseExclude *self, const char *path,
         return g_pattern_match_simple(self->pattern, input);
     case FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX:
         return self->regex ? g_regex_match(self->regex, input, 0, NULL) : FALSE;
+    default:
+        g_assert_not_reached();
+    }
+}
+
+FsearchDatabaseExcludeType
+fsearch_database_exclude_get_type_from_string(const char *type_str) {
+    if (g_strcmp0(type_str, "fixed") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+    }
+    if (g_strcmp0(type_str, "wildcard") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD;
+    }
+    if (g_strcmp0(type_str, "regex") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX;
+    }
+    g_warning("Invalid exclude type: %s", type_str);
+    return FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+}
+
+FsearchDatabaseExcludeMatchScope
+fsearch_database_exclude_get_match_scope_from_string(const char *scope_str) {
+    if (g_strcmp0(scope_str, "full_path") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+    }
+    if (g_strcmp0(scope_str, "basename") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME;
+    }
+    g_warning("Invalid exclude scope: %s", scope_str);
+    return FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+}
+
+FsearchDatabaseExcludeTarget
+fsearch_database_exclude_get_target_from_string(const char *target_str) {
+    if (g_strcmp0(target_str, "both") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+    }
+    if (g_strcmp0(target_str, "files") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TARGET_FILES;
+    }
+    if (g_strcmp0(target_str, "folders") == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS;
+    }
+    g_warning("Invalid exclude target: %s", target_str);
+    return FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+}
+
+const char *
+fsearch_database_exclude_type_to_string(FsearchDatabaseExcludeType type) {
+    switch (type) {
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED:
+        return "fixed";
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD:
+        return "wildcard";
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX:
+        return "regex";
+    default:
+        g_assert_not_reached();
+    }
+}
+
+const char *
+fsearch_database_exclude_match_scope_to_string(FsearchDatabaseExcludeMatchScope scope) {
+    switch (scope) {
+    case FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH:
+        return "full_path";
+    case FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME:
+        return "basename";
+    default:
+        g_assert_not_reached();
+    }
+}
+
+const char *
+fsearch_database_exclude_target_to_string(FsearchDatabaseExcludeTarget target) {
+    switch (target) {
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH:
+        return "both";
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_FILES:
+        return "files";
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS:
+        return "folders";
     default:
         g_assert_not_reached();
     }

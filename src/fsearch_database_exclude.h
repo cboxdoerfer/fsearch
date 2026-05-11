@@ -65,6 +65,24 @@ fsearch_database_exclude_matches(FsearchDatabaseExclude *self, const char *path,
 gboolean
 fsearch_database_exclude_equal(FsearchDatabaseExclude *e1, FsearchDatabaseExclude *e2);
 
+FsearchDatabaseExcludeType
+fsearch_database_exclude_get_type_from_string(const char *str);
+
+FsearchDatabaseExcludeMatchScope
+fsearch_database_exclude_get_match_scope_from_string(const char *str);
+
+FsearchDatabaseExcludeTarget
+fsearch_database_exclude_get_target_from_string(const char *str);
+
+const char *
+fsearch_database_exclude_type_to_string(FsearchDatabaseExcludeType type);
+
+const char *
+fsearch_database_exclude_match_scope_to_string(FsearchDatabaseExcludeMatchScope scope);
+
+const char *
+fsearch_database_exclude_target_to_string(FsearchDatabaseExcludeTarget target);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseExclude, fsearch_database_exclude_unref)
 
 G_END_DECLS
