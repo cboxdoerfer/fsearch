@@ -392,7 +392,6 @@ config_load(FsearchConfig *config) {
     g_assert(key_file);
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
@@ -497,7 +496,6 @@ config_save(FsearchConfig *config) {
     g_assert(key_file);
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     g_debug("[config] saving...");
 
@@ -645,6 +643,7 @@ config_free(FsearchConfig *config) {
     g_clear_pointer(&config->folder_open_cmd, g_free);
     g_clear_pointer(&config->sort_by, g_free);
     g_clear_pointer(&config->filters, fsearch_filter_manager_unref);
-    g_clear_pointer(&config->exclude_files, g_strfreev);
+    g_clear_object(&config->includes);
+    g_clear_object(&config->excludes);
     g_clear_pointer(&config, g_free);
 }

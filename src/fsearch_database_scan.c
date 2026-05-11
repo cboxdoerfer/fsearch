@@ -241,7 +241,6 @@ db_scan_folder(const char *path,
     }
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     DatabaseWalkContext walk_context = {
         .folders = folders,

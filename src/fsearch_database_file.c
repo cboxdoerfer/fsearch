@@ -886,7 +886,6 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_debug("[db_save] saving database to file...");
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     g_autoptr(GString) file_tmp_path = g_string_new(file_path);
     g_string_append(file_tmp_path, ".tmp");

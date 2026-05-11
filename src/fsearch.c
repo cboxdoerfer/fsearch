@@ -663,7 +663,6 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 static int
 database_scan_in_local_instance() {
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);

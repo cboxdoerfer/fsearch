@@ -754,7 +754,6 @@ database_work_queue_thread(gpointer data) {
         g_autoptr(FsearchDatabaseWork) work = g_async_queue_pop(self->work_queue);
 
         g_autoptr(GTimer) timer = g_timer_new();
-        g_timer_start(timer);
 
         bool quit = false;
 
