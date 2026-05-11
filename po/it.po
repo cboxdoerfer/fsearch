@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 15:44+0200\n"
-"PO-Revision-Date: 2025-02-28 04:30+0000\n"
-"Last-Translator: Korra DH <korra@corradobigliardi.it>\n"
+"PO-Revision-Date: 2026-05-12 09:11+0000\n"
+"Last-Translator: Giasko <dibiame@hotmail.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
 "translations/it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2-rc\n"
+"X-Generator: Weblate 2026.5-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -93,7 +93,7 @@ msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"<em>Nota</em>: A causa del sandboxing di Flatpak, FSearch non può trovare "
+"<em>Nota:</em> A causa del sandboxing di Flatpak, FSearch non può trovare "
 "tutti i file sul tuo sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
@@ -146,29 +146,32 @@ msgstr "tutto"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
-msgstr ""
+msgstr "Riscrittura DB"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "DB: Aggiungi supporto per il monitoraggio dei filesystem"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"DB: Consentire file e cartelle da escludere in base a modelli fissi, "
+"wildcard o espressioni regolari"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "DB: memorizzare la configurazione del database nel file DB"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "DB: Aggiungi checksum al file DB"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
+"Rendi raccoglimento icone e informazioni file asincrono (nessun blocco UI)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
@@ -304,9 +307,8 @@ msgid "Open a new application window"
 msgstr "Apri una nuova finestra dell'applicazione"
 
 #: src/fsearch.c:726
-#, fuzzy
 msgid "Minimize the application window"
-msgstr "Apri una nuova finestra dell'applicazione"
+msgstr "Minimizzare la finestra dell'applicazione"
 
 #: src/fsearch.c:727
 msgid "Show the application preferences"
@@ -326,7 +328,7 @@ msgstr "Mostra informazioni di versione ed esce"
 
 #: src/fsearch_database.c:611
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Rescan indice: applicando modifiche…"
 
 #: src/fsearch_database_file.c:1252
 msgid "Loading folders…"
@@ -359,30 +361,27 @@ msgstr "_Seleziona"
 
 #: src/fsearch_database_preferences_widget.c:356
 msgid "Literal"
-msgstr ""
+msgstr "Letteralmente"
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
 msgid "Wildcard"
-msgstr "Supporto caratteri jolly"
+msgstr "Caratteri jolly"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "Espressioni regolari (Regex)"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
 msgid "Full Path"
-msgstr "Percorso"
+msgstr "Percorso assoluto"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
-msgstr ""
+msgstr "Nome base"
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
 msgid "Files & Folders"
-msgstr "Cartelle"
+msgstr "File e cartelle"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -399,7 +398,7 @@ msgstr "Attivo"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "Pattern"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:679
 #: src/menus.ui:275
@@ -407,13 +406,12 @@ msgid "Type"
 msgstr "Tipo"
 
 #: src/fsearch_database_preferences_widget.c:695
-#, fuzzy
 msgid "Match"
-msgstr "Rispetta le maiuscole e le minuscole"
+msgstr "Abbinamento"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "Si applica a"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:665
 #: src/menus.ui:219 src/menus.ui:267
@@ -426,16 +424,15 @@ msgstr "Un Filesystem"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "Monitoraggio"
 
 #: src/fsearch_database_preferences_widget.ui:56
-#, fuzzy
 msgid "Rescan database on startup"
 msgstr "Aggiorna il database all'avvio"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "Aggiorna ogni"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -455,19 +452,14 @@ msgstr "Inserisci il percorso…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Aggiungere la cartella al database:</b>\n"
-"\n"
-"                      Questo pulsante apre una finestra di dialogo in cui è "
-"possibile selezionare una cartella che si desidera includere nel database "
-"per\n"
-"                      la ricerca.\n"
-"                    "
+"Percorso da includere nel\n"
+"database\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:294
 msgid "Remove selected path"
@@ -478,40 +470,36 @@ msgid "Include"
 msgstr "Includi"
 
 #: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
 msgid ""
 "Enter path…\n"
 "                                                "
 msgstr ""
-"Aggiungi percorso che deve essere incluso nel database\n"
-"                                "
+"Inserisci il percorso...\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:374
-#, fuzzy
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
 msgstr ""
-"Aggiungi percorso che deve essere incluso nel database\n"
-"                                "
+"Aggiungi il percorso fisso da escludere\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Aggiungi percorso che deve essere incluso nel database\n"
-"                                "
+"Aggiungi regola di esclusione\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Aggiungi percorso che deve essere incluso nel database\n"
-"                                "
+"Rimuovere il percorso selezionato\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:487
 msgid "Exclude hidden files and folders"
@@ -959,7 +947,6 @@ msgstr ""
 "finestra ad avere una dimensione diversa."
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1210,7 +1197,7 @@ msgstr ""
 "cui sarà cercato.\n"
 "\t• <b>Percorso:</b> Il percorso completo da includere.\n"
 "\t• <b>Filesystem unico:</b> Se abilitato, FSearch non attraverserà i "
-"confini del filesystem per questa cartella."
+"confini del filesystem per questa cartella"
 
 #: src/fsearch_preferences.ui:1223
 msgid ""
@@ -1442,7 +1429,7 @@ msgstr "Database"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "Dati della riga non validi"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1632,22 +1619,22 @@ msgid "Select a Filter"
 msgstr "Seleziona un Filtro"
 
 #: src/fsearch_window_actions.c:98
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] "Vuoi veramente aprire il/i file %d?"
-msgstr[1] "Vuoi veramente aprire il/i file %d?"
+msgstr[0] "Vuoi veramente aprire il file %d?"
+msgstr[1] "Vuoi veramente aprire i file %d?"
 
 #: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "Apertura File…"
 
 #: src/fsearch_window_actions.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] "Vuoi veramente eliminare il/i file %d?"
-msgstr[1] "Vuoi veramente eliminare il/i file %d?"
+msgstr[0] "Vuoi veramente eliminare il file %d?"
+msgstr[1] "Vuoi veramente eliminare i file %d?"
 
 #: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
@@ -1663,18 +1650,18 @@ msgid "Something went wrong."
 msgstr "Qualcosa è andato storto."
 
 #: src/fsearch_window_actions.c:232
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %'d file."
 msgid_plural "Deleted %'d files."
-msgstr[0] "Eliminati %d file(s)…"
-msgstr[1] "Eliminati %d file(s)…"
+msgstr[0] "Eliminato %d file."
+msgstr[1] "Eliminati %d file."
 
 #: src/fsearch_window_actions.c:235
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %'d file to the trash."
 msgid_plural "Moved %'d files to the trash."
-msgstr[0] "Spostati %d file(s) nel cestino…"
-msgstr[1] "Spostati %d file(s) nel cestino…"
+msgstr[0] "Spostato %d file nel cestino."
+msgstr[1] "Spostati %d file nel cestino."
 
 #: src/fsearch_window_actions.c:245
 msgid ""
@@ -1685,10 +1672,10 @@ msgstr ""
 "Questo sarà corretto nei prossimi aggiornamenti."
 
 #: src/fsearch_window_actions.c:271
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] "Vuoi davvero aprire %d finestre di proprietà dei file?"
+msgstr[0] "Vuoi davvero aprire %d finestra di proprietà dei file?"
 msgstr[1] "Vuoi davvero aprire %d finestre di proprietà dei file?"
 
 #: src/fsearch_window_actions.c:278
