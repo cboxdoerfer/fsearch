@@ -1,12 +1,22 @@
 #include "fsearch_database_entry.h"
+#include "fsearch_array.h"
 #include "fsearch_database_entry_flags.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"
 
 #include <gio/gio.h>
+#include <glib.h>
+#include <glibconfig.h>
 #include <stdalign.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <time.h>
 
 #ifdef __MACH__
 #include "strverscmp.h"
