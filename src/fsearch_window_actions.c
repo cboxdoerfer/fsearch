@@ -16,6 +16,24 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#include "fsearch_window_actions.h"
+
+#include "fsearch.h"
+#include "fsearch_clipboard.h"
+#include "fsearch_config.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_file_utils.h"
+#include "fsearch_list_view.h"
+#include "fsearch_statusbar.h"
+#include "fsearch_ui_utils.h"
+#include "fsearch_window.h"
+#include "fsearch_preview.h"
+
+#include <gio/gio.h>
+#include <glib.h>
+#include <gtk/gtk.h>
+#include <stdbool.h>
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -32,16 +50,6 @@
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
-
-#include "fsearch_clipboard.h"
-#include "fsearch_config.h"
-#include "fsearch_database_entry.h"
-#include "fsearch_file_utils.h"
-#include "fsearch_list_view.h"
-#include "fsearch_statusbar.h"
-#include "fsearch_ui_utils.h"
-#include "fsearch_window_actions.h"
-#include "fsearch_preview.h"
 
 static void
 action_set_active_int(GActionGroup *group, const gchar *action_name, int32_t value) {
