@@ -22,6 +22,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
 #include "fsearch_filter_manager.h"
 
 typedef struct _FsearchConfig FsearchConfig;
@@ -116,7 +118,9 @@ struct _FsearchConfig {
     bool follow_symlinks;
 
     FsearchFilterManager *filters;
-    char **exclude_files;
+
+    FsearchDatabaseIncludeManager *includes;
+    FsearchDatabaseExcludeManager *excludes;
 };
 
 bool

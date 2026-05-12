@@ -20,6 +20,10 @@
 
 #include "fsearch_config.h"
 
+#include "fsearch_database_exclude.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_include_manager.h"
 #include "fsearch_filter.h"
 #include "fsearch_filter_manager.h"
 #include "fsearch_limits.h"
@@ -28,6 +32,7 @@
 
 #include <glib.h>
 #include <glib/gmacros.h>
+#include <glib-object.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -154,6 +159,38 @@ static const FsearchKeyData FILTER_KEYS[] = {
     CONF_BOOL_OF(FsearchConfigFilterKeys, match_case, false),
     CONF_BOOL_OF(FsearchConfigFilterKeys, search_in_path, false),
     CONF_BOOL_OF(FsearchConfigFilterKeys, enable_regex, false),
+};
+
+typedef struct {
+    int id;
+    char *path;
+    bool active;
+    bool one_file_system;
+    bool monitor;
+} FsearchConfigIncludeKeys;
+
+static const FsearchKeyData INCLUDE_KEYS[] = {
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, active, false),
+    CONF_INT_OF(FsearchConfigIncludeKeys, id, 0),
+    CONF_STR_OF(FsearchConfigIncludeKeys, path, NULL),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, one_file_system, false),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, monitor, false),
+};
+
+typedef struct {
+    char *type;
+    char *pattern;
+    char *match_scope;
+    char *target;
+    bool active;
+} FsearchConfigExcludeKeys;
+
+static const FsearchKeyData EXCLUDE_KEYS[] = {
+    CONF_BOOL_OF(FsearchConfigExcludeKeys, active, false),
+    CONF_STR_OF(FsearchConfigExcludeKeys, type, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, pattern, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, match_scope, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, target, NULL),
 };
 
 static const char *config_file_name = "fsearch.conf";
@@ -383,6 +420,71 @@ config_load_filters(GKeyFile *key_file) {
     return filters;
 }
 
+static FsearchDatabaseIncludeManager *
+config_load_includes(GKeyFile *key_file) {
+    if (!g_key_file_has_group(key_file, "Database")) {
+        return fsearch_database_include_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseIncludeManager *include_manager = fsearch_database_include_manager_new();
+
+    for (uint32_t i = 0; ; i++) {
+        FsearchConfigIncludeKeys include_keys = {};
+
+        CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
+
+        if (!include_keys.path || fsearch_string_is_empty(include_keys.path)) {
+            break;
+        }
+
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(
+            include_keys.path,
+            include_keys.active,
+            include_keys.one_file_system,
+            include_keys.monitor,
+            false,
+            include_keys.id);
+        fsearch_database_include_manager_add(include_manager, include);
+
+        g_clear_pointer(&include_keys.path, g_free);
+    }
+    return include_manager;
+}
+
+static FsearchDatabaseExcludeManager *
+config_load_excludes(GKeyFile *key_file) {
+    if (!g_key_file_has_group(key_file, "Database")) {
+        return fsearch_database_exclude_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_exclude_manager_new();
+
+    for (uint32_t i = 0; ; i++) {
+        FsearchConfigExcludeKeys exclude_keys = {};
+
+        CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
+
+        if (!exclude_keys.type || fsearch_string_is_empty(exclude_keys.type)) {
+            break;
+        }
+
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(
+            exclude_keys.pattern,
+            exclude_keys.active,
+            fsearch_database_exclude_get_type_from_string(exclude_keys.type),
+            fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
+            fsearch_database_exclude_get_target_from_string(exclude_keys.target)
+            );
+        fsearch_database_exclude_manager_add(exclude_manager, exclude);
+
+        g_clear_pointer(&exclude_keys.type, g_free);
+        g_clear_pointer(&exclude_keys.pattern, g_free);
+        g_clear_pointer(&exclude_keys.match_scope, g_free);
+        g_clear_pointer(&exclude_keys.target, g_free);
+    }
+    return exclude_manager;
+}
+
 bool
 config_load(FsearchConfig *config) {
     g_assert(config != NULL);
@@ -428,6 +530,10 @@ config_load(FsearchConfig *config) {
 
         // Database
         CONFIG_LOAD_SECTION(key_file, "Database", DATABASE_SECTION, config);
+        // Includes
+        config->includes = config_load_includes(key_file);
+        // Excludes
+        config->excludes = config_load_excludes(key_file);
 
         // Filters
         config->filters = config_load_filters(key_file);
@@ -458,6 +564,8 @@ config_load_default(FsearchConfig *config) {
     CONFIG_DEFAULT_SECTION(DATABASE_SECTION, config);
 
     config->filters = fsearch_filter_manager_new_with_defaults();
+    config->includes = fsearch_database_include_manager_new_with_defaults();
+    config->excludes = fsearch_database_exclude_manager_new_with_defaults();
 
     return true;
 }
@@ -484,6 +592,53 @@ config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Filters", "filter", i, FILTER_KEYS, &filter_keys);
 
         g_clear_pointer(&filter, fsearch_filter_unref);
+    }
+}
+
+static void
+config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_manager) {
+    if (!include_manager) {
+        return;
+    }
+
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
+    for (uint32_t i = 0; i < includes->len; ++i) {
+        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+        if (!include) {
+            g_assert_not_reached();
+        }
+
+        FsearchConfigIncludeKeys include_keys = {.path = (char *)fsearch_database_include_get_path(include),
+                                                 .monitor = fsearch_database_include_get_monitored(include),
+                                                 .active = fsearch_database_include_get_active(include),
+                                                 .one_file_system = fsearch_database_include_get_one_file_system(
+                                                     include),
+                                                 .id = fsearch_database_include_get_id(include)};
+
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
+    }
+}
+
+static void
+config_save_excludes(GKeyFile *key_file, FsearchDatabaseExcludeManager *exclude_manager) {
+    if (!exclude_manager) {
+        return;
+    }
+    g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
+    for (uint32_t i = 0; i < excludes->len; ++i) {
+        FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
+        if (!exclude) {
+            g_assert_not_reached();
+        }
+        FsearchConfigExcludeKeys exclude_keys = {
+            .pattern = (char *)fsearch_database_exclude_get_pattern(exclude),
+            .active = fsearch_database_exclude_get_active(exclude),
+            .type = (char *)fsearch_database_exclude_type_to_string(fsearch_database_exclude_get_exclude_type(exclude)),
+            .match_scope = (char *)fsearch_database_exclude_match_scope_to_string(
+                fsearch_database_exclude_get_match_scope(exclude)),
+            .target = (char *)fsearch_database_exclude_target_to_string(fsearch_database_exclude_get_target(exclude)),
+        };
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
     }
 }
 
@@ -517,6 +672,12 @@ config_save(FsearchConfig *config) {
     // Filters
     config_save_filters(key_file, config->filters);
 
+    // Includes
+    config_save_includes(key_file, config->includes);
+
+    // Excludes
+    config_save_excludes(key_file, config->excludes);
+
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
 
@@ -538,48 +699,6 @@ config_save(FsearchConfig *config) {
     return result;
 }
 
-static bool
-config_list_compare(GList *l1, GList *l2, bool (*cmp_func)(void *, void *)) {
-    if (!l1 && !l2) {
-        return true;
-    }
-    if (!l1 || !l2) {
-        return false;
-    }
-    uint32_t len1 = g_list_length(l1);
-    uint32_t len2 = g_list_length(l2);
-    if (len1 != len2) {
-        return false;
-    }
-    for (int i = 0; i < len1; i++) {
-        void *data1 = g_list_nth_data(l1, i);
-        void *data2 = g_list_nth_data(l2, i);
-        if (!data1 || !data2 || !cmp_func(data1, data2)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-#if !GLIB_CHECK_VERSION(2, 60, 0)
-// Copied from glib for backwards compatibility
-static gboolean
-g_strv_equal(const gchar *const *strv1, const gchar *const *strv2) {
-    g_return_val_if_fail(strv1 != NULL, FALSE);
-    g_return_val_if_fail(strv2 != NULL, FALSE);
-
-    if (strv1 == strv2)
-        return TRUE;
-
-    for (; *strv1 != NULL && *strv2 != NULL; strv1++, strv2++) {
-        if (!g_str_equal(*strv1, *strv2))
-            return FALSE;
-    }
-
-    return (*strv1 == NULL && *strv2 == NULL);
-}
-#endif
-
 FsearchConfigCompareResult
 config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     FsearchConfigCompareResult result = {};
@@ -593,21 +712,17 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     if (!fsearch_filter_manager_cmp(c1->filters, c2->filters)) {
         result.search_config_changed = true;
     }
-    if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
-        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
+    if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->
+        show_listview_icons
+        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->
+        enable_list_tooltips) {
         result.listview_config_changed = true;
     }
 
-    bool exclude_files_changed = false;
-    if (c1->exclude_files && c2->exclude_files
-        && !g_strv_equal((const gchar *const *)c1->exclude_files, (const gchar *const *)c2->exclude_files)) {
-        exclude_files_changed = true;
-    }
-    else if ((c1->exclude_files && !c2->exclude_files) || (!c1->exclude_files && c2->exclude_files)) {
-        exclude_files_changed = true;
-    }
+    const bool includes_changed = !fsearch_database_include_manager_equal(c1->includes, c2->includes);
+    const bool excludes_changed = !fsearch_database_exclude_manager_equal(c1->excludes, c2->excludes);
 
-    if (c1->exclude_hidden_items != c2->exclude_hidden_items || exclude_files_changed) {
+    if (c1->exclude_hidden_items != c2->exclude_hidden_items || excludes_changed || includes_changed) {
         result.database_config_changed = true;
     }
 
@@ -627,8 +742,11 @@ config_copy(FsearchConfig *config) {
     if (config->sort_by) {
         copy->sort_by = g_strdup(config->sort_by);
     }
-    if (config->exclude_files) {
-        copy->exclude_files = g_strdupv(config->exclude_files);
+    if (config->includes) {
+        copy->includes = fsearch_database_include_manager_copy(config->includes);
+    }
+    if (config->excludes) {
+        copy->excludes = fsearch_database_exclude_manager_copy(config->excludes);
     }
     if (config->filters) {
         copy->filters = fsearch_filter_manager_copy(config->filters);
