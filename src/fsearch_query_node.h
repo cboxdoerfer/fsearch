@@ -1,14 +1,6 @@
-
 #pragma once
 
 #define PCRE2_CODE_UNIT_WIDTH 8
-
-#include <pango/pango-attributes.h>
-#include <pcre2.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <unicode/ucasemap.h>
-#include <unicode/unorm2.h>
 
 #include "fsearch_database_index.h"
 #include "fsearch_filter_manager.h"
@@ -16,9 +8,20 @@
 #include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
 
+#include <glib.h>
+#include <pango/pango-attributes.h>
+#include <pcre2.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <unicode/ucasemap.h>
+#include <unicode/unorm2.h>
+
 typedef struct FsearchQueryNode FsearchQueryNode;
-typedef uint32_t(FsearchQueryNodeMatchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
-typedef void *(FsearchQueryNodeHaystackFunc)(FsearchQueryMatchData *);
+typedef uint32_t
+(FsearchQueryNodeMatchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
+typedef void *
+(FsearchQueryNodeHaystackFunc)(FsearchQueryMatchData *);
 
 typedef enum FsearchQueryNodeType {
     FSEARCH_QUERY_NODE_TYPE_OPERATOR,
@@ -118,7 +121,8 @@ fsearch_query_node_new_childfilecount(FsearchQueryFlags flags,
                                       int64_t child_file_count_end,
                                       FsearchQueryNodeComparison comp_type);
 
-FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
+FsearchQueryNode *
+fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
 
 FsearchQueryNode *
 fsearch_query_node_new_match_nothing(void);

@@ -1,6 +1,6 @@
 /*
 FSearch - A fast file search utility
-Copyright © 2020 Christian Boxdörfer
+Copyright © 2026 Christian Boxdörfer
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "fsearch_config.h"
 #include "fsearch_database.h"
-#include "fsearch_thread_pool.h"
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <inttypes.h>
@@ -46,22 +45,16 @@ typedef enum {
 } FsearchDatabaseState;
 
 FsearchDatabaseState
-fsearch_application_get_db_state(FsearchApplication *fsearch);
+fsearch_application_get_db_state(FsearchApplication *self);
 
 uint32_t
-fsearch_application_get_num_db_entries(FsearchApplication *fsearch);
+fsearch_application_get_num_db_entries(FsearchApplication *self);
 
 FsearchDatabase *
-fsearch_application_get_db(FsearchApplication *fsearch);
+fsearch_application_get_db(FsearchApplication *self);
 
 FsearchConfig *
-fsearch_application_get_config(FsearchApplication *fsearch);
-
-void
-fsearch_application_state_lock(FsearchApplication *fsearch);
-
-void
-fsearch_application_state_unlock(FsearchApplication *fsearch);
+fsearch_application_get_config(FsearchApplication *self);
 
 char *
 fsearch_application_get_database_file_path(void);
@@ -70,4 +63,4 @@ char *
 fsearch_application_get_database_dir(void);
 
 gboolean
-fsearch_application_has_file_manager_on_bus(FsearchApplication *fsearch);
+fsearch_application_has_file_manager_on_bus(FsearchApplication *self);

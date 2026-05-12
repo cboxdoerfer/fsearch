@@ -2,6 +2,7 @@
 
 #include "fsearch_statusbar.h"
 #include "fsearch.h"
+#include "fsearch_database_info.h"
 
 #include <glib/gi18n.h>
 
@@ -149,9 +150,9 @@ fsearch_statusbar_set_selection(FsearchStatusbar *sb,
     else {
         gtk_revealer_set_reveal_child(GTK_REVEALER(sb->statusbar_selection_revealer), TRUE);
         char text[100] = "";
-        snprintf(text, sizeof(text), "%d/%d", num_folders_selected, num_folders);
+        snprintf(text, sizeof(text), "%'d/%'d", num_folders_selected, num_folders);
         gtk_label_set_text(GTK_LABEL(sb->statusbar_selection_num_folders_label), text);
-        snprintf(text, sizeof(text), "%d/%d", num_files_selected, num_files);
+        snprintf(text, sizeof(text), "%'d/%'d", num_files_selected, num_files);
         gtk_label_set_text(GTK_LABEL(sb->statusbar_selection_num_files_label), text);
     }
 }
@@ -176,7 +177,14 @@ fsearch_statusbar_set_database_scanning(FsearchStatusbar *sb) {
 }
 
 static void
-fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
+fsearch_statusbar_set_num_db_entries(FsearchStatusbar *sb, uint32_t num_entries) {
+    gchar db_text[100] = "";
+    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_entries);
+    gtk_label_set_text(GTK_LABEL(sb->statusbar_database_status_label), db_text);
+}
+
+static void
+fsearch_statusbar_set_database_idle(FsearchStatusbar *sb, uint32_t num_entries) {
     fsearch_statusbar_set_num_search_results(sb, 0);
 
     gtk_spinner_stop(GTK_SPINNER(sb->statusbar_database_updating_spinner));
@@ -185,16 +193,11 @@ fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
 
     gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_database_stack), sb->statusbar_database_status_box);
 
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    const uint32_t num_entries = fsearch_application_get_num_db_entries(app);
-
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_entries);
-    gtk_label_set_text(GTK_LABEL(sb->statusbar_database_status_label), db_text);
+    fsearch_statusbar_set_num_db_entries(sb, num_entries);
 }
 
 static void
-on_database_scan_started(gpointer data, gpointer user_data) {
+on_database_scan_started(FsearchDatabase *db, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -207,7 +210,7 @@ on_database_scan_started(gpointer data, gpointer user_data) {
 }
 
 static void
-on_database_load_started(gpointer data, gpointer user_data) {
+on_database_load_started(FsearchDatabase *db, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -219,9 +222,21 @@ on_database_load_started(gpointer data, gpointer user_data) {
 }
 
 static void
-on_database_update_finished(gpointer data, gpointer user_data) {
+on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
-    fsearch_statusbar_set_database_idle(statusbar);
+    fsearch_statusbar_set_database_idle(statusbar, fsearch_database_info_get_num_entries(info));
+}
+
+static void
+on_database_progress(FsearchDatabase *db, char *text, gpointer user_data) {
+    FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
+    fsearch_statusbar_set_database_index_text(statusbar, text);
+}
+
+static void
+on_database_changed(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
+    fsearch_statusbar_set_num_db_entries(statusbar, fsearch_database_info_get_num_entries(info));
 }
 
 static gboolean
@@ -291,15 +306,20 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
         fsearch_statusbar_set_database_scanning(self);
         break;
     default:
-        fsearch_statusbar_set_database_idle(self);
+        fsearch_statusbar_set_database_idle(self, 0);
         break;
     }
 
     fsearch_statusbar_set_selection(self, 0, 0, 0, 0);
 
-    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-update-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
+    g_autoptr(FsearchDatabase) db = fsearch_application_get_db(app);
+
+    g_signal_connect_object(db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "database-changed", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "database-progress", G_CALLBACK(on_database_progress), self, G_CONNECT_AFTER);
 }
 
 static void

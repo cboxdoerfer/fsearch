@@ -7,11 +7,13 @@
 
 #include <stdbool.h>
 
-typedef FsearchQueryNode *(FsearchQueryComparisonNewNodeFunc)(FsearchQueryFlags,
-                                                              int64_t,
-                                                              int64_t,
-                                                              FsearchQueryNodeComparison);
-typedef bool(FsearchQueryIntegerParserFunc)(const char *, int64_t *, int64_t *);
+typedef FsearchQueryNode *
+(FsearchQueryComparisonNewNodeFunc)(FsearchQueryFlags,
+                                    int64_t,
+                                    int64_t,
+                                    FsearchQueryNodeComparison);
+typedef bool
+(FsearchQueryIntegerParserFunc)(const char *, int64_t *, int64_t *);
 
 static GList *
 parse_open_bracket(FsearchQueryParseContext *parse_ctx);
@@ -66,7 +68,8 @@ get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
                               FsearchQueryToken last_token,
                               FsearchQueryToken next_token);
 
-typedef GList *(FsearchTokenFunctionParser)(FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
+typedef GList *
+(FsearchTokenFunctionParser)(FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
 
 typedef enum {
     ADD_FLAG,
@@ -141,7 +144,8 @@ parse_numeric_field_with_optional_range(const char *field_name,
                                         FsearchQueryComparisonNewNodeFunc new_node_func,
                                         GString *string,
                                         FsearchQueryFlags flags) {
-    g_auto(GStrv) elements = g_strsplit(string->str, "..", 2);
+    g_auto(GStrv)
+        elements = g_strsplit(string->str, "..", 2);
     if (!elements || !elements[0]) {
         goto fail;
     }
@@ -267,7 +271,12 @@ parse_numeric_function(FsearchQueryParseContext *parse_ctx,
 
 static GList *
 parse_function_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_function(parse_ctx, is_empty_field, flags, "size", fsearch_query_node_new_size, fsearch_size_parse);
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "size",
+                                  fsearch_query_node_new_size,
+                                  fsearch_size_parse);
 }
 
 static GList *
@@ -277,7 +286,12 @@ parse_function_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, F
 
 static GList *
 parse_function_depth(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_function(parse_ctx, is_empty_field, flags, "depth", fsearch_query_node_new_depth, parse_integer);
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "depth",
+                                  fsearch_query_node_new_depth,
+                                  parse_integer);
 }
 
 static GList *
@@ -489,7 +503,7 @@ pop_query_token(GQueue *stack) {
     if (g_queue_is_empty(stack)) {
         return FSEARCH_QUERY_TOKEN_NONE;
     }
-    return (FsearchQueryToken)(GPOINTER_TO_UINT(g_queue_pop_tail(stack)));
+    return (FsearchQueryToken)GPOINTER_TO_UINT(g_queue_pop_tail(stack));
 }
 
 static void
@@ -656,7 +670,9 @@ parse_open_bracket(FsearchQueryParseContext *parse_ctx) {
 }
 
 GList *
-fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool in_open_bracket, FsearchQueryFlags flags) {
+fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx,
+                                      bool in_open_bracket,
+                                      FsearchQueryFlags flags) {
     GList *res = NULL;
 
     uint32_t num_open_brackets = in_open_bracket ? 1 : 0;
@@ -720,7 +736,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
             }
             else {
                 g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort "
-                        "parsing!\n");
+                    "parsing!\n");
                 g_list_free_full(g_steal_pointer(&res), (GDestroyNotify)fsearch_query_node_free);
                 return new_list(fsearch_query_node_new_match_nothing());
             }

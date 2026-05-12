@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@
 #include "fsearch_query_match_data.h"
 #include "fsearch_query_node.h"
 #include "fsearch_query_tree.h"
-#include "fsearch_thread_pool.h"
 
 typedef struct FsearchQuery {
     char *search_term;
@@ -73,3 +72,5 @@ fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchData *match_data);
 
 bool
 fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchQuery, fsearch_query_unref)

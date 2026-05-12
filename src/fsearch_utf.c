@@ -8,7 +8,7 @@
 #include <unicode/ustring.h>
 
 void
-fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
+fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t str_len) {
     g_return_if_fail(builder);
 
     builder->initialized = true;
@@ -29,7 +29,8 @@ fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
 
     builder->string_utf8_is_folded = false;
     builder->string_is_folded_and_normalized = false;
-    builder->num_characters = num_characters;
+    // Ensure there's enough space, since case-folded strings may grow in size.
+    builder->num_characters = 4 * str_len;
     builder->string_utf8_folded = calloc(builder->num_characters, sizeof(char));
     builder->string_utf8_folded_len = 0;
     builder->string_folded = calloc(builder->num_characters, sizeof(UChar));
@@ -84,7 +85,12 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
     builder->string = g_strdup(string);
     // first perform case folding (this can be done while our string is still in UTF8 form)
     builder->string_utf8_folded_len =
-        ucasemap_utf8FoldCase(builder->case_map, builder->string_utf8_folded, builder->num_characters, string, -1, &status);
+        ucasemap_utf8FoldCase(builder->case_map,
+                              builder->string_utf8_folded,
+                              builder->num_characters,
+                              string,
+                              -1,
+                              &status);
     if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
@@ -119,12 +125,12 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
         // normalize everything after string_folded + span_end
         u_strncpy(builder->string_normalized_folded, builder->string_folded, span_end);
         builder->string_normalized_folded_len = unorm2_normalizeSecondAndAppend(builder->normalizer,
-                                                                                builder->string_normalized_folded,
-                                                                                span_end,
-                                                                                builder->num_characters,
-                                                                                builder->string_folded + span_end,
-                                                                                builder->string_folded_len - span_end,
-                                                                                &status);
+            builder->string_normalized_folded,
+            span_end,
+            builder->num_characters,
+            builder->string_folded + span_end,
+            builder->string_folded_len - span_end,
+            &status);
         if (G_UNLIKELY(U_FAILURE(status))) {
             goto fail;
         }

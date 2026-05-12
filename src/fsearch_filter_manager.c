@@ -4,50 +4,84 @@
 #include <stdlib.h>
 
 struct FsearchFilterManager {
-    GList *filters;
+    GPtrArray *filters;
+
+    volatile gint ref_count;
 };
 
-void
-fsearch_filter_manager_free(FsearchFilterManager *manager) {
-    if (!manager) {
+G_DEFINE_BOXED_TYPE(FsearchFilterManager,
+                    fsearch_filter_manager,
+                    fsearch_filter_manager_ref,
+                    fsearch_filter_manager_unref)
+
+static void
+filter_manager_free(FsearchFilterManager *self) {
+    if (!self) {
         return;
     }
-    g_list_free_full(g_steal_pointer(&manager->filters), (GDestroyNotify)fsearch_filter_unref);
-    g_clear_pointer(&manager, free);
+    g_clear_pointer(&self->filters, g_ptr_array_unref);
+    g_clear_pointer(&self, free);
+}
+
+FsearchFilterManager *
+fsearch_filter_manager_ref(FsearchFilterManager *self) {
+    g_return_val_if_fail(self != NULL, NULL);
+    g_return_val_if_fail(self->ref_count > 0, NULL);
+
+    g_atomic_int_inc(&self->ref_count);
+
+    return self;
+}
+
+void
+fsearch_filter_manager_unref(FsearchFilterManager *self) {
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(self->ref_count > 0);
+
+    if (g_atomic_int_dec_and_test(&self->ref_count)) {
+        g_clear_pointer(&self, filter_manager_free);
+    }
 }
 
 FsearchFilterManager *
 fsearch_filter_manager_new(void) {
-    FsearchFilterManager *manager = calloc(1, sizeof(FsearchFilterManager));
-    g_assert(manager);
+    FsearchFilterManager *self = calloc(1, sizeof(FsearchFilterManager));
+    g_assert(self);
 
-    manager->filters = NULL;
-    return manager;
+    self->filters = g_ptr_array_new_full(12, (GDestroyNotify)fsearch_filter_unref);
+
+    self->ref_count = 1;
+    return self;
 }
 
 FsearchFilterManager *
 fsearch_filter_manager_new_with_defaults(void) {
-    FsearchFilterManager *manager = fsearch_filter_manager_new();
+    FsearchFilterManager *self = calloc(1, sizeof(FsearchFilterManager));
+    g_assert(self);
 
-    manager->filters = fsearch_filter_get_default();
-    return manager;
+    self->filters = fsearch_filter_get_default_filters();
+
+    self->ref_count = 1;
+    return self;
 }
 
 FsearchFilterManager *
-fsearch_filter_manager_copy(FsearchFilterManager *manager) {
+fsearch_filter_manager_copy(FsearchFilterManager *self) {
+    g_return_val_if_fail(self, NULL);
+
     FsearchFilterManager *copy = fsearch_filter_manager_new();
 
-    for (GList *l = manager->filters; l != NULL; l = l->next) {
-        FsearchFilter *filter = l->data;
-        copy->filters = g_list_append(copy->filters, fsearch_filter_copy(filter));
+    for (uint32_t i = 0; i < self->filters->len; ++i) {
+        FsearchFilter *filter = g_ptr_array_index(self->filters, i);
+        g_ptr_array_add(copy->filters, fsearch_filter_copy(filter));
     }
     return copy;
 }
 
 static gboolean
-filter_exists(GList *filters, FsearchFilter *filter, const char *name) {
-    for (GList *f = filters; f != NULL; f = f->next) {
-        FsearchFilter *ff = f->data;
+filter_exists(GPtrArray *filters, FsearchFilter *filter, const char *name) {
+    for (uint32_t i = 0; i < filters->len; ++i) {
+        FsearchFilter *ff = g_ptr_array_index(filters, i);
         if (!ff || ff == filter) {
             continue;
         }
@@ -59,79 +93,84 @@ filter_exists(GList *filters, FsearchFilter *filter, const char *name) {
 }
 
 static void
-update_filter_to_unique_name(GList *filters, FsearchFilter *filter) {
+update_filter_to_unique_name(GPtrArray *filters, FsearchFilter *filter) {
+    g_autofree char *new_name = g_strdup(filter->name);
+
     uint32_t filter_name_copy = 1;
-
-    char *filter_name = g_strdup(filter->name);
-    char *new_name = g_strdup(filter->name);
-
     while (filter_exists(filters, filter, new_name)) {
         g_clear_pointer(&new_name, g_free);
-        new_name = g_strdup_printf("%s (%d)", filter_name, filter_name_copy);
+        new_name = g_strdup_printf("%s (%d)", filter->name, filter_name_copy);
         filter_name_copy++;
     }
     g_clear_pointer(&filter->name, g_free);
-    g_clear_pointer(&filter_name, g_free);
-    filter->name = new_name;
+    filter->name = g_steal_pointer(&new_name);
 }
 
 void
-fsearch_filter_manager_append_filter(FsearchFilterManager *manager, FsearchFilter *filter) {
-    update_filter_to_unique_name(manager->filters, filter);
-    manager->filters = g_list_append(manager->filters, fsearch_filter_ref(filter));
+fsearch_filter_manager_append_filter(FsearchFilterManager *self, FsearchFilter *filter) {
+    g_return_if_fail(self);
+    g_return_if_fail(filter);
+
+    update_filter_to_unique_name(self->filters, filter);
+    g_ptr_array_add(self->filters, fsearch_filter_ref(filter));
 }
 
 void
-fsearch_filter_manager_reorder(FsearchFilterManager *manager, gint *new_order, size_t new_order_len) {
-    if (!new_order) {
-        return;
-    }
-    GList *reordered_filters = NULL;
+fsearch_filter_manager_reorder(FsearchFilterManager *self, gint *new_order, size_t new_order_len) {
+    g_return_if_fail(self);
+    g_return_if_fail(new_order);
+
+    GPtrArray *new_filters = g_ptr_array_new_full(self->filters->len, (GDestroyNotify)fsearch_filter_unref);
+
     for (uint32_t i = 0; i < new_order_len; ++i) {
         const gint old_pos = new_order[i];
-        GList *f = g_list_nth(manager->filters, old_pos);
-        reordered_filters = g_list_append(reordered_filters, f->data);
+        FsearchFilter *filter = g_ptr_array_index(self->filters, old_pos);
+        g_ptr_array_add(new_filters, fsearch_filter_ref(filter));
     }
-    g_list_free(manager->filters);
-    manager->filters = reordered_filters;
+
+    g_clear_pointer(&self->filters, g_ptr_array_unref);
+    self->filters = new_filters;
 }
 
 void
-fsearch_filter_manager_remove(FsearchFilterManager *manager, FsearchFilter *filter) {
-    if (!filter) {
-        return;
-    }
-    manager->filters = g_list_remove(manager->filters, filter);
-    g_clear_pointer(&filter, fsearch_filter_unref);
+fsearch_filter_manager_remove(FsearchFilterManager *self, FsearchFilter *filter) {
+    g_return_if_fail(self);
+    g_return_if_fail(filter);
+
+    g_ptr_array_remove(self->filters, filter);
 }
 
 void
-fsearch_filter_manager_edit(FsearchFilterManager *manager,
+fsearch_filter_manager_edit(FsearchFilterManager *self,
                             FsearchFilter *filter,
                             const char *name,
                             const char *macro,
                             const char *query,
                             FsearchQueryFlags flags) {
+    g_return_if_fail(self);
+
     if (!name) {
         return;
     }
+
     g_clear_pointer(&filter->name, g_free);
     g_clear_pointer(&filter->query, g_free);
+    g_clear_pointer(&filter->macro, g_free);
     filter->name = g_strdup(name);
     filter->query = g_strdup(query ? query : "");
     filter->macro = g_strdup(macro ? macro : "");
     filter->flags = flags;
-    update_filter_to_unique_name(manager->filters, filter);
+    update_filter_to_unique_name(self->filters, filter);
 }
 
 FsearchFilter *
-fsearch_filter_manager_get_filter_for_name(FsearchFilterManager *manager, const char *name) {
-    g_assert(name);
+fsearch_filter_manager_get_filter_for_name(FsearchFilterManager *self, const char *name) {
+    g_return_val_if_fail(self, NULL);
+    g_return_val_if_fail(name, NULL);
 
-    for (GList *l = manager->filters; l != NULL; l = l->next) {
-        FsearchFilter *filter = l->data;
-        g_assert(filter);
-        if (!strcmp(filter->name, name)) {
+    for (uint32_t i = 0; i < self->filters->len; ++i) {
+        FsearchFilter *filter = g_ptr_array_index(self->filters, i);
+        if (filter && !strcmp(filter->name, name)) {
             return fsearch_filter_ref(filter);
         }
     }
@@ -139,18 +178,18 @@ fsearch_filter_manager_get_filter_for_name(FsearchFilterManager *manager, const 
 }
 
 guint
-fsearch_filter_manager_get_num_filters(FsearchFilterManager *manager) {
-    return g_list_length(manager->filters);
+fsearch_filter_manager_get_num_filters(FsearchFilterManager *self) {
+    g_return_val_if_fail(self, 0);
+    return self->filters->len;
 }
 
 FsearchFilter *
-fsearch_filter_manager_get_filter(FsearchFilterManager *manager, guint idx) {
-    if (idx >= g_list_length(manager->filters)) {
+fsearch_filter_manager_get_filter(FsearchFilterManager *self, guint idx) {
+    g_return_val_if_fail(self, NULL);
+    if (idx >= self->filters->len) {
         return NULL;
     }
-    GList *l = g_list_nth(manager->filters, idx);
-    FsearchFilter *filter = l->data;
-    return filter ? fsearch_filter_ref(filter) : NULL;
+    return fsearch_filter_ref(g_ptr_array_index(self->filters, idx));
 }
 
 bool
@@ -158,22 +197,16 @@ fsearch_filter_manager_cmp(FsearchFilterManager *manager_1, FsearchFilterManager
     g_assert(manager_1);
     g_assert(manager_2);
 
-    guint len1 = g_list_length(manager_1->filters);
-    guint len2 = g_list_length(manager_2->filters);
-    if (len1 != len2) {
+    if (manager_1->filters->len != manager_2->filters->len) {
         return false;
     }
 
-    GList *l1 = manager_1->filters;
-    GList *l2 = manager_2->filters;
-    while (l1 && l2) {
-        FsearchFilter *f1 = l1->data;
-        FsearchFilter *f2 = l2->data;
+    for (uint32_t i = 0; i < manager_1->filters->len; ++i) {
+        FsearchFilter *f1 = g_ptr_array_index(manager_1->filters, i);
+        FsearchFilter *f2 = g_ptr_array_index(manager_2->filters, i);
         if (!fsearch_filter_cmp(f1, f2)) {
             return false;
         }
-        l1 = l1->next;
-        l2 = l2->next;
     }
     return true;
 }

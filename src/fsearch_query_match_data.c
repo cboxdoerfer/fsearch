@@ -2,6 +2,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "fsearch_database_entry.h"
 #include "fsearch_limits.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
@@ -17,6 +18,9 @@ struct FsearchQueryMatchData {
     GString *content_type_buffer;
 
     PangoAttrList **highlights;
+
+    size_t *file_attr_offsets;
+    size_t *folder_attr_offsets;
 
     int32_t thread_id;
 
@@ -116,20 +120,23 @@ fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
 }
 
 FsearchQueryMatchData *
-fsearch_query_match_data_new(void) {
+fsearch_query_match_data_new(size_t *file_attr_offsets, size_t *folder_attr_offsets) {
     FsearchQueryMatchData *match_data = calloc(1, sizeof(FsearchQueryMatchData));
     g_assert(match_data);
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_parent_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
-    fsearch_utf_builder_init(match_data->utf_name_builder, 4 * PATH_MAX);
-    fsearch_utf_builder_init(match_data->utf_path_builder, 4 * PATH_MAX);
-    fsearch_utf_builder_init(match_data->utf_parent_path_builder, 4 * PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_name_builder, PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_path_builder, PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_parent_path_builder, PATH_MAX);
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
     match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
     match_data->content_type_buffer = g_string_sized_new(PATH_MAX);
 
-    match_data->highlights = calloc(NUM_DATABASE_INDEX_TYPES, sizeof(PangoAttrList *));
+    match_data->file_attr_offsets = file_attr_offsets;
+    match_data->folder_attr_offsets = folder_attr_offsets;
+
+    match_data->highlights = calloc(NUM_DATABASE_INDEX_PROPERTIES, sizeof(PangoAttrList *));
     match_data->has_highlights = false;
 
     match_data->utf_name_ready = false;
@@ -147,7 +154,7 @@ free_highlights(FsearchQueryMatchData *match_data) {
     if (!match_data->has_highlights) {
         return;
     }
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
         if (match_data->highlights[i]) {
             g_clear_pointer(&match_data->highlights[i], pango_attr_list_unref);
         }
@@ -160,6 +167,8 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
     if (!match_data) {
         return;
     }
+    g_clear_pointer(&match_data->file_attr_offsets, free);
+    g_clear_pointer(&match_data->folder_attr_offsets, free);
 
     free_highlights(match_data);
     g_clear_pointer(&match_data->highlights, free);
@@ -217,16 +226,34 @@ fsearch_query_match_data_get_thread_id(FsearchQueryMatchData *match_data) {
 }
 
 PangoAttrList *
-fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx) {
-    g_assert(idx < NUM_DATABASE_INDEX_TYPES);
+fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexProperty idx) {
+    g_assert(idx < NUM_DATABASE_INDEX_PROPERTIES);
     return match_data->highlights[idx];
+}
+
+GHashTable *
+fsearch_query_match_data_get_highlights(FsearchQueryMatchData *match_data) {
+    g_assert(match_data);
+    if (match_data->has_highlights == 0) {
+        return NULL;
+    }
+    GHashTable *highlights =
+        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)pango_attr_list_unref);
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
+        PangoAttrList *attr_list = match_data->highlights[i];
+        if (attr_list) {
+            g_hash_table_insert(highlights, GUINT_TO_POINTER(i), pango_attr_list_ref(attr_list));
+        }
+    }
+    return highlights;
 }
 
 void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
                                        PangoAttribute *attribute,
-                                       FsearchDatabaseIndexType idx) {
-    g_assert(idx < NUM_DATABASE_INDEX_TYPES);
+                                       FsearchDatabaseIndexProperty idx) {
+    g_assert(idx < NUM_DATABASE_INDEX_PROPERTIES);
     if (!match_data->highlights[idx]) {
         match_data->highlights[idx] = pango_attr_list_new();
     }

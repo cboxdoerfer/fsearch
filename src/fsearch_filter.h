@@ -29,5 +29,5 @@ fsearch_filter_copy(FsearchFilter *filter);
 void
 fsearch_filter_unref(FsearchFilter *filter);
 
-GList *
-fsearch_filter_get_default();
+GPtrArray *
+fsearch_filter_get_default_filters(void);

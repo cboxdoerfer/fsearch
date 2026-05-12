@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,9 +16,18 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "fsearch_query.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_filter.h"
+#include "fsearch_filter_manager.h"
+#include "fsearch_query.h"
+#include "fsearch_query_flags.h"
+#include "fsearch_query_match_data.h"
+#include "fsearch_query_node.h"
+#include "fsearch_query_tree.h"
 #include "fsearch_string_utils.h"
+
+#include <glib.h>
+#include <glibconfig.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,7 +40,7 @@ fsearch_query_new(const char *search_term,
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     g_assert(q);
 
-    q->search_term = search_term ? strdup(search_term) : "";
+    q->search_term = strdup(search_term ? search_term : "");
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
     if (q->query_tree) {
@@ -57,6 +66,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->query_tree, fsearch_query_node_tree_free);
+    g_clear_pointer(&query->filter_tree, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
 }
 
@@ -101,10 +111,12 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
         GNode *left = node->children;
         g_assert(left);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
+        if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_AND
+        ) {
             return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
+        else if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_OR
+        ) {
             return highlight(left, entry, match_data, type) || highlight(right, entry, match_data, type);
         }
         else {
@@ -136,10 +148,12 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
         GNode *left = node->children;
         g_assert(left);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
+        if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_AND
+        ) {
             return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
+        else if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_OR
+        ) {
             return matches(left, entry, match_data, type) || matches(right, entry, match_data, type);
         }
         else {

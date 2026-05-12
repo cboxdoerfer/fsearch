@@ -18,6 +18,9 @@ fsearch_selection_select_toggle(GHashTable *selection, gpointer item);
 void
 fsearch_selection_select(GHashTable *selection, gpointer item);
 
+void
+fsearch_selection_unselect(GHashTable *selection, gpointer item);
+
 bool
 fsearch_selection_is_selected(GHashTable *selection, gpointer item);
 

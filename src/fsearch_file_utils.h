@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-typedef void (*FsearchFileUtilsOpenCallback)(gboolean result, const char *error_message, gpointer user_data);
+typedef void
+(*FsearchFileUtilsOpenCallback)(gboolean result, const char *error_message, gpointer user_data);
 
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len);
@@ -71,3 +72,6 @@ fsearch_file_utils_get_content_type(const char *path, GError **error);
 
 GIcon *
 fsearch_file_utils_get_thumbnail_icon(const char *path);
+
+bool
+fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir);

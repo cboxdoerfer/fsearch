@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@
 #include <config.h>
 #endif
 
-#include "fsearch_database_view.h"
-
 #include <gtk/gtk.h>
 
+#include "fsearch_database.h"
+
 gboolean
-listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view);
+listview_popup_menu(GtkWidget *widget, FsearchDatabase *db, uint32_t view_id);

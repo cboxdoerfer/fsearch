@@ -11,7 +11,7 @@
 typedef struct FsearchQueryMatchData FsearchQueryMatchData;
 
 FsearchQueryMatchData *
-fsearch_query_match_data_new(void);
+fsearch_query_match_data_new(size_t *file_attr_offsets, size_t *folder_attr_offsets);
 
 void
 fsearch_query_match_data_free(FsearchQueryMatchData *match_data);
@@ -22,10 +22,13 @@ fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDat
 void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
                                        PangoAttribute *attribute,
-                                       FsearchDatabaseIndexType idx);
+                                       FsearchDatabaseIndexProperty idx);
 
 PangoAttrList *
-fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx);
+fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexProperty idx);
+
+GHashTable *
+fsearch_query_match_data_get_highlights(FsearchQueryMatchData *match_data);
 
 void
 fsearch_query_match_data_set_thread_id(FsearchQueryMatchData *match_data, int32_t thread_id);

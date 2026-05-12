@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -116,8 +116,6 @@ struct _FsearchConfig {
     bool follow_symlinks;
 
     FsearchFilterManager *filters;
-    GList *indexes;
-    GList *exclude_locations;
     char **exclude_files;
 };
 
