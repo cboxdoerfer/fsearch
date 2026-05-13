@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 15:44+0200\n"
-"PO-Revision-Date: 2026-04-30 16:09+0000\n"
+"PO-Revision-Date: 2026-05-14 20:11+0000\n"
 "Last-Translator: Ricardo Simões <xmcorporation@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.5.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -106,14 +106,12 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "Um modelo que segue de perto as normas GNOME"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
 msgid "search"
-msgstr "Pesquisar"
+msgstr "pesquisar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
 msgid "fsearch"
-msgstr "Pesquisar"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
 msgid "files"
@@ -160,18 +158,22 @@ msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"DB: Permitir que ficheiros e pastas sejam excluídos com base em padrões "
+"fixos, asteriscos ou expressões regulares"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "DB: Armazenar configuração da base de dados no ficheiro DB"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "DB: Adicionar soma de verificação ao ficheiro DB"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
+"Tornar assíncrona a coleta de informações do ficheiro e ícone (sem bloqueio "
+"do UI)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
@@ -207,21 +209,23 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Inverter seleção com elástico quando 'Ctrl' é pressionado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Focar na entrada da pesquisa quando a janela principal é ativada"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Adicionar filtro para aplicações (ex: ficheiros .desktop)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Adicionar opção para lançar aplicações diretamente em vez de abrir os "
+"ficheiros .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 #, fuzzy
@@ -230,50 +234,62 @@ msgstr "Exibir preferências da aplicação"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Adicionar ficheiros .odp e .ods ao filtro de documento"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"Menu 'Abrir com' mostra agora apenas aplicações que conseguem ligar com os "
+"ficheiros selecionados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Abertura aprimorada de vários ficheiros com o mesmo tipo (agora são passados "
+"como uma lista para as aplicações, em vez de um a um)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Melhor suporte para abrir ficheiros no modo sandbox"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"Adicionar itens de menu com links para o rastreador de problemas, fórum e "
+"páginas de doação"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Melhorado suporte para sistemas não-Linux"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Adicionar opção para sair do FSearch quando o Escape é pressionado em vez de "
+"minimizar a janela"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Excluir '/proc' and '/sys' por defeito"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Abrir menu de contexto quando a tecla 'Menu' ou 'Shift + F10' são "
+"pressionados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"e toneladas de bugs corrigidos, traduções atualizadas e outros pequenos "
+"melhoramentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
@@ -314,7 +330,7 @@ msgstr "Mostra informações da versão e sai"
 
 #: src/fsearch_database.c:611
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Re-indexação do índice: a aplicar alterações…"
 
 #: src/fsearch_database_file.c:1252
 msgid "Loading folders…"
@@ -347,7 +363,7 @@ msgstr "_Selecionar"
 
 #: src/fsearch_database_preferences_widget.c:356
 msgid "Literal"
-msgstr ""
+msgstr "Literal"
 
 #: src/fsearch_database_preferences_widget.c:358
 #, fuzzy
@@ -356,7 +372,7 @@ msgstr "Suporte a wildcards"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
@@ -365,7 +381,7 @@ msgstr "Caminho"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
-msgstr ""
+msgstr "Nome base"
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
@@ -387,7 +403,7 @@ msgstr "Ativo"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "Padrão"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:679
 #: src/menus.ui:275
@@ -401,7 +417,7 @@ msgstr "Coincidir Capitalização"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "Aplica-se a"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:665
 #: src/menus.ui:219 src/menus.ui:267
@@ -414,7 +430,7 @@ msgstr "Um sistema de ficheiros"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "Monitorizar"
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
@@ -423,7 +439,7 @@ msgstr "Atualizar base de dados ao iniciar"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "Re-indexar a cada"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -439,7 +455,7 @@ msgstr "minuto(s)"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Enter path…"
-msgstr ""
+msgstr "Inserir caminho…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
@@ -515,7 +531,7 @@ msgstr "Excluir"
 #: src/fsearch_file_utils.c:143
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "Erro ao remover ficheiro"
 
 #: src/fsearch_file_utils.c:145
 #, fuzzy
@@ -525,7 +541,7 @@ msgstr "Falha ao abrir:"
 #: src/fsearch_file_utils.c:260
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr ""
+msgstr "Erro ao obter informação a partir do ficheiro"
 
 #: src/fsearch_file_utils.c:262
 #, fuzzy
@@ -535,7 +551,7 @@ msgstr "Abre uma nova janela"
 #: src/fsearch_file_utils.c:277
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Erro ao obter informação para tipo de conteúdo"
 
 #: src/fsearch_file_utils.c:279
 #, fuzzy
@@ -545,7 +561,7 @@ msgstr "Exibir preferências da aplicação"
 #: src/fsearch_file_utils.c:504
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Erro ao abrir pasta parente"
 
 #: src/fsearch_file_utils.c:506
 #, fuzzy
@@ -600,7 +616,7 @@ msgstr "Vídeos"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Os nomes das Macro não podem conter caracteres `:` ."
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:315
 msgid "_OK"
@@ -649,6 +665,9 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"A macro para este filtro. A macro permite-lhe aceder a este filtro a partir "
+"da entrada da pesquisa ao escrever o texto seguido de ':'\n"
+"                "
 
 #: src/fsearch_filter_preferences_widget.c:134
 msgid "Add filter"
@@ -758,7 +777,7 @@ msgstr "Lembrar tamanho da janela"
 
 #: src/fsearch_preferences.ui:159
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Sair com Escape"
 
 #: src/fsearch_preferences.ui:202
 msgid "with keyboard shortcuts or menu entries"
@@ -1340,6 +1359,13 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
+"<b>Lançar ficheiros desktop:</b>\n"
+"\n"
+"Se ativado, a execução de um ficheiro <i>.desktop</i> iniciará a aplicação "
+"definida nesse ficheiro. Desta forma, o FSearch pode agir como um lançador "
+"de programas. Caso contrário, o ficheiro <i>.desktop</i> será aberto com o "
+"programa padrão para este tipo de ficheiros, que geralmente é um editor de "
+"texto."
 
 #: src/fsearch_preferences.ui:1396
 msgid ""
@@ -1352,6 +1378,16 @@ msgid ""
 "the filter on demand\n"
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
+"<b>Filtros:</b>\n"
+"\n"
+"Esta é uma lista de todos os filtros disponíveis. Um filtro é uma pesquisa "
+"predefinida.\n"
+"\n"
+"\t• <b>Nome:</b> Um identificador único e descritivo para o filtro\n"
+"\t• <b>Macro:</b> Ao digitar o texto macro seguido de um ':' pode habilitar "
+"o filtro sob demanda\n"
+"\t• <b>Query:</b> O termo de pesquisa pelo qual a base de dados deve ser "
+"filtrada"
 
 #: src/fsearch_preferences.ui:1417
 #, fuzzy
@@ -1402,6 +1438,12 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>Restaurar filtros padrão:</b>\n"
+"\n"
+"Este botão restaura a configuração padrão do filtro.\n"
+"\n"
+"⚠ Todos os filtros que foram criados ou editados pelo utilizador serão "
+"perdidos! ⚠"
 
 #: src/fsearch_preferences.ui:1487
 msgid ""
@@ -1410,6 +1452,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>Sair com Escape:</b>\n"
+"\n"
+"Se ativado, o FSearch sai quando a tecla Escape é pressionada em vez da "
+"janela ser minimizada."
 
 #: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
@@ -1422,7 +1468,7 @@ msgstr "Base de Dados"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "Dados de linha inválidos"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1593,15 +1639,15 @@ msgstr "Doar"
 
 #: src/fsearch_window.ui:387 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Fórum"
 
 #: src/fsearch_window.ui:401 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Relatórios de Bugs e Solicitações de Funcionalidades"
 
 #: src/fsearch_window.ui:460 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "Patrocinadores GitHub"
 
 #: src/fsearch_window.ui:474 src/menus.ui:137
 msgid "PayPal"
@@ -1644,7 +1690,7 @@ msgstr "A mover ficheiros para o lixo…"
 #: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
 #: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
-msgstr ""
+msgstr "Algo correu mal."
 
 #: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
@@ -1665,6 +1711,8 @@ msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"A base de dados precisa de ser atualizada antes de reconhecer aquelas "
+"alterações! Isto será corrigido com futuras atualizações."
 
 #: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
