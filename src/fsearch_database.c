@@ -864,6 +864,13 @@ fsearch_database_dispose(GObject *object) {
         g_thread_pool_free(g_steal_pointer(&self->io_pool), TRUE, TRUE);
     }
 
+    // Clear work queue
+    g_clear_pointer(&self->work_queue, g_async_queue_unref);
+
+    // Don't use g_clear_pointer here since index_store_unref will access self->store while terminating
+    fsearch_database_index_store_unref(self->store);
+    self->store = NULL;
+
     G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
 }
 
@@ -871,13 +878,7 @@ static void
 fsearch_database_finalize(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
-    g_clear_pointer(&self->work_queue, g_async_queue_unref);
-
     g_clear_object(&self->file);
-
-    // Don't use g_clear_pointer here since index_store_unref will access self->store while terminating
-    fsearch_database_index_store_unref(self->store);
-    self->store = NULL;
 
     g_clear_object(&self->cancellable);
 
