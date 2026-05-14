@@ -450,9 +450,9 @@ database_save(FsearchDatabase *self) {
     fsearch_database_file_save(self->store, file_path);
 }
 
-void
+static void
 io_thread_cb(gpointer data, gpointer user_data) {
-    FsearchDatabaseWork *work = data;
+    g_autoptr(FsearchDatabaseWork) work = data;
     FsearchDatabase *db = user_data;
     g_return_if_fail(work);
     g_return_if_fail(db);
