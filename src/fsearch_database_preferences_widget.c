@@ -1,13 +1,10 @@
 #define G_LOG_DOMAIN "fsearch-database-preferences-widget"
 
-#include "fsearch_database.h"
-#include "fsearch_database_info.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_exclude.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_preferences_widget.h"
-#include "fsearch_result.h"
 
 #include <config.h>
 #include <gio/gio.h>
@@ -24,9 +21,8 @@
 struct _FsearchDatabasePreferencesWidget {
     GtkBox parent_instance;
 
-    FsearchDatabase *db;
-
-    FsearchDatabaseInfo *info;
+    FsearchDatabaseIncludeManager *include_manager;
+    FsearchDatabaseExcludeManager *exclude_manager;
 
     // Include page
     GtkTreeView *include_list;
@@ -64,7 +60,7 @@ enum {
     NUM_EXCLUDE_COLUMNS
 };
 
-enum { PROP_0, PROP_DATABASE, NUM_PROPERTIES };
+enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
@@ -747,11 +743,10 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_include_page(FsearchDatabasePreferencesWidget *self) {
-    g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_info_get_include_manager(self->info);
-    if (!include_manager) {
+    if (!self->include_manager) {
         return;
     }
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(self->include_manager);
     if (!includes || includes->len == 0) {
         return;
     }
@@ -769,11 +764,10 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
-    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_info_get_exclude_manager(self->info);
-    if (!exclude_manager) {
+    if (!self->exclude_manager) {
         return;
     }
-    g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
+    g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(self->exclude_manager);
     if (!excludes || excludes->len == 0) {
         return;
     }
@@ -788,7 +782,7 @@ populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_exclude_get_target(exclude));
     }
     gtk_toggle_button_set_active(self->exclude_hidden_items_button,
-                                 fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager));
+                                 fsearch_database_exclude_manager_get_exclude_hidden(self->exclude_manager));
 }
 
 static void
@@ -796,8 +790,11 @@ fsearch_database_preferences_widget_get_property(GObject *object, guint prop_id,
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
     switch (prop_id) {
-    case PROP_DATABASE:
-        g_value_set_object(value, self->db);
+    case PROP_INCLUDE_MANAGER:
+        g_value_set_object(value, self->include_manager);
+        break;
+    case PROP_EXCLUDE_MANAGER:
+        g_value_set_object(value, self->exclude_manager);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -813,8 +810,11 @@ fsearch_database_preferences_widget_set_property(GObject *object,
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
     switch (prop_id) {
-    case PROP_DATABASE:
-        g_set_object(&self->db, g_value_get_object(value));
+    case PROP_INCLUDE_MANAGER:
+        g_set_object(&self->include_manager, g_value_get_object(value));
+        break;
+    case PROP_EXCLUDE_MANAGER:
+        g_set_object(&self->exclude_manager, g_value_get_object(value));
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -826,8 +826,8 @@ static void
 fsearch_database_preferences_widget_dispose(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
-    g_clear_pointer(&self->info, fsearch_database_info_unref);
-    g_clear_object(&self->db);
+    g_clear_object(&self->include_manager);
+    g_clear_object(&self->exclude_manager);
     g_clear_object(&self->exclude_type_model);
     g_clear_object(&self->exclude_scope_model);
     g_clear_object(&self->exclude_target_model);
@@ -839,10 +839,8 @@ static void
 fsearch_database_preferences_widget_constructed(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
-    if (fsearch_database_try_get_database_info(self->db, &self->info) == FSEARCH_RESULT_SUCCESS) {
-        populate_include_page(self);
-        populate_exclude_page(self);
-    }
+    populate_include_page(self);
+    populate_exclude_page(self);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->constructed(object);
 }
@@ -857,13 +855,18 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     object_class->set_property = fsearch_database_preferences_widget_set_property;
     object_class->get_property = fsearch_database_preferences_widget_get_property;
 
-    properties[PROP_DATABASE] = g_param_spec_object("database",
-                                                    "Database",
-                                                    "The database which will be represented and edited in this "
-                                                    "widget",
-                                                    FSEARCH_TYPE_DATABASE,
-                                                    (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
-                                                     G_PARAM_STATIC_STRINGS));
+    properties[PROP_INCLUDE_MANAGER] =
+        g_param_spec_object("include-manager",
+                            "Include Manager",
+                            "The include manager used to populate and edit the include list",
+                            FSEARCH_TYPE_DATABASE_INCLUDE_MANAGER,
+                            (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+    properties[PROP_EXCLUDE_MANAGER] =
+        g_param_spec_object("exclude-manager",
+                            "Exclude Manager",
+                            "The exclude manager used to populate and edit the exclude list",
+                            FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER,
+                            (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -900,8 +903,14 @@ fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self)
 }
 
 FsearchDatabasePreferencesWidget *
-fsearch_database_preferences_widget_new(FsearchDatabase *db) {
-    return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE, "database", db, NULL);
+fsearch_database_preferences_widget_new(FsearchDatabaseIncludeManager *include_manager,
+                                        FsearchDatabaseExcludeManager *exclude_manager) {
+    return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE,
+                        "include-manager",
+                        include_manager,
+                        "exclude-manager",
+                        exclude_manager,
+                        NULL);
 }
 
 FsearchDatabaseIncludeManager *

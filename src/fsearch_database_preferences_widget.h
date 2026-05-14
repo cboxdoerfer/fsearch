@@ -1,6 +1,5 @@
 #pragma once
 
-#include "fsearch_database.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_exclude_manager.h"
 
@@ -19,7 +18,8 @@ G_DECLARE_FINAL_TYPE(FsearchDatabasePreferencesWidget,
                      GtkBox)
 
 FsearchDatabasePreferencesWidget *
-fsearch_database_preferences_widget_new(FsearchDatabase *db);
+fsearch_database_preferences_widget_new(FsearchDatabaseIncludeManager *include_manager,
+                                        FsearchDatabaseExcludeManager *exclude_manager);
 
 FsearchDatabaseIncludeManager *
 fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferencesWidget *widget);

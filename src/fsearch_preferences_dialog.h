@@ -1,9 +1,10 @@
 #pragma once
 
-#include <gtk/gtk.h>
-
 #include "fsearch_config.h"
-#include "fsearch_database.h"
+
+#include <glib-object.h>
+#include <glibconfig.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -19,18 +20,12 @@ typedef enum FsearchPreferencesDialogPage {
 G_DECLARE_FINAL_TYPE(FsearchPreferencesDialog, fsearch_preferences_dialog, FSEARCH, PREFERENCES_DIALOG, GtkDialog)
 
 FsearchPreferencesDialog *
-fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase *db);
+fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config);
 
 void
 fsearch_preferences_dialog_set_page(FsearchPreferencesDialog *self, FsearchPreferencesDialogPage page);
 
 FsearchConfig *
 fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self);
-
-FsearchDatabaseIncludeManager *
-fsearch_preferences_dialog_get_include_manager(FsearchPreferencesDialog *self);
-
-FsearchDatabaseExcludeManager *
-fsearch_preferences_dialog_get_exclude_manager(FsearchPreferencesDialog *self);
 
 G_END_DECLS

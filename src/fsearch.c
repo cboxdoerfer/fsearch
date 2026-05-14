@@ -280,7 +280,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
         return;
     }
 
-    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db));
+    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config));
     fsearch_preferences_dialog_set_page(FSEARCH_PREFERENCES_DIALOG(pref), page);
     g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
     gtk_dialog_run(GTK_DIALOG(pref));

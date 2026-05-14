@@ -1,16 +1,23 @@
 #include "fsearch_preferences_dialog.h"
 
-#include <glib/gi18n.h>
-
+#include "fsearch_config.h"
 #include "fsearch_database_preferences_widget.h"
+#include "fsearch_filter_manager.h"
 #include "fsearch_filter_preferences_widget.h"
+
+#include <gdk/gdkevents.h>
+#include <glib-object.h>
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <glibconfig.h>
+#include <gtk/gtk.h>
+#include <stdio.h>
 
 struct _FsearchPreferencesDialog {
     GtkDialog parent_instance;
 
     FsearchConfig *config;
     FsearchConfig *config_old;
-    FsearchDatabase *db;
 
     // Interface page
     GtkWidget *help_stack;
@@ -55,7 +62,7 @@ struct _FsearchPreferencesDialog {
     GtkToggleButton *show_dialog_failed_opening;
 };
 
-enum { PROP_0, PROP_CONFIG, PROP_DATABASE, NUM_PROPERTIES };
+enum { PROP_0, PROP_CONFIG, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
@@ -129,6 +136,12 @@ update_config(FsearchPreferencesDialog *self) {
 
     g_clear_pointer(&self->config->filters, fsearch_filter_manager_unref);
     self->config->filters = fsearch_filter_preferences_widget_get_filter_manager(self->filter_pref_widget);
+
+    g_clear_object(&self->config->includes);
+    self->config->includes = fsearch_database_preferences_widget_get_include_manager(self->database_pref_widget);
+
+    g_clear_object(&self->config->excludes);
+    self->config->excludes = fsearch_database_preferences_widget_get_exclude_manager(self->database_pref_widget);
 }
 
 static void
@@ -150,9 +163,6 @@ fsearch_preferences_dialog_get_property(GObject *object, guint prop_id, GValue *
     case PROP_CONFIG:
         g_value_set_pointer(value, self->config);
         break;
-    case PROP_DATABASE:
-        g_value_set_object(value, self->db);
-        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
         break;
@@ -168,9 +178,6 @@ fsearch_preferences_dialog_set_property(GObject *object, guint prop_id, const GV
         self->config = config_copy(g_value_get_pointer(value));
         self->config_old = config_copy(g_value_get_pointer(value));
         break;
-    case PROP_DATABASE:
-        g_set_object(&self->db, g_value_get_object(value));
-        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
         break;
@@ -181,7 +188,6 @@ static void
 fsearch_preferences_dialog_dispose(GObject *object) {
     FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(object);
 
-    g_clear_object(&self->db);
     g_clear_pointer(&self->config, config_free);
     g_clear_pointer(&self->config_old, config_free);
 
@@ -210,7 +216,8 @@ fsearch_preferences_dialog_constructed(GObject *object) {
     gtk_container_add(GTK_CONTAINER(self->filter_frame), GTK_WIDGET(self->filter_pref_widget));
     gtk_widget_show(GTK_WIDGET(self->filter_pref_widget));
 
-    self->database_pref_widget = fsearch_database_preferences_widget_new(self->db);
+    self->database_pref_widget = fsearch_database_preferences_widget_new(self->config_old->includes,
+                                                                          self->config_old->excludes);
     gtk_notebook_append_page(self->main_notebook, GTK_WIDGET(self->database_pref_widget), gtk_label_new(_("Database")));
     gtk_widget_show(GTK_WIDGET(self->database_pref_widget));
 
@@ -258,14 +265,6 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
                                                    "default",
                                                    (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
                                                     G_PARAM_STATIC_STRINGS));
-    properties[PROP_DATABASE] = g_param_spec_object("database",
-                                                    "Database",
-                                                    "The database which will be used fill the database section of the "
-                                                    "dialog and which the new database config will be saved to"
-                                                    "default",
-                                                    FSEARCH_TYPE_DATABASE,
-                                                    (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
-                                                     G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -316,13 +315,8 @@ fsearch_preferences_dialog_init(FsearchPreferencesDialog *self) {
 }
 
 FsearchPreferencesDialog *
-fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase *db) {
-    FsearchPreferencesDialog *self = g_object_new(FSEARCH_PREFERENCES_DIALOG_TYPE,
-                                                  "config",
-                                                  config,
-                                                  "database",
-                                                  db,
-                                                  NULL);
+fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config) {
+    FsearchPreferencesDialog *self = g_object_new(FSEARCH_PREFERENCES_DIALOG_TYPE, "config", config, NULL);
     if (parent) {
         gtk_window_set_transient_for(GTK_WINDOW(self), parent);
     }
@@ -334,18 +328,6 @@ fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self) {
     g_return_val_if_fail(self, NULL);
     update_config(self);
     return config_copy(self->config);
-}
-
-FsearchDatabaseIncludeManager *
-fsearch_preferences_dialog_get_include_manager(FsearchPreferencesDialog *self) {
-    g_return_val_if_fail(self, NULL);
-    return fsearch_database_preferences_widget_get_include_manager(self->database_pref_widget);
-}
-
-FsearchDatabaseExcludeManager *
-fsearch_preferences_dialog_get_exclude_manager(FsearchPreferencesDialog *self) {
-    g_return_val_if_fail(self, NULL);
-    return fsearch_database_preferences_widget_get_exclude_manager(self->database_pref_widget);
 }
 
 void
