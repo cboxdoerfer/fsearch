@@ -525,18 +525,20 @@ static void
 index_store_free(FsearchDatabaseIndexStore *store) {
     g_return_if_fail(store);
 
+    // 1. Make sure the indices are down
+    g_clear_pointer(&store->indices, g_ptr_array_unref);
+    g_clear_pointer(&store->search_results, g_hash_table_unref);
+    index_store_sorted_entries_free(store);
+    g_clear_object(&store->include_manager);
+    g_clear_object(&store->exclude_manager);
+
     // Wait for tasks to finish must be TRUE since the worker threads might be using the worker_pool_collect_queue
     // Hence, make sure to unref the queue only after the pool has been terminated
     g_thread_pool_free(g_steal_pointer(&store->worker_pool), FALSE, TRUE);
     g_clear_pointer(&store->worker_pool_collect_queue, g_async_queue_unref);
 
-    g_clear_pointer(&store->search_results, g_hash_table_unref);
-    index_store_sorted_entries_free(store);
-    g_clear_pointer(&store->indices, g_ptr_array_unref);
-    g_clear_object(&store->include_manager);
-    g_clear_object(&store->exclude_manager);
 
-    // Only stop the monitor and worker threads after the indices have been freed, since they need
+    // Only stop the monitor and worker threads after the indices have been freed, since they rely on them when freeing
     if (store->monitor.loop) {
         g_main_context_invoke_full(store->monitor.ctx,
                                    G_PRIORITY_HIGH,
