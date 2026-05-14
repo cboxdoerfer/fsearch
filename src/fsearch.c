@@ -18,26 +18,39 @@
 
 #define G_LOG_DOMAIN "fsearch-application"
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "fsearch.h"
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_database_info.h"
+#include "fsearch_database_work.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_preferences_dialog.h"
+#include "fsearch_preview.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "icon_resources.h"
 #include "ui_resources.h"
-#include "fsearch_preview.h"
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gdk/gdk.h>
+#include <gio/gio.h>
+#include <gio/gmenumodel.h>
+#include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <limits.h>
+#include <glibconfig.h>
+#include <gtk/gtk.h>
+#include <gtk/gtkcssprovider.h>
+#include <linux/limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -222,21 +235,6 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     FsearchPreferencesDialog *pref_dialog = FSEARCH_PREFERENCES_DIALOG(dialog);
     if (response_id == GTK_RESPONSE_OK) {
-        g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_preferences_dialog_get_include_manager(pref_dialog);
-        g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_preferences_dialog_get_exclude_manager(pref_dialog);
-
-        if (self->work_scan) {
-            fsearch_database_work_cancel(self->work_scan);
-            g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-        }
-        self->work_scan = fsearch_database_work_new_scan(include_manager,
-                                                         exclude_manager,
-                                                         DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
-        fsearch_database_queue_work(self->db, self->work_scan);
-
         FsearchConfigCompareResult config_diff = {.listview_config_changed = true, .search_config_changed = true};
 
         FsearchConfig *new_config = fsearch_preferences_dialog_get_config(pref_dialog);
@@ -246,6 +244,20 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         }
         self->config = new_config;
         config_save(self->config);
+
+        if (config_diff.database_config_changed) {
+            if (self->work_scan) {
+                fsearch_database_work_cancel(self->work_scan);
+                g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
+            }
+            self->work_scan = fsearch_database_work_new_scan(self->config->includes,
+                                                             self->config->excludes,
+                                                             DATABASE_INDEX_PROPERTY_FLAG_NAME
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+            fsearch_database_queue_work(self->db, self->work_scan);
+        }
 
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",
@@ -436,6 +448,39 @@ on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoi
 }
 
 static void
+on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchApplication *self = (FsearchApplication *)user_data;
+    g_assert(FSEARCH_IS_APPLICATION(self));
+
+    on_database_update_finished(db, info, user_data);
+
+    g_autoptr(FsearchDatabaseIncludeManager) db_includes = fsearch_database_info_get_include_manager(info);
+    g_autoptr(FsearchDatabaseExcludeManager) db_excludes = fsearch_database_info_get_exclude_manager(info);
+
+    const bool includes_changed = !fsearch_database_include_manager_equal(db_includes, self->config->includes);
+    const bool excludes_changed = !fsearch_database_exclude_manager_equal(db_excludes, self->config->excludes);
+
+    if (includes_changed || excludes_changed) {
+        g_debug("[app] database config differs from config file, triggering rescan");
+        if (self->work_scan) {
+            fsearch_database_work_cancel(self->work_scan);
+            g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
+        }
+        self->work_scan = fsearch_database_work_new_scan(self->config->includes,
+                                                         self->config->excludes,
+                                                         DATABASE_INDEX_PROPERTY_FLAG_NAME
+                                                         | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                                         | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                         | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+        fsearch_database_queue_work(self->db, self->work_scan);
+    }
+    else {
+        g_autoptr(FsearchDatabaseWork) work_rescan_monitored = fsearch_database_work_new_rescan_monitored();
+        fsearch_database_queue_work(self->db, work_rescan_monitored);
+    }
+}
+
+static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     G_APPLICATION_CLASS(fsearch_application_parent_class)->startup(app);
@@ -460,7 +505,7 @@ fsearch_application_startup(GApplication *app) {
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_load_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
 
