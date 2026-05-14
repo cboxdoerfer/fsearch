@@ -769,6 +769,8 @@ database_work_queue_thread(gpointer data) {
             break;
         case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
             database_load(self);
+            break;
+        case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
             database_rescan_indices_if_needed(self);
             break;
         case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {

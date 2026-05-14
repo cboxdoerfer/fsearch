@@ -90,6 +90,7 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
     case FSEARCH_DATABASE_WORK_RESCAN:
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
+    case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
     case FSEARCH_DATABASE_WORK_SORT:
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
@@ -147,6 +148,13 @@ FsearchDatabaseWork *
 fsearch_database_work_new_rescan() {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN;
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_rescan_monitored() {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_RESCAN_MONITORED;
     return work;
 }
 
@@ -413,6 +421,8 @@ fsearch_database_work_to_string(FsearchDatabaseWork *work) {
         return "RESCAN_INDEX";
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
         return "RESCAN_INDEX_FINISHED";
+    case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
+        return "RESCAN_MONITORED";
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
         return "SAVE_TO_FILE";
     case FSEARCH_DATABASE_WORK_SCAN:

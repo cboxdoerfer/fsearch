@@ -4,10 +4,14 @@
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
 
 #include <glib.h>
+#include <glibconfig.h>
+#include <gtk/gtk.h>
+#include <stdint.h>
 
 typedef struct FsearchDatabaseWork FsearchDatabaseWork;
 
@@ -16,6 +20,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_RESCAN,
     FSEARCH_DATABASE_WORK_RESCAN_INDEX,
     FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED,
+    FSEARCH_DATABASE_WORK_RESCAN_MONITORED,
     FSEARCH_DATABASE_WORK_SAVE_TO_FILE,
     FSEARCH_DATABASE_WORK_SCAN,
     FSEARCH_DATABASE_WORK_SCAN_FINISHED,
@@ -38,6 +43,9 @@ fsearch_database_work_new_quit(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_rescan_monitored(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan_index(uint32_t index_id);
