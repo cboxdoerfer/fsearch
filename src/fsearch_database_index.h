@@ -39,7 +39,6 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           GMainContext *worker_ctx,
                            GMainContext *monitor_ctx,
                            FsearchDatabaseIndexEventFunc event_func,
                            gpointer event_func_data);
@@ -69,6 +68,9 @@ fsearch_database_index_get_id(FsearchDatabaseIndex *self);
 
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
+
+bool
+fsearch_database_index_wants_root_reappear_poll(FsearchDatabaseIndex *self);
 
 void
 fsearch_database_index_lock(FsearchDatabaseIndex *self);

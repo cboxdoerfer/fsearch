@@ -68,6 +68,7 @@ struct FsearchDatabaseIndexStore {
     FsearchDatabaseThreadContext monitor;
     // Shared thread where all indices can process file system change events
     FsearchDatabaseThreadContext worker;
+    GSource *worker_index_root_reappear_poll_source;
 
     bool is_sorted;
     bool running;
@@ -492,22 +493,11 @@ index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEven
     g_return_if_fail(store);
 
     switch (event->kind) {
-    case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
-        g_mutex_lock(&store->mutex);
-        break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         index_store_add_entries_locked(store, event->entries.files, event->entries.folders);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         index_store_remove_entries_locked(store, event->entries.files, event->entries.folders);
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
-        index_store_update_all_search_views_locked(store);
-        g_mutex_unlock(&store->mutex);
-        // notify upward with a single coarse event
-        if (store->event_func) {
-            store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED, NULL, store->event_func_data);
-        }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCANNING:
         if (store->event_func) {
@@ -519,6 +509,15 @@ index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEven
         break;
     default:
         break;
+    }
+}
+
+static void
+index_store_content_changed(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
+    index_store_update_all_search_views_locked(store);
+    if (store->event_func) {
+        store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED, NULL, store->event_func_data);
     }
 }
 
@@ -538,19 +537,68 @@ index_store_proces_events_cb(gpointer data) {
     }
 
     if (store_was_updated) {
-        index_store_update_all_search_views_locked(store);
-        // notify upward with a single coarse event
-        if (store->event_func) {
-            store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED, NULL, store->event_func_data);
+        index_store_content_changed(store);
+    }
+
+    return G_SOURCE_CONTINUE;
+}
+
+static gboolean
+index_store_root_reappear_poll_cb(gpointer user_data) {
+    FsearchDatabaseIndexStore *store = user_data;
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
+    g_assert_nonnull(locker);
+
+    if (!store->running) {
+        return G_SOURCE_CONTINUE;
+    }
+
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
+        if (!index) {
+            continue;
+        }
+
+        if (!fsearch_database_index_wants_root_reappear_poll(index)) {
+            continue;
+        }
+
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_index_get_include(index);
+        const char *include_path = fsearch_database_include_get_path(include);
+        if (!g_file_test(include_path, G_FILE_TEST_IS_DIR)) {
+            continue;
+        }
+        g_debug("[index-%d] root folder reappeared, rescanning: %s",
+                fsearch_database_include_get_id(include),
+                include_path);
+        if (fsearch_database_index_scan(index, NULL)) {
+            fsearch_database_index_lock(index);
+
+            g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
+            g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
+
+            fsearch_database_index_start_monitoring(index, true);
+
+            index_store_add_entries_locked(store, files, folders);
+            index_store_content_changed(store);
+
+            fsearch_database_index_unlock(index);
         }
     }
 
     return G_SOURCE_CONTINUE;
 }
 
+
 static void
 index_store_free(FsearchDatabaseIndexStore *store) {
     g_return_if_fail(store);
+
+    if (store->worker_index_root_reappear_poll_source) {
+        g_source_destroy(store->worker_index_root_reappear_poll_source);
+        g_clear_pointer(&store->worker_index_root_reappear_poll_source, g_source_unref);
+    }
 
     if (store->worker.event_source) {
         g_source_destroy(store->worker.event_source);
@@ -580,7 +628,6 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     // Hence, make sure to unref the queue only after the pool has been terminated
     g_thread_pool_free(g_steal_pointer(&store->worker_pool), FALSE, TRUE);
     g_clear_pointer(&store->worker_pool_collect_queue, g_async_queue_unref);
-
 
     // Only stop the monitor and worker threads after the indices have been freed, since they rely on them when freeing
     if (store->monitor.loop) {
@@ -636,6 +683,14 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     g_source_set_priority(store->worker.event_source, G_PRIORITY_DEFAULT_IDLE);
     g_source_set_callback(store->worker.event_source, (GSourceFunc)index_store_proces_events_cb, store, NULL);
     g_source_attach(store->worker.event_source, store->worker.ctx);
+
+    store->worker_index_root_reappear_poll_source = g_timeout_source_new_seconds(5);
+    g_source_set_priority(store->worker_index_root_reappear_poll_source, G_PRIORITY_DEFAULT_IDLE);
+    g_source_set_callback(store->worker_index_root_reappear_poll_source,
+                          index_store_root_reappear_poll_cb,
+                          store,
+                          NULL);
+    g_source_attach(store->worker_index_root_reappear_poll_source, store->worker.ctx);
 
     g_mutex_init(&store->mutex);
 
@@ -728,7 +783,6 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                                            include,
                                                                            store->exclude_manager,
                                                                            store->flags,
-                                                                           store->worker.ctx,
                                                                            store->monitor.ctx,
                                                                            index_store_index_event_cb,
                                                                            store);
@@ -922,7 +976,6 @@ fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *
                                       include,
                                       exclude_manager,
                                       flags,
-                                      store->worker.ctx,
                                       store->monitor.ctx,
                                       index_store_index_event_cb,
                                       store);
@@ -981,14 +1034,7 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store,
     fsearch_database_index_start_monitoring(new_index, true);
 
     // 6. Notify any open search views that their results may have changed.
-    index_store_update_all_search_views_locked(store);
-
-    if (store->event_func) {
-        store->event_func(store,
-                          FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED,
-                          NULL,
-                          store->event_func_data);
-    }
+    index_store_content_changed(store);
 
     return true;
 }
