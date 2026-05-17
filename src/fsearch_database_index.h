@@ -82,4 +82,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 void
 fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start);
 
+gboolean
+fsearch_database_index_process_events(FsearchDatabaseIndex *self);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

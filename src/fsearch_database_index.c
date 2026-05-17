@@ -40,7 +40,6 @@ struct _FsearchDatabaseIndex {
     FsearchFolderMonitorFanotify *fanotify_monitor;
     FsearchFolderMonitorInotify *inotify_monitor;
 
-    GSource *event_source;
     GSource *root_reappear_poll_source;
     GMainContext *worker_ctx;
 
@@ -161,7 +160,7 @@ propagate_event(FsearchDatabaseIndex *self,
 static void
 process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event);
 
-static void
+static gboolean
 process_queued_events(FsearchDatabaseIndex *self);
 
 static inline bool
@@ -221,13 +220,16 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
     return g_steal_pointer(&skippable_events);
 }
 
-static void
+static gboolean
 process_queued_events(FsearchDatabaseIndex *self) {
-    g_return_if_fail(self);
+    g_return_val_if_fail(self, FALSE);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     const int32_t num_events_queued = g_async_queue_length(self->event_queue);
     if (num_events_queued < 1) {
-        return;
+        return FALSE;
     }
 
     // 1. Pop all events into an array for faster traversal and build an array for all folders to be removed
@@ -252,9 +254,6 @@ process_queued_events(FsearchDatabaseIndex *self) {
     g_autoptr(GTimer) timer = g_timer_new();
     double last_time = 0.0;
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
-    g_mutex_lock(&self->mutex);
-
     uint32_t num_skipped = 0;
     uint32_t processed_count = 0;
     for (uint32_t i = 0; i < events->len; i++) {
@@ -267,22 +266,8 @@ process_queued_events(FsearchDatabaseIndex *self) {
 
         processed_count++;
 
-        const double elapsed = g_timer_elapsed(timer, NULL);
-        if (elapsed - last_time > 0.2) {
-            g_debug("interrupt event processing for a while...");
-            g_mutex_unlock(&self->mutex);
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
-            last_time = elapsed;
-            g_usleep(G_USEC_PER_SEC * 0.05);
-            g_debug("continue event processing...");
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
-            g_mutex_lock(&self->mutex);
-        }
         process_event(self, event);
     }
-
-    g_mutex_unlock(&self->mutex);
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
 
     const double process_time = g_timer_elapsed(timer, NULL);
     self->max_process_time = MAX(process_time, self->max_process_time);
@@ -305,6 +290,8 @@ process_queued_events(FsearchDatabaseIndex *self) {
     num_file_creates = 0;
     num_attrib_changes = 0;
     num_descendant_counted = 0;
+
+    return processed_count > 0 ? TRUE : FALSE;
 }
 
 static FsearchDatabaseEntry *
@@ -694,22 +681,19 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     }
 }
 
-static gboolean
-process_queued_events_cb(gpointer user_data) {
-    g_return_val_if_fail(user_data, G_SOURCE_REMOVE);
-    FsearchDatabaseIndex *self = user_data;
+gboolean
+fsearch_database_index_process_events(FsearchDatabaseIndex *self) {
+    g_return_val_if_fail(self, FALSE);
 
     // Assert that this function is running is the worker thread
-    g_assert(g_main_context_is_owner(self->worker_ctx));
+    //g_assert(g_main_context_is_owner(self->worker_ctx));
 
     // Don't process events until the monitoring was enabled and the index was initialized
     if (g_atomic_int_get(&self->monitor) == 0 || g_atomic_int_get(&self->initialized) == 0) {
-        return G_SOURCE_CONTINUE;
+        return FALSE;
     }
 
-    process_queued_events(self);
-
-    return G_SOURCE_CONTINUE;
+    return process_queued_events(self);
 }
 
 // endregion
@@ -727,17 +711,9 @@ index_free(FsearchDatabaseIndex *self) {
 
     index_stop_root_reappearance_polling(self);
 
-    if (self->event_source) {
-        fsearch_main_context_blocking_call(self->worker_ctx,
-                                           (FsearchMainContextFunc)g_source_destroy,
-                                           self->event_source);
-    }
-
     g_clear_pointer(&self->worker_ctx, g_main_context_unref);
 
     g_clear_pointer(&self->monitor_ctx, g_main_context_unref);
-
-    g_clear_pointer(&self->event_source, g_source_unref);
 
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
@@ -787,14 +763,6 @@ fsearch_database_index_new(uint32_t id,
 #ifdef HAVE_INOTIFY
         self->inotify_monitor = fsearch_folder_monitor_inotify_new(self->monitor_ctx, self->event_queue);
 #endif
-    }
-
-    if (self->fanotify_monitor || self->inotify_monitor) {
-        self->worker_ctx = g_main_context_ref(worker_ctx);
-        self->event_source = g_timeout_source_new_seconds(1);
-        g_source_set_priority(self->event_source, G_PRIORITY_DEFAULT_IDLE);
-        g_source_set_callback(self->event_source, (GSourceFunc)process_queued_events_cb, self, NULL);
-        g_source_attach(self->event_source, self->worker_ctx);
     }
 
     return self;

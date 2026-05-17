@@ -36,6 +36,7 @@ typedef struct {
     GThread *thread;
     GMainLoop *loop;
     GMainContext *ctx;
+    GSource *event_source;
 } FsearchDatabaseThreadContext;
 
 struct FsearchDatabaseIndexStore {
@@ -521,9 +522,52 @@ index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEven
     }
 }
 
+static gboolean
+index_store_proces_events_cb(gpointer data) {
+    FsearchDatabaseIndexStore *store = data;
+    g_return_val_if_fail(store, G_SOURCE_REMOVE);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
+    g_assert_nonnull(locker);
+
+    gboolean store_was_updated = FALSE;
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
+        g_return_val_if_fail(index, G_SOURCE_REMOVE);
+        store_was_updated |= fsearch_database_index_process_events(index);
+    }
+
+    if (store_was_updated) {
+        index_store_update_all_search_views_locked(store);
+        // notify upward with a single coarse event
+        if (store->event_func) {
+            store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED, NULL, store->event_func_data);
+        }
+    }
+
+    return G_SOURCE_CONTINUE;
+}
+
 static void
 index_store_free(FsearchDatabaseIndexStore *store) {
     g_return_if_fail(store);
+
+    if (store->worker.event_source) {
+        g_source_destroy(store->worker.event_source);
+        g_clear_pointer(&store->worker.event_source, g_source_unref);
+    }
+
+    if (store->worker.loop) {
+        g_main_context_invoke_full(store->worker.ctx,
+                                   G_PRIORITY_HIGH,
+                                   (GSourceFunc)thread_quit_func,
+                                   store->worker.loop,
+                                   NULL);
+    }
+    if (store->worker.thread) {
+        g_thread_join(store->worker.thread);
+    }
+    g_clear_pointer(&store->worker.ctx, g_main_context_unref);
 
     // 1. Make sure the indices are down
     g_clear_pointer(&store->indices, g_ptr_array_unref);
@@ -550,18 +594,6 @@ index_store_free(FsearchDatabaseIndexStore *store) {
         g_thread_join(store->monitor.thread);
     }
     g_clear_pointer(&store->monitor.ctx, g_main_context_unref);
-
-    if (store->worker.loop) {
-        g_main_context_invoke_full(store->worker.ctx,
-                                   G_PRIORITY_HIGH,
-                                   (GSourceFunc)thread_quit_func,
-                                   store->worker.loop,
-                                   NULL);
-    }
-    if (store->worker.thread) {
-        g_thread_join(store->worker.thread);
-    }
-    g_clear_pointer(&store->worker.ctx, g_main_context_unref);
 
     g_mutex_clear(&store->mutex);
 
@@ -600,6 +632,10 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     store->worker.ctx = g_main_context_new();
     store->worker.loop = g_main_loop_new(store->worker.ctx, FALSE);
     store->worker.thread = g_thread_new("FsearchDatabaseIndexStoreWorker", index_store_worker_thread_func, store);
+    store->worker.event_source = g_timeout_source_new_seconds(1);
+    g_source_set_priority(store->worker.event_source, G_PRIORITY_DEFAULT_IDLE);
+    g_source_set_callback(store->worker.event_source, (GSourceFunc)index_store_proces_events_cb, store, NULL);
+    g_source_attach(store->worker.event_source, store->worker.ctx);
 
     g_mutex_init(&store->mutex);
 
