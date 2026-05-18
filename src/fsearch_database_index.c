@@ -229,7 +229,10 @@ process_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event, bool steal, bool expect_success) {
+lookup_entry_for_event_locked(FsearchDatabaseIndex *self,
+                              FsearchFolderMonitorEvent *event,
+                              bool steal,
+                              bool expect_success) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(event, NULL);
 
@@ -292,7 +295,7 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
 }
 
 static void
-unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
+index_unwatch_folder_locked(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
     g_return_if_fail(self);
     g_return_if_fail(db_entry_is_folder(folder));
 
@@ -309,9 +312,8 @@ unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
 }
 
 static void
-index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monitor_kind) {
+index_clear_locked(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
-    g_return_if_fail(monitor_kind != FSEARCH_FOLDER_MONITOR_NONE);
     g_return_if_fail(self);
     fsearch_database_index_start_monitoring(self, false);
     g_atomic_int_set(&self->initialized, 0);
@@ -416,7 +418,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
 
 static void
 process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
-    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, event, true, false);
+    FsearchDatabaseEntry *entry = lookup_entry_for_event_locked(self, event, true, false);
     if (!entry) {
         return;
     }
@@ -484,7 +486,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         // which are needed in order un-watch them properly
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            unwatch_folder(self, folder);
+            index_unwatch_folder_locked(self, folder);
         }
         for (uint32_t i = 0; i < darray_get_num_items(folders) - 1; ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
@@ -510,7 +512,7 @@ process_rescan_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
 
 static void
 process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
-    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, event, false, false);
+    FsearchDatabaseEntry *entry = lookup_entry_for_event_locked(self, event, false, false);
     if (!entry) {
         return;
     }
@@ -550,7 +552,7 @@ process_move_or_delete_self_event(FsearchDatabaseIndex *self, FsearchFolderMonit
     g_return_if_fail(self);
     g_return_if_fail(event);
 
-    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, event, false, false);
+    FsearchDatabaseEntry *entry = lookup_entry_for_event_locked(self, event, false, false);
     if (!entry) {
         g_debug("move_self: entry not found: %s", event->path->str);
         return;
@@ -566,7 +568,7 @@ process_move_or_delete_self_event(FsearchDatabaseIndex *self, FsearchFolderMonit
         return;
     }
     g_debug("move_self: is root: %s", root_path);
-    index_stop_monitoring(self, event->monitor_kind);
+    index_clear_locked(self);
     self->needs_root_reappear_poll = true;
 }
 
@@ -593,7 +595,7 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
         process_delete_event(self, event);
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_CREATE:
-        if (!lookup_entry_for_event(self, event, false, false)) {
+        if (!lookup_entry_for_event_locked(self, event, false, false)) {
             process_create_event(self, event);
         }
         else {
@@ -840,8 +842,9 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    if (g_atomic_int_get(&self->initialized) > 0) {
-        return true;
+    if (self->initialized) {
+        // Clear existing index data
+        index_clear_locked(self);
     }
 
     g_autoptr(DynamicArray) files = darray_new(4096);
