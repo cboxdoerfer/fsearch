@@ -2,7 +2,7 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_query_node.h"
 #include <string.h>
-#include "fsearch_string_utils.h"
+#include "fsearch_string_utils.h" /* added for diacritics insensitivity search */
 
 uint32_t
 fsearch_query_matcher_false(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
@@ -230,7 +230,34 @@ fsearch_query_matcher_strstr(FsearchQueryNode *node, FsearchQueryMatchData *matc
 
 uint32_t
 fsearch_query_matcher_strcasestr(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return strcasestr(node->haystack_func(match_data), node->needle) ? 1 : 0;
+    const char *haystack = fsearch_query_match_data_get_name_str(match_data);
+    const char *needle = node->needle;
+
+    if (!haystack || !needle || !*needle)
+        return 0;
+
+    /*
+       FIX: Even for ASCII queries, the filename might contain diacritics.
+       We must strip diacritics from the filename before comparing.
+    */
+
+    /* 1. Strip diacritics from the filename */
+    gchar *norm_haystack = fsearch_string_strip_diacritics(haystack);
+
+    /* 2. Case-fold the normalized haystack (to handle case-insensitivity) */
+    /* Note: g_ascii_strcasecmp is faster but doesn't handle UTF8 case folding well.
+       We use g_utf8_casefold on the normalized string to be safe and consistent. */
+    gchar *lower_haystack = g_utf8_casefold(norm_haystack, -1);
+
+    /* 3. Perform the search */
+    /* The needle is already ASCII and lowercased (from node_init_needle logic for ASCII) */
+    uint32_t match = (strstr(lower_haystack, needle) != NULL) ? 1 : 0;
+
+    /* Cleanup */
+    g_free(norm_haystack);
+    g_free(lower_haystack);
+
+    return match;
 }
 
 uint32_t
