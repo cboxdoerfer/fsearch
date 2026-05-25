@@ -164,3 +164,27 @@ fsearch_string_starts_with_interval(char *str, char **end_ptr) {
     *end_ptr = str;
     return false;
 }
+
+gchar*
+fsearch_string_strip_diacritics(const gchar* str) {
+    if (!str || !*str)
+        return g_strdup("");
+
+    gchar* nfd = g_utf8_normalize(str, -1, G_NORMALIZE_NFD);
+    if (!nfd)
+        return g_strdup(str);
+
+    GString* result = g_string_new(NULL);
+    const gchar* p = nfd;
+
+    while (*p) {
+        gunichar c = g_utf8_get_char(p);
+        if (!g_unichar_ismark(c)) {
+            g_string_append_unichar(result, c);
+        }
+        p = g_utf8_next_char(p);
+    }
+
+    g_free(nfd);
+    return g_string_free(result, FALSE);
+}

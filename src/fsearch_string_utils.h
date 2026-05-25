@@ -17,6 +17,7 @@
    */
 
 #pragma once
+#include <glib.h>
 #include <stdbool.h>
 #include <unistd.h>
 
@@ -38,6 +39,9 @@ fsearch_string_is_ascii_icase(const char *str);
 
 bool
 fsearch_string_has_wildcards(const char *str);
+
+// diacritics insensitivity, 1 line
+gchar* fsearch_string_strip_diacritics(const gchar* str);
 
 // Converts a wildcard expression to a regular expression, i.e.
 // `*` becomes `.*`

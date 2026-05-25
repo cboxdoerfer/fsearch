@@ -2,6 +2,7 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_query_node.h"
 #include <string.h>
+#include "fsearch_string_utils.h"
 
 uint32_t
 fsearch_query_matcher_false(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
@@ -183,17 +184,27 @@ fsearch_query_matcher_regex(FsearchQueryNode *node, FsearchQueryMatchData *match
 
 uint32_t
 fsearch_query_matcher_utf_strcasestr(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchUtfBuilder *haystack_builder = node->haystack_func(match_data);
-    FsearchUtfBuilder *needle_builder = node->needle_builder;
-    if (G_LIKELY(haystack_builder->string_is_folded_and_normalized)) {
-        return u_strFindFirst(haystack_builder->string_normalized_folded,
-                              haystack_builder->string_normalized_folded_len,
-                              needle_builder->string_normalized_folded,
-                              needle_builder->string_normalized_folded_len)
-                   ? 1
-                   : 0;
-    }
-    return 0;
+    const char *haystack = fsearch_query_match_data_get_name_str(match_data);
+    const char *needle = node->needle;
+
+    if (!haystack || !needle || !*needle)
+        return 0;
+
+    /* 1. Strip diacritics from the filename (haystack) */
+    gchar *norm_haystack = fsearch_string_strip_diacritics(haystack);
+
+    /* 2. Case-fold the normalized haystack (convert to lowercase) */
+    /* The needle is already case-folded and diacritic-stripped in node_init_needle */
+    gchar *lower_haystack = g_utf8_casefold(norm_haystack, -1);
+
+    /* 3. Perform the search using standard strstr */
+    uint32_t match = (strstr(lower_haystack, needle) != NULL) ? 1 : 0;
+
+    /* Cleanup */
+    g_free(norm_haystack);
+    g_free(lower_haystack);
+
+    return match;
 }
 
 uint32_t
