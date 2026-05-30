@@ -12,7 +12,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define TEXT_HEIGHT_FALLBACK 20
 #define ROW_HEIGHT_DEFAULT 30

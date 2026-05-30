@@ -1,7 +1,6 @@
 #include "fsearch_folder_monitor_fanotify.h"
 
 #include "fsearch_database_entry.h"
-#include "fsearch_database_entry_flags.h"
 #include "fsearch_folder_monitor_event.h"
 #include "fsearch_main_context_utils.h"
 

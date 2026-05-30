@@ -3,7 +3,6 @@
 #include "fsearch_database_scan.h"
 
 #include "fsearch_database_entry.h"
-#include "fsearch_database_sort.h"
 
 #include <config.h>
 #include <dirent.h>

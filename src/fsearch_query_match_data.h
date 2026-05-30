@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fsearch_database_entry.h"
-#include "fsearch_database_index.h"
 #include "fsearch_utf.h"
 
 #include <pango/pango-attributes.h>

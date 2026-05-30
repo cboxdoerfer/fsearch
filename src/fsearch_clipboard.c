@@ -21,7 +21,6 @@
 #include "fsearch_clipboard.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
-#include <string.h>
 
 static GdkDragAction clipboard_action = GDK_ACTION_DEFAULT;
 static GList *clipboard_file_list = NULL;

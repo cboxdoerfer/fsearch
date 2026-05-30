@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_database_entry.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_index_event.h"
@@ -13,7 +12,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
-#include <time.h>
 
 G_BEGIN_DECLS
 

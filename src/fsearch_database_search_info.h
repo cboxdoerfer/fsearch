@@ -2,8 +2,6 @@
 
 #include <gtk/gtk.h>
 
-#include "fsearch_database_index.h"
-
 #include "fsearch_query.h"
 
 G_BEGIN_DECLS

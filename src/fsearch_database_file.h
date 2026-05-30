@@ -2,7 +2,6 @@
 
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
-#include "fsearch_database_index.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_index_store.h"
 

@@ -6,7 +6,6 @@
 #include "fsearch_config.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_file_utils.h"
-#include "fsearch_query.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>

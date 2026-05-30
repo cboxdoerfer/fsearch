@@ -19,7 +19,6 @@
 #define G_LOG_DOMAIN "fsearch-application"
 
 #include "fsearch.h"
-#include "fsearch_clipboard.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
 #include "fsearch_database_exclude_manager.h"
@@ -31,10 +30,7 @@
 #include "fsearch_limits.h"
 #include "fsearch_preferences_dialog.h"
 #include "fsearch_preview.h"
-#include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
-#include "icon_resources.h"
-#include "ui_resources.h"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -52,7 +48,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct _FsearchApplication {
     GtkApplication parent;

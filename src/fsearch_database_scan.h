@@ -1,7 +1,6 @@
 #pragma once
 
 #include "fsearch_database_exclude_manager.h"
-#include "fsearch_database_include_manager.h"
 #include "fsearch_folder_monitor_fanotify.h"
 #include "fsearch_folder_monitor_inotify.h"
 

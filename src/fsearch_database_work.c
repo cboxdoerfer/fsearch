@@ -13,7 +13,6 @@
 #include <gtk/gtk.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct FsearchDatabaseWork {
     FsearchDatabaseWorkKind kind;

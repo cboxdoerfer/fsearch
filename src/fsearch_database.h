@@ -3,8 +3,6 @@
 #include <gio/gio.h>
 
 #include "fsearch_database_entry_info.h"
-#include "fsearch_database_exclude_manager.h"
-#include "fsearch_database_include_manager.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_work.h"

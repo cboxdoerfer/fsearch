@@ -22,19 +22,14 @@
 #include <config.h>
 #endif
 
-#include "fsearch_array.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
-#include "fsearch_database_entry.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
-#include "fsearch_file_utils.h"
 #include "fsearch_list_view.h"
 #include "fsearch_listview_popup.h"
 #include "fsearch_result_view.h"
 #include "fsearch_statusbar.h"
-#include "fsearch_string_utils.h"
-#include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
 #include <glib/gi18n.h>

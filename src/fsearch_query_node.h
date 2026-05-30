@@ -2,8 +2,6 @@
 
 #define PCRE2_CODE_UNIT_WIDTH 8
 
-#include "fsearch_database_index.h"
-#include "fsearch_filter_manager.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
