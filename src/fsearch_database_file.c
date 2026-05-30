@@ -564,6 +564,7 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             one_file_system,
             is_monitored,
             scan_after_launch,
+            0,
             id);
         fsearch_database_include_set_last_scan_time(include, last_scan_time);
         fsearch_database_include_set_last_scan_duration(include, last_scan_duration);

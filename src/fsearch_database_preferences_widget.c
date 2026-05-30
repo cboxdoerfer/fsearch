@@ -945,7 +945,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, id));
+                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, 0, id));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);

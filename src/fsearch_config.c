@@ -442,6 +442,7 @@ config_load_includes(GKeyFile *key_file) {
             include_keys.one_file_system,
             include_keys.monitor,
             false,
+            0,
             include_keys.id);
         fsearch_database_include_manager_add(include_manager, include);
 

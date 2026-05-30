@@ -19,6 +19,7 @@ fsearch_database_include_new(const char *path,
                              gboolean one_file_system,
                              gboolean monitor,
                              gboolean scan_after_load,
+                             int64_t rescan_after,
                              gint id);
 
 FsearchDatabaseInclude *
@@ -44,6 +45,9 @@ fsearch_database_include_get_monitored(FsearchDatabaseInclude *self);
 
 gboolean
 fsearch_database_include_get_scan_after_launch(FsearchDatabaseInclude *self);
+
+int64_t
+fsearch_database_include_get_rescan_after(FsearchDatabaseInclude *self);
 
 int64_t
 fsearch_database_include_get_last_scan_time(FsearchDatabaseInclude *self);

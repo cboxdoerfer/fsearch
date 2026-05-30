@@ -12,6 +12,7 @@ struct _FsearchDatabaseInclude {
     gboolean one_file_system;
     gboolean scan_after_launch;
 
+    int64_t rescan_after;
     int64_t last_scan_time;
     uint32_t last_scan_duration;
     uint32_t last_error_code;
@@ -35,6 +36,7 @@ fsearch_database_include_new(const char *path,
                              gboolean one_file_system,
                              gboolean monitor,
                              gboolean scan_after_load,
+                             int64_t rescan_after,
                              gint id) {
     FsearchDatabaseInclude *self;
 
@@ -47,6 +49,7 @@ fsearch_database_include_new(const char *path,
     self->one_file_system = one_file_system;
     self->monitor = monitor;
     self->scan_after_launch = scan_after_load;
+    self->rescan_after = rescan_after;
     self->id = id;
     self->ref_count = 1;
 
@@ -81,7 +84,7 @@ fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclud
     g_return_val_if_fail(i1->ref_count > 0, FALSE);
     g_return_val_if_fail(i2->ref_count > 0, FALSE);
 
-    if (i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system
+    if (i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system || i1->rescan_after != i2->rescan_after
         || i1->scan_after_launch != i2->scan_after_launch || g_strcmp0(i1->path, i2->path) != 0) {
         return FALSE;
     }
@@ -104,6 +107,7 @@ fsearch_database_include_copy(FsearchDatabaseInclude *self) {
                                         self->one_file_system,
                                         self->monitor,
                                         self->scan_after_launch,
+                                        self->rescan_after,
                                         self->id);
 }
 
@@ -185,6 +189,12 @@ fsearch_database_include_get_scan_after_launch(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self->ref_count > 0, FALSE);
 
     return self->scan_after_launch;
+}
+
+int64_t
+fsearch_database_include_get_rescan_after(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->rescan_after;
 }
 
 int64_t
