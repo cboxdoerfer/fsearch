@@ -2,6 +2,8 @@
 
 #include <gio/gio.h>
 
+#include "fsearch_database_scan_reason.h"
+
 G_BEGIN_DECLS
 
 #define FSEARCH_TYPE_DATABASE_INCLUDE (fsearch_database_include_get_type())
@@ -43,8 +45,44 @@ fsearch_database_include_get_monitored(FsearchDatabaseInclude *self);
 gboolean
 fsearch_database_include_get_scan_after_launch(FsearchDatabaseInclude *self);
 
+int64_t
+fsearch_database_include_get_last_scan_time(FsearchDatabaseInclude *self);
+
+uint32_t
+fsearch_database_include_get_last_scan_duration(FsearchDatabaseInclude *self);
+
+uint32_t
+fsearch_database_include_get_last_error_code(FsearchDatabaseInclude *self);
+
+uint32_t
+fsearch_database_include_get_last_scanned_folder_count(FsearchDatabaseInclude *self);
+
+uint32_t
+fsearch_database_include_get_last_scanned_file_count(FsearchDatabaseInclude *self);
+
+FsearchDatabaseScanReason
+fsearch_database_include_get_last_scan_reason(FsearchDatabaseInclude *self);
+
 gint
 fsearch_database_include_get_id(FsearchDatabaseInclude *self);
+
+void
+fsearch_database_include_set_last_scan_time(FsearchDatabaseInclude *self, int64_t time);
+
+void
+fsearch_database_include_set_last_scan_duration(FsearchDatabaseInclude *self, uint32_t duration);
+
+void
+fsearch_database_include_set_last_error_code(FsearchDatabaseInclude *self, uint32_t error_code);
+
+void
+fsearch_database_include_set_last_scanned_file_count(FsearchDatabaseInclude *self, uint32_t count);
+
+void
+fsearch_database_include_set_last_scanned_folder_count(FsearchDatabaseInclude *self, uint32_t count);
+
+void
+fsearch_database_include_set_last_scan_reason(FsearchDatabaseInclude *self, FsearchDatabaseScanReason reason);
 
 gboolean
 fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2);

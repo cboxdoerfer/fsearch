@@ -13,10 +13,10 @@
 #include "fsearch_folder_monitor_event.h"
 #include "fsearch_folder_monitor_fanotify.h"
 #include "fsearch_folder_monitor_inotify.h"
-#include "fsearch_main_context_utils.h"
 
 #include <config.h>
 #include <glib-object.h>
+#include <glibconfig.h>
 #include <glib-unix.h>
 #include <glib.h>
 #include <glib/gmacros.h>
@@ -852,6 +852,8 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     self->needs_root_reappear_poll = false;
 
+    g_autoptr(GTimer) scan_timer = g_timer_new();
+
     if (!db_scan_folder(fsearch_database_include_get_path(self->include),
                         NULL,
                         folders,
@@ -891,6 +893,18 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                                                              DATABASE_ENTRY_TYPE_FOLDER,
                                                              NULL,
                                                              (GDestroyNotify)db_entry_free_no_unparent);
+
+    const int64_t scan_time = g_get_real_time() / G_USEC_PER_SEC;
+    fsearch_database_include_set_last_scan_time(self->include, scan_time);
+
+    const uint32_t scan_duration_ms = (uint32_t)(g_timer_elapsed(scan_timer, NULL) * 1000.0);
+    fsearch_database_include_set_last_scan_duration(self->include, scan_duration_ms);
+
+    const uint32_t scan_file_count = files ? darray_get_num_items(files) : 0;
+    fsearch_database_include_set_last_scanned_file_count(self->include, scan_file_count);
+
+    const uint32_t scan_folder_count = folders ? darray_get_num_items(folders) : 0;
+    fsearch_database_include_set_last_scanned_folder_count(self->include, scan_folder_count);
 
     g_atomic_int_set(&self->initialized, 1);
 

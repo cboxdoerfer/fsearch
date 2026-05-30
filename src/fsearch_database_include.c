@@ -1,6 +1,9 @@
 #include "fsearch_database_include.h"
 
 #include <glib.h>
+#include <stdint.h>
+
+#include "fsearch_database_scan_reason.h"
 
 struct _FsearchDatabaseInclude {
     char *path;
@@ -8,6 +11,13 @@ struct _FsearchDatabaseInclude {
     gboolean monitor;
     gboolean one_file_system;
     gboolean scan_after_launch;
+
+    int64_t last_scan_time;
+    uint32_t last_scan_duration;
+    uint32_t last_error_code;
+    uint32_t last_scanned_file_count;
+    uint32_t last_scanned_folder_count;
+    FsearchDatabaseScanReason last_scan_reason;
 
     gint id;
 
@@ -97,6 +107,46 @@ fsearch_database_include_copy(FsearchDatabaseInclude *self) {
                                         self->id);
 }
 
+void
+fsearch_database_include_set_last_scan_time(FsearchDatabaseInclude *self, int64_t time) {
+    g_return_if_fail(self);
+    self->last_scan_time = time;
+}
+
+void
+fsearch_database_include_set_last_scan_duration(FsearchDatabaseInclude *self, uint32_t duration) {
+    g_return_if_fail(self);
+    self->last_scan_duration = duration;
+}
+
+void
+fsearch_database_include_set_last_error_code(FsearchDatabaseInclude *self, uint32_t error_code) {
+    g_return_if_fail(self);
+    self->last_error_code = error_code;
+}
+
+void
+fsearch_database_include_set_last_scanned_file_count(FsearchDatabaseInclude *self, uint32_t count) {
+    g_return_if_fail(self);
+    self->last_scanned_file_count = count;
+}
+
+void
+fsearch_database_include_set_last_scanned_folder_count(FsearchDatabaseInclude *self, uint32_t count) {
+    g_return_if_fail(self);
+    self->last_scanned_folder_count = count;
+}
+
+void
+fsearch_database_include_set_last_scan_reason(FsearchDatabaseInclude *self, FsearchDatabaseScanReason reason) {
+    g_return_if_fail(self);
+
+    g_return_if_fail(reason >= FSEARCH_DATABASE_SCAN_REASON_UNKNOWN);
+    g_return_if_fail(reason < NUM_FSEARCH_DATABASE_SCAN_REASONS);
+
+    self->last_scan_reason = reason;
+}
+
 gboolean
 fsearch_database_include_get_active(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, 0);
@@ -135,6 +185,42 @@ fsearch_database_include_get_scan_after_launch(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self->ref_count > 0, FALSE);
 
     return self->scan_after_launch;
+}
+
+int64_t
+fsearch_database_include_get_last_scan_time(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->last_scan_time;
+}
+
+uint32_t
+fsearch_database_include_get_last_scan_duration(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->last_scan_duration;
+}
+
+uint32_t
+fsearch_database_include_get_last_error_code(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->last_error_code;
+}
+
+uint32_t
+fsearch_database_include_get_last_scanned_file_count(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->last_scanned_file_count;
+}
+
+uint32_t
+fsearch_database_include_get_last_scanned_folder_count(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, 0);
+    return self->last_scanned_folder_count;
+}
+
+FsearchDatabaseScanReason
+fsearch_database_include_get_last_scan_reason(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, FSEARCH_DATABASE_SCAN_REASON_UNKNOWN);
+    return self->last_scan_reason;
 }
 
 gint

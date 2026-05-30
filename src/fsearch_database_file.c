@@ -29,8 +29,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DATABASE_MAJOR_VERSION 2
-#define DATABASE_MINOR_VERSION 2
+#define DATABASE_MAJOR_VERSION 3
+#define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 #define DATABASE_CHECKSUM_SIZE 16
 
@@ -530,6 +530,36 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
+        int64_t last_scan_time = 0;
+        if (!database_file_read_element(&last_scan_time, sizeof(last_scan_time), fp, checksum)) {
+            return false;
+        }
+
+        uint32_t last_scan_duration = 0;
+        if (!database_file_read_element(&last_scan_duration, sizeof(last_scan_duration), fp, checksum)) {
+            return false;
+        }
+
+        uint32_t last_error_code = 0;
+        if (!database_file_read_element(&last_error_code, sizeof(last_error_code), fp, checksum)) {
+            return false;
+        }
+
+        uint32_t last_scanned_folder_count = 0;
+        if (!database_file_read_element(&last_scanned_folder_count, sizeof(last_scanned_folder_count), fp, checksum)) {
+            return false;
+        }
+
+        uint32_t last_scanned_file_count = 0;
+        if (!database_file_read_element(&last_scanned_file_count, sizeof(last_scanned_file_count), fp, checksum)) {
+            return false;
+        }
+
+        uint8_t last_scan_reason = 0; // Or FSEARCH_SCAN_REASON_UNKNOWN
+        if (!database_file_read_element(&last_scan_reason, sizeof(last_scan_reason), fp, checksum)) {
+            return false;
+        }
+
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(
             path,
             is_active,
@@ -537,6 +567,13 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             is_monitored,
             scan_after_launch,
             id);
+        fsearch_database_include_set_last_scan_time(include, last_scan_time);
+        fsearch_database_include_set_last_scan_duration(include, last_scan_duration);
+        fsearch_database_include_set_last_scanned_file_count(include, last_scanned_file_count);
+        fsearch_database_include_set_last_scanned_folder_count(include, last_scanned_folder_count);
+        fsearch_database_include_set_last_scan_reason(include, last_scan_reason);
+        fsearch_database_include_set_last_error_code(include, last_error_code);
+
         fsearch_database_include_manager_add(include_manager, include);
     }
     return true;
@@ -834,6 +871,24 @@ database_file_save_includes(DatabaseFileWriteCursor *cursor,
 
         const uint8_t scan_after_launch = fsearch_database_include_get_scan_after_launch(include);
         cursor_write(cursor, &scan_after_launch, sizeof(scan_after_launch));
+
+        const int64_t last_scan_time = fsearch_database_include_get_last_scan_time(include);
+        cursor_write(cursor, &last_scan_time, sizeof(last_scan_time));
+
+        const uint32_t last_scan_duration = fsearch_database_include_get_last_scan_duration(include);
+        cursor_write(cursor, &last_scan_duration, sizeof(last_scan_duration));
+
+        const uint32_t last_error_code = fsearch_database_include_get_last_error_code(include);
+        cursor_write(cursor, &last_error_code, sizeof(last_error_code));
+
+        const uint32_t last_scanned_folder_count = fsearch_database_include_get_last_scanned_folder_count(include);
+        cursor_write(cursor, &last_scanned_folder_count, sizeof(last_scanned_folder_count));
+
+        const uint32_t last_scanned_file_count = fsearch_database_include_get_last_scanned_file_count(include);
+        cursor_write(cursor, &last_scanned_file_count, sizeof(last_scanned_file_count));
+
+        const uint8_t last_scan_reason = fsearch_database_include_get_last_scan_reason(include);
+        cursor_write(cursor, &last_scan_reason, sizeof(last_scan_reason));
     }
 }
 
