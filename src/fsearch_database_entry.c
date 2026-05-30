@@ -7,7 +7,6 @@
 
 #include <gio/gio.h>
 #include <glib.h>
-#include <glibconfig.h>
 #include <stdalign.h>
 #include <stdarg.h>
 #include <stdbool.h>

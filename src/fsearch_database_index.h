@@ -10,7 +10,6 @@
 #include <gio/gio.h>
 #include <glib-object.h>
 #include <glib.h>
-#include <glib/gmacros.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>

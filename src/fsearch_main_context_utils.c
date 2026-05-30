@@ -1,7 +1,6 @@
 #include "fsearch_main_context_utils.h"
 
 #include <glib.h>
-#include <glibconfig.h>
 #include <stddef.h>
 
 typedef struct {

@@ -15,12 +15,10 @@
 #include "fsearch_folder_monitor_inotify.h"
 
 #include <config.h>
+#include <gio/gio.h>
 #include <glib-object.h>
-#include <glibconfig.h>
 #include <glib-unix.h>
 #include <glib.h>
-#include <glib/gmacros.h>
-#include <gio/gio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>

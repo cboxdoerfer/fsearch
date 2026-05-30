@@ -9,7 +9,6 @@
 #include "fsearch_selection_type.h"
 
 #include <glib.h>
-#include <glibconfig.h>
 #include <gtk/gtk.h>
 #include <stdint.h>
 

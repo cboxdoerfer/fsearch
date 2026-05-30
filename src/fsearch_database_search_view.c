@@ -13,7 +13,6 @@
 #include "fsearch_selection.h"
 
 #include <glib.h>
-#include <glib/gmacros.h>
 #include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stddef.h>

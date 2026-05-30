@@ -7,7 +7,6 @@
 #include "fsearch_array.h"
 
 #include <glib.h>
-#include <glib/gmacros.h>
 #include <gio/giotypes.h>
 #include <stdbool.h>
 #include <stddef.h>

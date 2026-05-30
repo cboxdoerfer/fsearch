@@ -8,7 +8,6 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glib/gmacros.h>
 #include <gtk/gtk.h>
 #include <stdint.h>
 

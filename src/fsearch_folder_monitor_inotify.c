@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <glib.h>
 #include <glib-unix.h>
-#include <glibconfig.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>

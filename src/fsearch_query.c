@@ -27,7 +27,6 @@
 #include "fsearch_string_utils.h"
 
 #include <glib.h>
-#include <glibconfig.h>
 #include <stdlib.h>
 #include <string.h>
 

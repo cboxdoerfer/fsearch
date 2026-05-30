@@ -3,7 +3,6 @@
 #include "fsearch_config.h"
 
 #include <glib-object.h>
-#include <glibconfig.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS

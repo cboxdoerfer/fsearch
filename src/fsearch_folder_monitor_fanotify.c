@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include <glib.h>
 #include <glib-unix.h>
-#include <glibconfig.h>
 #include <linux/fanotify.h>
 #include <stddef.h>
 #include <stdint.h>

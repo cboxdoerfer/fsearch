@@ -9,7 +9,6 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glibconfig.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
 

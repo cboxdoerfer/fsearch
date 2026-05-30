@@ -15,8 +15,6 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glib/gmacros.h>
-#include <glibconfig.h>
 #include <inttypes.h>
 #include <linux/limits.h>
 #include <stdbool.h>

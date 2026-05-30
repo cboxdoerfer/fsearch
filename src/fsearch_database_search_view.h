@@ -9,7 +9,6 @@
 
 #include <glib.h>
 #include <gio/gio.h>
-#include <glib/gmacros.h>
 #include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>

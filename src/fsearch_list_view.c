@@ -4,7 +4,6 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib.h>
-#include <glibconfig.h>
 #include <gobject/gobject.h>
 #include <gtk/gtk.h>
 #include <math.h>

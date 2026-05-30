@@ -19,8 +19,6 @@
 #include "fsearch_selection_type.h"
 
 #include <glib.h>
-#include <glibconfig.h>
-#include <glib/gmacros.h>
 #include <gio/gio.h>
 #include <gobject/gobject.h>
 #include <gtk/gtkenums.h>

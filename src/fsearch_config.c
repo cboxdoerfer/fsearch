@@ -31,7 +31,6 @@
 #include "fsearch_string_utils.h"
 
 #include <glib.h>
-#include <glib/gmacros.h>
 #include <glib-object.h>
 #include <stdbool.h>
 #include <stddef.h>
