@@ -29,7 +29,7 @@ fsearch_database_exclude_new(const char *pattern,
 
     g_return_val_if_fail(pattern, NULL);
 
-    self = g_slice_new0(FsearchDatabaseExclude);
+    self = g_new0(FsearchDatabaseExclude, 1);
 
     self->pattern = g_strdup(pattern);
     self->active = active;
@@ -70,7 +70,7 @@ fsearch_database_exclude_unref(FsearchDatabaseExclude *self) {
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
         g_clear_pointer(&self->pattern, g_free);
         g_clear_pointer(&self->regex, g_regex_unref);
-        g_slice_free(FsearchDatabaseExclude, self);
+        g_free(self);
     }
 }
 

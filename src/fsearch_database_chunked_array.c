@@ -180,7 +180,7 @@ fsearch_database_chunked_array_new(DynamicArray *array,
                                    GDestroyNotify entry_free_func) {
     g_return_val_if_fail(array, NULL);
 
-    FsearchDatabaseChunkedArray *self = g_slice_new0(FsearchDatabaseChunkedArray);
+    FsearchDatabaseChunkedArray *self = g_new0(FsearchDatabaseChunkedArray, 1);
 
     self->target_chunk_size = TARGET_CHUNK_SIZE;
 
@@ -235,7 +235,7 @@ fsearch_database_chunked_array_unref(FsearchDatabaseChunkedArray *self) {
         }
         g_clear_pointer(&self->chunks, darray_unref);
         g_clear_pointer(&self->compare_context, db_entry_compare_context_free);
-        g_slice_free(FsearchDatabaseChunkedArray, self);
+        g_free(self);
     }
 }
 

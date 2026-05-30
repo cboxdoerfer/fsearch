@@ -40,7 +40,7 @@ fsearch_database_include_new(const char *path,
 
     g_return_val_if_fail(path, NULL);
 
-    self = g_slice_new0(FsearchDatabaseInclude);
+    self = g_new0(FsearchDatabaseInclude, 1);
 
     self->path = g_strdup(path);
     self->active = active;
@@ -70,7 +70,7 @@ fsearch_database_include_unref(FsearchDatabaseInclude *self) {
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
         g_clear_pointer(&self->path, g_free);
-        g_slice_free(FsearchDatabaseInclude, self);
+        g_free(self);
     }
 }
 

@@ -111,7 +111,7 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
     g_clear_object(&dialog);
 #endif
 
-    g_slice_free(FsearchPreferencesFileChooserContext, g_steal_pointer(&ctx));
+    g_free(g_steal_pointer(&ctx));
 }
 
 static void
@@ -326,7 +326,7 @@ on_exclude_remove_button_clicked(GtkButton *button, gpointer user_data) {
 static void
 on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
-    FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+    FsearchPreferencesFileChooserContext *ctx = g_new0(FsearchPreferencesFileChooserContext, 1);
     ctx->model = self->include_model;
     ctx->row_add_func = on_include_append_new_row;
     run_file_chooser_dialog(button, ctx);

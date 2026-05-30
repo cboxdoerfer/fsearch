@@ -706,7 +706,7 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         DynamicArray *folders,
                                         DynamicArray *files,
                                         FsearchDatabaseIndexPropertyFlags flags) {
-    FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
+    FsearchDatabaseIndex *self = g_new0(FsearchDatabaseIndex, 1);
     g_assert(self);
 
     self->ref_count = 1;

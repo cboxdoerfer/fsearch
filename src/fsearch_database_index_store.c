@@ -642,7 +642,7 @@ index_store_free(FsearchDatabaseIndexStore *store) {
 
     g_mutex_clear(&store->mutex);
 
-    g_slice_free(FsearchDatabaseIndexStore, store);
+    g_free(store);
 }
 
 FsearchDatabaseIndexStore *
@@ -651,7 +651,7 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseIndexPropertyFlags flags,
                                  FsearchDatabaseIndexStoreEventFunc event_func,
                                  gpointer event_func_data) {
-    FsearchDatabaseIndexStore *store = g_slice_new0(FsearchDatabaseIndexStore);
+    FsearchDatabaseIndexStore *store = g_new0(FsearchDatabaseIndexStore, 1);
 
     store->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
     store->search_results =
