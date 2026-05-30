@@ -184,7 +184,6 @@ process_queued_events(FsearchDatabaseIndex *self) {
 
     // 3. Process events
     g_autoptr(GTimer) timer = g_timer_new();
-    double last_time = 0.0;
 
     uint32_t num_skipped = 0;
     uint32_t processed_count = 0;
