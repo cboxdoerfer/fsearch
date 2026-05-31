@@ -39,7 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum { TYPE_INT, TYPE_STRING, TYPE_BOOL } FsearchConfigValueType;
+typedef enum { TYPE_INT, TYPE_INT64, TYPE_STRING, TYPE_BOOL } FsearchConfigValueType;
 
 typedef struct {
     const char *key_name;
@@ -47,16 +47,19 @@ typedef struct {
     size_t struct_offset; // offset to data in config struct
     union {
         int i;
+        int64_t i64;
         bool b;
         const char *s;
     } default_val;
 } FsearchKeyData;
 
 #define CONF_INT_OF(S, member, def)  { #member, TYPE_INT,    offsetof(S, member), .default_val = {.i = (def)} }
+#define CONF_INT64_OF(S, member, def)  { #member, TYPE_INT64,    offsetof(S, member), .default_val = {.i64 = (def)} }
 #define CONF_STR_OF(S, member, def)  { #member, TYPE_STRING, offsetof(S, member), .default_val = {.s = (def)} }
 #define CONF_BOOL_OF(S, member, def) { #member, TYPE_BOOL,   offsetof(S, member), .default_val = {.b = (def)} }
 
 #define CONF_INT(member, def)  CONF_INT_OF(FsearchConfig, member, def)
+#define CONF_INT64(member, def)  CONF_INT64_OF(FsearchConfig, member, def)
 #define CONF_STR(member, def)  CONF_STR_OF(FsearchConfig, member, def)
 #define CONF_BOOL(member, def) CONF_BOOL_OF(FsearchConfig, member, def)
 
@@ -166,6 +169,7 @@ typedef struct {
     bool active;
     bool one_file_system;
     bool monitor;
+    int64_t rescan_after;
 } FsearchConfigIncludeKeys;
 
 static const FsearchKeyData INCLUDE_KEYS[] = {
@@ -174,6 +178,7 @@ static const FsearchKeyData INCLUDE_KEYS[] = {
     CONF_STR_OF(FsearchConfigIncludeKeys, path, NULL),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, one_file_system, false),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, monitor, false),
+    CONF_INT64_OF(FsearchConfigIncludeKeys, rescan_after, 0),
 };
 
 typedef struct {
@@ -229,6 +234,9 @@ config_save_key(GKeyFile *key_file,
     case TYPE_INT:
         g_key_file_set_integer(key_file, key_section, key_name, *(int *)ptr);
         break;
+    case TYPE_INT64:
+        g_key_file_set_int64(key_file, key_section, key_name, *(int *)ptr);
+        break;
     case TYPE_STRING: {
         const char *str = *(const char **)ptr;
         if (str)
@@ -256,6 +264,12 @@ config_load_key(GKeyFile *key_file,
         *(int *)ptr = g_key_file_get_integer(key_file, key_section, key_name, &error);
         if (error) {
             *(int *)ptr = key_data->default_val.i;
+        }
+        break;
+    case TYPE_INT64:
+        *(int *)ptr = g_key_file_get_int64(key_file, key_section, key_name, &error);
+        if (error) {
+            *(int *)ptr = key_data->default_val.i64;
         }
         break;
     case TYPE_STRING: {
@@ -363,6 +377,9 @@ config_get_section_default(const FsearchKeyData *keys,
         case TYPE_INT:
             *(int *)ptr = keys[i].default_val.i;
             break;
+        case TYPE_INT64:
+            *(int *)ptr = keys[i].default_val.i64;
+            break;
         case TYPE_STRING: {
             char **str_ptr = (char **)ptr;
             if (*str_ptr) {
@@ -442,7 +459,7 @@ config_load_includes(GKeyFile *key_file) {
             include_keys.one_file_system,
             include_keys.monitor,
             false,
-            0,
+            include_keys.rescan_after,
             include_keys.id);
         fsearch_database_include_manager_add(include_manager, include);
 
@@ -613,6 +630,7 @@ config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_
                                                  .active = fsearch_database_include_get_active(include),
                                                  .one_file_system = fsearch_database_include_get_one_file_system(
                                                      include),
+                                                 .rescan_after = fsearch_database_include_get_rescan_after(include),
                                                  .id = fsearch_database_include_get_id(include)};
 
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
