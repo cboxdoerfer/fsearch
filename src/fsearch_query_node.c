@@ -16,17 +16,24 @@ static void
 node_init_needle(FsearchQueryNode *node, const char *needle) {
     g_assert(node);
     g_assert(needle);
-    // node->needle must not be set already
+    /* node->needle must not be set already */
     g_assert_null(node->needle);
     g_assert_null(node->needle_builder);
 
-    node->needle = g_strdup(needle);
-    node->needle_len = strlen(needle);
+    /* --- MODIFICATION START: Strip diacritics from the search query --- */
+    gchar* stripped_needle = fsearch_string_strip_diacritics(needle);
+    node->needle = g_strdup(stripped_needle);
+    g_free(stripped_needle);
+    /* --- MODIFICATION END --- */
 
-    // set up case folded needle in UTF16 format
+    node->needle_len = strlen(node->needle);
+
+    /* set up case folded needle in UTF16 format */
     node->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
     fsearch_utf_builder_init(node->needle_builder, node->needle_len);
-    const bool utf_ready = fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, needle);
+
+    /* Use the stripped needle for normalization */
+    const bool utf_ready = fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, node->needle);
     g_assert(utf_ready == true);
 }
 
