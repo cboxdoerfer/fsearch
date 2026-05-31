@@ -1,10 +1,10 @@
 #define G_LOG_DOMAIN "fsearch-database-preferences-widget"
 
-#include "fsearch_database_include.h"
-#include "fsearch_database_include_manager.h"
+#include "fsearch_database_preferences_widget.h"
 #include "fsearch_database_exclude.h"
 #include "fsearch_database_exclude_manager.h"
-#include "fsearch_database_preferences_widget.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_include_manager.h"
 
 #include <config.h>
 #include <gio/gio.h>
@@ -27,7 +27,15 @@ struct _FsearchDatabasePreferencesWidget {
     GtkTreeView *include_list;
     GtkListStore *include_model;
     GtkWidget *include_path_entry;
+    GtkButton *include_remove_button;
     GtkTreeSelection *include_selection;
+    GtkRevealer *include_settings_revealer;
+    GtkToggleButton *include_monitor_checkbutton;
+    GtkToggleButton *include_onefs_checkbutton;
+    GtkToggleButton *include_rescan_scheduled_checkbutton;
+    GtkBox *include_rescan_scheduled_box;
+    GtkSpinButton *include_rescan_scheduled_hours_spinbutton;
+    GtkSpinButton *include_rescan_scheduled_minutes_spinbutton;
 
     // Exclude model
     GtkTreeView *exclude_list;
@@ -46,6 +54,7 @@ enum {
     COL_INCLUDE_PATH,
     COL_INCLUDE_ONE_FS,
     COL_INCLUDE_MONITOR,
+    COL_INCLUDE_RESCAN_AFTER,
     COL_INCLUDE_ID,
     NUM_INCLUDE_COLUMNS
 };
@@ -69,8 +78,7 @@ G_DEFINE_FINAL_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferenc
 G_DEFINE_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferences_widget, GTK_TYPE_BOX)
 #endif
 
-typedef void
-(*RowAddFunc)(GtkListStore *, const char *);
+typedef void (*RowAddFunc)(GtkListStore *, const char *);
 
 typedef struct {
     GtkListStore *model;
@@ -80,8 +88,6 @@ typedef struct {
 #if !GTK_CHECK_VERSION(3, 20, 0)
 static void
 on_file_chooser_dialog_response(GtkFileChooserDialog *dialog, GtkResponseType response, gpointer user_data) {
-
-
 
 #else
 static void
@@ -279,6 +285,7 @@ include_append_row(GtkListStore *store,
                    const char *path,
                    gboolean one_file_system,
                    gboolean monitor,
+                   gint64 rescan_after,
                    gint id) {
     if (!include_path_is_unique(store, path)) {
         return;
@@ -295,6 +302,8 @@ include_append_row(GtkListStore *store,
                        one_file_system,
                        COL_INCLUDE_MONITOR,
                        monitor,
+                       COL_INCLUDE_RESCAN_AFTER,
+                       rescan_after,
                        COL_INCLUDE_ID,
                        id,
                        -1);
@@ -302,7 +311,7 @@ include_append_row(GtkListStore *store,
 
 static void
 on_include_append_new_row(GtkListStore *store, const char *path) {
-    include_append_row(store, TRUE, path, FALSE, FALSE, get_unique_include_id(store));
+    include_append_row(store, TRUE, path, FALSE, FALSE, 0, get_unique_include_id(store));
 }
 
 static void
@@ -502,18 +511,6 @@ on_column_include_active_toggled(GtkCellRendererToggle *cell, gchar *path_str, g
 }
 
 static void
-on_column_include_one_fs_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    GtkTreeModel *include_model = data;
-    on_column_toggled(path_str, include_model, COL_INCLUDE_ONE_FS);
-}
-
-static void
-on_column_include_monitor_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    GtkTreeModel *include_model = data;
-    on_column_toggled(path_str, include_model, COL_INCLUDE_MONITOR);
-}
-
-static void
 on_path_entry_changed(GtkEntry *entry, gpointer user_data) {
     GtkWidget *add_path_button = GTK_WIDGET(user_data);
     const char *path = gtk_entry_get_text(entry);
@@ -548,7 +545,7 @@ on_include_add_path_button_clicked(GtkButton *button, gpointer user_data) {
 }
 
 static void
-on_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
+on_exclude_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
     GtkWidget *widget = GTK_WIDGET(user_data);
     if (gtk_tree_selection_count_selected_rows(selection) > 0) {
         gtk_widget_set_sensitive(widget, TRUE);
@@ -559,12 +556,7 @@ on_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
 }
 
 static void
-column_toggle_append(GtkTreeView *view,
-                     GtkTreeModel *model,
-                     const char *name,
-                     int id,
-                     GCallback cb,
-                     gpointer user_data) {
+column_toggle_append(GtkTreeView *view, GtkTreeModel *model, const char *name, int id, GCallback cb, gpointer user_data) {
     GtkCellRenderer *renderer = gtk_cell_renderer_toggle_new();
     g_object_set(renderer, "xalign", 0.0, NULL);
 
@@ -575,12 +567,7 @@ column_toggle_append(GtkTreeView *view,
 }
 
 static void
-column_text_editable_append(GtkTreeView *view,
-                            const char *name,
-                            gboolean expand,
-                            int id,
-                            GCallback cb,
-                            gpointer user_data) {
+column_text_editable_append(GtkTreeView *view, const char *name, gboolean expand, int id, GCallback cb, gpointer user_data) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     g_object_set(renderer, "editable", TRUE, NULL);
     g_signal_connect(renderer, "edited", cb, user_data);
@@ -631,11 +618,7 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
 
     GtkTreeIter iter = {};
     gtk_list_store_append(self->exclude_type_model, &iter);
-    gtk_list_store_set(self->exclude_type_model,
-                       &iter,
-                       0,
-                       exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED),
-                       -1);
+    gtk_list_store_set(self->exclude_type_model, &iter, 0, exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED), -1);
     gtk_list_store_append(self->exclude_type_model, &iter);
     gtk_list_store_set(self->exclude_type_model,
                        &iter,
@@ -643,11 +626,7 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
                        exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD),
                        -1);
     gtk_list_store_append(self->exclude_type_model, &iter);
-    gtk_list_store_set(self->exclude_type_model,
-                       &iter,
-                       0,
-                       exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX),
-                       -1);
+    gtk_list_store_set(self->exclude_type_model, &iter, 0, exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX), -1);
 
     gtk_list_store_append(self->exclude_scope_model, &iter);
     gtk_list_store_set(self->exclude_scope_model,
@@ -704,14 +683,132 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
 }
 
 static void
+on_include_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+
+    const gint num_selected_rows = gtk_tree_selection_count_selected_rows(selection);
+
+    GtkWidget *include_remove_button = GTK_WIDGET(self->include_remove_button);
+    if (num_selected_rows <= 0) {
+        gtk_widget_set_sensitive(include_remove_button, FALSE);
+        gtk_revealer_set_reveal_child(self->include_settings_revealer, FALSE);
+        return;
+    }
+
+    gtk_widget_set_sensitive(include_remove_button, TRUE);
+    gtk_revealer_set_reveal_child(self->include_settings_revealer, TRUE);
+
+    GtkTreeModel *model = NULL;
+    GtkTreeIter iter = {};
+
+    if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+        gboolean one_file_system = FALSE;
+        gboolean monitor = FALSE;
+        gint64 rescan_after = 0;
+        gtk_tree_model_get(model,
+                           &iter,
+                           COL_INCLUDE_ONE_FS,
+                           &one_file_system,
+                           COL_INCLUDE_MONITOR,
+                           &monitor,
+                           COL_INCLUDE_RESCAN_AFTER,
+                           &rescan_after,
+                           -1);
+        gtk_toggle_button_set_active(self->include_monitor_checkbutton, monitor);
+        gtk_toggle_button_set_active(self->include_onefs_checkbutton, one_file_system);
+        const gboolean rescan_after_active = rescan_after > 0 ? TRUE : FALSE;
+
+        gtk_toggle_button_set_active(self->include_rescan_scheduled_checkbutton, rescan_after_active);
+        gtk_widget_set_sensitive(GTK_WIDGET(self->include_rescan_scheduled_box), rescan_after_active);
+
+        uint32_t hours = 0;
+        uint32_t minutes = 0;
+        if (rescan_after_active) {
+            hours = rescan_after / 3600;
+            minutes = (rescan_after % 3600) / 60;
+        }
+        gtk_spin_button_set_value(self->include_rescan_scheduled_hours_spinbutton, hours);
+        gtk_spin_button_set_value(self->include_rescan_scheduled_minutes_spinbutton, minutes);
+    }
+}
+
+static void
+include_model_update_on_toggled_button(GtkTreeSelection *selection, GtkToggleButton *button, gint col) {
+    GtkTreeModel *model = NULL;
+    GtkTreeIter iter = {};
+
+    g_print("toggled\n");
+    const gboolean button_active = gtk_toggle_button_get_active(button);
+    if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+        gtk_list_store_set(GTK_LIST_STORE(model), &iter, col, button_active, -1);
+    }
+}
+
+static void
+on_include_monitor_checkbutton_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    include_model_update_on_toggled_button(self->include_selection, button, COL_INCLUDE_MONITOR);
+}
+
+static void
+on_include_onefs_checkbutton_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    include_model_update_on_toggled_button(self->include_selection, button, COL_INCLUDE_ONE_FS);
+}
+
+static void
+include_model_update_rescan_after(FsearchDatabasePreferencesWidget *self) {
+
+    GtkTreeModel *model = NULL;
+    GtkTreeIter iter = {};
+
+    if (gtk_tree_selection_get_selected(self->include_selection, &model, &iter)) {
+        const gboolean button_active = gtk_toggle_button_get_active(self->include_rescan_scheduled_checkbutton);
+        gint64 seconds = 0;
+        if (button_active) {
+            const gint hours = gtk_spin_button_get_value_as_int(self->include_rescan_scheduled_hours_spinbutton);
+            const gint minutes = gtk_spin_button_get_value_as_int(self->include_rescan_scheduled_minutes_spinbutton);
+            seconds = hours * 3600 + minutes * 60;
+        }
+
+        gtk_list_store_set(GTK_LIST_STORE(model), &iter, COL_INCLUDE_RESCAN_AFTER, seconds, -1);
+    }
+}
+
+static void
+on_include_rescan_scheduled_checkbutton_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+
+    include_model_update_rescan_after(self);
+
+    const gboolean button_active = gtk_toggle_button_get_active(button);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->include_rescan_scheduled_box), button_active);
+}
+
+static void
+on_include_rescan_scheduled_hours_spinbutton_value_changed(GtkSpinButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    include_model_update_rescan_after(self);
+
+    g_print("value-changed\n");
+}
+
+static void
+on_include_rescan_scheduled_minutes_spinbutton_value_changed(GtkSpinButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    include_model_update_rescan_after(self);
+    g_print("value-changed\n");
+}
+
+static void
 init_include_page(FsearchDatabasePreferencesWidget *self) {
-    self->include_model =
-        gtk_list_store_new(NUM_INCLUDE_COLUMNS,
-                           G_TYPE_BOOLEAN,
-                           G_TYPE_STRING,
-                           G_TYPE_BOOLEAN,
-                           G_TYPE_BOOLEAN,
-                           G_TYPE_INT);
+    self->include_model = gtk_list_store_new(NUM_INCLUDE_COLUMNS,
+                                             G_TYPE_BOOLEAN,
+                                             G_TYPE_STRING,
+                                             G_TYPE_BOOLEAN,
+                                             G_TYPE_BOOLEAN,
+                                             G_TYPE_INT64,
+                                             G_TYPE_INT);
     gtk_tree_view_set_model(self->include_list, GTK_TREE_MODEL(self->include_model));
 
     column_toggle_append(self->include_list,
@@ -721,20 +818,6 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
                          G_CALLBACK(on_column_include_active_toggled),
                          self->include_model);
     column_text_append(self->include_list, _("Path"), TRUE, COL_INCLUDE_PATH);
-    column_toggle_append(self->include_list,
-                         GTK_TREE_MODEL(self->include_model),
-                         _("One Filesystem"),
-                         COL_INCLUDE_ONE_FS,
-                         G_CALLBACK(on_column_include_one_fs_toggled),
-                         self->include_model);
-#if (defined HAVE_INOTIFY) || (defined HAVE_FANOTIFY)
-    column_toggle_append(self->include_list,
-                         GTK_TREE_MODEL(self->include_model),
-                         _("Monitor"),
-                         COL_INCLUDE_MONITOR,
-                         G_CALLBACK(on_column_include_monitor_toggled),
-                         self->include_model);
-#endif
 
     // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
     g_signal_connect(self->include_list, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
@@ -757,6 +840,7 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_include_get_path(include),
                            fsearch_database_include_get_one_file_system(include),
                            fsearch_database_include_get_monitored(include),
+                           fsearch_database_include_get_rescan_after(include),
                            fsearch_database_include_get_id(include));
     }
 }
@@ -802,10 +886,7 @@ fsearch_database_preferences_widget_get_property(GObject *object, guint prop_id,
 }
 
 static void
-fsearch_database_preferences_widget_set_property(GObject *object,
-                                                 guint prop_id,
-                                                 const GValue *value,
-                                                 GParamSpec *pspec) {
+fsearch_database_preferences_widget_set_property(GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
     switch (prop_id) {
@@ -876,6 +957,20 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_list);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_path_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_remove_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_settings_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_monitor_checkbutton);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_onefs_checkbutton);
+    gtk_widget_class_bind_template_child(widget_class,
+                                         FsearchDatabasePreferencesWidget,
+                                         include_rescan_scheduled_checkbutton);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_rescan_scheduled_box);
+    gtk_widget_class_bind_template_child(widget_class,
+                                         FsearchDatabasePreferencesWidget,
+                                         include_rescan_scheduled_hours_spinbutton);
+    gtk_widget_class_bind_template_child(widget_class,
+                                         FsearchDatabasePreferencesWidget,
+                                         include_rescan_scheduled_minutes_spinbutton);
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_list);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_selection);
@@ -886,11 +981,17 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_path_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_remove_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_selection_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_monitor_checkbutton_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_onefs_checkbutton_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_checkbutton_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_hours_spinbutton_value_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_minutes_spinbutton_value_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_path_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_remove_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_path_entry_changed);
-    gtk_widget_class_bind_template_callback(widget_class, on_selection_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_exclude_selection_changed);
 }
 
 static void
@@ -927,6 +1028,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         gboolean active = FALSE;
         gboolean one_file_system = FALSE;
         gboolean monitor = FALSE;
+        gint64 rescan_after = 0;
         gint id = -1;
         gtk_tree_model_get(model,
                            &iter,
@@ -938,6 +1040,8 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            &one_file_system,
                            COL_INCLUDE_MONITOR,
                            &monitor,
+                           COL_INCLUDE_RESCAN_AFTER,
+                           &rescan_after,
                            COL_INCLUDE_ID,
                            &id,
                            -1);
@@ -945,7 +1049,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, 0, id));
+                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, rescan_after, id));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
@@ -995,9 +1099,8 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
 
         valid = gtk_tree_model_iter_next(model, &iter);
     }
-    fsearch_database_exclude_manager_set_exclude_hidden(
-        exclude_manager,
-        gtk_toggle_button_get_active(self->exclude_hidden_items_button));
+    fsearch_database_exclude_manager_set_exclude_hidden(exclude_manager,
+                                                        gtk_toggle_button_get_active(self->exclude_hidden_items_button));
 
     return g_steal_pointer(&exclude_manager);
 }
