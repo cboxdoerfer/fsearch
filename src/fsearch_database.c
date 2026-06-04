@@ -6,7 +6,6 @@
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_file.h"
-#include "fsearch_database_include.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
 #include "fsearch_database_index_properties.h"
@@ -701,98 +700,6 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_thread_pool_push(self->io_pool, g_steal_pointer(&new_work), NULL);
 }
 
-static bool
-include_rescan_schedule_triggered(FsearchDatabaseInclude *include) {
-    if (!fsearch_database_include_get_active(include)) {
-        return false;
-    }
-    const int64_t rescan_after = fsearch_database_include_get_rescan_after(include);
-    if (rescan_after < -0) {
-        return false;
-    }
-    const int64_t last_scan_time = fsearch_database_include_get_last_scan_time(include);
-    const int64_t current_time = g_get_real_time() / G_USEC_PER_SEC;
-
-    if (current_time <= last_scan_time) {
-        return false;
-        ;
-    }
-    if (current_time - last_scan_time >= rescan_after) {
-        return true;
-    }
-    return false;
-}
-
-static void
-database_rescan_scheduled_indices(FsearchDatabase *self) {
-    g_return_if_fail(self);
-    g_return_if_fail(self->store);
-
-    g_autoptr(FsearchDatabaseIncludeManager)
-        include_manager = fsearch_database_index_store_get_include_manager(self->store);
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
-
-    for (uint32_t i = 0; i < includes->len; i++) {
-        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-
-        if (include_rescan_schedule_triggered(include)) {
-            g_print("rescan index scheduled: %s\n", fsearch_database_include_get_path(include));
-            const int64_t current_time = g_get_real_time() / G_USEC_PER_SEC;
-            fsearch_database_include_set_last_scan_time(include, current_time);
-            g_autoptr(FsearchDatabaseWork)
-                work = fsearch_database_work_new_rescan_index(fsearch_database_include_get_id(include));
-            database_rescan_index(self, work);
-        }
-    }
-}
-
-static void
-database_rescan_indices_if_needed(FsearchDatabase *self) {
-    g_return_if_fail(self);
-    g_return_if_fail(self->store);
-
-    g_autoptr(FsearchDatabaseIncludeManager)
-        include_manager = fsearch_database_index_store_get_include_manager(self->store);
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
-
-    uint32_t num_active_monitored = 0;
-    uint32_t num_active = 0;
-    for (uint32_t i = 0; i < includes->len; i++) {
-        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        if (fsearch_database_include_get_active(include)) {
-            num_active++;
-            if (fsearch_database_include_get_monitored(include)) {
-                num_active_monitored++;
-            }
-        }
-    }
-
-    // Don't rescan if there are no monitored indices
-    if (num_active_monitored == 0) {
-        return;
-    }
-
-    // If all indices are monitored, it's more efficient to rescan everything
-    if (num_active_monitored == num_active) {
-        g_debug("[db] all indices monitored, rescan everything.");
-        database_rescan(self);
-        return;
-    }
-
-    for (uint32_t i = 0; i < includes->len; i++) {
-        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        if ((fsearch_database_include_get_monitored(include) && fsearch_database_include_get_active(include))
-            || include_rescan_schedule_triggered(include)) {
-            g_debug("[db] rescan index: %s", fsearch_database_include_get_path(include));
-            const int64_t current_time = g_get_real_time() / G_USEC_PER_SEC;
-            fsearch_database_include_set_last_scan_time(include, current_time);
-            g_autoptr(FsearchDatabaseWork)
-                work = fsearch_database_work_new_rescan_index(fsearch_database_include_get_id(include));
-            database_rescan_index(self, work);
-        }
-    }
-}
-
 static void
 database_load(FsearchDatabase *self) {
     // DB must be locked
@@ -814,6 +721,10 @@ database_load(FsearchDatabase *self) {
     }
 
     database_set_store(self, store);
+
+    if (self->rescan_manager) {
+        fsearch_database_rescan_manager_trigger_startup_scans(self->rescan_manager);
+    }
 
     signal_emit(self,
                 SIGNAL_LOAD_FINISHED,
@@ -881,9 +792,6 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
         break;
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
         database_rescan_index(self, work);
-        break;
-    case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
-        database_rescan_indices_if_needed(self);
         break;
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
         database_rescan_index_finished(self, work);

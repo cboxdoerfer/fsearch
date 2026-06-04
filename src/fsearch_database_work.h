@@ -19,7 +19,6 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_RESCAN,
     FSEARCH_DATABASE_WORK_RESCAN_INDEX,
     FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED,
-    FSEARCH_DATABASE_WORK_RESCAN_MONITORED,
     FSEARCH_DATABASE_WORK_SAVE_TO_FILE,
     FSEARCH_DATABASE_WORK_SCAN,
     FSEARCH_DATABASE_WORK_SCAN_FINISHED,
@@ -42,9 +41,6 @@ fsearch_database_work_new_quit(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);
-
-FsearchDatabaseWork *
-fsearch_database_work_new_rescan_monitored(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan_index(uint32_t index_id);

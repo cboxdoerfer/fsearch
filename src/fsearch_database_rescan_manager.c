@@ -250,6 +250,58 @@ fsearch_database_rescan_manager_request_full_scan(FsearchDatabaseRescanManager *
 }
 
 void
+fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManager *self) {
+    g_return_if_fail(self != NULL);
+
+    if (!self->include_manager || self->global_scan_active) {
+        return;
+    }
+
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(self->include_manager);
+    const int64_t current_time_sec = g_get_real_time() / G_USEC_PER_SEC;
+
+    g_debug("[rescan-manager] Evaluating startup scans...");
+
+    for (uint32_t i = 0; i < includes->len; i++) {
+        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+
+        // Inactive indexes don't need to be rescanned -> skip
+        if (!fsearch_database_include_get_active(include)) {
+            continue;
+        }
+
+        const uint32_t index_id = fsearch_database_include_get_id(include);
+        gboolean needs_startup_scan = FALSE;
+
+        // 1: Folder is being actively monitored for FS events
+        if (fsearch_database_include_get_monitored(include)) {
+            needs_startup_scan = TRUE;
+        }
+        // 2: Explicitly marked to scan after launch
+        else if (fsearch_database_include_get_scan_after_launch(include)) {
+            needs_startup_scan = TRUE;
+        }
+        // 3: Schedule is already due
+        else {
+            const int64_t rescan_after = fsearch_database_include_get_rescan_after(include);
+            if (rescan_after > 0) {
+                const int64_t last_scan_time = fsearch_database_include_get_last_scan_time(include);
+                if (last_scan_time + rescan_after <= current_time_sec) {
+                    needs_startup_scan = TRUE;
+                }
+            }
+        }
+
+        if (needs_startup_scan) {
+            g_debug("[rescan-manager] Queuing startup scan for index %u", index_id);
+
+            // Add it to the active scans and queue the work
+            fsearch_database_rescan_manager_request_index_scan(self, index_id);
+        }
+    }
+}
+
+void
 fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, uint32_t index_id) {
     g_return_if_fail(self != NULL);
     if (g_hash_table_remove(self->active_scans, GUINT_TO_POINTER(index_id))) {

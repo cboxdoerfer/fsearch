@@ -89,7 +89,6 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
     case FSEARCH_DATABASE_WORK_RESCAN:
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
-    case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
     case FSEARCH_DATABASE_WORK_SORT:
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
@@ -151,13 +150,6 @@ fsearch_database_work_new_rescan() {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_monitored() {
-    FsearchDatabaseWork *work = work_new();
-    work->kind = FSEARCH_DATABASE_WORK_RESCAN_MONITORED;
-    return work;
-}
-
-FsearchDatabaseWork *
 fsearch_database_work_new_rescan_index(uint32_t index_id) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX;
@@ -187,7 +179,9 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_func)(void *), void (*index_free_func)(void *)) {
+fsearch_database_work_new_scan_finished(void *index_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *)) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN_FINISHED;
     work->index_store = index_ref_func(index_store);
@@ -197,10 +191,7 @@ fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_fun
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_modify_selection(guint view_id,
-                                           FsearchSelectionType selection_type,
-                                           int32_t idx_1,
-                                           int32_t idx_2) {
+fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MODIFY_SELECTION;
     work->view_id = view_id;
@@ -269,11 +260,10 @@ fsearch_database_work_new_save() {
 guint
 fsearch_database_work_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(
-        work->kind == FSEARCH_DATABASE_WORK_SEARCH || work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION
-        || work->kind == FSEARCH_DATABASE_WORK_SORT
-        || work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
-        0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH || work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION
+                             || work->kind == FSEARCH_DATABASE_WORK_SORT
+                             || work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+                         0);
     return work->view_id;
 }
 
@@ -420,8 +410,6 @@ fsearch_database_work_to_string(FsearchDatabaseWork *work) {
         return "RESCAN_INDEX";
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
         return "RESCAN_INDEX_FINISHED";
-    case FSEARCH_DATABASE_WORK_RESCAN_MONITORED:
-        return "RESCAN_MONITORED";
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
         return "SAVE_TO_FILE";
     case FSEARCH_DATABASE_WORK_SCAN:

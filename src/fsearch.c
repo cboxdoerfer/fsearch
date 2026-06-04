@@ -27,7 +27,6 @@
 #include "fsearch_database_info.h"
 #include "fsearch_database_work.h"
 #include "fsearch_file_utils.h"
-#include "fsearch_limits.h"
 #include "fsearch_preferences_dialog.h"
 #include "fsearch_preview.h"
 #include "fsearch_window.h"
@@ -461,10 +460,6 @@ on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoint
                                                              | DATABASE_INDEX_PROPERTY_FLAG_SIZE
                                                              | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
         fsearch_database_queue_work(self->db, self->work_scan);
-    }
-    else {
-        g_autoptr(FsearchDatabaseWork) work_rescan_monitored = fsearch_database_work_new_rescan_monitored();
-        fsearch_database_queue_work(self->db, work_rescan_monitored);
     }
 }
 

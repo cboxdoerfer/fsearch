@@ -29,6 +29,8 @@ void
 fsearch_database_rescan_manager_request_index_scan(FsearchDatabaseRescanManager *self, uint32_t index_id);
 void
 fsearch_database_rescan_manager_request_full_scan(FsearchDatabaseRescanManager *self);
+void
+fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManager *self);
 
 void
 fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, uint32_t index_id);
