@@ -95,7 +95,7 @@ database_auto_update_init(FsearchApplication *self) {
     }
     if (self->config->update_database_every) {
         guint seconds = self->config->update_database_every_hours * 3600
-                        + self->config->update_database_every_minutes * 60;
+                      + self->config->update_database_every_minutes * 60;
         if (seconds < 60) {
             seconds = 60;
         }
@@ -247,16 +247,13 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
             self->work_scan = fsearch_database_work_new_scan(self->config->includes,
                                                              self->config->excludes,
                                                              DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+                                                                 | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                                                 | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                                 | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
             fsearch_database_queue_work(self->db, self->work_scan);
         }
 
-        g_object_set(gtk_settings_get_default(),
-                     "gtk-application-prefer-dark-theme",
-                     new_config->enable_dark_theme,
-                     NULL);
+        g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
         database_auto_update_init(self);
 
         GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
@@ -378,10 +375,7 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
-on_file_manager_name_appeared(GDBusConnection *connection,
-                              const gchar *name,
-                              const gchar *name_owner,
-                              gpointer user_data) {
+on_file_manager_name_appeared(GDBusConnection *connection, const gchar *name, const gchar *name_owner, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_return_if_fail(self);
     self->has_file_manager_on_bus = true;
@@ -463,9 +457,9 @@ on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoint
         self->work_scan = fsearch_database_work_new_scan(self->config->includes,
                                                          self->config->excludes,
                                                          DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
         fsearch_database_queue_work(self->db, self->work_scan);
     }
     else {
@@ -503,7 +497,7 @@ fsearch_application_startup(GApplication *app) {
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
 
-    g_autoptr (FsearchDatabaseWork) work_load = fsearch_database_work_new_load();
+    g_autoptr(FsearchDatabaseWork) work_load = fsearch_database_work_new_load();
     fsearch_database_queue_work(self->db, work_load);
 
     self->file_manager_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
@@ -520,14 +514,11 @@ fsearch_application_startup(GApplication *app) {
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    g_object_set(gtk_settings_get_default(),
-                 "gtk-application-prefer-dark-theme",
-                 self->config->enable_dark_theme,
-                 NULL);
+    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", self->config->enable_dark_theme, NULL);
 
     if (self->config->show_menubar) {
         g_autoptr(GtkBuilder) menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
-            "menus.ui");
+                                                                           "menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
     }
