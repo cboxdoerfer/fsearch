@@ -86,6 +86,28 @@ get_num_active_includes(FsearchDatabaseRescanManager *self) {
     return active_count;
 }
 
+static void
+request_scans(FsearchDatabaseRescanManager *self, GPtrArray *includes) {
+    if (includes && includes->len > 0) {
+        const guint num_active_includes = get_num_active_includes(self);
+        if (includes->len == num_active_includes) {
+            g_debug("[rescan_manager] all active indices need to be scanned. Perform a full scan.");
+            fsearch_database_rescan_manager_request_full_scan(self);
+        }
+        else {
+            for (uint32_t i = 0; i < includes->len; i++) {
+                FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+                const uint32_t index_id = fsearch_database_include_get_id(include);
+
+                g_debug("[rescan-manager] Queuing scan for index %u: %s",
+                        index_id,
+                        fsearch_database_include_get_path(include));
+                fsearch_database_rescan_manager_request_index_scan(self, index_id);
+            }
+        }
+    }
+}
+
 static guint
 calculate_next_timeout_ms(FsearchDatabaseRescanManager *self, GPtrArray **due_indices_out) {
     if (self->global_scan_active || !self->include_manager) {
@@ -149,21 +171,7 @@ rescan_timer_fired_cb(gpointer user_data) {
 
     calculate_next_timeout_ms(self, &due_indices);
 
-    if (due_indices && due_indices->len > 0) {
-        const guint num_active_includes = get_num_active_includes(self);
-        if (due_indices->len == num_active_includes) {
-            g_debug("[rescan_manager] all active indices are due. Perform a full scan.");
-            fsearch_database_rescan_manager_request_full_scan(self);
-        }
-        else {
-            for (uint32_t i = 0; i < due_indices->len; i++) {
-                FsearchDatabaseInclude *include = g_ptr_array_index(due_indices, i);
-                const uint32_t index_id = fsearch_database_include_get_id(include);
-
-                fsearch_database_rescan_manager_request_index_scan(self, index_id);
-            }
-        }
-    }
+    request_scans(self, due_indices);
 
     g_clear_pointer(&self->current_timer_source, g_source_unref);
     fsearch_database_rescan_manager_reschedule(self);
@@ -290,7 +298,7 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
 
     const guint num_active_includes = get_num_active_includes(self);
 
-    g_autoptr(GArray) startup_indices = g_array_sized_new(FALSE, FALSE, sizeof(uint32_t), num_active_includes);
+    g_autoptr(GPtrArray) startup_indices = g_ptr_array_new_full(num_active_includes, NULL);
 
     for (uint32_t i = 0; i < includes->len; i++) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
@@ -300,7 +308,6 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
             continue;
         }
 
-        const uint32_t index_id = fsearch_database_include_get_id(include);
         gboolean needs_startup_scan = FALSE;
 
         // 1: Folder is being actively monitored for FS events
@@ -323,23 +330,11 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
         }
 
         if (needs_startup_scan) {
-            g_array_append_val(startup_indices, index_id);
+            g_ptr_array_add(startup_indices, include);
         }
     }
 
-    if (startup_indices->len > 0) {
-        if (startup_indices->len == num_active_includes) {
-            g_debug("[rescan-manager] All %u active indices need startup scan -> Use a full scan.", num_active_includes);
-            fsearch_database_rescan_manager_request_full_scan(self);
-        }
-        else {
-            for (uint32_t i = 0; i < startup_indices->len; i++) {
-                uint32_t id = g_array_index(startup_indices, uint32_t, i);
-                g_debug("[rescan-manager] Queuing startup scan for index %u", id);
-                fsearch_database_rescan_manager_request_index_scan(self, id);
-            }
-        }
-    }
+    request_scans(self, startup_indices);
 }
 
 void
