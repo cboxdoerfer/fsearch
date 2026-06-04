@@ -68,6 +68,25 @@ fsearch_database_rescan_manager_free(FsearchDatabaseRescanManager *self) {
 }
 
 static guint
+get_num_active_includes(FsearchDatabaseRescanManager *self) {
+    if (!self->include_manager) {
+        return 0;
+    }
+
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(self->include_manager);
+    guint active_count = 0;
+
+    for (uint32_t i = 0; i < includes->len; i++) {
+        FsearchDatabaseInclude *inc = g_ptr_array_index(includes, i);
+        if (fsearch_database_include_get_active(inc)) {
+            active_count++;
+        }
+    }
+
+    return active_count;
+}
+
+static guint
 calculate_next_timeout_ms(FsearchDatabaseRescanManager *self, GPtrArray **due_indices_out) {
     if (self->global_scan_active || !self->include_manager) {
         return 0;
@@ -131,11 +150,18 @@ rescan_timer_fired_cb(gpointer user_data) {
     calculate_next_timeout_ms(self, &due_indices);
 
     if (due_indices && due_indices->len > 0) {
-        for (uint32_t i = 0; i < due_indices->len; i++) {
-            FsearchDatabaseInclude *include = g_ptr_array_index(due_indices, i);
-            const uint32_t index_id = fsearch_database_include_get_id(include);
+        const guint num_active_includes = get_num_active_includes(self);
+        if (due_indices->len == num_active_includes) {
+            g_debug("[rescan_manager] all active indices are due. Perform a full scan.");
+            fsearch_database_rescan_manager_request_full_scan(self);
+        }
+        else {
+            for (uint32_t i = 0; i < due_indices->len; i++) {
+                FsearchDatabaseInclude *include = g_ptr_array_index(due_indices, i);
+                const uint32_t index_id = fsearch_database_include_get_id(include);
 
-            fsearch_database_rescan_manager_request_index_scan(self, index_id);
+                fsearch_database_rescan_manager_request_index_scan(self, index_id);
+            }
         }
     }
 
@@ -262,6 +288,10 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
 
     g_debug("[rescan-manager] Evaluating startup scans...");
 
+    const guint num_active_includes = get_num_active_includes(self);
+
+    g_autoptr(GArray) startup_indices = g_array_sized_new(FALSE, FALSE, sizeof(uint32_t), num_active_includes);
+
     for (uint32_t i = 0; i < includes->len; i++) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
 
@@ -293,10 +323,21 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
         }
 
         if (needs_startup_scan) {
-            g_debug("[rescan-manager] Queuing startup scan for index %u", index_id);
+            g_array_append_val(startup_indices, index_id);
+        }
+    }
 
-            // Add it to the active scans and queue the work
-            fsearch_database_rescan_manager_request_index_scan(self, index_id);
+    if (startup_indices->len > 0) {
+        if (startup_indices->len == num_active_includes) {
+            g_debug("[rescan-manager] All %u active indices need startup scan -> Use a full scan.", num_active_includes);
+            fsearch_database_rescan_manager_request_full_scan(self);
+        }
+        else {
+            for (uint32_t i = 0; i < startup_indices->len; i++) {
+                uint32_t id = g_array_index(startup_indices, uint32_t, i);
+                g_debug("[rescan-manager] Queuing startup scan for index %u", id);
+                fsearch_database_rescan_manager_request_index_scan(self, id);
+            }
         }
     }
 }

@@ -1092,11 +1092,10 @@ fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     DatabaseWorkWrapper *wrapper = db_work_wrapper_new(self, work);
 
-    g_main_context_invoke_full(self->worker_ctx,
-                               G_PRIORITY_DEFAULT,
-                               handle_work_in_worker_thread_cb,
-                               wrapper,
-                               (GDestroyNotify)db_work_wrapper_free);
+    g_autoptr(GSource) idle_source = g_idle_source_new();
+    g_source_set_priority(idle_source, G_PRIORITY_DEFAULT);
+    g_source_set_callback(idle_source, handle_work_in_worker_thread_cb, wrapper, (GDestroyNotify)db_work_wrapper_free);
+    g_source_attach(idle_source, self->worker_ctx);
 }
 
 FsearchResult
