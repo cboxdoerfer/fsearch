@@ -60,10 +60,7 @@ get_name_offset(const char *old, const char *new) {
     }
 
     uint16_t offset = 0;
-    while (offset < UINT16_MAX
-           && old[offset]
-           && old[offset] == new[offset]
-    ) {
+    while (offset < UINT16_MAX && old[offset] && old[offset] == new[offset]) {
         offset++;
     }
     return offset;
@@ -279,11 +276,7 @@ database_file_load_folders(FILE *fp,
         uint16_t db_index = 0;
         cursor_read(&cursor, &db_index, sizeof(db_index));
 
-        database_file_load_entry(&cursor,
-                                 index_flags,
-                                 previous_entry_name,
-                                 &folder,
-                                 DATABASE_ENTRY_TYPE_FOLDER);
+        database_file_load_entry(&cursor, index_flags, previous_entry_name, &folder, DATABASE_ENTRY_TYPE_FOLDER);
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         cursor_read(&cursor, &parent_idx, sizeof(parent_idx));
@@ -352,11 +345,7 @@ database_file_load_files(FILE *fp,
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
         g_autoptr(FsearchDatabaseEntry) entry = NULL;
-        database_file_load_entry(&cursor,
-                                 index_flags,
-                                 previous_entry_name,
-                                 &entry,
-                                 DATABASE_ENTRY_TYPE_FILE);
+        database_file_load_entry(&cursor, index_flags, previous_entry_name, &entry, DATABASE_ENTRY_TYPE_FILE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -538,6 +527,11 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
+        int64_t rescan_after = 0;
+        if (!database_file_read_element(&rescan_after, sizeof(rescan_after), fp, checksum)) {
+            return false;
+        }
+
         uint32_t last_error_code = 0;
         if (!database_file_read_element(&last_error_code, sizeof(last_error_code), fp, checksum)) {
             return false;
@@ -558,14 +552,8 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(
-            path,
-            is_active,
-            one_file_system,
-            is_monitored,
-            scan_after_launch,
-            0,
-            id);
+        g_autoptr(FsearchDatabaseInclude) include =
+            fsearch_database_include_new(path, is_active, one_file_system, is_monitored, scan_after_launch, rescan_after, id);
         fsearch_database_include_set_last_scan_time(include, last_scan_time);
         fsearch_database_include_set_last_scan_duration(include, last_scan_duration);
         fsearch_database_include_set_last_scanned_file_count(include, last_scanned_file_count);
@@ -621,11 +609,12 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
-            is_active,
-            (FsearchDatabaseExcludeType)exclude_type,
-            (FsearchDatabaseExcludeMatchScope)scope,
-            (FsearchDatabaseExcludeTarget)target);
+        g_autoptr(FsearchDatabaseExclude)
+            exclude = fsearch_database_exclude_new(pattern,
+                                                   is_active,
+                                                   (FsearchDatabaseExcludeType)exclude_type,
+                                                   (FsearchDatabaseExcludeMatchScope)scope,
+                                                   (FsearchDatabaseExcludeTarget)target);
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
     }
 
@@ -716,12 +705,7 @@ database_file_save_files(DatabaseFileWriteCursor *cursor,
         db_entry_set_index(entry, i);
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = db_entry_get_index(parent);
-        database_file_save_entry(cursor,
-                                 index_flags,
-                                 entry,
-                                 parent_idx,
-                                 name_prev,
-                                 name_new);
+        database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
         }
@@ -744,9 +728,7 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
 }
 
 static void
-database_file_save_sorted_entries(DatabaseFileWriteCursor *cursor,
-                                  DynamicArray *entries,
-                                  uint32_t num_entries) {
+database_file_save_sorted_entries(DatabaseFileWriteCursor *cursor, DynamicArray *entries, uint32_t num_entries) {
     if (num_entries < 1) {
         // nothing to write, we're done here
         return;
@@ -776,8 +758,7 @@ database_file_save_sorted_arrays(DatabaseFileWriteCursor *cursor,
     }
 
     for (uint32_t id = DATABASE_INDEX_PROPERTY_NAME; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
-        g_autoptr(FsearchDatabaseChunkedArray) folder_chunks =
-            fsearch_database_index_store_get_folders(store, id);
+        g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(store, id);
         g_autoptr(FsearchDatabaseChunkedArray) file_chunks = fsearch_database_index_store_get_files(store, id);
         if (!folder_chunks || !file_chunks) {
             continue;
@@ -820,12 +801,7 @@ database_file_save_folders(DatabaseFileWriteCursor *cursor,
 
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
-        database_file_save_entry(cursor,
-                                 index_flags,
-                                 entry,
-                                 parent_idx,
-                                 name_prev,
-                                 name_new);
+        database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
         }
@@ -835,8 +811,7 @@ database_file_save_folders(DatabaseFileWriteCursor *cursor,
 }
 
 static void
-database_file_save_includes(DatabaseFileWriteCursor *cursor,
-                            FsearchDatabaseIndexStore *store) {
+database_file_save_includes(DatabaseFileWriteCursor *cursor, FsearchDatabaseIndexStore *store) {
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_index_store_get_include_manager(store);
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     const uint32_t num_includes = includes->len;
@@ -877,6 +852,9 @@ database_file_save_includes(DatabaseFileWriteCursor *cursor,
         const uint32_t last_scan_duration = fsearch_database_include_get_last_scan_duration(include);
         cursor_write(cursor, &last_scan_duration, sizeof(last_scan_duration));
 
+        const int64_t rescan_after = fsearch_database_include_get_rescan_after(include);
+        cursor_write(cursor, &rescan_after, sizeof(rescan_after));
+
         const uint32_t last_error_code = fsearch_database_include_get_last_error_code(include);
         cursor_write(cursor, &last_error_code, sizeof(last_error_code));
 
@@ -892,8 +870,7 @@ database_file_save_includes(DatabaseFileWriteCursor *cursor,
 }
 
 static void
-database_file_save_excludes(DatabaseFileWriteCursor *cursor,
-                            FsearchDatabaseIndexStore *store) {
+database_file_save_excludes(DatabaseFileWriteCursor *cursor, FsearchDatabaseIndexStore *store) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_index_store_get_exclude_manager(store);
     g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
     const uint32_t num_excludes = excludes->len;
@@ -1202,7 +1179,6 @@ load_fail:
     g_debug("[db_load] load failed");
 
     return false;
-
 }
 
 bool
@@ -1227,14 +1203,10 @@ fsearch_database_file_load(const char *file_path,
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_direct_hash,
-                                                                      g_direct_equal,
-                                                                      NULL,
-                                                                      (GDestroyNotify)darray_unref);
-    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_direct_hash,
-                                                                    g_direct_equal,
-                                                                    NULL,
-                                                                    (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable)
+        folder_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable)
+        file_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
 
     g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
 
@@ -1356,13 +1328,12 @@ fsearch_database_file_load(const char *file_path,
             file_array_index = darray_new(0);
             g_hash_table_insert(file_index_arrays, GINT_TO_POINTER(id), file_array_index);
         }
-        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(
-            id,
-            include,
-            exclude_manager,
-            folder_array_index,
-            file_array_index,
-            index_flags);
+        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(id,
+                                                                              include,
+                                                                              exclude_manager,
+                                                                              folder_array_index,
+                                                                              file_array_index,
+                                                                              index_flags);
         g_ptr_array_add(indices, index);
     }
     *store_out = fsearch_database_index_store_new_with_content(indices,

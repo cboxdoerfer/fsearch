@@ -30,6 +30,7 @@ libfsearch_sources = [
     'fsearch_database_index_store.c',
     'fsearch_database_info.c',
     'fsearch_database_preferences_widget.c',
+    'fsearch_database_rescan_manager.c',
     'fsearch_database_scan.c',
     'fsearch_database_search_info.c',
     'fsearch_database_search_view.c',
