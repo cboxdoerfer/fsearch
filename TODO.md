@@ -7,7 +7,7 @@
 |       | Option to index and search for creation and access time                       | High       | Medium     | Low        |
 |       | Option to index and search for owner and permissions                          | High       | Medium     | Low        |
 |       | Option to index and search for xattrs                                         | High       | Medium     | Low        |
-|       | Rework include/exclude UI                                                     | High       | Medium     | Low        |
+| Done  | Rework include/exclude UI                                                     | High       | Medium     | Low        |
 | Done  | File system monitoring                                                        | High       | High       | High       |
 |       | Option to search for run count                                                | Medium     | Low        | Low        |
 |       | Add column for nesting level                                                  | Medium     | Low        | Low        |
