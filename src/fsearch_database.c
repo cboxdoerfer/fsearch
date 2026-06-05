@@ -776,17 +776,14 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
         database_save(self);
         quit = true;
         break;
+    case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
+        signal_emit0(self, SIGNAL_SAVE_STARTED);
+        database_save(self);
+        signal_emit0(self, SIGNAL_SAVE_FINISHED);
+        break;
     case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
         database_load(self);
         break;
-    case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
-        FsearchDatabaseEntryInfo *info = NULL;
-        database_get_entry_info(self, work, &info);
-        if (info) {
-            signal_emit_item_info_ready(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
-        }
-        break;
-    }
     case FSEARCH_DATABASE_WORK_RESCAN:
         database_rescan(self);
         break;
@@ -795,11 +792,6 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
         break;
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
         database_rescan_index_finished(self, work);
-        break;
-    case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-        signal_emit0(self, SIGNAL_SAVE_STARTED);
-        database_save(self);
-        signal_emit0(self, SIGNAL_SAVE_FINISHED);
         break;
     case FSEARCH_DATABASE_WORK_SCAN:
         database_scan(self, work);
@@ -816,6 +808,14 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
         database_modify_selection(self, work);
         break;
+    case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
+        FsearchDatabaseEntryInfo *info = NULL;
+        database_get_entry_info(self, work, &info);
+        if (info) {
+            signal_emit_item_info_ready(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
+        }
+        break;
+    }
     default:
         g_assert_not_reached();
     }
