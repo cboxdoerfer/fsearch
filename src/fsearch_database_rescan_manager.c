@@ -368,17 +368,13 @@ fsearch_database_rescan_manager_notify_new_config(FsearchDatabaseRescanManager *
                                                   FsearchDatabaseIncludeManager *include_manager) {
     g_return_if_fail(self != NULL);
 
-    if (self->include_manager == include_manager) {
-        return;
+    if (include_manager != self->include_manager) {
+        // Swap the reference when there's a new include manager
+        g_set_object(&self->include_manager, include_manager);
     }
 
-    // Swap the reference
-    g_clear_object(&self->include_manager);
-
-    if (include_manager) {
-        self->include_manager = g_object_ref(include_manager);
-    }
-
+    // Always reset the rescan manager state, even if the include manager is the same
+    // It becomes invalid after a scan finished or the config changed
     g_hash_table_remove_all(self->offline_indices);
     if (self->offline_poll_source) {
         g_source_destroy(self->offline_poll_source);
