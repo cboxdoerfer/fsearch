@@ -61,7 +61,6 @@ struct _FsearchApplication {
     bool has_file_manager_on_bus;
 
     FsearchDatabaseState db_state;
-    guint db_timeout_id;
 
     uint32_t num_files;
     uint32_t num_folders;
