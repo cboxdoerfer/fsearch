@@ -1,4 +1,4 @@
-#define G_LOG_DOMAIN "fsearch-rescan-manager"
+#define G_LOG_DOMAIN "fsearch-database-rescan-manager"
 
 #include "fsearch_database_rescan_manager.h"
 
@@ -87,16 +87,16 @@ get_num_active_includes(FsearchDatabaseRescanManager *self) {
 }
 
 static void
-request_scans(FsearchDatabaseRescanManager *self, GPtrArray *includes) {
-    if (includes && includes->len > 0) {
+request_scans(FsearchDatabaseRescanManager *self, GPtrArray *due_includes) {
+    if (due_includes && due_includes->len > 0) {
         const guint num_active_includes = get_num_active_includes(self);
-        if (includes->len == num_active_includes) {
+        if (due_includes->len == num_active_includes) {
             g_debug("[rescan_manager] all active indices need to be scanned. Perform a full scan.");
             fsearch_database_rescan_manager_request_full_scan(self);
         }
         else {
-            for (uint32_t i = 0; i < includes->len; i++) {
-                FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+            for (uint32_t i = 0; i < due_includes->len; i++) {
+                FsearchDatabaseInclude *include = g_ptr_array_index(due_includes, i);
                 const uint32_t index_id = fsearch_database_include_get_id(include);
 
                 g_debug("[rescan-manager] Queuing scan for index %u: %s",
