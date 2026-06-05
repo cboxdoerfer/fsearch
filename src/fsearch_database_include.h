@@ -1,8 +1,9 @@
 #pragma once
 
-#include <gio/gio.h>
-
 #include "fsearch_database_scan_reason.h"
+
+#include <gio/gio.h>
+#include <stdint.h>
 
 G_BEGIN_DECLS
 
