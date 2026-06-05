@@ -439,17 +439,25 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
 }
 
 static void
-database_save(FsearchDatabase *self) {
+database_save(FsearchDatabase *self, gboolean notify) {
     // DB must be locked
     g_return_if_fail(self);
     g_return_if_fail(self->file);
     g_return_if_fail(self->store);
+
+    if (notify) {
+        signal_emit0(self, SIGNAL_SAVE_STARTED);
+    }
 
     g_autofree char *file_path = g_file_get_path(self->file);
 
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
     fsearch_database_file_save(self->store, file_path);
+
+    if (notify) {
+        signal_emit0(self, SIGNAL_SAVE_FINISHED);
+    }
 }
 
 static void
@@ -773,13 +781,11 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
 
     switch (fsearch_database_work_get_kind(work)) {
     case FSEARCH_DATABASE_WORK_QUIT:
-        database_save(self);
+        database_save(self, FALSE);
         quit = true;
         break;
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-        signal_emit0(self, SIGNAL_SAVE_STARTED);
-        database_save(self);
-        signal_emit0(self, SIGNAL_SAVE_FINISHED);
+        database_save(self, TRUE);
         break;
     case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
         database_load(self);
