@@ -27,7 +27,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DATABASE_MAJOR_VERSION 3
+#define DATABASE_MAJOR_VERSION 4
 #define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 #define DATABASE_CHECKSUM_SIZE 16
@@ -495,25 +495,25 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
 
         uint8_t one_file_system = 0;
         if (!database_file_read_element(&one_file_system, sizeof(one_file_system), fp, checksum)) {
-            g_debug("[db_load] failed to read path_len of include");
+            g_debug("[db_load] failed to read one_file_system of include");
             return false;
         }
 
         uint8_t is_active = 0;
         if (!database_file_read_element(&is_active, sizeof(is_active), fp, checksum)) {
-            g_debug("[db_load] failed to read path_len of include");
+            g_debug("[db_load] failed to read is_active of include");
             return false;
         }
 
         uint8_t is_monitored = 0;
         if (!database_file_read_element(&is_monitored, sizeof(is_monitored), fp, checksum)) {
-            g_debug("[db_load] failed to read path_len of include");
+            g_debug("[db_load] failed to read is_monitored of include");
             return false;
         }
 
         uint8_t scan_after_launch = 0;
         if (!database_file_read_element(&scan_after_launch, sizeof(scan_after_launch), fp, checksum)) {
-            g_debug("[db_load] failed to read path_len of include");
+            g_debug("[db_load] failed to read scan_after_launch of include");
             return false;
         }
 
@@ -605,7 +605,7 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
 
         uint8_t is_active = 0;
         if (!database_file_read_element(&is_active, sizeof(is_active), fp, checksum)) {
-            g_debug("[db_load] failed to read path_len of exclude");
+            g_debug("[db_load] failed to read is_active of exclude");
             return false;
         }
 
@@ -954,6 +954,16 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
+    g_debug("[db_save] saving database fast sort flags...");
+    const uint64_t fast_sort_flags = DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                   | DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                   | DATABASE_INDEX_PROPERTY_FLAG_EXTENSION;
+    cursor_write(&cursor, &fast_sort_flags, sizeof(fast_sort_flags));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving fast sort flags");
+        goto save_fail;
+    }
+
     g_debug("[db_save] saving indices...");
     database_file_save_includes(&cursor, store);
     if (cursor.error == true) {
@@ -1117,6 +1127,12 @@ fsearch_database_file_load_config(const char *file_path,
         goto load_fail;
     }
 
+    uint64_t fast_sort_flags = 0;
+    if (!database_file_read_element(&fast_sort_flags, sizeof(fast_sort_flags), fp, checksum)) {
+        g_debug("[db_load] failed to read fast sort flags");
+        goto load_fail;
+    }
+
     if (!database_file_load_includes(fp, include_manager, checksum)) {
         g_debug("[db_load] failed to load includes");
         goto load_fail;
@@ -1217,6 +1233,12 @@ fsearch_database_file_load(const char *file_path,
     uint64_t index_flags = 0;
     if (!database_file_read_element(&index_flags, sizeof(index_flags), fp, checksum)) {
         g_debug("[db_load] failed to read index flags");
+        goto load_fail;
+    }
+
+    uint64_t fast_sort_flags = 0;
+    if (!database_file_read_element(&fast_sort_flags, sizeof(fast_sort_flags), fp, checksum)) {
+        g_debug("[db_load] failed to read fast sort flags");
         goto load_fail;
     }
 
