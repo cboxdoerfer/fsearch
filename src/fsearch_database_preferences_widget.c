@@ -31,6 +31,7 @@ struct _FsearchDatabasePreferencesWidget {
     GtkTreeSelection *include_selection;
     GtkRevealer *include_settings_revealer;
     GtkToggleButton *include_monitor_checkbutton;
+    GtkToggleButton *include_scan_after_launch_checkbutton;
     GtkToggleButton *include_onefs_checkbutton;
     GtkToggleButton *include_rescan_scheduled_checkbutton;
     GtkBox *include_rescan_scheduled_box;
@@ -54,6 +55,7 @@ enum {
     COL_INCLUDE_PATH,
     COL_INCLUDE_ONE_FS,
     COL_INCLUDE_MONITOR,
+    COL_INCLUDE_SCAN_AFTER_LAUNCH,
     COL_INCLUDE_RESCAN_AFTER,
     COL_INCLUDE_ID,
     NUM_INCLUDE_COLUMNS
@@ -285,6 +287,7 @@ include_append_row(GtkListStore *store,
                    const char *path,
                    gboolean one_file_system,
                    gboolean monitor,
+                   gboolean scan_after_launch,
                    gint64 rescan_after,
                    gint id) {
     if (!include_path_is_unique(store, path)) {
@@ -302,6 +305,8 @@ include_append_row(GtkListStore *store,
                        one_file_system,
                        COL_INCLUDE_MONITOR,
                        monitor,
+                       COL_INCLUDE_SCAN_AFTER_LAUNCH,
+                       scan_after_launch,
                        COL_INCLUDE_RESCAN_AFTER,
                        rescan_after,
                        COL_INCLUDE_ID,
@@ -311,7 +316,7 @@ include_append_row(GtkListStore *store,
 
 static void
 on_include_append_new_row(GtkListStore *store, const char *path) {
-    include_append_row(store, TRUE, path, FALSE, FALSE, 0, get_unique_include_id(store));
+    include_append_row(store, TRUE, path, FALSE, FALSE, FALSE, 0, get_unique_include_id(store));
 }
 
 static void
@@ -704,6 +709,7 @@ on_include_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
     if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
         gboolean one_file_system = FALSE;
         gboolean monitor = FALSE;
+        gboolean scan_after_launch = FALSE;
         gint64 rescan_after = 0;
         gtk_tree_model_get(model,
                            &iter,
@@ -711,10 +717,14 @@ on_include_selection_changed(GtkTreeSelection *selection, gpointer user_data) {
                            &one_file_system,
                            COL_INCLUDE_MONITOR,
                            &monitor,
+                           COL_INCLUDE_SCAN_AFTER_LAUNCH,
+                           &scan_after_launch,
                            COL_INCLUDE_RESCAN_AFTER,
                            &rescan_after,
                            -1);
         gtk_toggle_button_set_active(self->include_monitor_checkbutton, monitor);
+        gtk_toggle_button_set_active(self->include_scan_after_launch_checkbutton, monitor ? TRUE : scan_after_launch);
+        gtk_widget_set_sensitive(GTK_WIDGET(self->include_scan_after_launch_checkbutton), !monitor);
         gtk_toggle_button_set_active(self->include_onefs_checkbutton, one_file_system);
         const gboolean rescan_after_active = rescan_after > 0 ? TRUE : FALSE;
 
@@ -748,6 +758,17 @@ static void
 on_include_monitor_checkbutton_toggled(GtkToggleButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     include_model_update_on_toggled_button(self->include_selection, button, COL_INCLUDE_MONITOR);
+    const gboolean monitor = gtk_toggle_button_get_active(button);
+    if (monitor) {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self->include_scan_after_launch_checkbutton), monitor);
+    }
+    gtk_widget_set_sensitive(GTK_WIDGET(self->include_scan_after_launch_checkbutton), !monitor);
+}
+
+static void
+on_include_scan_after_launch_checkbutton_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    include_model_update_on_toggled_button(self->include_selection, button, COL_INCLUDE_SCAN_AFTER_LAUNCH);
 }
 
 static void
@@ -807,6 +828,7 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
                                              G_TYPE_STRING,
                                              G_TYPE_BOOLEAN,
                                              G_TYPE_BOOLEAN,
+                                             G_TYPE_BOOLEAN,
                                              G_TYPE_INT64,
                                              G_TYPE_INT);
     gtk_tree_view_set_model(self->include_list, GTK_TREE_MODEL(self->include_model));
@@ -840,6 +862,7 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_include_get_path(include),
                            fsearch_database_include_get_one_file_system(include),
                            fsearch_database_include_get_monitored(include),
+                           fsearch_database_include_get_scan_after_launch(include),
                            fsearch_database_include_get_rescan_after(include),
                            fsearch_database_include_get_id(include));
     }
@@ -960,6 +983,9 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_remove_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_settings_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_monitor_checkbutton);
+    gtk_widget_class_bind_template_child(widget_class,
+                                         FsearchDatabasePreferencesWidget,
+                                         include_scan_after_launch_checkbutton);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_onefs_checkbutton);
     gtk_widget_class_bind_template_child(widget_class,
                                          FsearchDatabasePreferencesWidget,
@@ -983,6 +1009,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_include_remove_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_selection_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_include_monitor_checkbutton_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_include_scan_after_launch_checkbutton_toggled);
     gtk_widget_class_bind_template_callback(widget_class, on_include_onefs_checkbutton_toggled);
     gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_checkbutton_toggled);
     gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_hours_spinbutton_value_changed);
@@ -1028,6 +1055,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         gboolean active = FALSE;
         gboolean one_file_system = FALSE;
         gboolean monitor = FALSE;
+        gboolean scan_after_launch = FALSE;
         gint64 rescan_after = 0;
         gint id = -1;
         gtk_tree_model_get(model,
@@ -1040,6 +1068,8 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            &one_file_system,
                            COL_INCLUDE_MONITOR,
                            &monitor,
+                           COL_INCLUDE_SCAN_AFTER_LAUNCH,
+                           &scan_after_launch,
                            COL_INCLUDE_RESCAN_AFTER,
                            &rescan_after,
                            COL_INCLUDE_ID,
@@ -1049,7 +1079,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, rescan_after, id));
+                fsearch_database_include_new(path, active, one_file_system, monitor, scan_after_launch, rescan_after, id));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);

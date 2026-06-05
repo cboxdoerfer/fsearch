@@ -30,8 +30,8 @@
 #include "fsearch_query_flags.h"
 #include "fsearch_string_utils.h"
 
-#include <glib.h>
 #include <glib-object.h>
+#include <glib.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -53,26 +53,35 @@ typedef struct {
     } default_val;
 } FsearchKeyData;
 
-#define CONF_INT_OF(S, member, def)  { #member, TYPE_INT,    offsetof(S, member), .default_val = {.i = (def)} }
-#define CONF_INT64_OF(S, member, def)  { #member, TYPE_INT64,    offsetof(S, member), .default_val = {.i64 = (def)} }
-#define CONF_STR_OF(S, member, def)  { #member, TYPE_STRING, offsetof(S, member), .default_val = {.s = (def)} }
-#define CONF_BOOL_OF(S, member, def) { #member, TYPE_BOOL,   offsetof(S, member), .default_val = {.b = (def)} }
+#define CONF_INT_OF(S, member, def)                                                                                    \
+    {                                                                                                                  \
+        #member, TYPE_INT, offsetof(S, member), .default_val = {.i = (def) }                                           \
+    }
+#define CONF_INT64_OF(S, member, def)                                                                                  \
+    {                                                                                                                  \
+        #member, TYPE_INT64, offsetof(S, member), .default_val = {.i64 = (def) }                                       \
+    }
+#define CONF_STR_OF(S, member, def)                                                                                    \
+    {                                                                                                                  \
+        #member, TYPE_STRING, offsetof(S, member), .default_val = {.s = (def) }                                        \
+    }
+#define CONF_BOOL_OF(S, member, def)                                                                                   \
+    {                                                                                                                  \
+        #member, TYPE_BOOL, offsetof(S, member), .default_val = {.b = (def) }                                          \
+    }
 
-#define CONF_INT(member, def)  CONF_INT_OF(FsearchConfig, member, def)
-#define CONF_INT64(member, def)  CONF_INT64_OF(FsearchConfig, member, def)
-#define CONF_STR(member, def)  CONF_STR_OF(FsearchConfig, member, def)
+#define CONF_INT(member, def) CONF_INT_OF(FsearchConfig, member, def)
+#define CONF_INT64(member, def) CONF_INT64_OF(FsearchConfig, member, def)
+#define CONF_STR(member, def) CONF_STR_OF(FsearchConfig, member, def)
 #define CONF_BOOL(member, def) CONF_BOOL_OF(FsearchConfig, member, def)
 
-#define CONFIG_SAVE_SECTION(kf, sec, arr, cfg) \
-    config_save_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
-#define CONFIG_LOAD_SECTION(kf, sec, arr, cfg) \
-    config_load_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
-#define CONFIG_SAVE_OBJECT_KEYS(kf, sec, pre, idx, arr, obj) \
+#define CONFIG_SAVE_SECTION(kf, sec, arr, cfg) config_save_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
+#define CONFIG_LOAD_SECTION(kf, sec, arr, cfg) config_load_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
+#define CONFIG_SAVE_OBJECT_KEYS(kf, sec, pre, idx, arr, obj)                                                           \
     config_save_object(kf, sec, pre, idx, arr, G_N_ELEMENTS(arr), obj)
-#define CONFIG_LOAD_OBJECT_KEYS(kf, sec, pre, idx, arr, obj) \
+#define CONFIG_LOAD_OBJECT_KEYS(kf, sec, pre, idx, arr, obj)                                                           \
     config_load_object(kf, sec, pre, idx, arr, G_N_ELEMENTS(arr), obj)
-#define CONFIG_DEFAULT_SECTION(arr, cfg) \
-    config_get_section_default(arr, G_N_ELEMENTS(arr), cfg)
+#define CONFIG_DEFAULT_SECTION(arr, cfg) config_get_section_default(arr, G_N_ELEMENTS(arr), cfg)
 
 static const FsearchKeyData SEARCH_SECTION[] = {
     CONF_BOOL(hide_results_on_empty_search, false),
@@ -169,6 +178,7 @@ typedef struct {
     bool active;
     bool one_file_system;
     bool monitor;
+    bool scan_after_launch;
     int64_t rescan_after;
 } FsearchConfigIncludeKeys;
 
@@ -178,6 +188,7 @@ static const FsearchKeyData INCLUDE_KEYS[] = {
     CONF_STR_OF(FsearchConfigIncludeKeys, path, NULL),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, one_file_system, false),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, monitor, false),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, scan_after_launch, false),
     CONF_INT64_OF(FsearchConfigIncludeKeys, rescan_after, 0),
 };
 
@@ -367,9 +378,7 @@ config_load_section(GKeyFile *key_file,
 }
 
 static void
-config_get_section_default(const FsearchKeyData *keys,
-                           size_t num_keys,
-                           FsearchConfig *config) {
+config_get_section_default(const FsearchKeyData *keys, size_t num_keys, FsearchConfig *config) {
     for (size_t i = 0; i < num_keys; i++) {
         void *ptr = (char *)config + keys[i].struct_offset;
 
@@ -405,7 +414,7 @@ config_load_filters(GKeyFile *key_file) {
 
     FsearchFilterManager *filters = fsearch_filter_manager_new();
 
-    for (uint32_t i = 0; ; i++) {
+    for (uint32_t i = 0;; i++) {
         FsearchConfigFilterKeys filter_keys = {};
 
         CONFIG_LOAD_OBJECT_KEYS(key_file, "Filters", "filter", i, FILTER_KEYS, &filter_keys);
@@ -444,7 +453,7 @@ config_load_includes(GKeyFile *key_file) {
 
     FsearchDatabaseIncludeManager *include_manager = fsearch_database_include_manager_new();
 
-    for (uint32_t i = 0; ; i++) {
+    for (uint32_t i = 0;; i++) {
         FsearchConfigIncludeKeys include_keys = {};
 
         CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
@@ -453,14 +462,13 @@ config_load_includes(GKeyFile *key_file) {
             break;
         }
 
-        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(
-            include_keys.path,
-            include_keys.active,
-            include_keys.one_file_system,
-            include_keys.monitor,
-            false,
-            include_keys.rescan_after,
-            include_keys.id);
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(include_keys.path,
+                                                                                 include_keys.active,
+                                                                                 include_keys.one_file_system,
+                                                                                 include_keys.monitor,
+                                                                                 include_keys.scan_after_launch,
+                                                                                 include_keys.rescan_after,
+                                                                                 include_keys.id);
         fsearch_database_include_manager_add(include_manager, include);
 
         g_clear_pointer(&include_keys.path, g_free);
@@ -476,7 +484,7 @@ config_load_excludes(GKeyFile *key_file) {
 
     FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_exclude_manager_new();
 
-    for (uint32_t i = 0; ; i++) {
+    for (uint32_t i = 0;; i++) {
         FsearchConfigExcludeKeys exclude_keys = {};
 
         CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
@@ -485,13 +493,12 @@ config_load_excludes(GKeyFile *key_file) {
             break;
         }
 
-        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(
-            exclude_keys.pattern,
-            exclude_keys.active,
-            fsearch_database_exclude_get_type_from_string(exclude_keys.type),
-            fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
-            fsearch_database_exclude_get_target_from_string(exclude_keys.target)
-            );
+        g_autoptr(FsearchDatabaseExclude) exclude =
+            fsearch_database_exclude_new(exclude_keys.pattern,
+                                         exclude_keys.active,
+                                         fsearch_database_exclude_get_type_from_string(exclude_keys.type),
+                                         fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
+                                         fsearch_database_exclude_get_target_from_string(exclude_keys.target));
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
 
         g_clear_pointer(&exclude_keys.type, g_free);
@@ -599,11 +606,11 @@ config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
             g_assert_not_reached();
         }
 
-        FsearchConfigFilterKeys filter_keys = {.name = filter->name, .query = filter->query, .macro = filter->macro,
+        FsearchConfigFilterKeys filter_keys = {.name = filter->name,
+                                               .query = filter->query,
+                                               .macro = filter->macro,
                                                .match_case = filter->flags & QUERY_FLAG_MATCH_CASE ? true : false,
-                                               .search_in_path = filter->flags & QUERY_FLAG_SEARCH_IN_PATH
-                                                                     ? true
-                                                                     : false,
+                                               .search_in_path = filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? true : false,
                                                .enable_regex = filter->flags & QUERY_FLAG_REGEX ? true : false};
 
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Filters", "filter", i, FILTER_KEYS, &filter_keys);
@@ -625,13 +632,14 @@ config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_
             g_assert_not_reached();
         }
 
-        FsearchConfigIncludeKeys include_keys = {.path = (char *)fsearch_database_include_get_path(include),
-                                                 .monitor = fsearch_database_include_get_monitored(include),
-                                                 .active = fsearch_database_include_get_active(include),
-                                                 .one_file_system = fsearch_database_include_get_one_file_system(
-                                                     include),
-                                                 .rescan_after = fsearch_database_include_get_rescan_after(include),
-                                                 .id = fsearch_database_include_get_id(include)};
+        FsearchConfigIncludeKeys include_keys = {
+            .path = (char *)fsearch_database_include_get_path(include),
+            .monitor = fsearch_database_include_get_monitored(include),
+            .active = fsearch_database_include_get_active(include),
+            .one_file_system = fsearch_database_include_get_one_file_system(include),
+            .scan_after_launch = fsearch_database_include_get_scan_after_launch(include),
+            .rescan_after = fsearch_database_include_get_rescan_after(include),
+            .id = fsearch_database_include_get_id(include)};
 
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
     }
@@ -730,10 +738,8 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     if (!fsearch_filter_manager_cmp(c1->filters, c2->filters)) {
         result.search_config_changed = true;
     }
-    if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->
-        show_listview_icons
-        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->
-        enable_list_tooltips) {
+    if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
+        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
         result.listview_config_changed = true;
     }
 

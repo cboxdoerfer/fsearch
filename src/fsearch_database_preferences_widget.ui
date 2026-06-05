@@ -187,6 +187,21 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkCheckButton" id="include_scan_after_launch_checkbutton">
+                                <property name="label" translatable="yes">Scan after launch</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="draw-indicator">True</property>
+                                <signal name="toggled" handler="on_include_scan_after_launch_checkbutton_toggled" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkCheckButton" id="include_onefs_checkbutton">
                                 <property name="label" translatable="yes">Stay on one file system</property>
                                 <property name="visible">True</property>
@@ -198,7 +213,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                             <child>
@@ -214,7 +229,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">2</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                             <child>
@@ -318,7 +333,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">3</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                           </object>
