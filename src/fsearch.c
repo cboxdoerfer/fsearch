@@ -78,32 +78,6 @@ G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 static void
 set_accels_for_escape(GApplication *app);
 
-static gboolean
-on_database_auto_update(gpointer user_data) {
-    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    g_debug("[app] scheduled database update started");
-    g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
-    return G_SOURCE_CONTINUE;
-}
-
-static void
-database_auto_update_init(FsearchApplication *self) {
-    if (self->db_timeout_id != 0) {
-        g_source_remove(self->db_timeout_id);
-        self->db_timeout_id = 0;
-    }
-    if (self->config->update_database_every) {
-        guint seconds = self->config->update_database_every_hours * 3600
-                      + self->config->update_database_every_minutes * 60;
-        if (seconds < 60) {
-            seconds = 60;
-        }
-
-        g_debug("[app] update database every %d seconds", seconds);
-        self->db_timeout_id = g_timeout_add_seconds(seconds, on_database_auto_update, self);
-    }
-}
-
 static void
 move_search_term_to_window(FsearchApplication *self, FsearchApplicationWindow *win) {
     if (!self->option_search_term) {
@@ -253,7 +227,6 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         }
 
         g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
-        database_auto_update_init(self);
 
         GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
         for (GList *w = windows; w; w = w->next) {
@@ -572,13 +545,6 @@ fsearch_application_activate(GApplication *app) {
     }
 
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", g_variant_new_boolean(self->minimized));
-
-    database_auto_update_init(self);
-
-    if (self->config->update_database_on_launch) {
-        // TODO: implement
-        // database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
-    }
 }
 
 static gint
