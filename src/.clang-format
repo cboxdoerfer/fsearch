@@ -15,13 +15,15 @@ BinPackParameters: false
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BraceWrapping:
-  BeforeElse: true
+    BeforeElse: true
 
 # Penalties
-PenaltyBreakAssignment: 50
+PenaltyBreakAssignment: 100
 PenaltyBreakBeforeFirstCallParameter: 40
 PenaltyBreakComment: 10
 PenaltyBreakFirstLessLess: 0
 PenaltyBreakString: 10
 PenaltyExcessCharacter: 10
 PenaltyReturnTypeOnItsOwnLine: 30
+
+TypenameMacros: ["g_autoptr", "g_auto", "g_autofree"]

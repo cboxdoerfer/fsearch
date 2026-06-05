@@ -1079,8 +1079,11 @@ fsearch_database_init(FsearchDatabase *self) {
     self->worker_loop = g_main_loop_new(self->worker_ctx, FALSE);
     self->worker_thread = g_thread_new("FsearchDatabaseWorker", database_worker_thread, self);
 
-    self->rescan_manager =
-        fsearch_database_rescan_manager_new(NULL, on_index_scan_requested, on_full_scan_requested, self, self->worker_ctx);
+    self->rescan_manager = fsearch_database_rescan_manager_new(NULL,
+                                                               on_index_scan_requested,
+                                                               on_full_scan_requested,
+                                                               self,
+                                                               self->worker_ctx);
 }
 
 FsearchDatabase *

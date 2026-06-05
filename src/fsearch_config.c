@@ -493,12 +493,12 @@ config_load_excludes(GKeyFile *key_file) {
             break;
         }
 
-        g_autoptr(FsearchDatabaseExclude) exclude =
-            fsearch_database_exclude_new(exclude_keys.pattern,
-                                         exclude_keys.active,
-                                         fsearch_database_exclude_get_type_from_string(exclude_keys.type),
-                                         fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
-                                         fsearch_database_exclude_get_target_from_string(exclude_keys.target));
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(
+            exclude_keys.pattern,
+            exclude_keys.active,
+            fsearch_database_exclude_get_type_from_string(exclude_keys.type),
+            fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
+            fsearch_database_exclude_get_target_from_string(exclude_keys.target));
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
 
         g_clear_pointer(&exclude_keys.type, g_free);
