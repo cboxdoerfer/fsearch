@@ -18,8 +18,8 @@ BraceWrapping:
     BeforeElse: true
 
 # Penalties
-PenaltyBreakAssignment: 100
-PenaltyBreakBeforeFirstCallParameter: 40
+PenaltyBreakAssignment: 200
+PenaltyBreakBeforeFirstCallParameter: 100
 PenaltyBreakComment: 10
 PenaltyBreakFirstLessLess: 0
 PenaltyBreakString: 10

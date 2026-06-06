@@ -520,8 +520,8 @@ database_set_store(FsearchDatabase *self, FsearchDatabaseIndexStore *store) {
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = store ? fsearch_database_index_store_ref(store) : NULL;
 
-    g_autoptr(FsearchDatabaseIncludeManager)
-        include_manager = fsearch_database_index_store_get_include_manager(self->store);
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_index_store_get_include_manager(
+        self->store);
 
     if (self->rescan_manager) {
         fsearch_database_rescan_manager_notify_new_config(self->rescan_manager, include_manager);
@@ -563,8 +563,11 @@ database_rescan_sync(FsearchDatabase *db,
                      FsearchDatabaseExcludeManager *exclude_manager,
                      FsearchDatabaseIndexPropertyFlags flags) {
     // DB must be locked
-    g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, index_store_event_cb, db);
+    g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
+                                                                                  exclude_manager,
+                                                                                  flags,
+                                                                                  index_store_event_cb,
+                                                                                  db);
     g_return_if_fail(store);
 
     database_set_store(db, store);
@@ -601,10 +604,10 @@ database_rescan(FsearchDatabase *self) {
     g_return_if_fail(store);
 
     // The IO thread is expecting work objects -> use scan_finished kind to wrap the index store
-    g_autoptr(FsearchDatabaseWork)
-        work = fsearch_database_work_new_scan_finished(store,
-                                                       (void *(*)(void *))fsearch_database_index_store_ref,
-                                                       (GDestroyNotify)fsearch_database_index_store_unref);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan_finished(
+        store,
+        (void *(*)(void *))fsearch_database_index_store_ref,
+        (GDestroyNotify)fsearch_database_index_store_unref);
 
     g_thread_pool_push(self->io_pool, g_steal_pointer(&work), NULL);
 }
@@ -618,8 +621,8 @@ database_rescan_index(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     const uint32_t index_id = fsearch_database_work_rescan_index_get_id(work);
 
-    g_autoptr(FsearchDatabaseIndex)
-        new_index = fsearch_database_index_store_create_index_for_rescan(self->store, index_id);
+    g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_index_store_create_index_for_rescan(self->store,
+                                                                                                     index_id);
 
     if (!new_index) {
         g_warning("[db] rescan_index: failed to create index for rescan (id=%u)", index_id);
@@ -695,15 +698,18 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
-    g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, index_store_event_cb, self);
+    g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
+                                                                                  exclude_manager,
+                                                                                  flags,
+                                                                                  index_store_event_cb,
+                                                                                  self);
     g_return_if_fail(store);
 
     // The IO thread is expecting work objects -> use scan_finished kind to wrap the index store
-    g_autoptr(FsearchDatabaseWork)
-        new_work = fsearch_database_work_new_scan_finished(store,
-                                                           (void *(*)(void *))fsearch_database_index_store_ref,
-                                                           (GDestroyNotify)fsearch_database_index_store_unref);
+    g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_scan_finished(
+        store,
+        (void *(*)(void *))fsearch_database_index_store_ref,
+        (GDestroyNotify)fsearch_database_index_store_unref);
 
     g_thread_pool_push(self->io_pool, g_steal_pointer(&new_work), NULL);
 }
