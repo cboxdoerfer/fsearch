@@ -80,12 +80,14 @@
         <value key="Purism::form_factor">workstation</value>
     </custom>
     <releases>
-        <release date="2026-04-11" version="0.3-beta1">
+        <release date="2026-06-06" version="0.3-beta2">
             <description>
                 <ul>
                     <li>DB rewrite</li>
                     <li>DB: Add support for filesystem monitoring</li>
                     <li>DB: Allow files and folders to be excluded based on fixed patterns, wildcards or regular expressions</li>
+                    <li>DB: Allow included folders to be scheduled and scanned after launch independently</li>
+                    <li>DB: Make rescanning more efficient</li>
                     <li>DB: Store database config in DB file</li>
                     <li>DB: Add checksum to DB file</li>
                     <li>Make icon and file info gathering asynchronous (no UI blocking)</li>
