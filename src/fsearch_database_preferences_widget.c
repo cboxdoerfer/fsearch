@@ -143,8 +143,11 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
     gtk_widget_show(dialog);
 #else
-    GtkFileChooserNative *dialog =
-        gtk_file_chooser_native_new(_("Select folder"), GTK_WINDOW(window), action, _("_Select"), _("_Cancel"));
+    GtkFileChooserNative *dialog = gtk_file_chooser_native_new(_("Select folder"),
+                                                               GTK_WINDOW(window),
+                                                               action,
+                                                               _("_Select"),
+                                                               _("_Cancel"));
 
     g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_native_dialog_response), ctx);
     gtk_native_dialog_set_transient_for(GTK_NATIVE_DIALOG(dialog), GTK_WINDOW(window));
@@ -601,8 +604,12 @@ column_combo_append(GtkTreeView *view,
 
 static void
 init_exclude_page(FsearchDatabasePreferencesWidget *self) {
-    self->exclude_model =
-        gtk_list_store_new(NUM_EXCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT);
+    self->exclude_model = gtk_list_store_new(NUM_EXCLUDE_COLUMNS,
+                                             G_TYPE_BOOLEAN,
+                                             G_TYPE_STRING,
+                                             G_TYPE_INT,
+                                             G_TYPE_INT,
+                                             G_TYPE_INT);
     gtk_tree_view_set_model(self->exclude_list, GTK_TREE_MODEL(self->exclude_model));
     column_toggle_append(self->exclude_list,
                          GTK_TREE_MODEL(self->exclude_model),
@@ -747,7 +754,6 @@ include_model_update_on_toggled_button(GtkTreeSelection *selection, GtkToggleBut
     GtkTreeModel *model = NULL;
     GtkTreeIter iter = {};
 
-    g_print("toggled\n");
     const gboolean button_active = gtk_toggle_button_get_active(button);
     if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
         gtk_list_store_set(GTK_LIST_STORE(model), &iter, col, button_active, -1);
@@ -810,15 +816,12 @@ static void
 on_include_rescan_scheduled_hours_spinbutton_value_changed(GtkSpinButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     include_model_update_rescan_after(self);
-
-    g_print("value-changed\n");
 }
 
 static void
 on_include_rescan_scheduled_minutes_spinbutton_value_changed(GtkSpinButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     include_model_update_rescan_after(self);
-    g_print("value-changed\n");
 }
 
 static void
@@ -958,18 +961,20 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     object_class->set_property = fsearch_database_preferences_widget_set_property;
     object_class->get_property = fsearch_database_preferences_widget_get_property;
 
-    properties[PROP_INCLUDE_MANAGER] =
-        g_param_spec_object("include-manager",
-                            "Include Manager",
-                            "The include manager used to populate and edit the include list",
-                            FSEARCH_TYPE_DATABASE_INCLUDE_MANAGER,
-                            (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
-    properties[PROP_EXCLUDE_MANAGER] =
-        g_param_spec_object("exclude-manager",
-                            "Exclude Manager",
-                            "The exclude manager used to populate and edit the exclude list",
-                            FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER,
-                            (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+    properties[PROP_INCLUDE_MANAGER] = g_param_spec_object("include-manager",
+                                                           "Include Manager",
+                                                           "The include manager used to populate and edit the include "
+                                                           "list",
+                                                           FSEARCH_TYPE_DATABASE_INCLUDE_MANAGER,
+                                                           (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                            | G_PARAM_STATIC_STRINGS));
+    properties[PROP_EXCLUDE_MANAGER] = g_param_spec_object("exclude-manager",
+                                                           "Exclude Manager",
+                                                           "The exclude manager used to populate and edit the exclude "
+                                                           "list",
+                                                           FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER,
+                                                           (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                            | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
