@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-06 19:07+0200\n"
 "PO-Revision-Date: 2026-06-08 08:01+0000\n"
-"Last-Translator: Rondnelly Nunes de Assis <rond.nunes@gmail.com>\n"
+"Last-Translator: breakout71fan_1789 <pxhere.viral741@passinbox.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -213,7 +213,7 @@ msgstr "Desempenho de classificação aprimorado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Desempenho de rolagem aprimorado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Remember file selection after a database update"
