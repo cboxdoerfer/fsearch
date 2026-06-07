@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-06 19:07+0200\n"
-"PO-Revision-Date: 2026-05-25 06:11+0000\n"
+"PO-Revision-Date: 2026-06-08 08:01+0000\n"
 "Last-Translator: anon <anon0000000000@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.dev0\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -170,7 +170,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "DB: Effizienteres erneutes Scannen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "DB: Store database config in DB file"
@@ -387,7 +387,7 @@ msgstr "Pfad"
 
 #: src/fsearch_database_preferences_widget.c:392
 msgid "Basename"
-msgstr ""
+msgstr "Basisname"
 
 #: src/fsearch_database_preferences_widget.c:410
 #, fuzzy
@@ -450,11 +450,11 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "Versuchen zu überwachen"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Nach dem Start scannen"
 
 #: src/fsearch_database_preferences_widget.ui:206
 #, fuzzy
@@ -467,7 +467,7 @@ msgstr "Erneut scannen alle"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Stunden:"
 
 #: src/fsearch_database_preferences_widget.ui:298
 #, fuzzy
