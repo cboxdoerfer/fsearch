@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-06 19:07+0200\n"
-"PO-Revision-Date: 2026-05-08 17:11+0000\n"
+"PO-Revision-Date: 2026-06-08 08:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.5-dev\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -164,10 +164,12 @@ msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"Veri tabanı: Dahil edilen klasörlerin, başlatıldıktan sonra bağımsız olarak "
+"zamanlanmasına ve taranmasına izin verildi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "Veri tabanı: Yeniden tarama daha verimli hale getirildi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "DB: Store database config in DB file"
@@ -437,16 +439,15 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "İzlemeye çalış"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Başlatıldıktan sonra tara"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Bir Dosya Sistemi"
+msgstr "Bir dosya sisteminde kal"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -454,12 +455,11 @@ msgstr "Yeniden tarama aralığı"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Saat:"
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "dakika"
+msgstr "Dakika:"
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
