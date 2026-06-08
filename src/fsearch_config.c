@@ -471,7 +471,8 @@ config_load_includes(GKeyFile *key_file) {
 
 static FsearchDatabaseExcludeManager *
 config_load_excludes(GKeyFile *key_file) {
-    if (!g_key_file_has_group(key_file, "Database")) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
         return fsearch_database_exclude_manager_new_with_defaults();
     }
 
@@ -480,7 +481,7 @@ config_load_excludes(GKeyFile *key_file) {
     for (uint32_t i = 0;; i++) {
         FsearchConfigExcludeKeys exclude_keys = {};
 
-        CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
+        CONFIG_LOAD_OBJECT_KEYS(key_file, group, "exclude", i, EXCLUDE_KEYS, &exclude_keys);
 
         if (!exclude_keys.type || fsearch_string_is_empty(exclude_keys.type)) {
             break;
@@ -505,6 +506,99 @@ config_load_excludes(GKeyFile *key_file) {
         g_key_file_get_boolean(key_file, group, "exclude_hidden_files_and_folders", NULL));
 
     return exclude_manager;
+}
+
+// Legacy config handlers to support loading includes and excludes from config files created with 0.2 and earlier
+
+static FsearchDatabaseIncludeManager *
+config_load_legacy_includes(GKeyFile *key_file) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
+        return fsearch_database_include_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseIncludeManager *include_manager = fsearch_database_include_manager_new();
+    g_autoptr(GString) key = g_string_new(NULL);
+    const char *prefix = "location";
+    uint32_t pos = 0;
+    while (true) {
+        pos++;
+        g_string_printf(key, "%s_%d", prefix, pos);
+        g_autofree char *path = g_key_file_get_string(key_file, group, key->str, NULL);
+        if (!path) {
+            break;
+        }
+        g_string_printf(key, "%s_enabled_%d", prefix, pos);
+        const gboolean enabled = g_key_file_get_boolean(key_file, group, key->str, NULL);
+        g_string_printf(key, "%s_one_filesystem_%d", prefix, pos);
+        const gboolean one_filesystem = g_key_file_get_boolean(key_file, group, key->str, NULL);
+
+        fsearch_database_include_manager_add(
+            include_manager,
+            fsearch_database_include_new(path, enabled, one_filesystem, FALSE, FALSE, 0, pos - 1));
+    }
+
+    return include_manager;
+}
+
+static FsearchDatabaseExcludeManager *
+config_load_legacy_excludes(GKeyFile *key_file) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
+        return fsearch_database_exclude_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_exclude_manager_new();
+    g_autoptr(GString) key = g_string_new(NULL);
+    const char *prefix = "exclude_location";
+    uint32_t pos = 0;
+    while (true) {
+        pos++;
+        g_string_printf(key, "%s_%d", prefix, pos);
+        g_autofree char *path = g_key_file_get_string(key_file, group, key->str, NULL);
+        if (!path) {
+            break;
+        }
+        g_string_printf(key, "%s_enabled_%d", prefix, pos);
+        bool enabled = g_key_file_get_boolean(key_file, group, key->str, NULL);
+
+        fsearch_database_exclude_manager_add(exclude_manager,
+                                             fsearch_database_exclude_new(path,
+                                                                          enabled,
+                                                                          FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                                                                          FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                                                                          FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS));
+    }
+
+    g_autofree char *exclude_files_str = g_key_file_get_string(key_file, group, "exclude_files", NULL);
+    if (exclude_files_str) {
+        g_auto(GStrv) exclude_files = g_strsplit(exclude_files_str, ";", -1);
+        for (gchar **ptr = exclude_files; *ptr != NULL; ptr++) {
+            const gchar *current_file = *ptr;
+            fsearch_database_exclude_manager_add(exclude_manager,
+                                                 fsearch_database_exclude_new(current_file,
+                                                                              TRUE,
+                                                                              FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                                                                              FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME,
+                                                                              FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH));
+        }
+    }
+
+    fsearch_database_exclude_manager_set_exclude_hidden(
+        exclude_manager,
+        g_key_file_get_boolean(key_file, group, "exclude_hidden_files_and_folders", NULL));
+
+    return exclude_manager;
+}
+
+static bool
+config_has_legacy_includes(GKeyFile *key_file) {
+    return g_key_file_has_key(key_file, "Database", "location_1", NULL);
+}
+
+static bool
+config_has_legacy_excludes(GKeyFile *key_file) {
+    return g_key_file_has_key(key_file, "Database", "exclude_location_1", NULL);
 }
 
 bool
@@ -551,9 +645,19 @@ config_load(FsearchConfig *config) {
         CONFIG_LOAD_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
         // Includes
-        config->includes = config_load_includes(key_file);
+        if (config_has_legacy_includes(key_file)) {
+            config->includes = config_load_legacy_includes(key_file);
+        }
+        else {
+            config->includes = config_load_includes(key_file);
+        }
         // Excludes
-        config->excludes = config_load_excludes(key_file);
+        if (config_has_legacy_excludes(key_file)) {
+            config->excludes = config_load_legacy_excludes(key_file);
+        }
+        else {
+            config->excludes = config_load_excludes(key_file);
+        }
 
         // Filters
         config->filters = config_load_filters(key_file);
@@ -627,14 +731,14 @@ config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_
             g_assert_not_reached();
         }
 
-        FsearchConfigIncludeKeys include_keys = {
-            .path = (char *)fsearch_database_include_get_path(include),
-            .monitor = fsearch_database_include_get_monitored(include),
-            .active = fsearch_database_include_get_active(include),
-            .one_file_system = fsearch_database_include_get_one_file_system(include),
-            .scan_after_launch = fsearch_database_include_get_scan_after_launch(include),
-            .rescan_after = fsearch_database_include_get_rescan_after(include),
-            .id = fsearch_database_include_get_id(include)};
+        FsearchConfigIncludeKeys include_keys = {.path = (char *)fsearch_database_include_get_path(include),
+                                                 .monitor = fsearch_database_include_get_monitored(include),
+                                                 .active = fsearch_database_include_get_active(include),
+                                                 .one_file_system = fsearch_database_include_get_one_file_system(include),
+                                                 .scan_after_launch = fsearch_database_include_get_scan_after_launch(
+                                                     include),
+                                                 .rescan_after = fsearch_database_include_get_rescan_after(include),
+                                                 .id = fsearch_database_include_get_id(include)};
 
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
     }
