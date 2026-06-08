@@ -340,6 +340,30 @@ on_exclude_remove_button_clicked(GtkButton *button, gpointer user_data) {
 }
 
 static void
+on_exclude_reset_to_defaults_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    gtk_list_store_clear(self->exclude_model);
+    exclude_append_row(self->exclude_model,
+                       TRUE,
+                       "/.snapshots",
+                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+    exclude_append_row(self->exclude_model,
+                       TRUE,
+                       "/proc",
+                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+    exclude_append_row(self->exclude_model,
+                       TRUE,
+                       "/sys",
+                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+}
+
+static void
 on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     FsearchPreferencesFileChooserContext *ctx = g_new0(FsearchPreferencesFileChooserContext, 1);
@@ -1015,6 +1039,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_remove_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_path_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_selection_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_exclude_reset_to_defaults_button_clicked);
 }
 
 static void
