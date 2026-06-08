@@ -499,6 +499,11 @@ config_load_excludes(GKeyFile *key_file) {
         g_clear_pointer(&exclude_keys.match_scope, g_free);
         g_clear_pointer(&exclude_keys.target, g_free);
     }
+
+    fsearch_database_exclude_manager_set_exclude_hidden(
+        exclude_manager,
+        g_key_file_get_boolean(key_file, group, "exclude_hidden_files_and_folders", NULL));
+
     return exclude_manager;
 }
 
@@ -656,6 +661,11 @@ config_save_excludes(GKeyFile *key_file, FsearchDatabaseExcludeManager *exclude_
         };
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
     }
+
+    g_key_file_set_boolean(key_file,
+                           "Database",
+                           "exclude_hidden_files_and_folders",
+                           fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager));
 }
 
 bool
