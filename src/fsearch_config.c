@@ -103,13 +103,6 @@ static const FsearchKeyData APPLICATIONS_SECTION[] = {
     CONF_STR(folder_open_cmd, NULL),
 };
 
-static const FsearchKeyData DATABASE_SECTION[] = {
-    CONF_BOOL(update_database_on_launch, false),
-    CONF_BOOL(update_database_every, false),
-    CONF_INT(update_database_every_hours, 24),
-    CONF_INT(update_database_every_minutes, 0),
-};
-
 static const FsearchKeyData INTERFACE_SECTION[] = {
     CONF_BOOL(show_base_2_units, false),
     CONF_BOOL(highlight_search_terms, true),
@@ -552,8 +545,6 @@ config_load(FsearchConfig *config) {
         // Search
         CONFIG_LOAD_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
-        // Database
-        CONFIG_LOAD_SECTION(key_file, "Database", DATABASE_SECTION, config);
         // Includes
         config->includes = config_load_includes(key_file);
         // Excludes
@@ -585,7 +576,6 @@ config_load_default(FsearchConfig *config) {
     CONFIG_DEFAULT_SECTION(DIALOG_SECTION, config);
     CONFIG_DEFAULT_SECTION(APPLICATIONS_SECTION, config);
     CONFIG_DEFAULT_SECTION(SEARCH_SECTION, config);
-    CONFIG_DEFAULT_SECTION(DATABASE_SECTION, config);
 
     config->filters = fsearch_filter_manager_new_with_defaults();
     config->includes = fsearch_database_include_manager_new_with_defaults();
@@ -692,9 +682,6 @@ config_save(FsearchConfig *config) {
     // Search
     CONFIG_SAVE_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
-    // Database
-    CONFIG_SAVE_SECTION(key_file, "Database", DATABASE_SECTION, config);
-
     // Filters
     config_save_filters(key_file, config->filters);
 
@@ -746,7 +733,7 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     const bool includes_changed = !fsearch_database_include_manager_equal(c1->includes, c2->includes);
     const bool excludes_changed = !fsearch_database_exclude_manager_equal(c1->excludes, c2->excludes);
 
-    if (c1->exclude_hidden_items != c2->exclude_hidden_items || excludes_changed || includes_changed) {
+    if (excludes_changed || includes_changed) {
         result.database_config_changed = true;
     }
 
