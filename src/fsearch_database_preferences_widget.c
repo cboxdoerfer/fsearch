@@ -41,7 +41,6 @@ struct _FsearchDatabasePreferencesWidget {
     // Exclude model
     GtkTreeView *exclude_list;
     GtkListStore *exclude_model;
-    GtkWidget *exclude_path_entry;
     GtkTreeSelection *exclude_selection;
     GtkToggleButton *exclude_hidden_items_button;
     // Models for dropdown menus
@@ -541,12 +540,6 @@ add_path(GtkEntry *entry, GtkListStore *model, RowAddFunc row_add_func) {
 }
 
 static void
-on_exclude_add_path_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
-    add_path(GTK_ENTRY(self->exclude_path_entry), self->exclude_model, on_exclude_append_new_row);
-}
-
-static void
 on_include_add_path_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     add_path(GTK_ENTRY(self->include_path_entry), self->include_model, on_include_append_new_row);
@@ -1005,7 +998,6 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_list);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_selection);
-    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_path_entry);
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
 
@@ -1020,7 +1012,6 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_hours_spinbutton_value_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_include_rescan_scheduled_minutes_spinbutton_value_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_path_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_remove_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_path_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_selection_changed);
