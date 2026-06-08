@@ -327,6 +327,7 @@ static void
 on_exclude_remove_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     gtk_tree_selection_selected_foreach(self->exclude_selection, remove_row, NULL);
+    gtk_tree_view_columns_autosize(self->exclude_list);
 }
 
 static void
@@ -351,6 +352,8 @@ on_exclude_reset_to_defaults_button_clicked(GtkButton *button, gpointer user_dat
                        FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
                        FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
                        FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+
+    gtk_tree_view_columns_autosize(self->exclude_list);
 }
 
 static void
@@ -366,6 +369,7 @@ static void
 on_include_remove_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     gtk_tree_selection_selected_foreach(self->include_selection, remove_row, NULL);
+    gtk_tree_view_columns_autosize(self->include_list);
 }
 
 static void
