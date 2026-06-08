@@ -247,16 +247,6 @@ exclude_append_row(GtkListStore *store,
                        -1);
 }
 
-static void
-on_exclude_append_new_row(GtkListStore *store, const char *path) {
-    exclude_append_row(store,
-                       TRUE,
-                       path,
-                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
-                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
-                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
-}
-
 void
 remove_row(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata) {
     gtk_list_store_remove(GTK_LIST_STORE(model), iter);
