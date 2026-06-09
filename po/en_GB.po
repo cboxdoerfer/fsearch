@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 19:07+0200\n"
+"POT-Creation-Date: 2026-06-08 20:23+0200\n"
 "PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -339,81 +339,81 @@ msgstr "Loading files…"
 msgid "Sorting…"
 msgstr "Sorting…"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:131
+#: src/fsearch_database_preferences_widget.c:145
 msgid "Select folder"
 msgstr "Select folder"
 
-#: src/fsearch_database_preferences_widget.c:135
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:134
+#: src/fsearch_database_preferences_widget.c:149
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
 msgid "_Cancel"
 msgstr "_Cancel"
 
-#: src/fsearch_database_preferences_widget.c:137
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:136
+#: src/fsearch_database_preferences_widget.c:148
 msgid "_Select"
 msgstr "_Select"
 
-#: src/fsearch_database_preferences_widget.c:365
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:367
+#: src/fsearch_database_preferences_widget.c:393
 #, fuzzy
 msgid "Wildcard"
 msgstr "Wildcard support"
 
-#: src/fsearch_database_preferences_widget.c:369
+#: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:416
 #, fuzzy
 msgid "Full Path"
 msgstr "Path"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:410
+#: src/fsearch_database_preferences_widget.c:436
 #, fuzzy
 msgid "Files & Folders"
 msgstr "Folders"
 
-#: src/fsearch_database_preferences_widget.c:412 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "Files"
 
-#: src/fsearch_database_preferences_widget.c:414 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:440 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Folders"
 
-#: src/fsearch_database_preferences_widget.c:609
-#: src/fsearch_database_preferences_widget.c:838
+#: src/fsearch_database_preferences_widget.c:633
+#: src/fsearch_database_preferences_widget.c:858
 msgid "Active"
 msgstr "Active"
 
-#: src/fsearch_database_preferences_widget.c:614
+#: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:668 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch_database_preferences_widget.c:674
+#: src/fsearch_database_preferences_widget.c:698
 #, fuzzy
 msgid "Match"
 msgstr "Match case"
 
-#: src/fsearch_database_preferences_widget.c:680
+#: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:842 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Path"
@@ -475,25 +475,7 @@ msgstr "Remove selected path"
 msgid "Include"
 msgstr "Include"
 
-#: src/fsearch_database_preferences_widget.ui:449
-#, fuzzy
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Add path to be included in database\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:469
-#, fuzzy
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Add path to be included in database\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:529
+#: src/fsearch_database_preferences_widget.ui:477
 #, fuzzy
 msgid ""
 "Add exclude rule\n"
@@ -502,7 +484,7 @@ msgstr ""
 "Add path to be included in database\n"
 "                                "
 
-#: src/fsearch_database_preferences_widget.ui:547
+#: src/fsearch_database_preferences_widget.ui:495
 #, fuzzy
 msgid ""
 "Remove selected path\n"
@@ -511,11 +493,17 @@ msgstr ""
 "Add path to be included in database\n"
 "                                "
 
-#: src/fsearch_database_preferences_widget.ui:578
+#: src/fsearch_database_preferences_widget.ui:512
+#, fuzzy
+#| msgid "Restore default filters"
+msgid "Restore default exclude list"
+msgstr "Restore default filters"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Exclude hidden files and folders"
 
-#: src/fsearch_database_preferences_widget.ui:600
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Exclude"
 
@@ -1760,6 +1748,22 @@ msgstr "Path + Name"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Move to _Trash"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Add path to be included in database\n"
+#~ "                                "
+
+#, fuzzy
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Add path to be included in database\n"
+#~ "                                "
 
 #, fuzzy
 #~ msgid "Rescan database on startup"

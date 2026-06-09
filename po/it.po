@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 19:07+0200\n"
+"POT-Creation-Date: 2026-06-08 20:23+0200\n"
 "PO-Revision-Date: 2026-05-30 21:01+0000\n"
 "Last-Translator: Giasko <dibiame@hotmail.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
@@ -353,77 +353,77 @@ msgstr "Caricamento file…"
 msgid "Sorting…"
 msgstr "Ordinamento…"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:131
+#: src/fsearch_database_preferences_widget.c:145
 msgid "Select folder"
 msgstr "Seleziona cartella"
 
-#: src/fsearch_database_preferences_widget.c:135
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:134
+#: src/fsearch_database_preferences_widget.c:149
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
 msgid "_Cancel"
 msgstr "_Annulla"
 
-#: src/fsearch_database_preferences_widget.c:137
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:136
+#: src/fsearch_database_preferences_widget.c:148
 msgid "_Select"
 msgstr "_Seleziona"
 
-#: src/fsearch_database_preferences_widget.c:365
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
 msgstr "Letteralmente"
 
-#: src/fsearch_database_preferences_widget.c:367
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Wildcard"
 msgstr "Caratteri jolly"
 
-#: src/fsearch_database_preferences_widget.c:369
+#: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr "Espressioni regolari (Regex)"
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Full Path"
 msgstr "Percorso assoluto"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr "Nome base"
 
-#: src/fsearch_database_preferences_widget.c:410
+#: src/fsearch_database_preferences_widget.c:436
 msgid "Files & Folders"
 msgstr "File e cartelle"
 
-#: src/fsearch_database_preferences_widget.c:412 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "File"
 
-#: src/fsearch_database_preferences_widget.c:414 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:440 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Cartelle"
 
-#: src/fsearch_database_preferences_widget.c:609
-#: src/fsearch_database_preferences_widget.c:838
+#: src/fsearch_database_preferences_widget.c:633
+#: src/fsearch_database_preferences_widget.c:858
 msgid "Active"
 msgstr "Attivo"
 
-#: src/fsearch_database_preferences_widget.c:614
+#: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
 msgstr "Pattern"
 
-#: src/fsearch_database_preferences_widget.c:668 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch_database_preferences_widget.c:674
+#: src/fsearch_database_preferences_widget.c:698
 msgid "Match"
 msgstr "Abbinamento"
 
-#: src/fsearch_database_preferences_widget.c:680
+#: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
 msgstr "Si applica a"
 
-#: src/fsearch_database_preferences_widget.c:842 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Percorso"
@@ -481,23 +481,7 @@ msgstr "Rimuovi percorso selezionato"
 msgid "Include"
 msgstr "Includi"
 
-#: src/fsearch_database_preferences_widget.ui:449
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Inserisci il percorso...\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:469
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Aggiungi il percorso fisso da escludere\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:529
+#: src/fsearch_database_preferences_widget.ui:477
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -505,7 +489,7 @@ msgstr ""
 "Aggiungi regola di esclusione\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:547
+#: src/fsearch_database_preferences_widget.ui:495
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -513,11 +497,17 @@ msgstr ""
 "Rimuovere il percorso selezionato\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:578
+#: src/fsearch_database_preferences_widget.ui:512
+#, fuzzy
+#| msgid "Restore default filters"
+msgid "Restore default exclude list"
+msgstr "Reimposta i filtri predefiniti"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Escludi file e cartelle nascoste"
 
-#: src/fsearch_database_preferences_widget.ui:600
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Escludi"
 
@@ -1777,6 +1767,20 @@ msgstr "Percorso + Nome"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Sposta nel _Cestino"
+
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Inserisci il percorso...\n"
+#~ "                                                "
+
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Aggiungi il percorso fisso da escludere\n"
+#~ "                                                "
 
 #~ msgid "Monitor"
 #~ msgstr "Monitoraggio"

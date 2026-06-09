@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 19:07+0200\n"
+"POT-Creation-Date: 2026-06-08 20:23+0200\n"
 "PO-Revision-Date: 2026-04-20 06:13+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
@@ -341,77 +341,77 @@ msgstr "Memuat file…"
 msgid "Sorting…"
 msgstr "Mengurutkan…"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:131
+#: src/fsearch_database_preferences_widget.c:145
 msgid "Select folder"
 msgstr "Pilih folder"
 
-#: src/fsearch_database_preferences_widget.c:135
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:134
+#: src/fsearch_database_preferences_widget.c:149
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
 msgid "_Cancel"
 msgstr "Batal"
 
-#: src/fsearch_database_preferences_widget.c:137
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:136
+#: src/fsearch_database_preferences_widget.c:148
 msgid "_Select"
 msgstr "Pilih"
 
-#: src/fsearch_database_preferences_widget.c:365
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
 msgstr "Literal"
 
-#: src/fsearch_database_preferences_widget.c:367
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Wildcard"
 msgstr "Wildcard"
 
-#: src/fsearch_database_preferences_widget.c:369
+#: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr "Regex"
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Full Path"
 msgstr "Jalur Penuh"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr "Nama Dasar"
 
-#: src/fsearch_database_preferences_widget.c:410
+#: src/fsearch_database_preferences_widget.c:436
 msgid "Files & Folders"
 msgstr "File & Folder"
 
-#: src/fsearch_database_preferences_widget.c:412 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "File"
 
-#: src/fsearch_database_preferences_widget.c:414 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:440 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Folder"
 
-#: src/fsearch_database_preferences_widget.c:609
-#: src/fsearch_database_preferences_widget.c:838
+#: src/fsearch_database_preferences_widget.c:633
+#: src/fsearch_database_preferences_widget.c:858
 msgid "Active"
 msgstr "Aktif"
 
-#: src/fsearch_database_preferences_widget.c:614
+#: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
 msgstr "Pola"
 
-#: src/fsearch_database_preferences_widget.c:668 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Tipe"
 
-#: src/fsearch_database_preferences_widget.c:674
+#: src/fsearch_database_preferences_widget.c:698
 msgid "Match"
 msgstr "Cocokkan"
 
-#: src/fsearch_database_preferences_widget.c:680
+#: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
 msgstr "Berlaku Untuk"
 
-#: src/fsearch_database_preferences_widget.c:842 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Jalur"
@@ -469,23 +469,7 @@ msgstr "Hapus jalur yang dipilih"
 msgid "Include"
 msgstr "Sertakan"
 
-#: src/fsearch_database_preferences_widget.ui:449
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Masukkan jalur…\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:469
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Tambah pengecualian jalur tetap\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:529
+#: src/fsearch_database_preferences_widget.ui:477
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -493,7 +477,7 @@ msgstr ""
 "Tambah aturan pengecualian\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:547
+#: src/fsearch_database_preferences_widget.ui:495
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -501,11 +485,17 @@ msgstr ""
 "Hapus jalur yang dipilih\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:578
+#: src/fsearch_database_preferences_widget.ui:512
+#, fuzzy
+#| msgid "Restore default filters"
+msgid "Restore default exclude list"
+msgstr "Pulihkan filter bawaan"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Kecualikan file dan folder tersembunyi"
 
-#: src/fsearch_database_preferences_widget.ui:600
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Kecualikan"
 
@@ -1750,6 +1740,20 @@ msgstr "Jalur + Nama"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Pindahkan ke Sampah"
+
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Masukkan jalur…\n"
+#~ "                                                "
+
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Tambah pengecualian jalur tetap\n"
+#~ "                                                "
 
 #~ msgid "Monitor"
 #~ msgstr "Pantau"

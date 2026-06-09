@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 19:07+0200\n"
+"POT-Creation-Date: 2026-06-08 20:23+0200\n"
 "PO-Revision-Date: 2026-06-08 08:01+0000\n"
 "Last-Translator: breakout71fan_1789 <pxhere.viral741@passinbox.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -243,8 +243,8 @@ msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
-"Adicionar opção de executar programas diretamente ao invés de abrir arquivos "
-".desktop"
+"Adicionar opção de executar programas diretamente ao invés de abrir "
+"arquivos .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Show application icons for .desktop files"
@@ -358,81 +358,81 @@ msgstr "Carregando os arquivos…"
 msgid "Sorting…"
 msgstr "Ordenando…"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:131
+#: src/fsearch_database_preferences_widget.c:145
 msgid "Select folder"
 msgstr "Selecione uma pasta"
 
-#: src/fsearch_database_preferences_widget.c:135
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:134
+#: src/fsearch_database_preferences_widget.c:149
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
 msgid "_Cancel"
 msgstr "Cancelar"
 
-#: src/fsearch_database_preferences_widget.c:137
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:136
+#: src/fsearch_database_preferences_widget.c:148
 msgid "_Select"
 msgstr "_Selecionar"
 
-#: src/fsearch_database_preferences_widget.c:365
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:367
+#: src/fsearch_database_preferences_widget.c:393
 #, fuzzy
 msgid "Wildcard"
 msgstr "Suporte a caractere curinga"
 
-#: src/fsearch_database_preferences_widget.c:369
+#: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:416
 #, fuzzy
 msgid "Full Path"
 msgstr "Caminho"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:410
+#: src/fsearch_database_preferences_widget.c:436
 #, fuzzy
 msgid "Files & Folders"
 msgstr "Pastas"
 
-#: src/fsearch_database_preferences_widget.c:412 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "Arquivos"
 
-#: src/fsearch_database_preferences_widget.c:414 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:440 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Pastas"
 
-#: src/fsearch_database_preferences_widget.c:609
-#: src/fsearch_database_preferences_widget.c:838
+#: src/fsearch_database_preferences_widget.c:633
+#: src/fsearch_database_preferences_widget.c:858
 msgid "Active"
 msgstr "Ativo"
 
-#: src/fsearch_database_preferences_widget.c:614
+#: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:668 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch_database_preferences_widget.c:674
+#: src/fsearch_database_preferences_widget.c:698
 #, fuzzy
 msgid "Match"
 msgstr "Coincidir maiúsculas e minúsculas"
 
-#: src/fsearch_database_preferences_widget.c:680
+#: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:842 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Caminho"
@@ -494,25 +494,7 @@ msgstr "Remover o caminho selecionado"
 msgid "Include"
 msgstr "Incluir"
 
-#: src/fsearch_database_preferences_widget.ui:449
-#, fuzzy
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Adicionar caminho para ser incluído na base de dados\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:469
-#, fuzzy
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Adicionar caminho para ser incluído na base de dados\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:529
+#: src/fsearch_database_preferences_widget.ui:477
 #, fuzzy
 msgid ""
 "Add exclude rule\n"
@@ -521,7 +503,7 @@ msgstr ""
 "Adicionar caminho para ser incluído na base de dados\n"
 "                                "
 
-#: src/fsearch_database_preferences_widget.ui:547
+#: src/fsearch_database_preferences_widget.ui:495
 #, fuzzy
 msgid ""
 "Remove selected path\n"
@@ -530,11 +512,17 @@ msgstr ""
 "Adicionar caminho para ser incluído na base de dados\n"
 "                                "
 
-#: src/fsearch_database_preferences_widget.ui:578
+#: src/fsearch_database_preferences_widget.ui:512
+#, fuzzy
+#| msgid "Restore default filters"
+msgid "Restore default exclude list"
+msgstr "Restaurar filtros padrão"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Excluir arquivos e pastas ocultas"
 
-#: src/fsearch_database_preferences_widget.ui:600
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Excluir"
 
@@ -1829,6 +1817,22 @@ msgstr "Caminho + Nome"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Mover para a lixeira"
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Adicionar caminho para ser incluído na base de dados\n"
+#~ "                                "
+
+#, fuzzy
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Adicionar caminho para ser incluído na base de dados\n"
+#~ "                                "
 
 #, fuzzy
 #~ msgid "Rescan database on startup"

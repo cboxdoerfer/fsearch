@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 19:07+0200\n"
+"POT-Creation-Date: 2026-06-08 20:23+0200\n"
 "PO-Revision-Date: 2026-06-09 11:01+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
@@ -353,77 +353,77 @@ msgstr "Загрузка файлов…"
 msgid "Sorting…"
 msgstr "Сортировка…"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:131
+#: src/fsearch_database_preferences_widget.c:145
 msgid "Select folder"
 msgstr "Выберите папку"
 
-#: src/fsearch_database_preferences_widget.c:135
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:134
+#: src/fsearch_database_preferences_widget.c:149
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: src/fsearch_database_preferences_widget.c:137
-#: src/fsearch_database_preferences_widget.c:147
+#: src/fsearch_database_preferences_widget.c:136
+#: src/fsearch_database_preferences_widget.c:148
 msgid "_Select"
 msgstr "_Выбрать"
 
-#: src/fsearch_database_preferences_widget.c:365
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
 msgstr "Литерал"
 
-#: src/fsearch_database_preferences_widget.c:367
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Wildcard"
 msgstr "Подстановочные знаки"
 
-#: src/fsearch_database_preferences_widget.c:369
+#: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr "Регулярное выражение"
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Full Path"
 msgstr "Полный путь"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr "Название базы"
 
-#: src/fsearch_database_preferences_widget.c:410
+#: src/fsearch_database_preferences_widget.c:436
 msgid "Files & Folders"
 msgstr "Файлы & Папки"
 
-#: src/fsearch_database_preferences_widget.c:412 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "Файлы"
 
-#: src/fsearch_database_preferences_widget.c:414 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:440 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Папки"
 
-#: src/fsearch_database_preferences_widget.c:609
-#: src/fsearch_database_preferences_widget.c:838
+#: src/fsearch_database_preferences_widget.c:633
+#: src/fsearch_database_preferences_widget.c:858
 msgid "Active"
 msgstr "Активно"
 
-#: src/fsearch_database_preferences_widget.c:614
+#: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
 msgstr "Шаблон"
 
-#: src/fsearch_database_preferences_widget.c:668 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Тип"
 
-#: src/fsearch_database_preferences_widget.c:674
+#: src/fsearch_database_preferences_widget.c:698
 msgid "Match"
 msgstr "Совпадение"
 
-#: src/fsearch_database_preferences_widget.c:680
+#: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
 msgstr "Распространяется на"
 
-#: src/fsearch_database_preferences_widget.c:842 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Путь"
@@ -479,23 +479,7 @@ msgstr "Убрать выбранный путь"
 msgid "Include"
 msgstr "Включить"
 
-#: src/fsearch_database_preferences_widget.ui:449
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Введите путь…\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:469
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Добавить фиксированный путь в исключение\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:529
+#: src/fsearch_database_preferences_widget.ui:477
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -503,7 +487,7 @@ msgstr ""
 "Добавить правило исключения\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:547
+#: src/fsearch_database_preferences_widget.ui:495
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -511,11 +495,17 @@ msgstr ""
 "Удалить выбранный путь\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:578
+#: src/fsearch_database_preferences_widget.ui:512
+#, fuzzy
+#| msgid "Restore default filters"
+msgid "Restore default exclude list"
+msgstr "Восстановить фильтры, установленные по умолчанию"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Исключить скрытые файлы и папки"
 
-#: src/fsearch_database_preferences_widget.ui:600
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Исключить"
 
@@ -1776,6 +1766,20 @@ msgstr "Путь + Название"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "_Переместить в корзину"
+
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Введите путь…\n"
+#~ "                                                "
+
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Добавить фиксированный путь в исключение\n"
+#~ "                                                "
 
 #~ msgid "Monitor"
 #~ msgstr "Отслеживание"
