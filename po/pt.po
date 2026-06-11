@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-08 20:23+0200\n"
-"PO-Revision-Date: 2026-06-09 11:01+0000\n"
+"PO-Revision-Date: 2026-06-12 10:01+0000\n"
 "Last-Translator: Ricardo Simões <xmcorporation@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -191,9 +191,8 @@ msgid "New search engine"
 msgstr "Novo mecanismo de pesquisa"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
-#, fuzzy
 msgid "Greatly improved highlighting of search terms"
-msgstr "Exibir termos de pesquisa destacados"
+msgstr "Destaque muito melhorado dos termos de pesquisa"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Custom filters"
@@ -213,10 +212,8 @@ msgstr ""
 "Lembre-se da seleção de arquivos após uma atualização do banco de dados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
-#, fuzzy
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
-"Rolar automaticamente a lista de resultados no modo de seleção elástica"
+msgstr "Rolar automaticamente a lista de resultados no modo de seleção elástica"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
@@ -239,9 +236,8 @@ msgstr ""
 "ficheiros .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
-#, fuzzy
 msgid "Show application icons for .desktop files"
-msgstr "Exibir preferências da aplicação"
+msgstr "Mostrar ícones de aplicação para ficheiros .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Add .odp and .ods files to document filter"
@@ -319,9 +315,8 @@ msgid "Open a new application window"
 msgstr "Abre uma nova janela"
 
 #: src/fsearch.c:715
-#, fuzzy
 msgid "Minimize the application window"
-msgstr "Abre uma nova janela"
+msgstr "Minimizar a janela da aplicação"
 
 #: src/fsearch.c:716
 msgid "Show the application preferences"
@@ -377,27 +372,24 @@ msgid "Literal"
 msgstr "Literal"
 
 #: src/fsearch_database_preferences_widget.c:393
-#, fuzzy
 msgid "Wildcard"
-msgstr "Suporte a wildcards"
+msgstr "Wildcard"
 
 #: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
 msgstr "Regex"
 
 #: src/fsearch_database_preferences_widget.c:416
-#, fuzzy
 msgid "Full Path"
-msgstr "Caminho"
+msgstr "Caminho Completo"
 
 #: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
 msgstr "Nome base"
 
 #: src/fsearch_database_preferences_widget.c:436
-#, fuzzy
 msgid "Files & Folders"
-msgstr "Pastas"
+msgstr "Ficheiros & Pastas"
 
 #: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
@@ -422,9 +414,8 @@ msgid "Type"
 msgstr "Tipo"
 
 #: src/fsearch_database_preferences_widget.c:698
-#, fuzzy
 msgid "Match"
-msgstr "Coincidir Capitalização"
+msgstr "Coincidir"
 
 #: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
@@ -441,18 +432,14 @@ msgstr "Inserir caminho…"
 
 #: src/fsearch_database_preferences_widget.ui:97
 #: src/fsearch_database_preferences_widget.ui:372
-#, fuzzy
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Adicionar pasta a base de dados:</b>\n"
-"\n"
-"                      Este botão abre uma caixa de diálogo onde pode "
-"selecionar uma pasta que deseja incluir na base de dados para\n"
-"                      pesquisa.\n"
-"                    "
+"Adicionar caminha para ser incluído em\n"
+"                                            base de dados\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
@@ -463,9 +450,8 @@ msgid "Scan after launch"
 msgstr "Digitalizar depois de lançar"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Um sistema de ficheiros"
+msgstr "Manter-se num sistema de ficheiros"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -476,9 +462,8 @@ msgid "Hours:"
 msgstr "Horas:"
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "minuto(s)"
+msgstr "Minutos:"
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
@@ -493,30 +478,24 @@ msgid "Include"
 msgstr "Incluir"
 
 #: src/fsearch_database_preferences_widget.ui:477
-#, fuzzy
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Adicionar o caminho a ser incluído na base de dados\n"
-"…………………\n"
-"                                "
+"Adicionar regra de exclusão\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:495
-#, fuzzy
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Adicionar o caminho a ser incluído na base de dados\n"
-"…………………\n"
-"                                "
+"Remover caminho selecionado\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
-#, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
-msgstr "Restaurar filtros padrão"
+msgstr "Restaurar a lista de exclusão padrão"
 
 #: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
@@ -532,9 +511,8 @@ msgid "Error when removing file"
 msgstr "Erro ao remover ficheiro"
 
 #: src/fsearch_file_utils.c:143
-#, fuzzy
 msgid "Failed to get path"
-msgstr "Falha ao abrir:"
+msgstr "Falha na obtenção do caminho"
 
 #: src/fsearch_file_utils.c:258
 msgctxt "Will be followed by the file path."
@@ -542,9 +520,8 @@ msgid "Error when getting information from file"
 msgstr "Erro ao obter informação a partir do ficheiro"
 
 #: src/fsearch_file_utils.c:260
-#, fuzzy
 msgid "Failed to get application information"
-msgstr "Abre uma nova janela"
+msgstr "Falha na obtenção de informação da aplicação"
 
 #: src/fsearch_file_utils.c:275
 msgctxt "Will be followed by the content type string."
@@ -552,9 +529,8 @@ msgid "Error when getting information for content type"
 msgstr "Erro ao obter informação para tipo de conteúdo"
 
 #: src/fsearch_file_utils.c:277
-#, fuzzy
 msgid "No default application registered"
-msgstr "Exibir preferências da aplicação"
+msgstr "Nenhuma aplicação padrão registada"
 
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
@@ -562,9 +538,8 @@ msgid "Error when opening parent folder"
 msgstr "Erro ao abrir pasta parente"
 
 #: src/fsearch_file_utils.c:504
-#, fuzzy
 msgid "Failed to get parent path"
-msgstr "Falha ao abrir:"
+msgstr "Falha ao obter caminho parente"
 
 #: src/fsearch_file_utils.c:508
 msgctxt "Will be followed by the path of the folder."
@@ -572,9 +547,8 @@ msgid "Error while opening folder"
 msgstr "Erro ao abrir pasta"
 
 #: src/fsearch_file_utils.c:511
-#, fuzzy
 msgid "Failed to build open command"
-msgstr "Falha ao abrir:"
+msgstr "Falha ao fazer build do comando open"
 
 #: src/fsearch_file_utils.c:567
 msgid "Folder"
@@ -645,9 +619,8 @@ msgid "Enable regular expressions"
 msgstr "Ativar expressões regulares"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
 msgid "Match case"
-msgstr "Coincidir Capitalização"
+msgstr "Coincidir capitalização"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
@@ -737,9 +710,8 @@ msgid "Empty Query"
 msgstr "Consulta Vazia"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Carregar em <b>Ctrl + F</b> e começar a escrever"
+msgstr "Carregue em <b>Ctrl + F</b> e começe a escrever"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -910,7 +882,6 @@ msgstr ""
 "portanto, ativar essa configuração pode não surtir efeito."
 
 #: src/fsearch_preferences.ui:872
-#, fuzzy
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -928,8 +899,8 @@ msgstr ""
 "título da janela.\n"
 "\n"
 "Se desativado, o menu principal será exibido como uma barra de menu com o "
-"termo de busca abaixo dele.\n"
-"Isso se assemelha a um layout mais tradicional da IU e ocupa um pouco mais "
+"termo de busca abaixo.\n"
+"Isto assemelha-se a um layout mais tradicional do IU e ocupa um pouco mais "
 "de espaço."
 
 #: src/fsearch_preferences.ui:892
@@ -971,7 +942,6 @@ msgstr ""
 "a janela a ter um tamanho diferente."
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -994,15 +964,14 @@ msgstr ""
 "\t• <b>Nada:</b> Nada acontece.\n"
 "\t• <b>Minimizar:</b> A janela FSearch selecionada no momento torna-se "
 "minimizada. \n"
-"\t• <b>Fechar:</b> Feche o FSearch.\n"
+"\t• <b>Fechar:</b> Fechar FSearch.\n"
 "\n"
-"Você pode configurar se essas ações devem ser acionadas quando o arquivo foi "
+"Pode configurar se essas ações devem ser acionadas quando o ficheiro foi "
 "aberto com\n"
 "\t• <b>atalhos de teclado ou entradas de menu</b> e/ou\n"
 "\t• <b>clique do rato</b>"
 
 #: src/fsearch_preferences.ui:955
-#, fuzzy
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -1088,7 +1057,6 @@ msgstr ""
 "selecionado."
 
 #: src/fsearch_preferences.ui:1062
-#, fuzzy
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -1100,8 +1068,8 @@ msgstr ""
 "\n"
 "Se ativado, um clique único abrirá o ficheiro/pasta selecionado. Se quiser "
 "apenas selecionar um ficheiro/pasta enquanto esta configuração estiver "
-"ativa, precisará segurar o <i>Ctrl</i> e ao mesmo tempo clicar no ficheiro/"
-"pasta."
+"ativa, precisará manter pressionado o <i>Ctrl</i> e ao mesmo tempo clicar no "
+"ficheiro/pasta."
 
 #: src/fsearch_preferences.ui:1079
 msgid ""
@@ -1116,18 +1084,16 @@ msgstr ""
 "de status."
 
 #: src/fsearch_preferences.ui:1096
-#, fuzzy
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
 "If enabled, a warning dialog is displayed when a file or folder failed to "
 "open."
 msgstr ""
-"<b>Mostrar diálogo de aviso:</b>\n"
+"<b>Mostrar diálogos de aviso:</b>\n"
 "\n"
-"Se ativado, um diálogo de aviso será exibido quando:\n"
-"\n"
-"\t•  um ficheiro ou pasta falhou ao abrir\n"
+"Se ativado, um diálogo de aviso irá ser mostrado quando um ficheiro ou pasta "
+"falharem ao abrir."
 
 #: src/fsearch_preferences.ui:1113
 msgid ""
