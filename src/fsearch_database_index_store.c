@@ -1296,12 +1296,8 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     g_return_val_if_fail(store, false);
     g_return_val_if_fail(store->search_results, false);
 
-    g_autoptr(FsearchDatabaseChunkedArray) file_chunks = fsearch_database_index_store_get_files(
-        store,
-        sort_order);
-    g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(
-        store,
-        sort_order);
+    g_autoptr(FsearchDatabaseChunkedArray) file_chunks = fsearch_database_index_store_get_files(store, sort_order);
+    g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
 
     if (!file_chunks && !folder_chunks) {
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
@@ -1309,24 +1305,26 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
         folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
     }
 
-    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(file_chunks);
-    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(folder_chunks);
+    if (!file_chunks && !folder_chunks) {
+        return false;
+    }
+
+    g_autoptr(DynamicArray) files = file_chunks ? fsearch_database_chunked_array_get_joined(file_chunks) : NULL;
+    g_autoptr(DynamicArray) folders = folder_chunks ? fsearch_database_chunked_array_get_joined(folder_chunks) : NULL;
 
     const bool matches_everything = fsearch_query_matches_everything(query);
-    g_autoptr(DynamicArray) found_files = matches_everything
-                                              ? g_steal_pointer(&files)
-                                              : search_entries(query,
-                                                               files,
-                                                               store->worker_pool,
-                                                               store->worker_pool_collect_queue,
-                                                               cancellable);
-    g_autoptr(DynamicArray) found_folders = matches_everything
-                                                ? g_steal_pointer(&folders)
-                                                : search_entries(query,
-                                                                 folders,
-                                                                 store->worker_pool,
-                                                                 store->worker_pool_collect_queue,
-                                                                 cancellable);
+    g_autoptr(DynamicArray) found_files = NULL;
+    if (files) {
+        found_files = matches_everything
+                        ? g_steal_pointer(&files)
+                        : search_entries(query, files, store->worker_pool, store->worker_pool_collect_queue, cancellable);
+    }
+    g_autoptr(DynamicArray) found_folders = NULL;
+    if (folders) {
+        found_folders = matches_everything
+                          ? g_steal_pointer(&folders)
+                          : search_entries(query, folders, store->worker_pool, store->worker_pool_collect_queue, cancellable);
+    }
 
     if (found_files || found_folders) {
         // After searching the secondary sort order will always be NONE, because we only search in pre-sorted indexes
