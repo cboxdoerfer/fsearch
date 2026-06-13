@@ -1048,7 +1048,10 @@ fsearch_database_index_store_unlock(FsearchDatabaseIndexStore *store) {
 FsearchDatabaseChunkedArray *
 fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order) {
     g_return_val_if_fail(store, NULL);
-    g_return_val_if_fail(store->is_sorted, NULL);
+
+    if (!store->is_sorted) {
+        return NULL;
+    }
 
     return store->file_chunks[sort_order] ? fsearch_database_chunked_array_ref(store->file_chunks[sort_order]) : NULL;
 }
@@ -1056,7 +1059,9 @@ fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *store, Fsearch
 FsearchDatabaseChunkedArray *
 fsearch_database_index_store_get_folders(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order) {
     g_return_val_if_fail(store, NULL);
-    g_return_val_if_fail(store->is_sorted, NULL);
+    if (!store->is_sorted) {
+        return NULL;
+    }
 
     return store->folder_chunks[sort_order] ? fsearch_database_chunked_array_ref(store->folder_chunks[sort_order]) : NULL;
 }
