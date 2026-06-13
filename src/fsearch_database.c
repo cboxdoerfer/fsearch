@@ -48,6 +48,7 @@ struct _FsearchDatabase {
     GCancellable *cancellable;
 
     FsearchDatabaseIndexStore *store;
+    FsearchDatabaseIndexStore *pending_store;
     FsearchDatabaseRescanManager *rescan_manager;
 
     GMutex mutex;
@@ -536,6 +537,10 @@ database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_work_scan_finished_get_index_store(work);
 
+    if (store == self->pending_store) {
+        g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
+    }
+
     database_set_store(self, store);
 
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
@@ -571,6 +576,7 @@ database_rescan_sync(FsearchDatabase *db,
     g_return_if_fail(store);
 
     database_set_store(db, store);
+    g_clear_pointer(&db->pending_store, fsearch_database_index_store_unref);
 
     fsearch_database_index_store_start(store, NULL);
 }
@@ -579,29 +585,32 @@ static void
 database_rescan(FsearchDatabase *self) {
     // DB must be locked
     g_return_if_fail(self);
-    g_return_if_fail(self->store);
+    g_return_if_fail(self->store || self->pending_store);
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
-    if (self->store) {
-        g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
-        g_assert_nonnull(locker);
-        include_manager = fsearch_database_index_store_get_include_manager(self->store);
-        exclude_manager = fsearch_database_index_store_get_exclude_manager(self->store);
-    }
-    else {
-        include_manager = fsearch_database_include_manager_new_with_defaults();
-        exclude_manager = fsearch_database_exclude_manager_new_with_defaults();
-    }
+
+    // If there is already another scan running, we must use the index store config of the pending store
+    // This ensures that the rescan we are about to queue uses this new config instead of the current one.
+    FsearchDatabaseIndexStore *source_store = self->pending_store ? self->pending_store : self->store;
+
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(source_store);
+    g_assert_nonnull(locker);
+    include_manager = fsearch_database_index_store_get_include_manager(source_store);
+    exclude_manager = fsearch_database_index_store_get_exclude_manager(source_store);
+    const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_index_store_get_flags(source_store);
 
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
-                                                                                  database_get_flags(self),
+                                                                                  flags,
                                                                                   index_store_event_cb,
                                                                                   self);
     g_return_if_fail(store);
+
+    g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
+    self->pending_store = fsearch_database_index_store_ref(store);
 
     // The IO thread is expecting work objects -> use scan_finished kind to wrap the index store
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan_finished(
@@ -705,6 +714,9 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
                                                                                   self);
     g_return_if_fail(store);
 
+    g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
+    self->pending_store = fsearch_database_index_store_ref(store);
+
     // The IO thread is expecting work objects -> use scan_finished kind to wrap the index store
     g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_scan_finished(
         store,
@@ -735,6 +747,7 @@ database_load(FsearchDatabase *self) {
     }
 
     database_set_store(self, store);
+    g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
 
     if (self->rescan_manager) {
         fsearch_database_rescan_manager_trigger_startup_scans(self->rescan_manager);
@@ -894,6 +907,11 @@ fsearch_database_dispose(GObject *object) {
     // Don't use g_clear_pointer here since index_store_unref will access self->store while terminating
     fsearch_database_index_store_unref(self->store);
     self->store = NULL;
+
+    if (self->pending_store) {
+        fsearch_database_index_store_unref(self->pending_store);
+        self->pending_store = NULL;
+    }
 
     G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
 }
