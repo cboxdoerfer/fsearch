@@ -21,10 +21,9 @@
 #include "strverscmp.h"
 #endif
 
-#define DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS \
-    (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | \
-     DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | \
-     DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX)
+#define DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS                                                                   \
+    (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES                                 \
+     | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX)
 
 typedef struct FsearchDatabaseEntry {
     FsearchDatabaseEntry *parent;
@@ -280,7 +279,11 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
     g_autoptr(GString) path = db_entry_get_path_full(entry);
     g_autoptr(GFile) file = g_file_new_for_path(path->str);
     g_autoptr(GError) error = NULL;
-    g_autoptr(GFileInfo) info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, &error);
+    g_autoptr(GFileInfo) info = g_file_query_info(file,
+                                                  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                                  G_FILE_QUERY_INFO_NONE,
+                                                  NULL,
+                                                  &error);
     const char *content_type = NULL;
     if (info) {
         content_type = g_file_info_get_content_type(info);
@@ -344,10 +347,7 @@ db_entry_get_parent_nth(FsearchDatabaseEntry *entry, uint32_t nth) {
 }
 
 static void
-sort_entry_by_path_recursive(FsearchDatabaseEntry *entry_1,
-                             FsearchDatabaseEntry *entry_2,
-                             size_t name_offset,
-                             int *res) {
+sort_entry_by_path_recursive(FsearchDatabaseEntry *entry_1, FsearchDatabaseEntry *entry_2, size_t name_offset, int *res) {
     if (G_UNLIKELY(!entry_1 || !entry_2)) {
         return;
     }
@@ -384,7 +384,7 @@ get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTab
 
     const char *name = db_entry_get_name_raw_for_display(entry);
     g_autofree char *type = fsearch_file_utils_get_file_type_non_localized(name,
-                                                                    db_entry_is_folder(entry) ? TRUE : FALSE);
+                                                                           db_entry_is_folder(entry) ? TRUE : FALSE);
     cached_type = g_hash_table_lookup(file_type_table, type);
     if (!cached_type) {
         g_hash_table_add(file_type_table, type);
@@ -405,9 +405,7 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     if (res != 0) {
         return res;
     }
-    return comp_ctx->next_comp_func
-               ? comp_ctx->next_comp_func((void *)a, (void *)b, comp_ctx->next_comp_func_data)
-               : res;
+    return comp_ctx->next_comp_func ? comp_ctx->next_comp_func((void *)a, (void *)b, comp_ctx->next_comp_func_data) : res;
 }
 
 int
@@ -507,10 +505,9 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
     size_t name_offset = 0;
     FsearchDatabaseEntry *folder_ref = entry_a->parent ? entry_a->parent : entry_b->parent;
-    const uint32_t folder_flags = folder_ref ? folder_ref->attribute_flags : (entry_a->attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS);
-    if (!db_entry_get_attribute_offset(folder_flags ,
-                                       DATABASE_INDEX_PROPERTY_NAME,
-                                       &name_offset)) {
+    const uint32_t folder_flags = folder_ref ? folder_ref->attribute_flags
+                                             : (entry_a->attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS);
+    if (!db_entry_get_attribute_offset(folder_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
         return 0;
     }
 
@@ -673,6 +670,9 @@ bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
                               FsearchDatabaseIndexProperty attribute,
                               size_t *offset) {
+    // TODO: Faster attribute lookup
+    // It's probably much faster to use __builtin_popcount if available to calculate the number of bits set in the
+    // flags. From that we can easily calculate the byte offset to the attribute.
     size_t offset_tmp = 0;
     if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         if (attribute == DATABASE_INDEX_PROPERTY_SIZE) {

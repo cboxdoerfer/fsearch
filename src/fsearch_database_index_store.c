@@ -996,6 +996,14 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     // 2. Remove the old index
     fsearch_database_index_lock(old_index);
 
+    // TODO: Faster index removal
+    // Instead of removing entries one by one (doing n * binsearch and n * memshifts),
+    // it's often faster (especially when removing many entries) to do the following instead:
+    // 1. Mark all the to be removed entries
+    // 2. Iterate over all store entries with a main (i.e. read) idx and a write idx
+    // 3. When there's a marked entry store its position in the write idx (and the num of consecutive marked entries)
+    // 4. When there's a non marked entry insert it at the write idx (if write idx != read idx)
+    // 5. At the end update the array size to the last write idx + 1
     g_autoptr(DynamicArray) old_files = fsearch_database_index_get_files(old_index);
     g_autoptr(DynamicArray) old_folders = fsearch_database_index_get_folders(old_index);
     index_store_remove_entries_locked(store, old_files, old_folders);
@@ -1006,6 +1014,12 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     g_ptr_array_add(store->indices, fsearch_database_index_ref(new_index));
 
     fsearch_database_index_lock(new_index);
+
+    // TODO> Faster index insert
+    // Assuming the new entries are sorted (otherwise sort them)
+    // Similary to above it might be more efficient to not insert entries one by one
+    // Instead we expand the destination by the num of entries to be added
+    // and then join them from the end
     g_autoptr(DynamicArray) new_files = fsearch_database_index_get_files(new_index);
     g_autoptr(DynamicArray) new_folders = fsearch_database_index_get_folders(new_index);
     index_store_add_entries_locked(store, new_files, new_folders);
@@ -1279,6 +1293,9 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
         return false;
     }
 
+    // TODO: Search performance increase
+    // Avoid joining chunks together for searching. It's most certainly more efficient to search in the chunks directly.
+    // We just need to make sure that the search threads get a roughly equally sized range to search in.
     g_autoptr(DynamicArray) files = file_chunks ? fsearch_database_chunked_array_get_joined(file_chunks) : NULL;
     g_autoptr(DynamicArray) folders = folder_chunks ? fsearch_database_chunked_array_get_joined(folder_chunks) : NULL;
 
