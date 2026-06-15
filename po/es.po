@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-08 20:23+0200\n"
-"PO-Revision-Date: 2026-05-07 03:11+0000\n"
-"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
+"PO-Revision-Date: 2026-06-15 16:01+0000\n"
+"Last-Translator: Libre <6n0n1m0s@proton.me>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -164,10 +164,12 @@ msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"DB: concede que las carpetas incluidas estén planificadas y escaneadas "
+"después del lanzamiento independientemente"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "DB: hace que el análisis sea más eficiente"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "DB: Store database config in DB file"
@@ -340,7 +342,7 @@ msgstr "Mostrar información de la versión y salir"
 
 #: src/fsearch_database.c:651
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Reanalizar índice: aplicar cambios…"
 
 #: src/fsearch_database_file.c:1299
 msgid "Loading folders…"
@@ -447,16 +449,15 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "Intento para monitor"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Scan tras lanzador"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Un sistema de archivos"
+msgstr "Mantener en un sistema de archivos"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -464,12 +465,11 @@ msgstr "Rescanear cada"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Horas:"
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "minuto(s)"
+msgstr "Minutos:"
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
@@ -500,10 +500,8 @@ msgstr ""
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
-#, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
-msgstr "Restaurar los filtros predeterminados"
+msgstr "Restaurar lista de exclusión predeterminada"
 
 #: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
@@ -1167,8 +1165,8 @@ msgstr ""
 "Si está habilitado, la búsqueda se actualiza automáticamente con cada "
 "pulsación de tecla.\n"
 "\n"
-"Si está deshabilitada, la búsqueda solo se actualiza cuando presiona <i> "
-"Enter </i> o presiona el botón de búsqueda. "
+"Si está deshabilitada, la búsqueda solo se actualiza cuando presiona <i>"
+"Entrada</i> o presiona el botón de búsqueda. "
 
 #: src/fsearch_preferences.ui:1185
 msgid ""
@@ -1546,7 +1544,7 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"Ordenar por <b> Tipo </b> puede tardar unos segundos con muchos resultados.\n"
+"Ordenar por <b>Tipo</b> puede tardar unos segundos con muchos resultados.\n"
 "\n"
 "Este orden de clasificación no es persistente, se restablecerá cuando cambie "
 "el término de búsqueda."
@@ -1705,7 +1703,7 @@ msgstr "Abrir carpeta"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr "Actualizar base de datos"
+msgstr "Actualizar Base de Datos"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
