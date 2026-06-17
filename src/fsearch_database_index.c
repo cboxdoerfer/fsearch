@@ -350,6 +350,85 @@ index_clear_locked(FsearchDatabaseIndex *self) {
 }
 
 static void
+remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
+    g_assert(db_entry_is_file(entry));
+
+    g_autoptr(DynamicArray) files = darray_new(1);
+    darray_add_item(files, entry);
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
+
+    num_file_deletes++;
+    g_clear_pointer(&entry, db_entry_free);
+}
+
+static void
+remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder_entry_to_remove) {
+    g_assert(db_entry_is_folder(folder_entry_to_remove));
+
+    g_autoptr(GTimer) timer = g_timer_new();
+
+    // Deleting a folder is more complex:
+    // 1. Find and remove all its descendants from the index
+    // 2. Notify listeners about the removal of all descendants and the folder
+    // 3. Unparent, unwatch and free all entries
+
+    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_steal_descendants(self->folder_chunks,
+                                                                                       folder_entry_to_remove,
+                                                                                       -1);
+
+    // It's worth iterating over all folders to calculate the exact number of file descendants we must find,
+    // because this means we can steal the files in huge chunks, which is much faster.
+    uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
+    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+        FsearchDatabaseEntry *folder_entry = darray_get_item(folders, i);
+        num_file_descendants += db_entry_folder_get_num_files(folder_entry);
+    }
+
+    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_steal_descendants(self->file_chunks,
+                                                                                     folder_entry_to_remove,
+                                                                                     (int32_t)num_file_descendants);
+
+    num_descendant_counted++;
+    g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
+
+    // We also add the parent folder to the folder array
+    if (!folders) {
+        folders = darray_new(1);
+    }
+    darray_add_item(folders, folder_entry_to_remove);
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+
+    // Free all entries
+    if (files) {
+        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+            FsearchDatabaseEntry *file = darray_get_item(files, i);
+            // Skip unparenting because the parent will be deleted as well
+            g_clear_pointer(&file, db_entry_free_no_unparent);
+        }
+        num_file_deletes += darray_get_num_items(files);
+    }
+    if (folders) {
+        // First unwatch all folders. We can't free them in the same loop, because this will invalidate their paths,
+        // which are needed in order un-watch them properly
+        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+            index_unwatch_folder_locked(self, folder);
+        }
+        for (uint32_t i = 0; i < darray_get_num_items(folders) - 1; ++i) {
+            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+            g_clear_pointer(&folder, db_entry_free_no_unparent);
+        }
+        // The last folder (the one explicitly deleted) needs to be freed normally
+        FsearchDatabaseEntry *last_folder = darray_get_item(folders, darray_get_num_items(folders) - 1);
+        g_clear_pointer(&last_folder, db_entry_free);
+
+        num_folder_deletes += darray_get_num_items(folders);
+    }
+}
+
+static void
 process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     off_t size = 0;
     time_t mtime = 0;
@@ -424,76 +503,11 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     // 1. notify listeners about the deletion
     // 2. free the entry
     if (db_entry_is_file(entry)) {
-        g_autoptr(DynamicArray) files = darray_new(1);
-        darray_add_item(files, entry);
-        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
-        g_clear_pointer(&entry, db_entry_free);
+        remove_and_free_file_entry_locked(self, entry);
         return;
     }
-
-    g_assert(db_entry_is_folder(entry));
-
-    // Deleting a folder is more complex:
-    // 1. Find and remove all its descendants from the index
-    // 2. Notify listeners about the removal of all descendants and the folder
-    // 3. Unparent, unwatch and free all entries
-
-    g_autoptr(GTimer) timer = g_timer_new();
-    FsearchDatabaseEntry *folder_entry_to_remove = entry;
-
-    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_steal_descendants(
-        self->folder_chunks,
-        folder_entry_to_remove,
-        -1);
-
-    // It's worth iterating over all folders to calculate the exact number of file descendants we must find,
-    // because this means we can steal the files in huge chunks, which is much faster.
-    uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
-    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-        FsearchDatabaseEntry *folder_entry = darray_get_item(folders, i);
-        num_file_descendants += db_entry_folder_get_num_files(folder_entry);
-    }
-
-    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_steal_descendants(
-        self->file_chunks,
-        folder_entry_to_remove,
-        (int32_t)num_file_descendants);
-    num_descendant_counted++;
-    g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
-
-    // We also add the parent folder to the folder array
-    if (!folders) {
-        folders = darray_new(1);
-    }
-    darray_add_item(folders, folder_entry_to_remove);
-
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
-
-    // Free all entries
-    if (files) {
-        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-            FsearchDatabaseEntry *file = darray_get_item(files, i);
-            // We must skip unparenting because the parent will be deleted as well
-            g_clear_pointer(&file, db_entry_free_no_unparent);
-        }
-        num_file_deletes += darray_get_num_items(files);
-    }
-    if (folders) {
-        // First unwatch all folders. We can't free them in the same loop, because this will invalidate their paths,
-        // which are needed in order un-watch them properly
-        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            index_unwatch_folder_locked(self, folder);
-        }
-        for (uint32_t i = 0; i < darray_get_num_items(folders) - 1; ++i) {
-            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            // We must skip unparenting because the parent will be deleted as well
-            g_clear_pointer(&folder, db_entry_free_no_unparent);
-        }
-        FsearchDatabaseEntry *last_folder = darray_get_item(folders, darray_get_num_items(folders) - 1);
-        // The last folder, i.e., the folder which was deleted, needs to be deleted properly
-        g_clear_pointer(&last_folder, db_entry_free);
-        num_folder_deletes += darray_get_num_items(folders);
+    else {
+        remove_and_free_folder_entry_locked(self, entry);
     }
 }
 
