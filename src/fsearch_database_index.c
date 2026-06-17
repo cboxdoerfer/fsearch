@@ -152,6 +152,26 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
     return g_steal_pointer(&skippable_events);
 }
 
+static inline FsearchDatabaseEntry *
+create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type, uint32_t db_index) {
+    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                            | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
+        flags |= DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX;
+        return db_entry_new_with_attributes(flags,
+                                            name,
+                                            parent,
+                                            type,
+                                            DATABASE_INDEX_PROPERTY_DB_INDEX,
+                                            db_index,
+                                            DATABASE_INDEX_PROPERTY_NONE);
+    }
+
+    // Files don't need the DB_INDEX attribute, they inherit it from 'parent'
+    return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
+}
+
 static gboolean
 process_queued_events(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self, FALSE);
@@ -247,11 +267,11 @@ lookup_entry_for_event_locked(FsearchDatabaseIndex *self,
     // It has the same name and parent (i.e. the watched directory)
     // and hence the same path. This means it will compare in the same way as the entry we're looking
     // for when it gets passed to the `db_entry_compare_entries_by_full_path` function.
-    FsearchDatabaseEntry *entry_tmp =
-        db_entry_new(DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME,
-                     event->name ? event->name->str : event->path->str,
-                     event->name ? event->watched_entry : NULL,
-                     event->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+    FsearchDatabaseEntry *entry_tmp = create_dummy_entry(event->name ? event->name->str : event->path->str,
+                                                         event->name ? event->watched_entry : NULL,
+                                                         event->is_dir ? DATABASE_ENTRY_TYPE_FOLDER
+                                                                       : DATABASE_ENTRY_TYPE_FILE,
+                                                         self->id);
 
     FsearchDatabaseChunkedArray *chunks = event->is_dir ? self->folder_chunks : self->file_chunks;
 
