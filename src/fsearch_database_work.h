@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fsearch_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
@@ -25,6 +26,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SEARCH,
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+    FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
     FSEARCH_DATABASE_WORK_QUIT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
@@ -54,6 +56,9 @@ fsearch_database_work_rescan_index_get_id(FsearchDatabaseWork *work);
 FsearchDatabaseIndex *
 fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work);
 
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work);
+
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
@@ -79,6 +84,9 @@ fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_
 
 FsearchDatabaseWork *
 fsearch_database_work_new_get_item_info(guint view_id, guint index, FsearchDatabaseEntryInfoFlags flags);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_load(void);

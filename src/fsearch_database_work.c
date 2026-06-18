@@ -1,4 +1,6 @@
 #include "fsearch_database_work.h"
+
+#include "fsearch_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
@@ -61,6 +63,10 @@ struct FsearchDatabaseWork {
         struct {
             FsearchDatabaseIndex *rescan_new_index;
         };
+        // FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED
+        struct {
+            DynamicArray *item_paths;
+        };
     };
 
     guint view_id;
@@ -93,6 +99,9 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_SORT:
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
     case FSEARCH_DATABASE_WORK_QUIT:
+        break;
+    case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
+        g_clear_pointer(&work->item_paths, darray_unref);
         break;
     case FSEARCH_DATABASE_WORK_SCAN:
         g_clear_object(&work->include_manager);
@@ -237,6 +246,15 @@ fsearch_database_work_new_get_item_info(guint view_id, guint idx, FsearchDatabas
     work->entry_info_flags = flags;
     work->idx = idx;
     work->view_id = view_id;
+
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED;
+    work->item_paths = darray_ref(item_paths);
 
     return work;
 }
@@ -395,6 +413,13 @@ fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work)
     g_return_val_if_fail(work, NULL);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED, NULL);
     return fsearch_database_index_ref(work->rescan_new_index);
+}
+
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED, NULL);
+    return darray_ref(work->item_paths);
 }
 
 const char *
