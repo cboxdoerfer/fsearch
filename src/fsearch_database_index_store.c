@@ -1039,6 +1039,43 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     return true;
 }
 
+void
+fsearch_database_index_store_remove_paths(FsearchDatabaseIndexStore *store,
+                                          DynamicArray *file_paths,
+                                          FsearchDatabaseRescanManager *rescan_manager) {
+    g_return_if_fail(store);
+    g_return_if_fail(file_paths);
+
+    bool content_changed = false;
+    const uint32_t num_file_paths = darray_get_num_items(file_paths);
+    for (uint32_t i = 0; i < num_file_paths; ++i) {
+        const char *path = darray_get_item(file_paths, i);
+
+        for (uint32_t j = 0; j < store->indices->len; ++j) {
+            FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, j);
+            g_autoptr(FsearchDatabaseInclude) include = fsearch_database_index_get_include(index);
+            const char *root_path = fsearch_database_include_get_path(include);
+
+            // Optimization: Only try to remove if the path falls under this index's root
+            if (g_str_has_prefix(path, root_path)) {
+                bool root_removed = false;
+                if (fsearch_database_index_remove_path(index, path, &root_removed)) {
+                    content_changed = true;
+                }
+
+                // Handle the offline edge case
+                if (root_removed && rescan_manager) {
+                    fsearch_database_rescan_manager_notify_index_offline(rescan_manager,
+                                                                         fsearch_database_index_get_id(index));
+                }
+            }
+        }
+    }
+    if (content_changed) {
+        index_store_content_changed(store);
+    }
+}
+
 GMutexLocker *
 fsearch_database_index_store_get_locker(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store, NULL);
