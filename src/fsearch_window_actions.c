@@ -19,16 +19,19 @@
 #include "fsearch_window_actions.h"
 
 #include "fsearch.h"
+#include "fsearch_array.h"
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
+#include "fsearch_database.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_work.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_list_view.h"
+#include "fsearch_preview.h"
 #include "fsearch_statusbar.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
-#include "fsearch_preview.h"
 
 #include <gio/gio.h>
 #include <glib.h>
@@ -43,10 +46,10 @@
 #include <gio/gdesktopappinfo.h>
 #endif
 
-#include <libintl.h>
-#include <glib/gi18n.h>
-#include <stdint.h>
 #include <gdk/gdk.h>
+#include <glib/gi18n.h>
+#include <libintl.h>
+#include <stdint.h>
 
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
@@ -125,9 +128,9 @@ prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
 }
 
 static void
-prepend_string_to_list(GList * *string_list,
+prepend_string_to_list(GList **string_list,
                        FsearchDatabaseEntry *entry,
-                       GString * (*get_string_func)(FsearchDatabaseEntry *)) {
+                       GString *(*get_string_func)(FsearchDatabaseEntry *)) {
     if (!entry || !string_list || !get_string_func) {
         return;
     }
@@ -148,9 +151,7 @@ append_line(GString *str, const char *text) {
 }
 
 static void
-append_line_to_string(GString *buffer,
-                      FsearchDatabaseEntry *entry,
-                      GString * (*get_string_func)(FsearchDatabaseEntry *)) {
+append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*get_string_func)(FsearchDatabaseEntry *)) {
     if (!entry || !buffer || !get_string_func) {
         return;
     }
@@ -277,8 +278,7 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    g_auto(GStrv)
-        file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
     if (!file_uris) {
         return;
     }
@@ -313,8 +313,7 @@ fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    g_auto(GStrv)
-        file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
     if (!file_uris) {
         return;
     }
@@ -334,7 +333,6 @@ fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
         g_debug("[file_properties] %s", error->message);
     }
 }
-
 
 static void
 fsearch_window_action_move_to_trash(GSimpleAction *action, GVariant *variant, gpointer user_data) {
@@ -527,8 +525,7 @@ open_path_list_callback(gboolean result, const char *error_message, gpointer use
     else if (error_message) {
         // open failed
         if (ctx->show_dialog_failed_opening) {
-            GtkWindow *win =
-                gtk_application_get_window_by_id(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT), ctx->win_id);
+            GtkWindow *win = gtk_application_get_window_by_id(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT), ctx->win_id);
             if (win) {
                 ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
                                               GTK_MESSAGE_WARNING,
@@ -692,9 +689,8 @@ fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, 
 
     GtkWidget *app_chooser_dlg = gtk_app_chooser_dialog_new_for_content_type(GTK_WINDOW(self),
                                                                              GTK_DIALOG_MODAL,
-                                                                             content_type
-                                                                                 ? content_type
-                                                                                 : "application/octet-stream");
+                                                                             content_type ? content_type
+                                                                                          : "application/octet-stream");
     gtk_widget_show(app_chooser_dlg);
 
     GtkWidget *widget = gtk_app_chooser_dialog_get_widget(GTK_APP_CHOOSER_DIALOG(app_chooser_dlg));
