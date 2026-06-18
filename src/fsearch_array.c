@@ -645,7 +645,7 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
     g_assert(comp_func);
 
     if (array->num_items < 64) {
-        g_debug("[sort] insertion sort: %d\n", array->num_items);
+        g_debug("[sort] insertion sort: %d", array->num_items);
         insertion_sort(array, comp_func, data);
     }
     else {
