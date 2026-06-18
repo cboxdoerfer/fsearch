@@ -708,6 +708,11 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
     g_clear_pointer(&store->indices, g_ptr_array_unref);
     store->indices = g_ptr_array_ref(indices);
 
+    for (uint32_t i = 0; store->indices && i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
+        fsearch_database_index_set_event_func(index, index_store_index_event_cb, store);
+    }
+
     for (uint32_t i = DATABASE_INDEX_PROPERTY_NAME; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         DynamicArray *s_files = files[i];
         DynamicArray *s_folders = folders[i];
