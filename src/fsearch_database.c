@@ -530,6 +530,21 @@ database_set_store(FsearchDatabase *self, FsearchDatabaseIndexStore *store) {
 }
 
 static void
+database_remove_items(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
+    g_return_if_fail(self);
+    g_return_if_fail(work);
+
+    g_autoptr(DynamicArray) item_paths = fsearch_database_work_notify_items_removed_get_item_paths(work);
+    g_return_if_fail(item_paths);
+
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+    g_assert_nonnull(locker);
+
+    fsearch_database_index_store_remove_paths(self->store, item_paths, self->rescan_manager);
+}
+
+static void
 database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
     // DB must be locked
     g_return_if_fail(self);
@@ -823,6 +838,9 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
         break;
     case FSEARCH_DATABASE_WORK_SCAN_FINISHED:
         database_scan_finished(self, work);
+        break;
+    case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
+        database_remove_items(self, work);
         break;
     case FSEARCH_DATABASE_WORK_SEARCH:
         database_search(self, work);
