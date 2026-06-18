@@ -662,6 +662,88 @@ fsearch_database_index_process_events(FsearchDatabaseIndex *self) {
     return process_queued_events(self);
 }
 
+static FsearchDatabaseEntry *
+create_dummy_entry_chain(const char *root_path, const char *target_path, FsearchDatabaseEntryType target_type, uint32_t id) {
+    if (g_strcmp0(root_path, target_path) == 0) {
+        // target is the root itself
+        return target_type == DATABASE_ENTRY_TYPE_FOLDER
+                 ? create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER, id)
+                 : NULL;
+    }
+
+    // TODO: Performance
+    // Ideally we should avoid so many allocations in the function.
+
+    g_autoptr(GFile) root_file = g_file_new_for_path(root_path);
+    g_autoptr(GFile) target_file = g_file_new_for_path(target_path);
+
+    // calculates the relative path: root: /a/b, target: /a/b/c/d -> rel: c/d
+    g_autofree char *rel_path = g_file_get_relative_path(root_file, target_file);
+
+    if (!rel_path) {
+        return NULL; // target_path is not a child of root_path
+    }
+
+    FsearchDatabaseEntry *current = create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER, id);
+
+    g_auto(GStrv) parts = g_strsplit(rel_path, G_DIR_SEPARATOR_S, -1);
+
+    for (int i = 0; parts[i] != NULL; i++) {
+        // The last part takes the requested type (FILE or FOLDER), everything in between is a FOLDER
+        FsearchDatabaseEntryType type = (parts[i + 1] == NULL) ? target_type : DATABASE_ENTRY_TYPE_FOLDER;
+
+        FsearchDatabaseEntry *child = create_dummy_entry(parts[i], current, type, id);
+        current = child;
+    }
+
+    return current;
+}
+
+bool
+fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path, bool *root_removed) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(path, false);
+    g_return_val_if_fail(root_removed, false);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+
+    // Edge Case: Check if the removed path is the root of this index
+    const char *root_path = fsearch_database_include_get_path(self->include);
+    if (g_strcmp0(path, root_path) == 0) {
+        g_debug("[index-%d] remove_path: root folder removed: %s", self->id, root_path);
+        index_clear_locked(self);
+        self->needs_root_reappear_poll = true;
+        *root_removed = true;
+        return true;
+    }
+
+    // Try finding it as a file first using a dummy entry
+    FsearchDatabaseEntry *dummy_file = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FILE, self->id);
+    if (dummy_file) {
+        FsearchDatabaseEntry *entry = fsearch_database_chunked_array_steal(self->file_chunks, dummy_file);
+        g_clear_pointer(&dummy_file, db_entry_free_full);
+
+        if (entry) {
+            remove_and_free_file_entry_locked(self, g_steal_pointer(&entry));
+            return true;
+        }
+    }
+
+    // If not a file, try finding it as a folder
+    FsearchDatabaseEntry *dummy_folder = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FOLDER, self->id);
+    if (dummy_folder) {
+        FsearchDatabaseEntry *entry = fsearch_database_chunked_array_steal(self->folder_chunks, dummy_folder);
+        g_clear_pointer(&dummy_folder, db_entry_free_full);
+
+        if (entry) {
+            remove_and_free_folder_entry_locked(self, g_steal_pointer(&entry));
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // endregion
 
 static void
