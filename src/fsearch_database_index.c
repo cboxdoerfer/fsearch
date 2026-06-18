@@ -873,6 +873,16 @@ fsearch_database_index_unref(FsearchDatabaseIndex *self) {
     }
 }
 
+void
+fsearch_database_index_set_event_func(FsearchDatabaseIndex *self,
+                                      FsearchDatabaseIndexEventFunc event_func,
+                                      gpointer event_func_data) {
+    g_return_if_fail(self);
+
+    self->event_func = event_func;
+    self->event_func_data = event_func_data;
+}
+
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self, NULL);

@@ -48,6 +48,9 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         DynamicArray *files,
                                         FsearchDatabaseIndexPropertyFlags flags);
 
+void
+fsearch_database_index_set_event_func(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventFunc event_func, gpointer event_func_data);
+
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self);
 
