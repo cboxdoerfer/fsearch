@@ -1,13 +1,13 @@
 #define G_LOG_DOMAIN "fsearch-database-chunked-array"
 
 #include "fsearch_database_chunked_array.h"
-#include "fsearch_database_index_properties.h"
-#include "fsearch_database_entry.h"
-#include "fsearch_database_sort.h"
 #include "fsearch_array.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_database_index_properties.h"
+#include "fsearch_database_sort.h"
 
-#include <glib.h>
 #include <gio/giotypes.h>
+#include <glib.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -58,9 +58,7 @@ chunk_compare_func(DynamicArray **chunk_ptr, FsearchDatabaseEntry **entry_ptr, F
 }
 
 static DynamicArray *
-get_chunk_for_entry(FsearchDatabaseChunkedArray *self,
-                    FsearchDatabaseEntry *entry,
-                    uint32_t *chunk_idx_out) {
+get_chunk_for_entry(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry, uint32_t *chunk_idx_out) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(entry, NULL);
 
@@ -122,8 +120,9 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
 
     DynamicArray *chunks = darray_new(num_chunks);
     for (uint32_t n = 0; n < num_chunks; ++n) {
-        DynamicArray *chunk_slice =
-            darray_get_range(chunk, n * num_items_per_chunk, n + 1 == num_chunks ? UINT32_MAX : num_items_per_chunk);
+        DynamicArray *chunk_slice = darray_get_range(chunk,
+                                                     n * num_items_per_chunk,
+                                                     n + 1 == num_chunks ? UINT32_MAX : num_items_per_chunk);
         darray_set_free_func(chunk_slice, entry_free_func);
         darray_add_item(chunks, chunk_slice);
     }
@@ -315,11 +314,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
     uint32_t entry_start_idx = 0;
     if (self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
         DynamicArray *chunk = get_chunk_for_entry(self, folder, &chunk_idx);
-        darray_binary_search_with_data(chunk,
-                                       folder,
-                                       self->entry_comp_func,
-                                       self->compare_context,
-                                       &entry_start_idx);
+        darray_binary_search_with_data(chunk, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
 
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
@@ -338,8 +333,8 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
             // We know the exact number of descendants, and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
             // it is guaranteed that they are all sorted next to each other. Therefore, we can use an optimized code
             // path where we steal them in large chunks, instead of one by one.
-            // It's also safe to not clamp n_elements since darray_steal will only steal the available number of elements
-            // and report the actual amount stolen
+            // It's also safe to not clamp n_elements since darray_steal will only steal the available number of
+            // elements and report the actual amount stolen
             num_known_descendants_stolen += darray_steal(chunk,
                                                          entry_start_idx,
                                                          num_known_descendants - num_known_descendants_stolen,
