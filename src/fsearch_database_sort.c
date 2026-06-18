@@ -168,13 +168,40 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
 }
 
 static int
+compare_by_db_index(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const uint32_t idx_a = db_entry_get_db_index(*a);
+    const uint32_t idx_b = db_entry_get_db_index(*b);
+    return (idx_a > idx_b) - (idx_a < idx_b);
+}
+
+static int
+compare_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_path(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+
+    return compare_by_db_index(a, b);
+}
+
+static int
+compare_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_full_path(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+
+    return compare_by_db_index(a, b);
+}
+
+static int
 compare_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const int res = db_entry_compare_entries_by_name(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
     }
     else {
-        return db_entry_compare_entries_by_path(a, b);
+        return compare_by_path(a, b);
     }
 }
 
@@ -215,9 +242,9 @@ fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty
     case DATABASE_INDEX_PROPERTY_NAME:
         return (DynamicArrayCompareDataFunc)compare_by_name;
     case DATABASE_INDEX_PROPERTY_PATH:
-        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
+        return (DynamicArrayCompareDataFunc)compare_by_path;
     case DATABASE_INDEX_PROPERTY_PATH_FULL:
-        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path;
+        return (DynamicArrayCompareDataFunc)compare_by_full_path;
     case DATABASE_INDEX_PROPERTY_SIZE:
         return (DynamicArrayCompareDataFunc)compare_by_size;
     case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
