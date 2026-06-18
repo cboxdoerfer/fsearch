@@ -205,24 +205,30 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                                 warning_message->str);
 
         if (response != GTK_RESPONSE_OK) {
-            goto save_fail;
+            if (file_list) {
+                g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
+            }
+            return;
         }
     }
 
-    uint32_t num_trashed_or_deleted = 0;
+    g_autoptr(DynamicArray) items = darray_new_full(num_selected_rows, g_free);
     for (GList *f = file_list; f != NULL; f = f->next) {
         char *path = f->data;
+        bool res = false;
         if (delete) {
-            if (fsearch_file_utils_remove(path, error_message)) {
-                num_trashed_or_deleted++;
-            }
+            res = fsearch_file_utils_remove(path, error_message);
         }
         else {
-            if (fsearch_file_utils_trash(path, error_message)) {
-                num_trashed_or_deleted++;
-            }
+            res = fsearch_file_utils_trash(path, error_message);
+        }
+        if (res) {
+            darray_add_item(items, g_strdup(path));
         }
     }
+    g_autoptr(FsearchDatabase) db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_notify_items_removed(items);
+    fsearch_database_queue_work(db, work);
 
     if (error_message->len > 0) {
         ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
@@ -233,31 +239,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
     }
-    if (num_trashed_or_deleted > 0) {
-        g_autoptr(GString) trashed_or_deleted_message = g_string_new(NULL);
 
-        const char *format;
-        if (delete) {
-            format = ngettext("Deleted %'d file.", "Deleted %'d files.", num_trashed_or_deleted);
-        }
-        else {
-            format = ngettext("Moved %'d file to the trash.", "Moved %'d files to the trash.", num_trashed_or_deleted);
-        }
-
-        g_string_printf(trashed_or_deleted_message,
-                        format,
-                        num_trashed_or_deleted);
-        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
-                                      GTK_MESSAGE_INFO,
-                                      GTK_BUTTONS_OK,
-                                      trashed_or_deleted_message->str,
-                                      _("The database needs to be updated before it becomes aware of those changes! "
-                                          "This will be fixed with future updates."),
-                                      G_CALLBACK(gtk_widget_destroy),
-                                      NULL);
-    }
-
-save_fail:
     if (file_list) {
         g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
     }
