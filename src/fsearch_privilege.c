@@ -31,6 +31,14 @@ typedef struct {
     gpointer user_data;
 } PrivilegeRequestData;
 
+/* Application-level authorization state */
+static bool g_is_authorized = false;
+
+bool
+privilege_is_authorized(void) {
+    return g_is_authorized;
+}
+
 static gboolean
 privilege_invoke_on_idle(gpointer user_data) {
     PrivilegeRequestData *data = (PrivilegeRequestData *)user_data;
@@ -48,17 +56,22 @@ on_authorize_finish(GObject *source_object, GAsyncResult *result, gpointer user_
     PolkitAuthorizationResult *res =
         polkit_authority_check_authorization_finish(authority, result, &error);
 
+    bool authorized = false;
     if (!res) {
         g_debug("[privilege] authorization failed: %s",
                 error ? error->message : "unknown error");
-        data->callback(false, data->user_data);
-        g_free(data);
-        return;
     }
-
-    bool authorized = polkit_authorization_result_get_is_authorized(res);
+    else {
+        authorized = polkit_authorization_result_get_is_authorized(res);
+        if (authorized) {
+            g_is_authorized = true;
+        }
+    }
     g_debug("[privilege] authorization %s", authorized ? "granted" : "denied");
-    data->callback(authorized, data->user_data);
+
+    if (data->callback) {
+        data->callback(authorized, data->user_data);
+    }
     g_free(data);
 }
 

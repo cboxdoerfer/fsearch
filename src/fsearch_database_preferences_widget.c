@@ -697,9 +697,9 @@ init_ntfs_page(FsearchDatabasePreferencesWidget *self) {
     gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width(col, 90);
 
-    /* Initialize status labels */
+    /* Initialize status labels from application-level state */
     self->ntfs_is_root = privilege_is_root();
-    self->ntfs_is_authorized = false;
+    self->ntfs_is_authorized = privilege_is_authorized();
     fsearch_database_preferences_widget_update_ntfs_status(self, self->ntfs_is_root, self->ntfs_is_authorized);
 }
 
@@ -746,6 +746,12 @@ on_ntfs_auto_polkit_toggled(GtkToggleButton *button, gpointer user_data) {
 
     /* Already root — nothing to do */
     if (privilege_is_root()) {
+        return;
+    }
+
+    /* Already authorized — skip */
+    if (privilege_is_authorized()) {
+        g_debug("[ntfs] already authorized, skipping Polkit request");
         return;
     }
 

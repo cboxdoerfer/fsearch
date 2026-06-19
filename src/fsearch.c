@@ -21,6 +21,7 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
+#include "fsearch_privilege.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index_properties.h"
@@ -76,6 +77,9 @@ G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
 static void
 set_accels_for_escape(GApplication *app);
+
+static gboolean
+fsearch_ntfs_startup_auth(gpointer user_data);
 
 static void
 move_search_term_to_window(FsearchApplication *self, FsearchApplicationWindow *win) {
@@ -383,6 +387,13 @@ set_accels_for_escape(GApplication *app) {
     }
 }
 
+static gboolean
+fsearch_ntfs_startup_auth(gpointer user_data) {
+    g_debug("[app] requesting NTFS Polkit authorization");
+    privilege_request_async(NULL, NULL);
+    return G_SOURCE_REMOVE;
+}
+
 static void
 on_database_scan_started(FsearchDatabase *db, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
@@ -452,6 +463,12 @@ fsearch_application_startup(GApplication *app) {
     g_assert(self->config);
     if (!config_load(self->config)) {
         config_load_default(self->config);
+    }
+
+    /* Request NTFS root permission after main window is shown */
+    if (self->config->ntfs_auto_polkit && !privilege_is_root() && !privilege_is_authorized()) {
+        g_debug("[app] scheduling NTFS Polkit authorization on startup");
+        g_timeout_add(500, (GSourceFunc)fsearch_ntfs_startup_auth, NULL);
     }
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);

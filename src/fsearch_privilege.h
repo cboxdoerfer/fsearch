@@ -63,4 +63,15 @@ privilege_request_async(void (*callback)(bool authorized, gpointer user_data),
 char *
 privilege_get_status_text(bool is_root, bool is_authorized);
 
+/**
+ * privilege_is_authorized:
+ *
+ * Returns whether Polkit authorization has been granted during
+ * the current application lifetime.
+ *
+ * Returns: %TRUE if authorized, %FALSE otherwise
+ */
+bool
+privilege_is_authorized(void);
+
 G_END_DECLS
