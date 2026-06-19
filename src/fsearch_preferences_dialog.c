@@ -141,6 +141,11 @@ update_config(FsearchPreferencesDialog *self) {
 
     g_clear_object(&self->config->excludes);
     self->config->excludes = fsearch_database_preferences_widget_get_exclude_manager(self->database_pref_widget);
+
+    /* NTFS config */
+    fsearch_database_preferences_widget_get_ntfs_config(self->database_pref_widget,
+                                                         &self->config->ntfs_fast_scan_enabled,
+                                                         &self->config->ntfs_auto_polkit);
 }
 
 static void
@@ -216,7 +221,9 @@ fsearch_preferences_dialog_constructed(GObject *object) {
     gtk_widget_show(GTK_WIDGET(self->filter_pref_widget));
 
     self->database_pref_widget = fsearch_database_preferences_widget_new(self->config_old->includes,
-                                                                          self->config_old->excludes);
+                                                                          self->config_old->excludes,
+                                                                          self->config_old->ntfs_fast_scan_enabled,
+                                                                          self->config_old->ntfs_auto_polkit);
     gtk_notebook_append_page(self->main_notebook, GTK_WIDGET(self->database_pref_widget), gtk_label_new(_("Database")));
     gtk_widget_show(GTK_WIDGET(self->database_pref_widget));
 

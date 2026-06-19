@@ -112,6 +112,10 @@ struct _FsearchConfig {
 
     FsearchDatabaseIncludeManager *includes;
     FsearchDatabaseExcludeManager *excludes;
+
+    // NTFS fast scan
+    bool ntfs_fast_scan_enabled;
+    bool ntfs_auto_polkit;
 };
 
 bool

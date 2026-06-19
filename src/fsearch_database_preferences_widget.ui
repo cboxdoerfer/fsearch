@@ -622,6 +622,7 @@
                             <property name="receives-default">False</property>
                             <property name="has-tooltip">True</property>
                             <property name="draw-indicator">True</property>
+                            <signal name="toggled" handler="on_ntfs_auto_polkit_toggled" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
