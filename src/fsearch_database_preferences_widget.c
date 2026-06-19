@@ -6,6 +6,7 @@
 #include "fsearch_database_include.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_privilege.h"
+#include "fsearch_filesystem_detect.h"
 
 #include <config.h>
 #include <gio/gio.h>
@@ -696,6 +697,23 @@ init_ntfs_page(FsearchDatabasePreferencesWidget *self) {
     col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_MONITOR);
     gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width(col, 90);
+
+    /* Populate partition list from detected NTFS partitions */
+    GPtrArray *partitions = fs_detect_ntfs_partitions();
+    if (partitions) {
+        for (guint i = 0; i < partitions->len; i++) {
+            FsearchPartitionInfo *info = g_ptr_array_index(partitions, i);
+            GtkTreeIter iter;
+            gtk_list_store_append(self->ntfs_partition_model, &iter);
+            gtk_list_store_set(self->ntfs_partition_model, &iter,
+                               COL_NTFS_DEVICE, info->device,
+                               COL_NTFS_MOUNTPOINT, info->mountpoint,
+                               COL_NTFS_INCLUDE, TRUE,
+                               COL_NTFS_MONITOR, TRUE,
+                               -1);
+        }
+        fs_partition_array_free(partitions);
+    }
 
     /* Initialize status labels from application-level state */
     self->ntfs_is_root = privilege_is_root();
