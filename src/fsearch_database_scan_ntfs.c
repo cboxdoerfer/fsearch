@@ -47,6 +47,13 @@
 #define NTFS_LAST_SYSTEM_MFT 11
 #define NTFS_EXTEND_DIR_MFT  11
 
+/*
+ * Batch read size for MFT records.
+ * Reading 1024 records at once (typically 1MB) reduces system call
+ * overhead significantly on mechanical HDDs where the MFT is contiguous.
+ */
+#define NTFS_MFT_BATCH_SIZE 1024
+
 typedef struct NtfsEntry NtfsEntry;
 
 struct NtfsEntry {
@@ -67,7 +74,6 @@ typedef struct NtfsScanContext {
     FsearchDatabaseEntry *root_entry; /* Mount point folder entry */
     DynamicArray *folders;
     DynamicArray *files;
-    FsearchDatabaseExcludeManager *exclude_manager;
     uint32_t index_id;
     GCancellable *cancellable;
 
@@ -77,7 +83,6 @@ typedef struct NtfsScanContext {
     uint64_t dir_count;
     uint64_t file_count;
     uint64_t system_skipped;
-    uint64_t exclude_skipped;
 } NtfsScanContext;
 
 static void
@@ -128,7 +133,7 @@ ntfs_name_to_utf8(const ntfschar *name, u8 name_len) {
     gsize len_out = 0;
     gsize chars = name_len;
     GError *error = NULL;
-    char *utf8 = g_utf16_to_utf8(ucs2, chars, NULL, &len_out, &error);
+    char *utf8 = g_utf16_to_utf8(ucs2, chars, &len_out, NULL, &error);
     g_free(ucs2);
 
     if (error) {
@@ -138,26 +143,6 @@ ntfs_name_to_utf8(const ntfschar *name, u8 name_len) {
         return g_strdup_printf("<invalid-name-%d>", name_len);
     }
     return utf8;
-}
-
-/* Build full path for exclude check: mount_point + relative path */
-static char *
-build_full_path_for_entry(NtfsEntry *entry, NtfsScanContext *ctx) {
-    /* Walk up the parent chain to build relative path */
-    GString *rel_path = g_string_new(NULL);
-
-    NtfsEntry *current = entry;
-    while (current && current->name) {
-        if (rel_path->len > 0) {
-            g_string_prepend_c(rel_path, G_DIR_SEPARATOR);
-        }
-        g_string_prepend(rel_path, current->name);
-        current = g_hash_table_lookup(ctx->mft_table, GUINT_TO_POINTER(current->parent_mft));
-    }
-
-    g_autofree char *full_path = g_build_path(G_DIR_SEPARATOR_S, ctx->mount_point, rel_path->str, NULL);
-    g_string_free(rel_path, TRUE);
-    return full_path;
 }
 
 /* Create FsearchDatabaseEntry for a folder */
@@ -287,14 +272,7 @@ process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
     return false;
 }
 
-/*
- * Batch read MFT records for better I/O performance.
- * Reading 1024 records at once (typically 1MB) reduces system call
- * overhead significantly on mechanical HDDs where the MFT is contiguous.
- */
-#define NTFS_MFT_BATCH_SIZE 1024
-
-/* Phase 1: Scan all MFT records and populate context */
+/* Phase 1: Scan all MFT records and populate hash table */
 static bool
 ntfs_scan_mft_phase1(NtfsScanContext *ctx) {
     ntfs_volume *vol = ctx->vol;
@@ -353,26 +331,25 @@ ntfs_scan_phase2(NtfsScanContext *ctx) {
     }
     darray_add_item(ctx->folders, ctx->root_entry);
 
-    /* First pass: create all entries with NULL parent */
+    /* First pass: create all entries and add to arrays */
     GHashTableIter iter;
     gpointer key, value;
     g_hash_table_iter_init(&iter, ctx->mft_table);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
         NtfsEntry *entry = (NtfsEntry *)value;
-        g_assert(entry->entry == NULL);
 
-        /* Create database entry with NULL parent (will set later) */
+        /* Create database entry with NULL parent (will set in second pass) */
         if (entry->is_dir) {
             entry->entry = ntfs_create_folder_entry(entry->name,
                                                      entry->mtime,
-                                                     NULL, /* parent set in phase 2b */
+                                                     NULL,
                                                      ctx->index_id);
         } else {
             entry->entry = ntfs_create_file_entry(entry->name,
                                                    entry->size,
                                                    entry->mtime,
-                                                   NULL); /* parent set in phase 2b */
+                                                   NULL);
         }
 
         if (!entry->entry) {
@@ -381,21 +358,6 @@ ntfs_scan_phase2(NtfsScanContext *ctx) {
             continue;
         }
 
-        /* Build full path for exclude check */
-        g_autofree char *full_path = build_full_path_for_entry(entry, ctx);
-        if (full_path && ctx->exclude_manager) {
-            if (fsearch_database_exclude_manager_excludes(ctx->exclude_manager,
-                                                          full_path,
-                                                          entry->name,
-                                                          entry->is_dir)) {
-                ctx->exclude_skipped++;
-                db_entry_free(entry->entry);
-                entry->entry = NULL;
-                continue;
-            }
-        }
-
-        /* Add to appropriate array (parent will be set in second pass) */
         if (entry->is_dir) {
             darray_add_item(ctx->folders, entry->entry);
         } else {
@@ -421,8 +383,6 @@ ntfs_scan_phase2(NtfsScanContext *ctx) {
             parent = ctx->root_entry;
         }
 
-        /* Use set_parent_no_update to avoid double-counting;
-         * entries are already in the arrays. */
         db_entry_set_parent_no_update(entry->entry, parent);
     }
 
@@ -434,7 +394,6 @@ db_scan_ntfs(const char *device_path,
              const char *mount_point,
              DynamicArray *folders,
              DynamicArray *files,
-             FsearchDatabaseExcludeManager *exclude_manager,
              uint32_t index_id,
              GCancellable *cancellable) {
     g_assert(g_path_is_absolute(device_path));
@@ -449,7 +408,6 @@ db_scan_ntfs(const char *device_path,
         .root_entry = NULL,
         .folders = folders,
         .files = files,
-        .exclude_manager = exclude_manager,
         .index_id = index_id,
         .cancellable = cancellable,
     };
@@ -487,9 +445,8 @@ db_scan_ntfs(const char *device_path,
         return false;
     }
 
-    g_debug("[ntfs_scan] complete: %" G_GUINT64_FORMAT " dirs, %" G_GUINT64_FORMAT " files, "
-            "%" G_GUINT64_FORMAT " excluded",
-            ctx.dir_count, ctx.file_count, ctx.exclude_skipped);
+    g_debug("[ntfs_scan] complete: %" G_GUINT64_FORMAT " dirs, %" G_GUINT64_FORMAT " files",
+            ctx.dir_count, ctx.file_count);
 
     ntfs_scan_context_free(&ctx);
     return true;
