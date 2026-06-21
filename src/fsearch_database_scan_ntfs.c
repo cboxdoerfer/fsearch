@@ -188,6 +188,112 @@ ntfs_create_file_entry(const char *name,
         DATABASE_INDEX_PROPERTY_NONE);
 }
 
+/* Process a single MFT record; return true if a FILE_NAME was found and added */
+static bool
+process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
+    /* Check magic */
+    if (!ntfs_is_mft_record(mrec->magic)) {
+        return false;
+    }
+
+    /* Check if in use */
+    u16 flags = le16_to_cpu(mrec->flags);
+    if (!(flags & MFT_RECORD_IN_USE)) {
+        return false;
+    }
+
+    ctx->used_records++;
+    bool is_dir = (flags & MFT_RECORD_IS_DIRECTORY) ? true : false;
+
+    /* Walk attributes to find FILE_NAME */
+    u32 bytes_in_use = le32_to_cpu(mrec->bytes_in_use);
+    u16 attrs_offset = le16_to_cpu(mrec->attrs_offset);
+    u8 *base = (u8 *)mrec;
+
+    for (u32 ao = attrs_offset; ao < bytes_in_use; ) {
+        ATTR_RECORD *attr = (ATTR_RECORD *)(base + ao);
+        ATTR_TYPES attr_type = attr->type;
+        u32 attr_len = le32_to_cpu(attr->length);
+
+        if (attr_type == AT_END || attr_len == 0 || attr_len > bytes_in_use) {
+            break;
+        }
+
+        if (attr_type != AT_FILE_NAME || attr->non_resident != 0) {
+            ao += attr_len;
+            continue;
+        }
+
+        u16 value_offset = le16_to_cpu(attr->value_offset);
+        FILE_NAME_ATTR *fn = (FILE_NAME_ATTR *)(base + ao + value_offset);
+
+        u8 name_len = fn->file_name_length;
+        u8 name_type = fn->file_name_type;
+
+        /* Skip pure DOS short names (type 2) */
+        if (name_type == 2) {
+            ao += attr_len;
+            continue;
+        }
+
+        u64 parent_mft = MREF_LE(fn->parent_directory);
+
+        /* Skip system files */
+        if (is_ntfs_system_file(mft_no, parent_mft)) {
+            ctx->system_skipped++;
+            return false;
+        }
+
+        /* Skip overly long names */
+        if (name_len == 0 || name_len > NTFS_MAX_NAME_LEN) {
+            g_debug("[ntfs_scan] invalid name length %d at mft %" G_GUINT64_FORMAT,
+                    name_len, mft_no);
+            return false;
+        }
+
+        /* Convert name to UTF-8 */
+        char *name = ntfs_name_to_utf8(fn->file_name, name_len);
+        if (!name) {
+            return false;
+        }
+
+        /* Extract file attributes from FILE_NAME_ATTR */
+        off_t size = is_dir ? 0 : (off_t)sle64_to_cpu(fn->data_size);
+        time_t mtime = ntfs_time_to_unix(fn->last_data_change_time);
+
+        /* Create NtfsEntry */
+        NtfsEntry *entry = g_new0(NtfsEntry, 1);
+        entry->mft_no = mft_no;
+        entry->parent_mft = parent_mft;
+        entry->name = name;
+        entry->is_dir = is_dir;
+        entry->size = size;
+        entry->mtime = mtime;
+        entry->entry = NULL;
+
+        g_hash_table_insert(ctx->mft_table,
+                            GUINT_TO_POINTER(mft_no),
+                            entry);
+
+        if (is_dir) {
+            ctx->dir_count++;
+        } else {
+            ctx->file_count++;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/*
+ * Batch read MFT records for better I/O performance.
+ * Reading 1024 records at once (typically 1MB) reduces system call
+ * overhead significantly on mechanical HDDs where the MFT is contiguous.
+ */
+#define NTFS_MFT_BATCH_SIZE 1024
+
 /* Phase 1: Scan all MFT records and populate context */
 static bool
 ntfs_scan_mft_phase1(NtfsScanContext *ctx) {
@@ -197,126 +303,39 @@ ntfs_scan_mft_phase1(NtfsScanContext *ctx) {
     ctx->total_records = vol->mft_na->data_size / vol->mft_record_size;
     g_debug("[ntfs_scan] estimated MFT records: %" G_GUINT64_FORMAT, ctx->total_records);
 
-    /* Allocate MFT record buffer */
-    MFT_RECORD *mrec = g_malloc(vol->mft_record_size);
-    if (!mrec) {
-        g_warning("[ntfs_scan] failed to allocate MFT buffer");
+    size_t record_size = vol->mft_record_size;
+    MFT_RECORD *batch = g_malloc(record_size * NTFS_MFT_BATCH_SIZE);
+    if (!batch) {
+        g_warning("[ntfs_scan] failed to allocate MFT batch buffer");
         return false;
     }
 
-    for (u64 mft_no = 0; mft_no < ctx->total_records; mft_no++) {
-        /* Check cancellation periodically */
-        if (mft_no % 1024 == 0 && ctx->cancellable) {
-            if (g_cancellable_is_cancelled(ctx->cancellable)) {
-                g_debug("[ntfs_scan] cancelled at mft_no %" G_GUINT64_FORMAT, mft_no);
-                g_free(mrec);
-                return false;
-            }
+    for (u64 mft_no = 0; mft_no < ctx->total_records; ) {
+        /* Check cancellation each batch */
+        if (ctx->cancellable && g_cancellable_is_cancelled(ctx->cancellable)) {
+            g_debug("[ntfs_scan] cancelled at mft_no %" G_GUINT64_FORMAT, mft_no);
+            g_free(batch);
+            return false;
         }
 
-        /* Read MFT record */
-        if (ntfs_mft_record_read(vol, (MFT_REF)mft_no, mrec) != 0) {
+        s64 remaining = (s64)(ctx->total_records - mft_no);
+        s64 count = remaining < NTFS_MFT_BATCH_SIZE ? remaining : NTFS_MFT_BATCH_SIZE;
+
+        /* Batch read MFT records */
+        if (ntfs_mft_records_read(vol, (MFT_REF)mft_no, count, batch) != 0) {
+            mft_no += 1;
             continue;
         }
 
-        /* Check magic */
-        if (!ntfs_is_mft_record(mrec->magic)) {
-            continue;
+        /* Process each record in the batch */
+        for (s64 i = 0; i < count; i++) {
+            process_mft_record(ctx, &batch[i], mft_no + i);
         }
 
-        /* Check if in use */
-        u16 flags = le16_to_cpu(mrec->flags);
-        if (!(flags & MFT_RECORD_IN_USE)) {
-            continue;
-        }
-
-        ctx->used_records++;
-        bool is_dir = (flags & MFT_RECORD_IS_DIRECTORY) ? true : false;
-
-        /* Walk attributes to find FILE_NAME */
-        u32 bytes_in_use = le32_to_cpu(mrec->bytes_in_use);
-        u16 attrs_offset = le16_to_cpu(mrec->attrs_offset);
-        u8 *base = (u8 *)mrec;
-
-        for (u32 ao = attrs_offset; ao < bytes_in_use; ) {
-            ATTR_RECORD *attr = (ATTR_RECORD *)(base + ao);
-            ATTR_TYPES attr_type = attr->type;
-            u32 attr_len = le32_to_cpu(attr->length);
-
-            if (attr_type == AT_END || attr_len == 0 || attr_len > bytes_in_use) {
-                break;
-            }
-
-            /* Look for FILE_NAME attribute (resident only) */
-            if (attr_type == AT_FILE_NAME && attr->non_resident == 0) {
-                u16 value_offset = le16_to_cpu(attr->value_offset);
-                FILE_NAME_ATTR *fn = (FILE_NAME_ATTR *)(base + ao + value_offset);
-
-                u8 name_len = fn->file_name_length;
-                u8 name_type = fn->file_name_type;
-
-                /* Skip pure DOS short names (type 2) */
-                if (name_type == 2) {
-                    ao += attr_len;
-                    continue;
-                }
-
-                u64 parent_mft = MREF_LE(fn->parent_directory);
-
-                /* Skip system files */
-                if (is_ntfs_system_file(mft_no, parent_mft)) {
-                    ctx->system_skipped++;
-                    break;
-                }
-
-                /* Skip overly long names */
-                if (name_len == 0 || name_len > NTFS_MAX_NAME_LEN) {
-                    g_debug("[ntfs_scan] invalid name length %d at mft %" G_GUINT64_FORMAT,
-                            name_len, mft_no);
-                    break;
-                }
-
-                /* Convert name to UTF-8 */
-                char *name = ntfs_name_to_utf8(fn->file_name, name_len);
-                if (!name) {
-                    break;
-                }
-
-                /* Extract file attributes from FILE_NAME_ATTR */
-                off_t size = is_dir ? 0 : (off_t)sle64_to_cpu(fn->data_size);
-                time_t mtime = ntfs_time_to_unix(fn->last_data_change_time);
-
-                /* Create NtfsEntry */
-                NtfsEntry *entry = g_new0(NtfsEntry, 1);
-                entry->mft_no = mft_no;
-                entry->parent_mft = parent_mft;
-                entry->name = name;
-                entry->is_dir = is_dir;
-                entry->size = size;
-                entry->mtime = mtime;
-                entry->entry = NULL;
-
-                g_hash_table_insert(ctx->mft_table,
-                                    GUINT_TO_POINTER(mft_no),
-                                    entry);
-
-                if (is_dir) {
-                    ctx->dir_count++;
-                } else {
-                    ctx->file_count++;
-                }
-
-                /* Found a valid FILE_NAME, move on to next MFT record */
-                goto next_mft;
-            }
-
-            ao += attr_len;
-        }
-
-    next_mft:;
+        mft_no += count;
     }
 
-    g_free(mrec);
+    g_free(batch);
     return true;
 }
 
