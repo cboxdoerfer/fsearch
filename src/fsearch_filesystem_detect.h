@@ -6,7 +6,7 @@
  * FsearchPartitionInfo:
  * @device: Block device path (e.g., "/dev/sda1")
  * @mountpoint: Mount point path (e.g., "/mnt/data")
- * @fstype: File system type (e.g., "fuse.ntfs-3g")
+ * @fstype: File system type (e.g., "fuseblk")
  *
  * Holds information about a detected partition.
  */

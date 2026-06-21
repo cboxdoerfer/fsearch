@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Maximum line length for fstab/mounts files */
+/* Maximum line length for /proc/mounts lines */
 #define MAX_LINE_LENGTH 1024
 
 /**
@@ -45,55 +45,41 @@ fs_partition_array_free(GPtrArray *array) {
 }
 
 /**
- * Parses /etc/fstab to extract NTFS entries.
+ * Verifies whether a block device is an NTFS volume using blkid.
  *
- * Returns: (element-type FsearchPartitionInfo) (transfer full): A #GPtrArray
- *          of fstab-configured NTFS partitions, or %NULL on failure.
+ * Runs `blkid <device>` and checks for TYPE="ntfs" in the output.
+ *
+ * Returns: %TRUE if the device is an NTFS volume, %FALSE otherwise
  */
-static GPtrArray *
-parse_fstab(void) {
-    GPtrArray *result = g_ptr_array_new_with_free_func((GDestroyNotify)fs_partition_info_free);
-    FILE *file = fopen("/etc/fstab", "r");
-    if (!file) {
-        g_warning("Failed to open /etc/fstab");
-        return result;
+static gboolean
+verify_ntfs_with_blkid(const char *device) {
+    g_autofree char *cmd = g_strdup_printf("blkid -s TYPE -o value %s 2>/dev/null", device);
+    g_autofree char *output = NULL;
+    gint exit_status;
+
+    if (!g_spawn_command_line_sync(cmd, &output, NULL, &exit_status, NULL)) {
+        g_debug("[fs_detect] failed to spawn blkid for %s", device);
+        return FALSE;
     }
 
-    char line[MAX_LINE_LENGTH];
-    while (fgets(line, sizeof(line), file)) {
-        /* Skip comments and empty lines */
-        if (line[0] == '#' || line[0] == '\n') continue;
+    /* g_spawn_command_line_sync appends a newline; strip trailing whitespace */
+    g_strchomp(output);
 
-        char device[MAX_LINE_LENGTH] = {0};
-        char mountpoint[MAX_LINE_LENGTH] = {0};
-        char fstype[MAX_LINE_LENGTH] = {0};
-
-        /* Parse: device mountpoint fstype options dump pass */
-        if (sscanf(line, "%s %s %s", device, mountpoint, fstype) == 3) {
-            /* Only include ntfs-3g file systems */
-            if (g_str_equal(fstype, "ntfs-3g")) {
-                FsearchPartitionInfo *info = fs_partition_info_new(device, mountpoint, fstype);
-                g_ptr_array_add(result, info);
-            }
-        }
-    }
-
-    fclose(file);
-    return result;
+    return g_str_equal(output, "ntfs");
 }
 
 /**
- * Parses /proc/mounts to extract currently mounted NTFS entries.
+ * Parses /proc/mounts to extract currently mounted fuseblk entries.
  *
  * Returns: (element-type FsearchPartitionInfo) (transfer full): A #GPtrArray
- *          of currently mounted NTFS partitions, or %NULL on failure.
+ *          of currently mounted fuseblk partitions, or %NULL on failure.
  */
 static GPtrArray *
 parse_proc_mounts(void) {
     GPtrArray *result = g_ptr_array_new_with_free_func((GDestroyNotify)fs_partition_info_free);
     FILE *file = fopen("/proc/mounts", "r");
     if (!file) {
-        g_warning("Failed to open /proc/mounts");
+        g_warning("[fs_detect] Failed to open /proc/mounts");
         return result;
     }
 
@@ -118,43 +104,38 @@ parse_proc_mounts(void) {
 }
 
 /**
- * Finds the intersection of fstab and currently mounted NTFS partitions.
+ * Detects NTFS partitions by scanning /proc/mounts for fuseblk entries
+ * and verifying each one with blkid.
  *
  * Returns: (element-type FsearchPartitionInfo) (transfer full): A #GPtrArray
- *          containing partitions that are both in fstab and currently mounted,
+ *          of NTFS partitions that are currently mounted via ntfs-3g FUSE,
  *          or an empty array if none found.
  */
 GPtrArray *
 fs_detect_ntfs_partitions(void) {
-    GPtrArray *fstab_entries = parse_fstab();
-    GPtrArray *mounted_entries = parse_proc_mounts();
+    GPtrArray *fuseblk_entries = parse_proc_mounts();
     GPtrArray *result = g_ptr_array_new_with_free_func((GDestroyNotify)fs_partition_info_free);
 
-    /* Find intersection: entries that exist in both fstab and /proc/mounts */
-    for (guint i = 0; i < fstab_entries->len; i++) {
-        FsearchPartitionInfo *fstab_entry = g_ptr_array_index(fstab_entries, i);
+    for (guint i = 0; i < fuseblk_entries->len; i++) {
+        FsearchPartitionInfo *entry = g_ptr_array_index(fuseblk_entries, i);
 
-        for (guint j = 0; j < mounted_entries->len; j++) {
-            FsearchPartitionInfo *mounted_entry = g_ptr_array_index(mounted_entries, j);
-
-            /* Match by mountpoint */
-            if (g_str_equal(fstab_entry->mountpoint, mounted_entry->mountpoint)) {
-                /* Use mounted entry's actual device and fstype */
-                FsearchPartitionInfo *info = fs_partition_info_new(
-                    mounted_entry->device,
-                    mounted_entry->mountpoint,
-                    mounted_entry->fstype
-                );
-                g_ptr_array_add(result, info);
-                break;
-            }
+        /* Verify this fuseblk device is actually NTFS */
+        if (verify_ntfs_with_blkid(entry->device)) {
+            g_debug("[fs_detect] NTFS partition found: %s -> %s",
+                    entry->device, entry->mountpoint);
+            FsearchPartitionInfo *info = fs_partition_info_new(
+                entry->device,
+                entry->mountpoint,
+                "fuseblk"
+            );
+            g_ptr_array_add(result, info);
+        } else {
+            g_debug("[fs_detect] skipping non-NTFS fuseblk: %s -> %s",
+                    entry->device, entry->mountpoint);
         }
     }
 
-    /* Clean up */
-    fs_partition_array_free(fstab_entries);
-    fs_partition_array_free(mounted_entries);
-
+    fs_partition_array_free(fuseblk_entries);
     return result;
 }
 
