@@ -552,8 +552,13 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseInclude) include =
-            fsearch_database_include_new(path, is_active, one_file_system, is_monitored, scan_after_launch, rescan_after, id);
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(path,
+                                                                                 is_active,
+                                                                                 one_file_system,
+                                                                                 is_monitored,
+                                                                                 scan_after_launch,
+                                                                                 rescan_after,
+                                                                                 id);
         fsearch_database_include_set_last_scan_time(include, last_scan_time);
         fsearch_database_include_set_last_scan_duration(include, last_scan_duration);
         fsearch_database_include_set_last_scanned_file_count(include, last_scanned_file_count);
@@ -609,12 +614,11 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseExclude)
-            exclude = fsearch_database_exclude_new(pattern,
-                                                   is_active,
-                                                   (FsearchDatabaseExcludeType)exclude_type,
-                                                   (FsearchDatabaseExcludeMatchScope)scope,
-                                                   (FsearchDatabaseExcludeTarget)target);
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
+                                                                                 is_active,
+                                                                                 (FsearchDatabaseExcludeType)exclude_type,
+                                                                                 (FsearchDatabaseExcludeMatchScope)scope,
+                                                                                 (FsearchDatabaseExcludeTarget)target);
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
     }
 
@@ -1219,10 +1223,14 @@ fsearch_database_file_load(const char *file_path,
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GHashTable)
-        folder_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
-    g_autoptr(GHashTable)
-        file_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_direct_hash,
+                                                                      g_direct_equal,
+                                                                      NULL,
+                                                                      (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_direct_hash,
+                                                                    g_direct_equal,
+                                                                    NULL,
+                                                                    (GDestroyNotify)darray_unref);
 
     g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
 
