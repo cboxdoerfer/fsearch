@@ -804,6 +804,9 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         uint32_t ntfs_index_id = UINT32_MAX;
         for (guint i = 0; i < store->ntfs_partitions->len; i++) {
             FsearchNtfsPartitionConfig *pc = g_ptr_array_index(store->ntfs_partitions, i);
+            if (!pc) {
+                break;
+            }
             if (!pc->include) {
                 continue;
             }

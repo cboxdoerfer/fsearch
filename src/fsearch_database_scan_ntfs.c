@@ -448,6 +448,9 @@ db_scan_ntfs(const char *device_path,
     g_debug("[ntfs_scan] complete: %" G_GUINT64_FORMAT " dirs, %" G_GUINT64_FORMAT " files",
             ctx.dir_count, ctx.file_count);
 
+    /* Don't free root_entry — it's already in the folders array and
+       entries reference it as their parent. Clear the pointer first. */
+    ctx.root_entry = NULL;
     ntfs_scan_context_free(&ctx);
     return true;
 }
