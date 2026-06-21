@@ -51,6 +51,9 @@ struct FsearchDatabaseIndexStore {
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
+    // NTFS partition configuration (non-owning pointer)
+    GPtrArray *ntfs_partitions;
+
     GThreadPool *worker_pool;
     GAsyncQueue *worker_pool_collect_queue;
 
@@ -643,6 +646,7 @@ FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
                                  FsearchDatabaseIndexPropertyFlags flags,
+                                 GPtrArray *ntfs_partitions,
                                  FsearchDatabaseIndexStoreEventFunc event_func,
                                  gpointer event_func_data) {
     FsearchDatabaseIndexStore *store = g_new0(FsearchDatabaseIndexStore, 1);
@@ -659,6 +663,7 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
 
     store->include_manager = g_object_ref(include_manager);
     store->exclude_manager = g_object_ref(exclude_manager);
+    store->ntfs_partitions = ntfs_partitions;
 
     store->event_func = event_func;
     store->event_func_data = event_func_data;
@@ -697,11 +702,13 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
                                               FsearchDatabaseIncludeManager *include_manager,
                                               FsearchDatabaseExcludeManager *exclude_manager,
                                               FsearchDatabaseIndexPropertyFlags flags,
+                                              GPtrArray *ntfs_partitions,
                                               FsearchDatabaseIndexStoreEventFunc event_func,
                                               gpointer event_func_data) {
     FsearchDatabaseIndexStore *store = fsearch_database_index_store_new(include_manager,
                                                                         exclude_manager,
                                                                         flags,
+                                                                        ntfs_partitions,
                                                                         event_func,
                                                                         event_func_data);
 
@@ -783,6 +790,7 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                                            store->monitor.ctx,
                                                                            index_store_index_event_cb,
                                                                            store);
+        fsearch_database_index_set_ntfs_partitions(index, store->ntfs_partitions);
         fsearch_database_index_scan(index, cancellable);
         g_ptr_array_add(indices, g_steal_pointer(&index));
     }
@@ -962,13 +970,15 @@ fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_index_get_exclude_manager(old_index);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_index_get_flags(old_index);
 
-    return fsearch_database_index_new(index_id,
-                                      include,
-                                      exclude_manager,
-                                      flags,
-                                      store->monitor.ctx,
-                                      index_store_index_event_cb,
-                                      store);
+    FsearchDatabaseIndex *new_index = fsearch_database_index_new(index_id,
+                                                                 include,
+                                                                 exclude_manager,
+                                                                 flags,
+                                                                 store->monitor.ctx,
+                                                                 index_store_index_event_cb,
+                                                                 store);
+    fsearch_database_index_set_ntfs_partitions(new_index, store->ntfs_partitions);
+    return new_index;
 }
 
 bool
@@ -1163,6 +1173,12 @@ FsearchDatabaseExcludeManager *
 fsearch_database_index_store_get_exclude_manager(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store, NULL);
     return g_object_ref(store->exclude_manager);
+}
+
+GPtrArray *
+fsearch_database_index_store_get_ntfs_partitions(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, NULL);
+    return store->ntfs_partitions;
 }
 
 FsearchDatabaseSearchView *

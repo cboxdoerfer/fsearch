@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gio/gio.h>
+#include <glib.h>
 
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_info.h"
@@ -26,7 +27,7 @@ FsearchResult
 fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo * *info_out);
 
 FsearchResult
-fsearch_database_rescan_blocking(FsearchDatabase *self);
+fsearch_database_rescan_blocking(FsearchDatabase *self, GPtrArray *ntfs_partitions);
 
 void
 fsearch_database_selection_foreach(FsearchDatabase *self,
@@ -42,6 +43,6 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfo **info_out);
 
 FsearchDatabase *
-fsearch_database_new(GFile *file);
+fsearch_database_new(GFile *file, GPtrArray *ntfs_partitions);
 
 G_END_DECLS

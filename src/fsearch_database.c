@@ -2,6 +2,7 @@
 
 #include "fsearch_database.h"
 
+#include "fsearch_config.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
@@ -50,6 +51,9 @@ struct _FsearchDatabase {
     FsearchDatabaseIndexStore *store;
     FsearchDatabaseIndexStore *pending_store;
     FsearchDatabaseRescanManager *rescan_manager;
+
+    // NTFS partition configuration (non-owning pointer)
+    GPtrArray *ntfs_partitions;
 
     GMutex mutex;
 };
@@ -586,6 +590,7 @@ database_rescan_sync(FsearchDatabase *db,
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
+                                                                                  db->ntfs_partitions,
                                                                                   index_store_event_cb,
                                                                                   db);
     g_return_if_fail(store);
@@ -620,6 +625,7 @@ database_rescan(FsearchDatabase *self) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
+                                                                                  self->ntfs_partitions,
                                                                                   index_store_event_cb,
                                                                                   self);
     g_return_if_fail(store);
@@ -725,6 +731,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
+                                                                                  self->ntfs_partitions,
                                                                                   index_store_event_cb,
                                                                                   self);
     g_return_if_fail(store);
@@ -751,12 +758,13 @@ database_load(FsearchDatabase *self) {
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     g_autofree char *file_path = g_file_get_path(self->file);
-    const bool res = fsearch_database_file_load(file_path, NULL, &store, index_store_event_cb, self);
+    const bool res = fsearch_database_file_load(file_path, NULL, &store, self->ntfs_partitions, index_store_event_cb, self);
 
     if (!res) {
         store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
                                                  fsearch_database_exclude_manager_new_with_defaults(),
                                                  database_get_flags(self),
+                                                 self->ntfs_partitions,
                                                  index_store_event_cb,
                                                  self);
     }
@@ -1129,8 +1137,10 @@ fsearch_database_init(FsearchDatabase *self) {
 }
 
 FsearchDatabase *
-fsearch_database_new(GFile *file) {
-    return g_object_new(FSEARCH_TYPE_DATABASE, "file", file, NULL);
+fsearch_database_new(GFile *file, GPtrArray *ntfs_partitions) {
+    FsearchDatabase *self = g_object_new(FSEARCH_TYPE_DATABASE, "file", file, NULL);
+    self->ntfs_partitions = ntfs_partitions;
+    return self;
 }
 
 // endregion
@@ -1226,11 +1236,12 @@ fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInf
 }
 
 FsearchResult
-fsearch_database_rescan_blocking(FsearchDatabase *self) {
+fsearch_database_rescan_blocking(FsearchDatabase *self, GPtrArray *ntfs_partitions) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
+    self->ntfs_partitions = ntfs_partitions;
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
     FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NONE;
