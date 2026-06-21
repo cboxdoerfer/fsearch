@@ -773,6 +773,9 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(store->include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+        if (!fsearch_database_include_get_active(include)) {
+            continue;
+        }
         g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(fsearch_database_include_get_id(include),
                                                                            include,
                                                                            store->exclude_manager,
