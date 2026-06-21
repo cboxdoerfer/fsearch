@@ -187,6 +187,12 @@ process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
         return false;
     }
 
+    /* Skip system files early */
+    if (mft_no <= NTFS_LAST_SYSTEM_MFT) {
+        ctx->system_skipped++;
+        return false;
+    }
+
     ctx->used_records++;
     bool is_dir = (flags & MFT_RECORD_IS_DIRECTORY) ? true : false;
 
@@ -223,8 +229,8 @@ process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
 
         u64 parent_mft = MREF_LE(fn->parent_directory);
 
-        /* Skip system files */
-        if (is_ntfs_system_file(mft_no, parent_mft)) {
+        /* Skip files under $Extend (parent is MFT 11) */
+        if (parent_mft == NTFS_EXTEND_DIR_MFT) {
             ctx->system_skipped++;
             return false;
         }
@@ -262,8 +268,10 @@ process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
 
         if (is_dir) {
             ctx->dir_count++;
+            g_debug("[ntfs_scan]   added dir: mft=%" G_GUINT64_FORMAT " name=%s parent=%" G_GUINT64_FORMAT, mft_no, name, parent_mft);
         } else {
             ctx->file_count++;
+            g_debug("[ntfs_scan]   added file: mft=%" G_GUINT64_FORMAT " name=%s parent=%" G_GUINT64_FORMAT, mft_no, name, parent_mft);
         }
 
         return true;
@@ -301,13 +309,18 @@ ntfs_scan_mft_phase1(NtfsScanContext *ctx) {
 
         /* Batch read MFT records */
         if (ntfs_mft_records_read(vol, (MFT_REF)mft_no, count, batch) != 0) {
+            g_debug("[ntfs_scan]   mft_read failed at %" G_GUINT64_FORMAT ", skipping 1", mft_no);
             mft_no += 1;
             continue;
         }
 
         /* Process each record in the batch */
+        /* NOTE: sizeof(MFT_RECORD) is only 48 bytes (header only),
+         * but actual record size is vol->mft_record_size (typically 1024).
+         * Must use byte-offset arithmetic, not array indexing. */
         for (s64 i = 0; i < count; i++) {
-            process_mft_record(ctx, &batch[i], mft_no + i);
+            MFT_RECORD *rec = (MFT_RECORD*)((uint8_t *)batch + i * record_size);
+            process_mft_record(ctx, rec, mft_no + i);
         }
 
         mft_no += count;
