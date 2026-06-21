@@ -33,6 +33,7 @@ libfsearch_sources = [
     'fsearch_database_preferences_widget.c',
     'fsearch_database_rescan_manager.c',
     'fsearch_database_scan.c',
+    'fsearch_database_scan_ntfs.c',
     'fsearch_filesystem_detect.c',
     'fsearch_database_search_info.c',
     'fsearch_database_search_view.c',
@@ -87,6 +88,7 @@ fsearch_deps = [
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 3.8'),
     dependency('polkit-gobject-1', version: '>= 0.105'),
+    dependency('libntfs-3g', required: true),
 ]
 
 fsearch_enums_headers = [
