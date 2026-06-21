@@ -49,3 +49,17 @@ fs_partition_info_free(FsearchPartitionInfo *info);
  */
 void
 fs_partition_array_free(GPtrArray *array);
+
+/**
+ * fs_path_is_on_ntfs_mount:
+ * @path: (not nullable): An absolute file system path
+ *
+ * Checks whether @path is on an NTFS mount point by calling
+ * fs_detect_ntfs_partitions() and matching against mount points.
+ *
+ * Returns: A newly allocated #FsearchPartitionInfo if the path is on
+ *          an NTFS mount, or %NULL otherwise. The caller must free
+ *          the result using fs_partition_info_free().
+ */
+FsearchPartitionInfo *
+fs_path_is_on_ntfs_mount(const char *path);

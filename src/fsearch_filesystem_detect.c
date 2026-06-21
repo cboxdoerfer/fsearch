@@ -157,3 +157,63 @@ fs_detect_ntfs_partitions(void) {
 
     return result;
 }
+
+/**
+ * fs_path_is_on_ntfs_mount:
+ * @path: (not nullable): An absolute file system path
+ *
+ * Checks whether @path is on an NTFS mount point by calling
+ * fs_detect_ntfs_partitions() and matching against mount points.
+ *
+ * Returns: A newly allocated #FsearchPartitionInfo if the path is on
+ *          an NTFS mount, or %NULL otherwise. The caller must free
+ *          the result using fs_partition_info_free().
+ */
+FsearchPartitionInfo *
+fs_path_is_on_ntfs_mount(const char *path) {
+    g_return_val_if_fail(path, NULL);
+
+    GPtrArray *partitions = fs_detect_ntfs_partitions();
+    if (!partitions || partitions->len == 0) {
+        return NULL;
+    }
+
+    /* Ensure path is normalized (no trailing slash, unless root) */
+    g_autofree char *normalized = g_strdup(path);
+    gsize len = strlen(normalized);
+    while (len > 1 && normalized[len - 1] == '/') {
+        normalized[--len] = '\0';
+    }
+
+    /* Find matching mount point (longest prefix match) */
+    FsearchPartitionInfo *best_match = NULL;
+    gsize best_len = 0;
+
+    for (guint i = 0; i < partitions->len; i++) {
+        FsearchPartitionInfo *info = g_ptr_array_index(partitions, i);
+        gsize mp_len = strlen(info->mountpoint);
+
+        /* Path must equal or start with mount point */
+        if (strlen(normalized) >= mp_len &&
+            strncmp(normalized, info->mountpoint, mp_len) == 0) {
+            /* Check it's a proper path boundary: mountpoint is exact match,
+               or next char in path is '/' */
+            if (strlen(normalized) == mp_len || normalized[mp_len] == '/') {
+                if (mp_len > best_len) {
+                    best_len = mp_len;
+                    best_match = info;
+                }
+            }
+        }
+    }
+
+    FsearchPartitionInfo *result = NULL;
+    if (best_match) {
+        result = fs_partition_info_new(best_match->device,
+                                        best_match->mountpoint,
+                                        best_match->fstype);
+    }
+
+    fs_partition_array_free(partitions);
+    return result;
+}

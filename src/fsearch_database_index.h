@@ -40,6 +40,10 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseIndexEventFunc event_func,
                            gpointer event_func_data);
 
+void
+fsearch_database_index_set_ntfs_partitions(FsearchDatabaseIndex *self,
+                                           GPtrArray *ntfs_partitions);
+
 FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchDatabaseInclude *include,
