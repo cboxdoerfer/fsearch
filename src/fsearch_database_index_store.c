@@ -1059,6 +1059,10 @@ fsearch_database_index_store_remove_paths(FsearchDatabaseIndexStore *store,
             g_autoptr(FsearchDatabaseInclude) include = fsearch_database_index_get_include(index);
             const char *root_path = fsearch_database_include_get_path(include);
 
+            if (fsearch_database_include_get_monitored(include)) {
+                continue;
+            }
+
             // Optimization: Only try to remove if the path falls under this index's root
             if (g_str_has_prefix(path, root_path)) {
                 bool root_removed = false;
