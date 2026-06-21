@@ -268,10 +268,8 @@ process_mft_record(NtfsScanContext *ctx, MFT_RECORD *mrec, u64 mft_no) {
 
         if (is_dir) {
             ctx->dir_count++;
-            g_debug("[ntfs_scan]   added dir: mft=%" G_GUINT64_FORMAT " name=%s parent=%" G_GUINT64_FORMAT, mft_no, name, parent_mft);
         } else {
             ctx->file_count++;
-            g_debug("[ntfs_scan]   added file: mft=%" G_GUINT64_FORMAT " name=%s parent=%" G_GUINT64_FORMAT, mft_no, name, parent_mft);
         }
 
         return true;

@@ -45,4 +45,7 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
 FsearchDatabase *
 fsearch_database_new(GFile *file, GPtrArray *ntfs_partitions);
 
+void
+fsearch_database_set_ntfs_partitions(FsearchDatabase *self, GPtrArray *ntfs_partitions);
+
 G_END_DECLS

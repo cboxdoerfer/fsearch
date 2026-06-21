@@ -916,8 +916,9 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
 
     const bool includes_changed = !fsearch_database_include_manager_equal(c1->includes, c2->includes);
     const bool excludes_changed = !fsearch_database_exclude_manager_equal(c1->excludes, c2->excludes);
+    const bool ntfs_changed = !fsearch_ntfs_partition_configs_equal(c1->ntfs_partitions, c2->ntfs_partitions);
 
-    if (excludes_changed || includes_changed) {
+    if (excludes_changed || includes_changed || ntfs_changed) {
         result.database_config_changed = true;
     }
 
@@ -1009,4 +1010,21 @@ fsearch_ntfs_get_partition_config(GPtrArray *partitions, const char *mountpoint)
         }
     }
     return NULL;
+}
+
+bool
+fsearch_ntfs_partition_configs_equal(GPtrArray *a1, GPtrArray *a2) {
+    if (!a1 && !a2) return true;
+    if (!a1 || !a2) return false;
+    if (a1->len != a2->len) return false;
+
+    for (guint i = 0; i < a1->len; i++) {
+        FsearchNtfsPartitionConfig *p1 = g_ptr_array_index(a1, i);
+        FsearchNtfsPartitionConfig *p2 = g_ptr_array_index(a2, i);
+        if (!p1 || !p2) return false;
+        if (!g_str_equal(p1->mountpoint, p2->mountpoint)) return false;
+        if (p1->include != p2->include) return false;
+        if (p1->monitor != p2->monitor) return false;
+    }
+    return true;
 }

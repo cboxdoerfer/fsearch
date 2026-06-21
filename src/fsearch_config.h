@@ -176,6 +176,18 @@ fsearch_ntfs_partition_configs_free(GPtrArray *array);
 const FsearchNtfsPartitionConfig *
 fsearch_ntfs_get_partition_config(GPtrArray *partitions, const char *mountpoint);
 
+/**
+ * fsearch_ntfs_partition_configs_equal:
+ * @a1: First GPtrArray of #FsearchNtfsPartitionConfig
+ * @a2: Second GPtrArray of #FsearchNtfsPartitionConfig
+ *
+ * Compares two NTFS partition config arrays for equality.
+ *
+ * Returns: %true if both arrays are equal
+ */
+bool
+fsearch_ntfs_partition_configs_equal(GPtrArray *a1, GPtrArray *a2);
+
 bool
 config_make_dir(void);
 

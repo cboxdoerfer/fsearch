@@ -216,6 +216,9 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         config_save(self->config);
 
         if (config_diff.database_config_changed) {
+            /* Update NTFS partition config in the running database before scanning */
+            fsearch_database_set_ntfs_partitions(self->db, self->config->ntfs_partitions);
+
             if (self->work_scan) {
                 fsearch_database_work_cancel(self->work_scan);
                 g_clear_pointer(&self->work_scan, fsearch_database_work_unref);

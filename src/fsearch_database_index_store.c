@@ -1220,6 +1220,13 @@ fsearch_database_index_store_get_ntfs_partitions(FsearchDatabaseIndexStore *stor
     return store->ntfs_partitions;
 }
 
+void
+fsearch_database_index_store_set_ntfs_partitions(FsearchDatabaseIndexStore *store,
+                                                 GPtrArray *ntfs_partitions) {
+    g_return_if_fail(store);
+    store->ntfs_partitions = ntfs_partitions;
+}
+
 FsearchDatabaseSearchView *
 fsearch_database_index_store_get_search_view(FsearchDatabaseIndexStore *store, uint32_t view_id) {
     g_return_val_if_fail(store, NULL);

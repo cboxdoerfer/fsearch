@@ -106,6 +106,10 @@ fsearch_database_index_store_get_exclude_manager(FsearchDatabaseIndexStore *stor
 GPtrArray *
 fsearch_database_index_store_get_ntfs_partitions(FsearchDatabaseIndexStore *store);
 
+void
+fsearch_database_index_store_set_ntfs_partitions(FsearchDatabaseIndexStore *store,
+                                                 GPtrArray *ntfs_partitions);
+
 uint32_t
 fsearch_database_index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *store);
 

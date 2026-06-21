@@ -718,8 +718,11 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
-    if (self->store && fsearch_database_include_manager_equal(database_get_include_manager(self), include_manager)
-        && fsearch_database_exclude_manager_equal(database_get_exclude_manager(self), exclude_manager)) {
+    FsearchDatabaseIndexStore *current_store = database_get_include_manager(self) ? self->store : NULL;
+    if (current_store && fsearch_database_include_manager_equal(database_get_include_manager(self), include_manager)
+        && fsearch_database_exclude_manager_equal(database_get_exclude_manager(self), exclude_manager)
+        && fsearch_ntfs_partition_configs_equal(fsearch_database_index_store_get_ntfs_partitions(current_store),
+                                                self->ntfs_partitions)) {
         g_debug("[scan] new config is identical to the current one. No scan necessary.");
         return;
     }
@@ -1286,6 +1289,19 @@ fsearch_database_selection_foreach(FsearchDatabase *self,
     FsearchDatabaseSelectionForeachContext ctx = {.func = func, .user_data = user_data};
 
     fsearch_database_index_store_selection_foreach(self->store, view_id, selection_foreach_cb, &ctx);
+}
+
+void
+fsearch_database_set_ntfs_partitions(FsearchDatabase *self, GPtrArray *ntfs_partitions) {
+    g_return_if_fail(FSEARCH_IS_DATABASE(self));
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    /* Only update self->ntfs_partitions for the next store creation.
+     * Do NOT touch the current store's ntfs_partitions — its indices
+     * are already using the old config and may be mid-scan or serving queries. */
+    self->ntfs_partitions = ntfs_partitions;
 }
 
 // endregion
