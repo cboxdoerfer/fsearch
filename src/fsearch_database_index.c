@@ -10,8 +10,8 @@
 #include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_scan.h"
-#include "fsearch_database_scan_ntfs.h"
-#include "fsearch_filesystem_detect.h"
+
+
 #include "fsearch_file_utils.h"
 #include "fsearch_folder_monitor_event.h"
 #include "fsearch_folder_monitor_fanotify.h"
@@ -53,9 +53,6 @@ struct _FsearchDatabaseIndex {
     gpointer event_func_data;
 
     bool needs_root_reappear_poll;
-
-    /* NTFS fast scan: pointer to config's ntfs_partitions array (not owned) */
-    GPtrArray *ntfs_partitions;
 
     volatile gint monitor;
     volatile gint initialized;
@@ -961,43 +958,21 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     const char *include_path = fsearch_database_include_get_path(self->include);
 
-    /* Check if this include path is an NTFS mount point with MFT scan enabled */
-    const FsearchNtfsPartitionConfig *ntfs_pc = fsearch_ntfs_get_partition_config(
-        self->ntfs_partitions, include_path);
-
-    if (ntfs_pc && ntfs_pc->include) {
-        /* NTFS MFT fast scan */
-        FsearchPartitionInfo *ntfs_info = fs_path_is_on_ntfs_mount(include_path);
-        if (ntfs_info) {
-            if (!db_scan_ntfs(ntfs_info->device,
-                              ntfs_info->mountpoint,
-                              folders,
-                              files,
-                              self->id,
-                              cancellable)) {
-                g_warning("[index-%d] NTFS MFT scan failed for %s", self->id, include_path);
-            }
-            fs_partition_info_free(ntfs_info);
-        }
-    }
-
-    /* Fall back to readdir if no entries were scanned */
-    if (darray_get_num_items(folders) == 0 && darray_get_num_items(files) == 0) {
-        if (!db_scan_folder(include_path,
-                            NULL,
-                            folders,
-                            files,
-                            self->exclude_manager,
-                            self->fanotify_monitor,
-                            self->inotify_monitor,
-                            self->id,
-                            fsearch_database_include_get_one_file_system(self->include),
-                            cancellable,
-                            scan_status_cb,
-                            self)) {
-            self->needs_root_reappear_poll = true;
-            return false;
-        }
+    /* readdir scan: pure include folder scanning */
+    if (!db_scan_folder(include_path,
+                        NULL,
+                        folders,
+                        files,
+                        self->exclude_manager,
+                        self->fanotify_monitor,
+                        self->inotify_monitor,
+                        self->id,
+                        fsearch_database_include_get_one_file_system(self->include),
+                        cancellable,
+                        scan_status_cb,
+                        self)) {
+        self->needs_root_reappear_poll = true;
+        return false;
     }
 
     darray_sort_multi_threaded(folders,
@@ -1043,10 +1018,4 @@ fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start) 
     g_return_if_fail(self);
 
     g_atomic_int_set(&self->monitor, start);
-}
-
-void
-fsearch_database_index_set_ntfs_partitions(FsearchDatabaseIndex *self, GPtrArray *ntfs_partitions) {
-    g_return_if_fail(self);
-    self->ntfs_partitions = ntfs_partitions;
 }

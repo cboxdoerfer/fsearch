@@ -11,6 +11,8 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
 #include "fsearch_database_index_event.h"
+#include "fsearch_database_scan_ntfs.h"
+#include "fsearch_filesystem_detect.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_search_view.h"
@@ -790,7 +792,6 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                                            store->monitor.ctx,
                                                                            index_store_index_event_cb,
                                                                            store);
-        fsearch_database_index_set_ntfs_partitions(index, store->ntfs_partitions);
         fsearch_database_index_scan(index, cancellable);
         g_ptr_array_add(indices, g_steal_pointer(&index));
     }
@@ -810,25 +811,30 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
             if (!pc->include) {
                 continue;
             }
-            /* Skip if this mount point is already in the include list */
-            bool already_included = false;
-            for (uint32_t j = 0; j < includes->len; j++) {
-                FsearchDatabaseInclude *inc = g_ptr_array_index(includes, j);
-                if (g_str_equal(fsearch_database_include_get_path(inc), pc->mountpoint)) {
-                    already_included = true;
-                    break;
+            g_autoptr(DynamicArray) ntfs_folders = darray_new(4096);
+            g_autoptr(DynamicArray) ntfs_files = darray_new(4096);
+
+            /* Direct MFT scan: no include entry, no fallback */
+            FsearchPartitionInfo *ntfs_info = fs_path_is_on_ntfs_mount(pc->mountpoint);
+            if (ntfs_info) {
+                if (!db_scan_ntfs(ntfs_info->device,
+                                  ntfs_info->mountpoint,
+                                  ntfs_folders,
+                                  ntfs_files,
+                                  ntfs_index_id,
+                                  cancellable)) {
+                    g_warning("[index-%u] NTFS MFT scan failed for %s", ntfs_index_id, pc->mountpoint);
                 }
+                fs_partition_info_free(ntfs_info);
             }
-            if (already_included) {
-                continue;
-            }
+
+            /* Create index from scanned entries */
             g_autoptr(FsearchDatabaseInclude) ntfs_include = fsearch_database_include_new(
                 pc->mountpoint, true, false, pc->monitor, false, 0, (gint)ntfs_index_id);
-            g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(
-                ntfs_index_id, ntfs_include, store->exclude_manager, store->flags,
-                store->monitor.ctx, index_store_index_event_cb, store);
-            fsearch_database_index_set_ntfs_partitions(index, store->ntfs_partitions);
-            fsearch_database_index_scan(index, cancellable);
+            g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new_with_content(
+                ntfs_index_id, ntfs_include, store->exclude_manager,
+                g_steal_pointer(&ntfs_folders), g_steal_pointer(&ntfs_files),
+                store->flags);
             g_ptr_array_add(indices, g_steal_pointer(&index));
             ntfs_index_id--;
         }
@@ -1016,7 +1022,6 @@ fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *
                                                                  store->monitor.ctx,
                                                                  index_store_index_event_cb,
                                                                  store);
-    fsearch_database_index_set_ntfs_partitions(new_index, store->ntfs_partitions);
     return new_index;
 }
 
