@@ -75,3 +75,6 @@ fsearch_file_utils_get_thumbnail_icon(const char *path);
 
 bool
 fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir);
+
+int
+fsearch_file_utils_cmp_paths(const char *a, const char *b);

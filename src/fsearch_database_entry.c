@@ -17,10 +17,6 @@
 #include <sys/types.h>
 #include <time.h>
 
-#ifdef __MACH__
-#include "strverscmp.h"
-#endif
-
 #define DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS                                                                   \
     (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES                                 \
      | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX)
@@ -359,7 +355,7 @@ sort_entry_by_path_recursive(FsearchDatabaseEntry *entry_1, FsearchDatabaseEntry
     }
     const char *name_1 = db_entry_get_attribute_name_for_offset(entry_1, name_offset);
     const char *name_2 = db_entry_get_attribute_name_for_offset(entry_2, name_offset);
-    *res = strverscmp(name_1, name_2);
+    *res = fsearch_file_utils_cmp_paths(name_1, name_2);
 }
 
 int
@@ -448,7 +444,7 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseE
 
     const uint32_t limit = MIN(a_n_path_elements, b_n_path_elements);
     for (uint32_t i = 0; i < limit; ++i) {
-        const int res = strverscmp(a_path[i], b_path[i]);
+        const int res = fsearch_file_utils_cmp_paths(a_path[i], b_path[i]);
         if (res != 0) {
             return res;
         }
@@ -487,7 +483,7 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
     const uint32_t limit = MIN(a_depth, b_depth);
     for (uint32_t i = 0; i < limit; ++i) {
-        const int res = strverscmp(a_path[i], b_path[i]);
+        const int res = fsearch_file_utils_cmp_paths(a_path[i], b_path[i]);
         if (res != 0) {
             return res;
         }
@@ -557,7 +553,7 @@ db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     }
     const char *name_a = db_entry_get_name_raw(*a);
     const char *name_b = db_entry_get_name_raw(*b);
-    return strverscmp(name_a ? name_a : "", name_b ? name_b : "");
+    return fsearch_file_utils_cmp_paths(name_a ? name_a : "", name_b ? name_b : "");
 }
 
 void
