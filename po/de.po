@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-08 20:23+0200\n"
-"PO-Revision-Date: 2026-06-21 12:10+0000\n"
+"PO-Revision-Date: 2026-06-21 19:26+0000\n"
 "Last-Translator: Masowick <Demian@gmx.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -715,7 +715,7 @@ msgstr "Leere Suche"
 
 #: src/fsearch_overlay.ui:256
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Drücke <b>Strg + F</b> und tippe los."
+msgstr "<b>Strg + F</b> drücken und lostippen."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
