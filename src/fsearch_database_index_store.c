@@ -798,6 +798,42 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         return;
     }
 
+    /* Scan NTFS partitions that have include==true (independent of include folder list) */
+    if (store->ntfs_partitions) {
+        /* Generate unique index IDs for NTFS partitions (use high values to avoid conflicts) */
+        uint32_t ntfs_index_id = UINT32_MAX;
+        for (guint i = 0; i < store->ntfs_partitions->len; i++) {
+            FsearchNtfsPartitionConfig *pc = g_ptr_array_index(store->ntfs_partitions, i);
+            if (!pc->include) {
+                continue;
+            }
+            /* Skip if this mount point is already in the include list */
+            bool already_included = false;
+            for (uint32_t j = 0; j < includes->len; j++) {
+                FsearchDatabaseInclude *inc = g_ptr_array_index(includes, j);
+                if (g_str_equal(fsearch_database_include_get_path(inc), pc->mountpoint)) {
+                    already_included = true;
+                    break;
+                }
+            }
+            if (already_included) {
+                continue;
+            }
+            g_autoptr(FsearchDatabaseInclude) ntfs_include = fsearch_database_include_new(
+                pc->mountpoint, true, false, pc->monitor, false, 0, (gint)ntfs_index_id);
+            g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(
+                ntfs_index_id, ntfs_include, store->exclude_manager, store->flags,
+                store->monitor.ctx, index_store_index_event_cb, store);
+            fsearch_database_index_set_ntfs_partitions(index, store->ntfs_partitions);
+            fsearch_database_index_scan(index, cancellable);
+            g_ptr_array_add(indices, g_steal_pointer(&index));
+            ntfs_index_id--;
+        }
+    }
+    if (g_cancellable_is_cancelled(cancellable)) {
+        return;
+    }
+
     g_autoptr(DynamicArray) store_files = darray_new(1024);
     g_autoptr(DynamicArray) store_folders = darray_new(1024);
     while (indices->len > 0) {
