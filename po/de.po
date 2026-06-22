@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-08 20:23+0200\n"
-"PO-Revision-Date: 2026-06-21 19:26+0000\n"
+"PO-Revision-Date: 2026-06-22 20:01+0000\n"
 "Last-Translator: Masowick <Demian@gmx.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -73,7 +73,7 @@ msgstr "Reguläre Ausdrücke"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
-msgstr "Wildcard-Unterstützung"
+msgstr "Platzhalterunterstützung"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
@@ -86,8 +86,8 @@ msgstr "Bestimmte Dateien und Ordner ausschließen"
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
-"Schnelles Sortieren nach Name, Pfad, Größe, Änderungsdatum und Datei-"
-"Erweiterung"
+"Schnelles Sortieren nach Name, Pfad, Größe, Änderungsdatum und "
+"Dateierweiterung"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
@@ -185,8 +185,8 @@ msgstr "DB: Prüfsumme zur DB-Datei hinzufügen"
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
-"Das Abrufen von Symbol- und Dateiinformationen asynchron gestalten (keine "
-"Blockierung der Benutzeroberfläche)"
+"Das Abrufen von Symbol- und Dateiinformationen asynchron gestalten (kein "
+"Blockieren der Benutzeroberfläche)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "New search engine"
@@ -222,8 +222,7 @@ msgstr "Auswahl mit dem Gummiband invertieren, wenn „Strg“ gedrückt ist"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
-"Die Suchbegriff-Eingabe aktivieren, wenn das Hauptfenster aktiviert wird"
+msgstr "Die Suchbegriffeingabe aktivieren, wenn das Hauptfenster aktiviert wird"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Add filter for applications (i.e. .desktop files)"
@@ -290,8 +289,8 @@ msgstr "„/proc“ und „/sys“ werden standardmäßig ausgeschlossen"
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
-"Öffnen des Kontextmenüs, wenn die „Menü“-Taste oder „Umschalt + F10“ "
-"gedrückt werden"
+"Kontextmenü öffnen, wenn die „Menü“-Taste oder „Umschalt + F10“ gedrückt "
+"werden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "and tons of bug fixes, translation updates and smaller improvements"
@@ -375,7 +374,7 @@ msgstr "Wörtlich"
 
 #: src/fsearch_database_preferences_widget.c:393
 msgid "Wildcard"
-msgstr "Platzhalterunterstützung"
+msgstr "Platzhalter"
 
 #: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
@@ -747,7 +746,7 @@ msgstr "IEC-Binärpräfixe statt SI-Dezimalpräfixe verwenden"
 
 #: src/fsearch_preferences.ui:138
 msgid "Remember window size"
-msgstr "Fenstergröße wiederherstellen"
+msgstr "Fenstergröße merken"
 
 #: src/fsearch_preferences.ui:159
 msgid "Exit on Escape"
@@ -795,15 +794,15 @@ msgstr "Symbole in der Namensspalte anzeigen"
 
 #: src/fsearch_preferences.ui:408
 msgid "Remember column configuration"
-msgstr "Spaltenkonfiguration wiederherstellen"
+msgstr "Spaltenkonfiguration merken"
 
 #: src/fsearch_preferences.ui:429
 msgid "Remember sort order"
-msgstr "Sortierreihenfolge wiederherstellen"
+msgstr "Sortierreihenfolge merken"
 
 #: src/fsearch_preferences.ui:450
 msgid "Open path with double click in path column"
-msgstr "Ordner mit Doppelklick in Pfad-Spalte öffnen"
+msgstr "Ordner mit Doppelklick in Pfadspalte öffnen"
 
 #: src/fsearch_preferences.ui:471
 msgid "Single click to open"
@@ -811,7 +810,7 @@ msgstr "Einzelklick zum Öffnen"
 
 #: src/fsearch_preferences.ui:492
 msgid "Launch desktop files"
-msgstr "Desktop-Dateien aufrufen"
+msgstr "Desktop-Dateien ausführen"
 
 #: src/fsearch_preferences.ui:519
 msgid "Results:"
@@ -843,7 +842,7 @@ msgstr "Bedienoberfläche"
 
 #: src/fsearch_preferences.ui:711
 msgid "Search in path when query contains path separators"
-msgstr "Pfad beachten, falls die Suche Pfadseparatoren enthält"
+msgstr "Pfad beachten, falls die Abfrage Pfadseparatoren enthält"
 
 #: src/fsearch_preferences.ui:730
 msgid "Search as you type"
@@ -855,7 +854,8 @@ msgstr "Bei leerem Suchfeld nichts anzeigen"
 
 #: src/fsearch_preferences.ui:769
 msgid "Match case when query contains at least one upper case character"
-msgstr "Groß-/Kleinschreibung beachten, falls die Suche Großbuchstaben enthält"
+msgstr ""
+"Groß-/Kleinschreibung beachten, falls die Abfrage Großbuchstaben enthält"
 
 #: src/fsearch_preferences.ui:801
 msgid "Filter:"
@@ -863,7 +863,7 @@ msgstr "Filter:"
 
 #: src/fsearch_preferences.ui:822 src/fsearch_window.ui:639
 msgid "Search"
-msgstr "Suche"
+msgstr "Suchen"
 
 #: src/fsearch_preferences.ui:854
 msgid ""
@@ -970,7 +970,7 @@ msgstr ""
 "Sie können auswählen, ob diese Aktion ausgelöst werden soll, wenn die Datei "
 "geöffnet wurde durch\n"
 "\t• <b>Tastenkombination oder Menüeintrag</b> und/oder\n"
-"\t• <b>Mausklick</b>"
+"\t• <b>Mausklick</b>."
 
 #: src/fsearch_preferences.ui:955
 msgid ""
@@ -1052,9 +1052,9 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
-"<b>Pfad per Doppelklick auf die Pfad-Spalte öffnen:</b>\n"
+"<b>Pfad mit Doppelklick in die Pfadspalte öffnen:</b>\n"
 "\n"
-"Falls aktiviert, öffnet ein Doppelklick auf die Pfad-Spalte den ausgewählten "
+"Falls aktiviert, öffnet ein Doppelklick in die Pfadspalte den ausgewählten "
 "Pfad."
 
 #: src/fsearch_preferences.ui:1062
@@ -1103,7 +1103,7 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
-"<b>In Pfaden suchen, wenn die Suche einen Pfadseparator enthält:</b>\n"
+"<b>In Pfaden suchen, wenn die Abfrage einen Pfadseparator enthält:</b>\n"
 "\n"
 "Falls aktiviert, wird bei Suchen, die einen Pfadseparator (z. B. „/“) "
 "enthalten, automatisch der komplette Pfad der Datei oder des Ordners "
@@ -1117,7 +1117,7 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Groß-/Kleinschreibung beachten, wenn die Suche mindestens einen "
+"<b>Groß-/Kleinschreibung beachten, wenn die Abrage mindestens einen "
 "Großbuchstaben enthält:</b>\n"
 "\n"
 "Falls aktiviert, wird bei Suchbegriffen, die mindestens einen Großbuchstaben "
@@ -1138,8 +1138,8 @@ msgstr ""
 "\n"
 "Falls aktiviert, werden bei leerem Suchfeld keine Ergebnisse angezeigt.\n"
 "\n"
-"Falls deaktiviert, werden alle Dateien und Ordner angezeigt, wenn das "
-"Suchfeld leer ist."
+"Falls deaktiviert, werden bei leerem Suchfeld alle Dateien und Ordner "
+"angezeigt."
 
 #: src/fsearch_preferences.ui:1166
 msgid ""
@@ -1324,9 +1324,9 @@ msgid ""
 msgstr ""
 "<b>Desktop-Dateien ausführen:</b>\n"
 "\n"
-"Falls aktiviert, wird die zu einer <i>.desktop</i> Datei zugehörige "
+"Falls aktiviert, wird die zu einer <i>.desktop</i>-Datei zugehörige "
 "Anwendung ausgeführt. FSearch funktioniert somit wie ein Anwendungsstarter. "
-"Falls deaktiviert, wird die <i>.desktop</i>- Datei von der zugehörigen "
+"Falls deaktiviert, wird die <i>.desktop</i>-Datei von der zugehörigen "
 "Standardanwendung geöffnet, welche in den meisten Fällen ein Texteditor ist."
 
 #: src/fsearch_preferences.ui:1396
@@ -1345,11 +1345,11 @@ msgstr ""
 "Dies ist eine Liste aller verfügbaren Filter. Ein Filter entspricht einer "
 "vorgefertigten Suchanfrage.\n"
 "\n"
-"\t• <b>Name:</b> Ein eindeutiger Name, der den Filter beschreibt\n"
+"\t• <b>Name:</b> Ein eindeutiger Name, der den Filter beschreibt.\n"
 "\t• <b>Makro:</b> Durch das Tippen dieses Texts im Suchfeld, gefolgt von "
-"einem „:“, wird der Filter ausgeführt\n"
-"\t• <b>Query:</b> Die Suchanfrage, die bei der Aktivierung dieses Filters "
-"ausgeführt werden soll"
+"einem „:“, wird der Filter ausgeführt.\n"
+"\t• <b>Abfrage:</b> Die Suchanfrage, die bei der Aktivierung dieses Filters "
+"ausgeführt werden soll."
 
 #: src/fsearch_preferences.ui:1417
 msgid ""
@@ -1494,7 +1494,7 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
-msgstr "GROẞ-/klein"
+msgstr "GROẞ/klein"
 
 #: src/fsearch_statusbar.ui:514
 msgid ""
