@@ -84,8 +84,9 @@ fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclud
     g_return_val_if_fail(i1->ref_count > 0, FALSE);
     g_return_val_if_fail(i2->ref_count > 0, FALSE);
 
-    if (i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system || i1->rescan_after != i2->rescan_after
-        || i1->scan_after_launch != i2->scan_after_launch || g_strcmp0(i1->path, i2->path) != 0) {
+    if (i1->active != i2->active || i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system
+        || i1->rescan_after != i2->rescan_after || i1->scan_after_launch != i2->scan_after_launch
+        || g_strcmp0(i1->path, i2->path) != 0) {
         return FALSE;
     }
     return TRUE;
