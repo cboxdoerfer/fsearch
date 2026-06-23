@@ -79,12 +79,29 @@ G_DEFINE_FINAL_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferenc
 G_DEFINE_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferences_widget, GTK_TYPE_BOX)
 #endif
 
-typedef void (*RowAddFunc)(GtkListStore *, const char *);
+typedef gboolean (*RowAddFunc)(GtkListStore *, const char *, GtkTreeIter *out_iter);
 
 typedef struct {
     GtkListStore *model;
+    GtkTreeView *view;
+    GtkTreeSelection *selection;
     RowAddFunc row_add_func;
 } FsearchPreferencesFileChooserContext;
+
+static void
+select_row(GtkTreeView *view, GtkTreeSelection *selection, GtkTreeModel *model, GtkTreeIter *iter) {
+    gtk_tree_selection_select_iter(selection, iter);
+    g_autoptr(GtkTreePath) path = gtk_tree_model_get_path(model, iter);
+    gtk_tree_view_scroll_to_cell(view, path, NULL, FALSE, 0, 0);
+}
+
+static void
+select_first_row(GtkTreeView *view, GtkTreeSelection *selection, GtkTreeModel *model) {
+    GtkTreeIter iter = {0};
+    if (gtk_tree_model_get_iter_first(model, &iter)) {
+        select_row(view, selection, model, &iter);
+    }
+}
 
 #if !GTK_CHECK_VERSION(3, 20, 0)
 static void
@@ -102,13 +119,22 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
         GSList *filenames = gtk_file_chooser_get_filenames(chooser);
         if (filenames) {
+            GtkTreeIter last_iter = {0};
+            gboolean any_added = FALSE;
             for (GSList *f = filenames; f != NULL; f = f->next) {
                 gchar *filename = f->data;
                 if (filename) {
-                    ctx->row_add_func(ctx->model, filename);
+                    GtkTreeIter iter = {0};
+                    if (ctx->row_add_func(ctx->model, filename, &iter)) {
+                        last_iter = iter;
+                        any_added = TRUE;
+                    }
                 }
             }
             g_slist_free_full(g_steal_pointer(&filenames), g_free);
+            if (any_added) {
+                select_row(ctx->view, ctx->selection, GTK_TREE_MODEL(ctx->model), &last_iter);
+            }
         }
     }
 
@@ -208,9 +234,9 @@ column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id)
 
 static bool
 on_column_toggled(gchar *path_str, GtkTreeModel *model, int col) {
-    GtkTreeIter iter;
+    GtkTreeIter iter = {0};
     GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
-    gboolean val;
+    gboolean val = 0;
 
     gtk_tree_model_get_iter(model, &iter, path);
     gtk_tree_model_get(model, &iter, col, &val, -1);
@@ -229,8 +255,9 @@ exclude_append_row(GtkListStore *store,
                    const char *pattern,
                    FsearchDatabaseExcludeType type,
                    FsearchDatabaseExcludeMatchScope scope,
-                   FsearchDatabaseExcludeTarget target) {
-    GtkTreeIter iter;
+                   FsearchDatabaseExcludeTarget target,
+                   GtkTreeIter *out_iter) {
+    GtkTreeIter iter = {0};
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store,
                        &iter,
@@ -245,6 +272,9 @@ exclude_append_row(GtkListStore *store,
                        COL_EXCLUDE_TARGET,
                        target,
                        -1);
+    if (out_iter) {
+        *out_iter = iter;
+    }
 }
 
 void
@@ -273,7 +303,7 @@ include_path_is_unique(GtkListStore *store, const char *new_path) {
     return true;
 }
 
-static void
+static gboolean
 include_append_row(GtkListStore *store,
                    gboolean active,
                    const char *path,
@@ -281,11 +311,12 @@ include_append_row(GtkListStore *store,
                    gboolean monitor,
                    gboolean scan_after_launch,
                    gint64 rescan_after,
-                   gint id) {
+                   gint id,
+                   GtkTreeIter *out_iter) {
     if (!include_path_is_unique(store, path)) {
-        return;
+        return FALSE;
     }
-    GtkTreeIter iter;
+    GtkTreeIter iter = {0};
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store,
                        &iter,
@@ -304,23 +335,30 @@ include_append_row(GtkListStore *store,
                        COL_INCLUDE_ID,
                        id,
                        -1);
+    if (out_iter) {
+        *out_iter = iter;
+    }
+    return TRUE;
 }
 
-static void
-on_include_append_new_row(GtkListStore *store, const char *path) {
-    include_append_row(store, TRUE, path, FALSE, FALSE, FALSE, 0, get_unique_include_id(store));
+static gboolean
+on_include_append_new_row(GtkListStore *store, const char *path, GtkTreeIter *out_iter) {
+    return include_append_row(store, TRUE, path, FALSE, FALSE, FALSE, 0, get_unique_include_id(store), out_iter);
 }
 
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
     (void)button;
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+    GtkTreeIter iter = {0};
     exclude_append_row(self->exclude_model,
                        TRUE,
                        "",
                        FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
                        FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
-                       FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH);
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH,
+                       &iter);
+    select_row(self->exclude_list, self->exclude_selection, GTK_TREE_MODEL(self->exclude_model), &iter);
 }
 
 static void
@@ -339,19 +377,22 @@ on_exclude_reset_to_defaults_button_clicked(GtkButton *button, gpointer user_dat
                        "/.snapshots",
                        FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
                        FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
-                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS,
+                       NULL);
     exclude_append_row(self->exclude_model,
                        TRUE,
                        "/proc",
                        FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
                        FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
-                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS,
+                       NULL);
     exclude_append_row(self->exclude_model,
                        TRUE,
                        "/sys",
                        FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
                        FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
-                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS,
+                       NULL);
 
     gtk_tree_view_columns_autosize(self->exclude_list);
 }
@@ -361,6 +402,8 @@ on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
     FsearchPreferencesFileChooserContext *ctx = g_new0(FsearchPreferencesFileChooserContext, 1);
     ctx->model = self->include_model;
+    ctx->view = self->include_list;
+    ctx->selection = self->include_selection;
     ctx->row_add_func = on_include_append_new_row;
     run_file_chooser_dialog(button, ctx);
 }
@@ -547,20 +590,24 @@ on_path_entry_changed(GtkEntry *entry, gpointer user_data) {
     }
 }
 
-static void
-add_path(GtkEntry *entry, GtkListStore *model, RowAddFunc row_add_func) {
+static gboolean
+add_path(GtkEntry *entry, GtkListStore *model, RowAddFunc row_add_func, GtkTreeIter *out_iter) {
     const char *path = gtk_entry_get_text(entry);
     if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
         g_autoptr(GFile) file = g_file_new_for_path(path);
         g_autofree char *file_path = g_file_get_path(file);
-        row_add_func(model, file_path);
+        return row_add_func(model, file_path, out_iter);
     }
+    return FALSE;
 }
 
 static void
 on_include_add_path_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
-    add_path(GTK_ENTRY(self->include_path_entry), self->include_model, on_include_append_new_row);
+    GtkTreeIter iter = {0};
+    if (add_path(GTK_ENTRY(self->include_path_entry), self->include_model, on_include_append_new_row, &iter)) {
+        select_row(self->include_list, self->include_selection, GTK_TREE_MODEL(self->include_model), &iter);
+    }
 }
 
 static void
@@ -878,7 +925,8 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_include_get_monitored(include),
                            fsearch_database_include_get_scan_after_launch(include),
                            fsearch_database_include_get_rescan_after(include),
-                           fsearch_database_include_get_id(include));
+                           fsearch_database_include_get_id(include),
+                           NULL);
     }
 }
 
@@ -899,7 +947,8 @@ populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_exclude_get_pattern(exclude),
                            fsearch_database_exclude_get_exclude_type(exclude),
                            fsearch_database_exclude_get_match_scope(exclude),
-                           fsearch_database_exclude_get_target(exclude));
+                           fsearch_database_exclude_get_target(exclude),
+                           NULL);
     }
     gtk_toggle_button_set_active(self->exclude_hidden_items_button,
                                  fsearch_database_exclude_manager_get_exclude_hidden(self->exclude_manager));
@@ -957,7 +1006,9 @@ fsearch_database_preferences_widget_constructed(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
     populate_include_page(self);
+    select_first_row(self->include_list, self->include_selection, GTK_TREE_MODEL(self->include_model));
     populate_exclude_page(self);
+    select_first_row(self->exclude_list, self->exclude_selection, GTK_TREE_MODEL(self->exclude_model));
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->constructed(object);
 }
