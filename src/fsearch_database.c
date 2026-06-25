@@ -53,10 +53,16 @@ struct _FsearchDatabase {
     FsearchDatabaseRescanManager *rescan_manager;
 
     // NTFS partition configuration (non-owning pointer)
+    bool ntfs_fast_scan_enabled;
     GPtrArray *ntfs_partitions;
 
     GMutex mutex;
 };
+
+static inline GPtrArray *
+database_get_effective_ntfs_partitions(FsearchDatabase *self) {
+    return self->ntfs_fast_scan_enabled ? self->ntfs_partitions : NULL;
+}
 
 G_DEFINE_TYPE(FsearchDatabase, fsearch_database, G_TYPE_OBJECT)
 
@@ -590,7 +596,7 @@ database_rescan_sync(FsearchDatabase *db,
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
-                                                                                  db->ntfs_partitions,
+                                                                                  database_get_effective_ntfs_partitions(db),
                                                                                   index_store_event_cb,
                                                                                   db);
     g_return_if_fail(store);
@@ -625,7 +631,7 @@ database_rescan(FsearchDatabase *self) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
-                                                                                  self->ntfs_partitions,
+                                                                                  database_get_effective_ntfs_partitions(self),
                                                                                   index_store_event_cb,
                                                                                   self);
     g_return_if_fail(store);
@@ -722,7 +728,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     if (current_store && fsearch_database_include_manager_equal(database_get_include_manager(self), include_manager)
         && fsearch_database_exclude_manager_equal(database_get_exclude_manager(self), exclude_manager)
         && fsearch_ntfs_partition_configs_equal(fsearch_database_index_store_get_ntfs_partitions(current_store),
-                                                self->ntfs_partitions)) {
+                                                database_get_effective_ntfs_partitions(self))) {
         g_debug("[scan] new config is identical to the current one. No scan necessary.");
         return;
     }
@@ -734,7 +740,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
                                                                                   flags,
-                                                                                  self->ntfs_partitions,
+                                                                                  database_get_effective_ntfs_partitions(self),
                                                                                   index_store_event_cb,
                                                                                   self);
     g_return_if_fail(store);
@@ -761,13 +767,13 @@ database_load(FsearchDatabase *self) {
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     g_autofree char *file_path = g_file_get_path(self->file);
-    const bool res = fsearch_database_file_load(file_path, NULL, &store, self->ntfs_partitions, index_store_event_cb, self);
+    const bool res = fsearch_database_file_load(file_path, NULL, &store, database_get_effective_ntfs_partitions(self), index_store_event_cb, self);
 
     if (!res) {
         store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
                                                  fsearch_database_exclude_manager_new_with_defaults(),
                                                  database_get_flags(self),
-                                                 self->ntfs_partitions,
+                                                 database_get_effective_ntfs_partitions(self),
                                                  index_store_event_cb,
                                                  self);
     }
@@ -1140,8 +1146,9 @@ fsearch_database_init(FsearchDatabase *self) {
 }
 
 FsearchDatabase *
-fsearch_database_new(GFile *file, GPtrArray *ntfs_partitions) {
+fsearch_database_new(GFile *file, bool ntfs_fast_scan_enabled, GPtrArray *ntfs_partitions) {
     FsearchDatabase *self = g_object_new(FSEARCH_TYPE_DATABASE, "file", file, NULL);
+    self->ntfs_fast_scan_enabled = ntfs_fast_scan_enabled;
     self->ntfs_partitions = ntfs_partitions;
     return self;
 }
@@ -1292,7 +1299,7 @@ fsearch_database_selection_foreach(FsearchDatabase *self,
 }
 
 void
-fsearch_database_set_ntfs_partitions(FsearchDatabase *self, GPtrArray *ntfs_partitions) {
+fsearch_database_set_ntfs_partitions(FsearchDatabase *self, bool ntfs_fast_scan_enabled, GPtrArray *ntfs_partitions) {
     g_return_if_fail(FSEARCH_IS_DATABASE(self));
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
@@ -1301,6 +1308,7 @@ fsearch_database_set_ntfs_partitions(FsearchDatabase *self, GPtrArray *ntfs_part
     /* Only update self->ntfs_partitions for the next store creation.
      * Do NOT touch the current store's ntfs_partitions — its indices
      * are already using the old config and may be mid-scan or serving queries. */
+    self->ntfs_fast_scan_enabled = ntfs_fast_scan_enabled;
     self->ntfs_partitions = ntfs_partitions;
 }
 

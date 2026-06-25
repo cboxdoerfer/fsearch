@@ -43,9 +43,9 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfo **info_out);
 
 FsearchDatabase *
-fsearch_database_new(GFile *file, GPtrArray *ntfs_partitions);
+fsearch_database_new(GFile *file, bool ntfs_fast_scan_enabled, GPtrArray *ntfs_partitions);
 
 void
-fsearch_database_set_ntfs_partitions(FsearchDatabase *self, GPtrArray *ntfs_partitions);
+fsearch_database_set_ntfs_partitions(FsearchDatabase *self, bool ntfs_fast_scan_enabled, GPtrArray *ntfs_partitions);
 
 G_END_DECLS
