@@ -1,9 +1,5 @@
 install_man('fsearch.1')
 
-# Install Polkit policy file for NTFS MFT fast scan
-install_data('polkit/io.github.cboxdoerfer.FSearch.policy',
-  install_dir: join_paths(get_option('datadir'), 'polkit-1', 'actions'))
-
 install_data('io.github.cboxdoerfer.FSearch.svg',
   install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps'))
 

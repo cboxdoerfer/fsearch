@@ -115,7 +115,6 @@ struct _FsearchConfig {
 
     // NTFS fast scan
     bool ntfs_fast_scan_enabled;
-    bool ntfs_auto_polkit;
     GPtrArray *ntfs_partitions; /* GPtrArray of FsearchNtfsPartitionConfig* */
 };
 

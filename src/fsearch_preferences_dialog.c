@@ -144,8 +144,7 @@ update_config(FsearchPreferencesDialog *self) {
 
     /* NTFS config */
     fsearch_database_preferences_widget_get_ntfs_config(self->database_pref_widget,
-                                                         &self->config->ntfs_fast_scan_enabled,
-                                                         &self->config->ntfs_auto_polkit);
+                                                         &self->config->ntfs_fast_scan_enabled);
 
     /* NTFS partition Include/Monitor state */
     g_clear_pointer(&self->config->ntfs_partitions, fsearch_ntfs_partition_configs_free);
@@ -226,8 +225,7 @@ fsearch_preferences_dialog_constructed(GObject *object) {
 
     self->database_pref_widget = fsearch_database_preferences_widget_new(self->config_old->includes,
                                                                           self->config_old->excludes,
-                                                                          self->config_old->ntfs_fast_scan_enabled,
-                                                                          self->config_old->ntfs_auto_polkit);
+                                                                          self->config_old->ntfs_fast_scan_enabled);
     /* Load saved NTFS partition Include/Monitor state into the UI */
     fsearch_database_preferences_widget_set_ntfs_partitions(self->database_pref_widget,
                                                              self->config_old->ntfs_partitions);

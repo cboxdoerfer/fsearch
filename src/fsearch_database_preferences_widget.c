@@ -28,7 +28,6 @@ struct _FsearchDatabasePreferencesWidget {
 
     // NTFS config
     bool ntfs_config_fast_scan;
-    bool ntfs_config_auto_polkit;
 
     // Include page
     GtkTreeView *include_list;
@@ -59,13 +58,8 @@ struct _FsearchDatabasePreferencesWidget {
     GtkTreeView *ntfs_partition_list;
     GtkListStore *ntfs_partition_model;
     GtkToggleButton *ntfs_enable_fast_scan;
-    GtkToggleButton *ntfs_auto_polkit;
     GtkLabel *ntfs_status_libntfs;
     GtkLabel *ntfs_status_root;
-
-    // NTFS authorization state
-    bool ntfs_is_root;
-    bool ntfs_is_authorized;
 };
 
 enum {
@@ -96,7 +90,7 @@ enum {
     NUM_NTFS_COLUMNS
 };
 
-enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, PROP_NTFS_FAST_SCAN_ENABLED, PROP_NTFS_AUTO_POLKIT, NUM_PROPERTIES };
+enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, PROP_NTFS_FAST_SCAN_ENABLED, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
@@ -716,71 +710,32 @@ init_ntfs_page(FsearchDatabasePreferencesWidget *self) {
         fs_partition_array_free(partitions);
     }
 
-    /* Initialize status labels from application-level state */
-    self->ntfs_is_root = privilege_is_root();
-    self->ntfs_is_authorized = privilege_is_authorized();
-    fsearch_database_preferences_widget_update_ntfs_status(self, self->ntfs_is_root, self->ntfs_is_authorized);
+    /* Initialize status labels — startup snapshot, not real-time */
+    g_autofree char *status_text = privilege_get_status_text();
+    gtk_label_set_text(self->ntfs_status_root, status_text);
 }
 
-/* NTFS privilege request callback — invoked on main thread */
-typedef struct {
-    FsearchDatabasePreferencesWidget *widget;
-    bool authorized;
-} NtfsPrivilegeCallbackData;
-
-static gboolean
-on_ntfs_privilege_idle(gpointer user_data) {
-    NtfsPrivilegeCallbackData *data = (NtfsPrivilegeCallbackData *)user_data;
-    FsearchDatabasePreferencesWidget *self = data->widget;
-
-    self->ntfs_is_authorized = data->authorized;
-    fsearch_database_preferences_widget_update_ntfs_status(self,
-                                                            privilege_is_root(),
-                                                            data->authorized);
-
-    g_object_unref(self);
-    g_free(data);
-    return G_SOURCE_REMOVE;
-}
-
+/* "Enable MFT fast scan" toggled callback — show restart dialog */
 static void
-on_ntfs_privilege_callback(bool authorized, gpointer user_data) {
-    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
-
-    NtfsPrivilegeCallbackData *data = g_new(NtfsPrivilegeCallbackData, 1);
-    data->widget = g_object_ref(self);
-    data->authorized = authorized;
-
-    /* Schedule UI update on main thread */
-    g_idle_add(on_ntfs_privilege_idle, data);
-}
-
-static void
-on_ntfs_auto_polkit_toggled(GtkToggleButton *button, gpointer user_data) {
+on_ntfs_enable_fast_scan_toggled(GtkToggleButton *button, gpointer user_data) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
 
     if (!gtk_toggle_button_get_active(button)) {
         return;
     }
 
-    /* Already root — nothing to do */
-    if (privilege_is_root()) {
-        return;
-    }
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
+    GtkWidget *dialog = gtk_message_dialog_new(
+        GTK_WINDOW(toplevel),
+        GTK_DIALOG_DESTROY_WITH_PARENT,
+        GTK_MESSAGE_INFO,
+        GTK_BUTTONS_OK,
+        _("NTFS MFT fast scan requires root privileges.\n"
+          "The feature will take effect after restarting FSearch.\n"
+          "Please restart FSearch to enable this feature."));
 
-    /* Already authorized — skip */
-    if (privilege_is_authorized()) {
-        g_debug("[ntfs] already authorized, skipping Polkit request");
-        return;
-    }
-
-    g_debug("[ntfs] requesting Polkit authorization");
-
-    /* Update status to "requesting..." */
-    gtk_label_set_text(self->ntfs_status_root, _("root: requesting..."));
-
-    /* Request authorization asynchronously */
-    privilege_request_async(on_ntfs_privilege_callback, g_object_ref_sink(self));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 }
 
 static void
@@ -1106,9 +1061,6 @@ fsearch_database_preferences_widget_set_property(GObject *object, guint prop_id,
     case PROP_NTFS_FAST_SCAN_ENABLED:
         self->ntfs_config_fast_scan = g_value_get_boolean(value);
         break;
-    case PROP_NTFS_AUTO_POLKIT:
-        self->ntfs_config_auto_polkit = g_value_get_boolean(value);
-        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
         break;
@@ -1138,7 +1090,6 @@ fsearch_database_preferences_widget_constructed(GObject *object) {
 
     /* Apply NTFS config to checkboxes */
     gtk_toggle_button_set_active(self->ntfs_enable_fast_scan, self->ntfs_config_fast_scan);
-    gtk_toggle_button_set_active(self->ntfs_auto_polkit, self->ntfs_config_auto_polkit);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->constructed(object);
 }
@@ -1173,12 +1124,6 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
                                                                     false,
                                                                     (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
                                                                      | G_PARAM_STATIC_STRINGS));
-    properties[PROP_NTFS_AUTO_POLKIT] = g_param_spec_boolean("ntfs-auto-polkit",
-                                                              "NTFS Auto Polkit",
-                                                              "Whether to request root permission on start",
-                                                              false,
-                                                              (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
-                                                               | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -1215,7 +1160,6 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     // NTFS page
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_partition_list);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_enable_fast_scan);
-    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_auto_polkit);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_libntfs);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_root);
 
@@ -1234,7 +1178,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_path_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_selection_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_reset_to_defaults_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_ntfs_auto_polkit_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_ntfs_enable_fast_scan_toggled);
 }
 
 static void
@@ -1249,8 +1193,7 @@ fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self)
 FsearchDatabasePreferencesWidget *
 fsearch_database_preferences_widget_new(FsearchDatabaseIncludeManager *include_manager,
                                         FsearchDatabaseExcludeManager *exclude_manager,
-                                        bool ntfs_fast_scan_enabled,
-                                        bool ntfs_auto_polkit) {
+                                        bool ntfs_fast_scan_enabled) {
     return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE,
                         "include-manager",
                         include_manager,
@@ -1258,8 +1201,6 @@ fsearch_database_preferences_widget_new(FsearchDatabaseIncludeManager *include_m
                         exclude_manager,
                         "ntfs-fast-scan-enabled",
                         ntfs_fast_scan_enabled,
-                        "ntfs-auto-polkit",
-                        ntfs_auto_polkit,
                         NULL);
 }
 
@@ -1419,29 +1360,11 @@ fsearch_database_preferences_widget_get_ntfs_partitions(FsearchDatabasePreferenc
 }
 
 void
-fsearch_database_preferences_widget_update_ntfs_status(FsearchDatabasePreferencesWidget *self,
-                                                       bool is_root,
-                                                       bool is_authorized) {
-    g_return_if_fail(self);
-
-    /* Update libntfs-3g status (placeholder — will be implemented with filesystem detection) */
-    gtk_label_set_text(self->ntfs_status_libntfs, _("libntfs-3g: available"));
-
-    /* Update root permission status */
-    g_autofree char *status_text = privilege_get_status_text(is_root, is_authorized);
-    gtk_label_set_text(self->ntfs_status_root, status_text);
-}
-
-void
 fsearch_database_preferences_widget_get_ntfs_config(FsearchDatabasePreferencesWidget *self,
-                                                    bool *ntfs_fast_scan_enabled,
-                                                    bool *ntfs_auto_polkit) {
+                                                    bool *ntfs_fast_scan_enabled) {
     g_return_if_fail(self);
 
     if (ntfs_fast_scan_enabled) {
         *ntfs_fast_scan_enabled = gtk_toggle_button_get_active(self->ntfs_enable_fast_scan);
-    }
-    if (ntfs_auto_polkit) {
-        *ntfs_auto_polkit = gtk_toggle_button_get_active(self->ntfs_auto_polkit);
     }
 }

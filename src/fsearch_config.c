@@ -149,7 +149,6 @@ static const FsearchKeyData DIALOG_SECTION[] = {
 
 static const FsearchKeyData NTFS_SECTION[] = {
     CONF_BOOL(ntfs_fast_scan_enabled, false),
-    CONF_BOOL(ntfs_auto_polkit, false),
 };
 
 typedef struct {

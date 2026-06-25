@@ -87,7 +87,6 @@ fsearch_deps = [
     dependency('gtk+-3.0', version: '>= 3.18'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 3.8'),
-    dependency('polkit-gobject-1', version: '>= 0.105'),
     dependency('libntfs-3g', required: true),
 ]
 

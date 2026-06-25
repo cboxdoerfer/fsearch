@@ -20,60 +20,69 @@
 
 #include "fsearch_privilege.h"
 
-#include <polkit/polkit.h>
-#include <unistd.h>
-
+#include <errno.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <pwd.h>
+#include <unistd.h>
 
-typedef struct {
-    void (*callback)(bool authorized, gpointer user_data);
-    gpointer user_data;
-} PrivilegeRequestData;
+/* ── helper functions ── */
 
-/* Application-level authorization state */
-static bool g_is_authorized = false;
-
-bool
-privilege_is_authorized(void) {
-    return g_is_authorized;
-}
-
-static gboolean
-privilege_invoke_on_idle(gpointer user_data) {
-    PrivilegeRequestData *data = (PrivilegeRequestData *)user_data;
-    data->callback(true, data->user_data);
-    g_free(data);
-    return G_SOURCE_REMOVE;
-}
-
-static void
-on_authorize_finish(GObject *source_object, GAsyncResult *result, gpointer user_data) {
-    PrivilegeRequestData *data = (PrivilegeRequestData *)user_data;
-    g_autoptr(GError) error = NULL;
-
-    PolkitAuthority *authority = POLKIT_AUTHORITY(source_object);
-    PolkitAuthorizationResult *res =
-        polkit_authority_check_authorization_finish(authority, result, &error);
-
-    bool authorized = false;
-    if (!res) {
-        g_debug("[privilege] authorization failed: %s",
-                error ? error->message : "unknown error");
-    }
-    else {
-        authorized = polkit_authorization_result_get_is_authorized(res);
-        if (authorized) {
-            g_is_authorized = true;
+static bool
+has_privileged_flag(int argc, char *argv[]) {
+    for (int i = 0; i < argc; i++) {
+        if (g_strcmp0(argv[i], "--privileged") == 0) {
+            return true;
         }
     }
-    g_debug("[privilege] authorization %s", authorized ? "granted" : "denied");
-
-    if (data->callback) {
-        data->callback(authorized, data->user_data);
-    }
-    g_free(data);
+    return false;
 }
+
+static bool
+ntfs_enabled_in_config(void) {
+    g_autoptr(GKeyFile) key_file = g_key_file_new();
+    g_autofree char *config_path = g_build_filename(
+        g_get_user_config_dir(), "fsearch", "fsearch.conf", NULL);
+
+    if (!g_key_file_load_from_file(key_file, config_path, 0, NULL)) {
+        return false;
+    }
+
+    return g_key_file_get_boolean(key_file, "NTFS",
+                                   "ntfs_fast_scan_enabled", NULL);
+}
+
+/**
+ * Get the original user UID from privilege elevation environment variables.
+ * pkexec sets PKEXEC_UID, sudo sets SUDO_UID.
+ * Returns the original user UID, or (uid_t)-1 if not found.
+ */
+static uid_t
+get_original_uid(void) {
+    const char *uid_str = g_getenv("PKEXEC_UID");
+    if (uid_str && *uid_str) {
+        return (uid_t)atoi(uid_str);
+    }
+    uid_str = g_getenv("SUDO_UID");
+    if (uid_str && *uid_str) {
+        return (uid_t)atoi(uid_str);
+    }
+    return (uid_t)-1;
+}
+
+/**
+ * Get the elevation method.
+ * Determines how the process obtained root privileges via environment variables.
+ * Returns "pkexec" / "sudo" / "root" (running as root directly).
+ */
+static const char *
+get_elevation_method(void) {
+    if (g_getenv("PKEXEC_UID")) return "pkexec";
+    if (g_getenv("SUDO_UID"))   return "sudo";
+    return "root";
+}
+
+/* ── public API ── */
 
 bool
 privilege_is_root(void) {
@@ -81,52 +90,95 @@ privilege_is_root(void) {
 }
 
 void
-privilege_request_async(void (*callback)(bool authorized, gpointer user_data),
-                        gpointer user_data) {
-    /* Already root — no need to request */
+privilege_request_if_needed(int argc, char *argv[]) {
+    /* Already has --privileged flag, skip elevation check */
+    if (has_privileged_flag(argc, argv)) {
+        return;
+    }
+
+    /* Already root, no elevation needed */
     if (privilege_is_root()) {
-        PrivilegeRequestData *data = g_new(PrivilegeRequestData, 1);
-        data->callback = callback;
-        data->user_data = user_data;
-        g_idle_add(privilege_invoke_on_idle, data);
         return;
     }
 
-    PrivilegeRequestData *data = g_new(PrivilegeRequestData, 1);
-    data->callback = callback;
-    data->user_data = user_data;
-
-    g_autoptr(GError) error = NULL;
-    g_autoptr(PolkitAuthority) authority =
-        polkit_authority_get_sync(NULL, &error);
-
-    if (!authority) {
-        g_debug("[privilege] Polkit authority not available: %s",
-                error ? error->message : "unknown error");
-        data->callback(false, data->user_data);
-        g_free(data);
+    /* NTFS fast scan not enabled in config, no elevation needed */
+    if (!ntfs_enabled_in_config()) {
         return;
     }
 
-    g_autoptr(PolkitSubject) subject = polkit_unix_process_new(getpid());
+    /* Get absolute path of the executable */
+    g_autofree char *exe_path = g_file_read_link("/proc/self/exe", NULL);
+    if (!exe_path) {
+        g_warning("[privilege] cannot determine executable path: %s",
+                  g_strerror(errno));
+        return;
+    }
 
-    polkit_authority_check_authorization(authority,
-                                         subject,
-                                         FSEARCH_PRIVILEGE_ACTION_ID,
-                                         NULL,
-                                         POLKIT_CHECK_AUTHORIZATION_FLAGS_ALLOW_USER_INTERACTION,
-                                         NULL,
-                                         (GAsyncReadyCallback)on_authorize_finish,
-                                         data);
+    /* Get current DISPLAY and pass it to the elevated process via CLI arg */
+    const char *display = g_getenv("DISPLAY");
+
+    g_debug("[privilege] requesting root via pkexec: %s (DISPLAY=%s)", exe_path, display ? display : "(null)");
+
+    /* execlp variadic list ends at first NULL pointer.
+     * When display is NULL, the first NULL terminates the list,
+     * so --x-display and its value are simply omitted. */
+    execlp("pkexec", "pkexec", exe_path, "--privileged",
+           display ? "--x-display" : NULL,
+           display ? display : NULL,
+           (char *)NULL);
+
+    /* execlp returned = authorization denied or pkexec not available */
+    if (errno == ENOENT) {
+        g_warning("[privilege] pkexec not found, NTFS fast scan disabled");
+    } else {
+        g_warning("[privilege] Polkit authorization denied, NTFS fast scan disabled");
+    }
+}
+
+void
+privilege_restore_xdg_paths(void) {
+    /* Non-root process, nothing to do */
+    if (!privilege_is_root()) {
+        return;
+    }
+
+    uid_t original_uid = get_original_uid();
+    if (original_uid == (uid_t)-1) {
+        return;  /* Cannot determine original user, may be direct root login */
+    }
+
+    struct passwd *pw = getpwuid(original_uid);
+    if (!pw) {
+        g_warning("[privilege] cannot lookup home directory for uid %u", original_uid);
+        return;
+    }
+
+    g_autofree char *config_home = g_build_filename(pw->pw_dir, ".config", NULL);
+    g_autofree char *data_home = g_build_filename(pw->pw_dir, ".local", "share", NULL);
+
+    g_setenv("XDG_CONFIG_HOME", config_home, true);
+    g_setenv("XDG_DATA_HOME", data_home, true);
+
+    g_debug("[privilege] restored XDG paths to %s / %s for user '%s'",
+            config_home, data_home, pw->pw_name);
 }
 
 char *
-privilege_get_status_text(bool is_root, bool is_authorized) {
-    if (is_root) {
-        return g_strdup(_("root: active"));
+privilege_get_status_text(void) {
+    /* NTFS fast scan disabled in config */
+    if (!ntfs_enabled_in_config()) {
+        return g_strdup(_("MFT scan: disabled"));
     }
-    if (is_authorized) {
-        return g_strdup(_("root: authorized"));
+
+    /* Running as root — show elevation method */
+    if (privilege_is_root()) {
+        const char *method = get_elevation_method();
+        return g_strdup_printf(_("MFT scan: enabled (%s)"), method);
     }
-    return g_strdup(_("root: not granted"));
+
+    /* Running as non-root with NTFS enabled — pkexec was attempted but failed */
+    if (g_find_program_in_path("pkexec")) {
+        return g_strdup(_("MFT scan: authorization denied"));
+    }
+    return g_strdup(_("MFT scan: pkexec not found"));
 }

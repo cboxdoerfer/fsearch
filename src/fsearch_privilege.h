@@ -23,9 +23,6 @@
 
 G_BEGIN_DECLS
 
-/* Polkit action ID for NTFS MFT scanning */
-#define FSEARCH_PRIVILEGE_ACTION_ID "org.freedesktop.policykit.exec"
-
 /**
  * privilege_is_root:
  *
@@ -37,41 +34,51 @@ bool
 privilege_is_root(void);
 
 /**
- * privilege_request_async:
- * @callback: callback to invoke when authorization completes
- * @user_data: user data to pass to the callback
+ * privilege_request_if_needed:
+ * @argc: argument count
+ * @argv: argument vector
  *
- * Requests elevated privileges via Polkit. If already running as root,
- * the callback is invoked immediately with %TRUE. If Polkit is not
- * available, the callback is invoked with %FALSE.
- *
- * The callback will be invoked with %TRUE if authorization is granted,
- * %FALSE otherwise.
+ * Called early in main(), before gtk_init().
+ * If NTFS fast scan is enabled and the process is not root,
+ * attempts pkexec re-exec. If pkexec succeeds, this function
+ * does not return (process replaced). If pkexec fails or is
+ * not needed, returns normally.
  */
 void
-privilege_request_async(void (*callback)(bool authorized, gpointer user_data),
-                        gpointer user_data);
+privilege_request_if_needed(int argc, char *argv[]);
+
+/**
+ * privilege_restore_xdg_paths:
+ *
+ * Called after privilege_request_if_needed(), before gtk_init().
+ * If the process was elevated (via pkexec or sudo), detects the
+ * original user and sets XDG_CONFIG_HOME / XDG_DATA_HOME to
+ * point to the original user's directories.
+ *
+ * Safe to call from a non-elevated process (no-op).
+ */
+void
+privilege_restore_xdg_paths(void);
 
 /**
  * privilege_get_status_text:
- * @is_root: whether the process is running as root
- * @is_authorized: whether Polkit authorization has been granted
  *
  * Returns a human-readable status string for UI display.
+ * Called once during widget initialization — startup snapshot,
+ * not real-time. The elevation method (pkexec/sudo/direct root)
+ * and pkexec availability do not change during process lifetime.
+ *
+ * Returns one of:
+ *   "MFT scan: disabled"          — NTFS fast scan disabled in config
+ *   "MFT scan: enabled (pkexec)"  — running as root via pkexec
+ *   "MFT scan: enabled (sudo)"    — running as root via sudo
+ *   "MFT scan: enabled (root)"    — running as root directly
+ *   "MFT scan: authorization denied" — pkexec available but user denied
+ *   "MFT scan: pkexec not found"  — pkexec not found on system
+ *
  * Returns: a newly allocated string (free with g_free)
  */
 char *
-privilege_get_status_text(bool is_root, bool is_authorized);
-
-/**
- * privilege_is_authorized:
- *
- * Returns whether Polkit authorization has been granted during
- * the current application lifetime.
- *
- * Returns: %TRUE if authorized, %FALSE otherwise
- */
-bool
-privilege_is_authorized(void);
+privilege_get_status_text(void);
 
 G_END_DECLS

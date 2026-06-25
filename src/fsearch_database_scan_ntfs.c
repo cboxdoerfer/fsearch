@@ -22,6 +22,7 @@
 
 #include "fsearch_database_entry.h"
 #include "fsearch_database_entry_flags.h"
+#include "fsearch_privilege.h"
 
 #include <config.h>
 
@@ -409,6 +410,14 @@ db_scan_ntfs(const char *device_path,
              GCancellable *cancellable) {
     g_assert(g_path_is_absolute(device_path));
     g_assert(g_path_is_absolute(mount_point));
+
+    /* Root privileges required for MFT scan */
+    if (!privilege_is_root()) {
+        g_debug("[ntfs_scan] root privileges required, skipping MFT scan of %s",
+                mount_point);
+        return false;
+    }
+
     g_debug("[ntfs_scan] scanning device %s mounted at %s", device_path, mount_point);
 
     NtfsScanContext ctx = {
