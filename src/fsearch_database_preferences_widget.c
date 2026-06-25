@@ -47,6 +47,14 @@ struct _FsearchDatabasePreferencesWidget {
     GtkListStore *exclude_type_model;
     GtkListStore *exclude_scope_model;
     GtkListStore *exclude_target_model;
+
+    // NTFS page
+    GtkTreeView *ntfs_partition_list;
+    GtkListStore *ntfs_partition_model;
+    GtkToggleButton *ntfs_enable_fast_scan;
+    GtkToggleButton *ntfs_auto_polkit;
+    GtkLabel *ntfs_status_libntfs;
+    GtkLabel *ntfs_status_root;
 };
 
 enum {
@@ -67,6 +75,14 @@ enum {
     COL_EXCLUDE_SCOPE,
     COL_EXCLUDE_TARGET,
     NUM_EXCLUDE_COLUMNS
+};
+
+enum {
+    COL_NTFS_DEVICE,
+    COL_NTFS_MOUNTPOINT,
+    COL_NTFS_INCLUDE,
+    COL_NTFS_MONITOR,
+    NUM_NTFS_COLUMNS
 };
 
 enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, NUM_PROPERTIES };
@@ -614,6 +630,66 @@ column_combo_append(GtkTreeView *view,
 }
 
 static void
+on_column_ntfs_include_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *model = GTK_TREE_MODEL(data);
+    on_column_toggled(path_str, model, COL_NTFS_INCLUDE);
+}
+
+static void
+on_column_ntfs_monitor_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *model = GTK_TREE_MODEL(data);
+    on_column_toggled(path_str, model, COL_NTFS_MONITOR);
+}
+
+static void
+init_ntfs_page(FsearchDatabasePreferencesWidget *self) {
+    self->ntfs_partition_model = gtk_list_store_new(NUM_NTFS_COLUMNS,
+                                                    G_TYPE_STRING,  // device
+                                                    G_TYPE_STRING,  // mountpoint
+                                                    G_TYPE_BOOLEAN, // include
+                                                    G_TYPE_BOOLEAN); // monitor
+    gtk_tree_view_set_model(self->ntfs_partition_list, GTK_TREE_MODEL(self->ntfs_partition_model));
+
+    column_text_append(self->ntfs_partition_list, _("Device"), FALSE, COL_NTFS_DEVICE);
+    column_text_append(self->ntfs_partition_list, _("Mount Point"), TRUE, COL_NTFS_MOUNTPOINT);
+    column_toggle_append(self->ntfs_partition_list,
+                         GTK_TREE_MODEL(self->ntfs_partition_model),
+                         _("Include"),
+                         COL_NTFS_INCLUDE,
+                         G_CALLBACK(on_column_ntfs_include_toggled),
+                         self->ntfs_partition_model);
+    column_toggle_append(self->ntfs_partition_list,
+                         GTK_TREE_MODEL(self->ntfs_partition_model),
+                         _("Monitor"),
+                         COL_NTFS_MONITOR,
+                         G_CALLBACK(on_column_ntfs_monitor_toggled),
+                         self->ntfs_partition_model);
+
+    /* Configure sizing on ALL columns to fix empty-table column width issue */
+    GtkTreeViewColumn *col;
+
+    /* Device: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_DEVICE);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 80);
+
+    /* Mount Point: GROW_ONLY + expand (only column that can grow) */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_MOUNTPOINT);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_GROW_ONLY);
+    gtk_tree_view_column_set_expand(col, TRUE);
+
+    /* Include: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_INCLUDE);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 90);
+
+    /* Monitor: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_MONITOR);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 90);
+}
+
+static void
 init_exclude_page(FsearchDatabasePreferencesWidget *self) {
     self->exclude_model = gtk_list_store_new(NUM_EXCLUDE_COLUMNS,
                                              G_TYPE_BOOLEAN,
@@ -948,6 +1024,7 @@ fsearch_database_preferences_widget_dispose(GObject *object) {
     g_clear_object(&self->exclude_type_model);
     g_clear_object(&self->exclude_scope_model);
     g_clear_object(&self->exclude_target_model);
+    g_clear_object(&self->ntfs_partition_model);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->dispose(object);
 }
@@ -1019,6 +1096,13 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
 
+    // NTFS page
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_partition_list);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_enable_fast_scan);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_auto_polkit);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_libntfs);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_root);
+
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_path_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_remove_button_clicked);
@@ -1042,6 +1126,7 @@ fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self)
 
     init_include_page(self);
     init_exclude_page(self);
+    init_ntfs_page(self);
 }
 
 FsearchDatabasePreferencesWidget *
