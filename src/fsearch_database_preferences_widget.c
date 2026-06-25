@@ -1,6 +1,7 @@
 #define G_LOG_DOMAIN "fsearch-database-preferences-widget"
 
 #include "fsearch_database_preferences_widget.h"
+#include "fsearch_config.h"
 #include "fsearch_database_exclude.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
@@ -1355,6 +1356,66 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
                                                         gtk_toggle_button_get_active(self->exclude_hidden_items_button));
 
     return g_steal_pointer(&exclude_manager);
+}
+
+void
+fsearch_database_preferences_widget_set_ntfs_partitions(FsearchDatabasePreferencesWidget *self,
+                                                        GPtrArray *ntfs_partitions) {
+    g_return_if_fail(self);
+
+    /* Iterate over the GtkListStore and apply saved Include/Monitor state */
+    GtkTreeModel *model = GTK_TREE_MODEL(self->ntfs_partition_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        g_autofree char *mountpoint = NULL;
+        gtk_tree_model_get(model, &iter, COL_NTFS_MOUNTPOINT, &mountpoint, -1);
+
+        if (ntfs_partitions) {
+            const FsearchNtfsPartitionConfig *pc = fsearch_ntfs_get_partition_config(ntfs_partitions, mountpoint);
+            if (pc) {
+                gtk_list_store_set(self->ntfs_partition_model, &iter,
+                                   COL_NTFS_INCLUDE, pc->include,
+                                   COL_NTFS_MONITOR, pc->monitor,
+                                   -1);
+            }
+        }
+        /* No saved config for this mountpoint — keep defaults */
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+}
+
+GPtrArray *
+fsearch_database_preferences_widget_get_ntfs_partitions(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(self, NULL);
+
+    GPtrArray *partitions = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)fsearch_ntfs_partition_config_free);
+
+    GtkTreeModel *model = GTK_TREE_MODEL(self->ntfs_partition_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        g_autofree char *device = NULL;
+        g_autofree char *mountpoint = NULL;
+        gboolean include = FALSE;
+        gboolean monitor = FALSE;
+        gtk_tree_model_get(model, &iter,
+                           COL_NTFS_DEVICE, &device,
+                           COL_NTFS_MOUNTPOINT, &mountpoint,
+                           COL_NTFS_INCLUDE, &include,
+                           COL_NTFS_MONITOR, &monitor,
+                           -1);
+
+        if (mountpoint) {
+            FsearchNtfsPartitionConfig *pc = fsearch_ntfs_partition_config_new(mountpoint, include, monitor);
+            g_ptr_array_add(partitions, pc);
+        }
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    return partitions;
 }
 
 void

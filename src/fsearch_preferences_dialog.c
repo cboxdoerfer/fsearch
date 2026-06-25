@@ -146,6 +146,10 @@ update_config(FsearchPreferencesDialog *self) {
     fsearch_database_preferences_widget_get_ntfs_config(self->database_pref_widget,
                                                          &self->config->ntfs_fast_scan_enabled,
                                                          &self->config->ntfs_auto_polkit);
+
+    /* NTFS partition Include/Monitor state */
+    g_clear_pointer(&self->config->ntfs_partitions, fsearch_ntfs_partition_configs_free);
+    self->config->ntfs_partitions = fsearch_database_preferences_widget_get_ntfs_partitions(self->database_pref_widget);
 }
 
 static void
@@ -224,6 +228,9 @@ fsearch_preferences_dialog_constructed(GObject *object) {
                                                                           self->config_old->excludes,
                                                                           self->config_old->ntfs_fast_scan_enabled,
                                                                           self->config_old->ntfs_auto_polkit);
+    /* Load saved NTFS partition Include/Monitor state into the UI */
+    fsearch_database_preferences_widget_set_ntfs_partitions(self->database_pref_widget,
+                                                             self->config_old->ntfs_partitions);
     gtk_notebook_append_page(self->main_notebook, GTK_WIDGET(self->database_pref_widget), gtk_label_new(_("Database")));
     gtk_widget_show(GTK_WIDGET(self->database_pref_widget));
 

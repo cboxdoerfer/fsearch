@@ -43,6 +43,30 @@ fsearch_database_preferences_widget_get_ntfs_config(FsearchDatabasePreferencesWi
                                                     bool *ntfs_auto_polkit);
 
 /**
+ * fsearch_database_preferences_widget_set_ntfs_partitions:
+ * @widget: the widget
+ * @ntfs_partitions: (element-type FsearchNtfsPartitionConfig): saved partition config from FsearchConfig
+ *
+ * Loads saved NTFS partition Include/Monitor state into the UI.
+ * Call this after constructing the widget to restore persisted settings.
+ */
+void
+fsearch_database_preferences_widget_set_ntfs_partitions(FsearchDatabasePreferencesWidget *widget,
+                                                        GPtrArray *ntfs_partitions);
+
+/**
+ * fsearch_database_preferences_widget_get_ntfs_partitions:
+ * @widget: the widget
+ *
+ * Reads the current NTFS partition Include/Monitor state from the UI.
+ *
+ * Returns: (element-type FsearchNtfsPartitionConfig) (transfer full): A newly
+ *   allocated #GPtrArray of #FsearchNtfsPartitionConfig, or %NULL if no partitions.
+ */
+GPtrArray *
+fsearch_database_preferences_widget_get_ntfs_partitions(FsearchDatabasePreferencesWidget *widget);
+
+/**
  * fsearch_database_preferences_widget_update_ntfs_status:
  * @widget: the widget
  * @is_root: whether running as root
