@@ -53,7 +53,7 @@ struct FsearchDatabaseIndexStore {
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
-    // NTFS partition configuration (non-owning pointer)
+    // NTFS partition configuration (owned reference)
     GPtrArray *ntfs_partitions;
 
     GThreadPool *worker_pool;
@@ -620,6 +620,7 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     index_store_sorted_entries_free(store);
     g_clear_object(&store->include_manager);
     g_clear_object(&store->exclude_manager);
+    g_clear_pointer(&store->ntfs_partitions, g_ptr_array_unref);
 
     // Wait for tasks to finish must be TRUE since the worker threads might be using the worker_pool_collect_queue
     // Hence, make sure to unref the queue only after the pool has been terminated
@@ -665,7 +666,7 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
 
     store->include_manager = g_object_ref(include_manager);
     store->exclude_manager = g_object_ref(exclude_manager);
-    store->ntfs_partitions = ntfs_partitions;
+    store->ntfs_partitions = ntfs_partitions ? g_ptr_array_ref(ntfs_partitions) : NULL;
 
     store->event_func = event_func;
     store->event_func_data = event_func_data;
@@ -1229,7 +1230,11 @@ void
 fsearch_database_index_store_set_ntfs_partitions(FsearchDatabaseIndexStore *store,
                                                  GPtrArray *ntfs_partitions) {
     g_return_if_fail(store);
-    store->ntfs_partitions = ntfs_partitions;
+    GPtrArray *old = store->ntfs_partitions;
+    store->ntfs_partitions = ntfs_partitions ? g_ptr_array_ref(ntfs_partitions) : NULL;
+    if (old) {
+        g_ptr_array_unref(old);
+    }
 }
 
 FsearchDatabaseSearchView *
