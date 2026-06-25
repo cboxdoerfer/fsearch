@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-08 20:23+0200\n"
-"PO-Revision-Date: 2025-07-22 07:03+0000\n"
-"Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
+"PO-Revision-Date: 2026-06-26 13:01+0000\n"
+"Last-Translator: Golden Axolotl <gardevg@proton.me>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
 "Language: bg\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -144,39 +144,45 @@ msgstr "всичко"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
-msgstr ""
+msgstr "БД преработване"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "БД: Добави поддръжка за наблюдение на файловата система"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"БД: Позволи на файлове и папки да бъдат изключени според фиксирани шаблони, "
+"заместващи символи или регулярни изрази"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"БД: Разрешаване на включените папки да бъдат планирани и сканирани след "
+"стартиране независимо"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "БД: Направи повторното сканиране по-ефективно"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "БД: Запази конфигурация за БД във файл"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "БД: Добави контролна сума в БД файла"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
+"Направи събирането на информация за икони и файлове асинхронно (без "
+"блокиране на интерфейс)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "New search engine"
@@ -308,9 +314,8 @@ msgid "Open a new application window"
 msgstr "Отваряне на нов прозорец на приложението"
 
 #: src/fsearch.c:715
-#, fuzzy
 msgid "Minimize the application window"
-msgstr "Отваряне на нов прозорец на приложението"
+msgstr "Минимизирай прозореца на приложението"
 
 #: src/fsearch.c:716
 msgid "Show the application preferences"
@@ -330,7 +335,7 @@ msgstr "Показване на информация за версията и и
 
 #: src/fsearch_database.c:651
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Индексно повторно сканиране: прилагане на промени…"
 
 #: src/fsearch_database_file.c:1299
 msgid "Loading folders…"
@@ -363,30 +368,27 @@ msgstr "_Избор"
 
 #: src/fsearch_database_preferences_widget.c:391
 msgid "Literal"
-msgstr ""
+msgstr "Буквално"
 
 #: src/fsearch_database_preferences_widget.c:393
-#, fuzzy
 msgid "Wildcard"
-msgstr "Поддръжка на заместващи символи"
+msgstr "Wildcard"
 
 #: src/fsearch_database_preferences_widget.c:395
 msgid "Regex"
-msgstr ""
+msgstr "Регулярен израз (regex)"
 
 #: src/fsearch_database_preferences_widget.c:416
-#, fuzzy
 msgid "Full Path"
-msgstr "Път"
+msgstr "Пълен път"
 
 #: src/fsearch_database_preferences_widget.c:418
 msgid "Basename"
-msgstr ""
+msgstr "Базово име"
 
 #: src/fsearch_database_preferences_widget.c:436
-#, fuzzy
 msgid "Files & Folders"
-msgstr "Папки"
+msgstr "Файлове и Папки"
 
 #: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:114
 msgid "Files"
@@ -403,7 +405,7 @@ msgstr "Активно"
 
 #: src/fsearch_database_preferences_widget.c:638
 msgid "Pattern"
-msgstr ""
+msgstr "Шаблон"
 
 #: src/fsearch_database_preferences_widget.c:692 src/fsearch_window.c:674
 #: src/menus.ui:275
@@ -411,13 +413,12 @@ msgid "Type"
 msgstr "Тип (файлово разширение)"
 
 #: src/fsearch_database_preferences_widget.c:698
-#, fuzzy
 msgid "Match"
-msgstr "Случай на съвпадение"
+msgstr "Съвпадение"
 
 #: src/fsearch_database_preferences_widget.c:704
 msgid "Applies To"
-msgstr ""
+msgstr "Отнася се за"
 
 #: src/fsearch_database_preferences_widget.c:862 src/fsearch_window.c:660
 #: src/menus.ui:219 src/menus.ui:267
@@ -430,44 +431,38 @@ msgstr "Въведете път…"
 
 #: src/fsearch_database_preferences_widget.ui:97
 #: src/fsearch_database_preferences_widget.ui:372
-#, fuzzy
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Добавяне на папка към базата с данни:</b>\n"
-"\n"
-"                            Този бутон ще отвори диалог, където ще можете да "
-"изберете папка, която да бъде включена в базата с данни \n"
-"                            за търсене.\n"
-"                    "
+"Добави път, които да бъде включен в\n"
+"                                            база данни\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "Опит за наблюдение"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Сканирай след старт"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Една файлова система"
+msgstr "Остани на една файлова система"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
-msgstr ""
+msgstr "Пресканирай всеки"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Часа:"
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "минута (и)"
+msgstr "Минути:"
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
@@ -482,28 +477,24 @@ msgid "Include"
 msgstr "Включване"
 
 #: src/fsearch_database_preferences_widget.ui:477
-#, fuzzy
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Добавяне на път, който ще бъде включен в базата с данни\n"
-"                                "
+"Добавяне на правило за изключване\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:495
-#, fuzzy
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Добавяне на път, който ще бъде включен в базата с данни\n"
-"                                "
+"Премахване на избрания път\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
-#, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
-msgstr "Възстановяване на филтрите по подразбиране"
+msgstr "Възстановяване на списъка с изключения по подразбиране"
 
 #: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
@@ -949,7 +940,6 @@ msgstr ""
 "принуждават прозореца да има различен размер."
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -967,17 +957,16 @@ msgid ""
 msgstr ""
 "<b>Поведение след успешно отваряне на файл:</b>\n"
 "\n"
-"Когато файл/папка бъдат отворени успешно може да бъде изпълнено едно от "
-"следните действия:\n"
-"   • <b>Нищо:</b> Нищо не се случва.\n"
-"   • <b>Минимизиране:</b> Текущо избраният прозорец на FSearch ще бъде "
-"минимизиран. \n"
-"   • <b>Затваряне:</b> Изход от FSearch.\n"
+"Когато файл/папка е отворен успешно, може да се извърши едно от следните "
+"действия:\n"
+"• <b>Нищо:</b> Нищо не се случва.\n"
+"• <b>Минимизиране:</b> Текущо избраният прозорец на FSearch се минимизира.\n"
+"• <b>Затваряне:</b> Излизане от FSearch.\n"
 "\n"
-"Можете да конфигурирате дали тези действия при отваряне на файла да се "
-"задействат с\n"
-"   • <b>клаваишна комбинация или елементите на менюто</b> и/или\n"
-"   • <b>кликване с мишката</b>"
+"Можете да конфигурирате дали тези действия да се задействат, когато файлът е "
+"отворен с\n"
+"• <b>клавишни комбинации или елементи от менюто</b> и/или\n"
+"• <b>щракване с мишката</b>"
 
 #: src/fsearch_preferences.ui:955
 msgid ""
@@ -993,17 +982,17 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
-"<b>Показване на маркирани думи за търсене:</b>\n"
+"<b>Показване на маркирани термини за търсене:</b>\n"
 "\n"
-"Ако е активирано, думите за търсене ще бъдат маркирани в изгледа с "
-"резултати. Например, когато търсите \"foo\", всички намерени <i> foo </i> в "
-"имената на файлове / папки ще бъдат маркирани с удебелени символи:\n"
+"Ако е активирано, термините за търсене ще бъдат маркирани в изгледа с "
+"резултати. Например, когато търсите „foo“, всички появявания на <i>foo</i> в "
+"имената на файлове/папки ще бъдат маркирани с удебелен шрифт:\n"
 "\n"
-"       <b>foo</b>bar.txt\n"
-"       file.<b>foo</b>\n"
+"<b>foo</b>bar.txt\n"
+"файл.<b>foo</b>\n"
 "\n"
-"Това също е приложимо за регулярни изрази и изрази със заместващи символи, "
-"започващи или завършващи със звездичка. "
+"Това работи и за регулярни изрази и заместващи изрази, започващи или "
+"завършващи със звездичка. "
 
 #: src/fsearch_preferences.ui:977
 msgid ""
@@ -1124,13 +1113,13 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Съвпадение на регистър, когато заявката съдържа поне един главен знак:</"
-"b>\n"
+"<b>Съвпадение на регистър, когато заявката съдържа поне един главен знак:</b>"
+"\n"
 "\n"
 "Ако е активирана, думите за търсене, съдържащи поне един главен регистър, ще "
 "задействат търсене, чувствително на малки и големи букви. Това означава, че "
-"термин за търсене като <i> Foo </i> ще съответства на <i> FooBar.txt </i>, "
-"но не и <i> foobar.txt </i>."
+"термин за търсене като <i>Foo</i> ще съответства на <i>FooBar.txt</i>, но не "
+"и <i>foobar.txt</i>."
 
 #: src/fsearch_preferences.ui:1147
 msgid ""
@@ -1173,7 +1162,7 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
-"<b>Обновяване на базата с данни при стартиране</b>\n"
+"<b>Обновяване на базата с данни при стартиране:</b>\n"
 "\n"
 "Ако е активирано, базата с данни ще бъде обновена във фонов режим, когато "
 "стартирате FSearch."
@@ -1195,9 +1184,9 @@ msgstr ""
 "Този списък съдържа всички папки, които искате да изключите от базата с "
 "данни за търсене.\n"
 "\n"
-"       • <b>Активно:</b> Ако е активирано, пътят ще бъде изключен от базата "
-"с данни.\n"
-"       • <b>Път:</b> Пълният път ще бъде изключен.\n"
+" • <b>Активно:</b> Ако е активирано, пътят ще бъде изключен от базата с "
+"данни.\n"
+" • <b>Път:</b> Пълният път ще бъде изключен.\n"
 "       • <b>Една файлова система:</b> Ако е активирано, FSearch няма да "
 "пресича границата на файловата система за тази папка"
 
@@ -1208,7 +1197,7 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
-"<b>Добавяне на на папка към базата с данни:</b>\n"
+"<b>Добавяне на папка към базата с данни:</b>\n"
 "\n"
 "Този бутон отваря диалог, където ще можете да изберете папка, която искате "
 "да добавите към базата с данни за търсене."
@@ -1276,9 +1265,9 @@ msgstr ""
 "<b>Изключване на файлове и папки от базата с данни:</b>\n"
 "\n"
 "Това е списък с файлове (или папки), разделени с двоеточие, които искате да "
-"изключите от базата данни. Например <i> .git; .cache; *. Swp </i> ще изключи "
-"всички файлове или папки, които се наричат <i> .git </i> или <i> .cache </i> "
-"или завършват с <i> .swp </i>."
+"изключите от базата данни. Например <i>.git; .cache; *. swp</i> ще изключи "
+"всички файлове или папки, които се наричат <i>.git</i> или <i>.cache</i> или "
+"завършват с <i>.swp</i>."
 
 #: src/fsearch_preferences.ui:1328
 msgid ""
@@ -1355,11 +1344,11 @@ msgstr ""
 "Това е списък с всички налични филтри. Филтърът е предварително дефинирано "
 "търсене.\n"
 "\n"
-" • <b>Име:</b>Уникален и описателен идентификатор за филтъра\n"
-" • <b>Макрос:</b> Като напишете текста на макроса, последван от ':' , можете "
+"\t• <b>Име:</b> Уникален и описателен идентификатор за филтъра\n"
+"\t• <b>Макрос:</b> Като въведете текста на макроса, последван от ':', можете "
 "да активирате филтъра при поискване\n"
-" • <b>Запитване:</b> Думата за търсене, по която трябва да се филтрира "
-"базата с данни"
+"\t• <b>Заявка:</b> Терминът за търсене, по който базата данни трябва да бъде "
+"филтрирана"
 
 #: src/fsearch_preferences.ui:1417
 msgid ""
@@ -1429,7 +1418,7 @@ msgstr "База с данни"
 
 #: src/fsearch_result_view.c:381
 msgid "Invalid row data"
-msgstr ""
+msgstr "Невалидни данни на редове"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1540,8 +1529,7 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"Сортирането по <b> Тип </b> може да отнеме няколко секунди с много "
-"резултати.\n"
+"Сортирането по <b>Тип</b> може да отнеме няколко секунди с много резултати.\n"
 "\n"
 "Този ред на сортиране не е постоянен, той ще бъде нулиран, когато думата за "
 "търсене се промени."
@@ -1619,22 +1607,22 @@ msgid "Select a Filter"
 msgstr "Избор на Филтър"
 
 #: src/fsearch_window_actions.c:107
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] "Наистина ли искате да отворите %d файл (а)?"
-msgstr[1] "Наистина ли искате да отворите %d файл (а)?"
+msgstr[0] "Наистина ли искате да отворите %d файла?"
+msgstr[1] "Наистина ли искате да отворите %d файловете?"
 
 #: src/fsearch_window_actions.c:112
 msgid "Opening Files…"
 msgstr "Отваряне на Файл (ове)…"
 
 #: src/fsearch_window_actions.c:197
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] "Наистина ли искате да премахнете %d файл (а)?"
-msgstr[1] "Наистина ли искате да премахнете %d файл (а)?"
+msgstr[0] "Наистина ли искате да премахнете %d файла?"
+msgstr[1] "Наистина ли искате да премахнете %d файловете?"
 
 #: src/fsearch_window_actions.c:204
 msgid "Deleting files…"
@@ -1650,18 +1638,18 @@ msgid "Something went wrong."
 msgstr "Нещо се обърка."
 
 #: src/fsearch_window_actions.c:241
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %'d file."
 msgid_plural "Deleted %'d files."
-msgstr[0] "Изтрити са %d файл (а)."
-msgstr[1] "Изтрити са %d файл (а)."
+msgstr[0] "Изтрит е %d файл."
+msgstr[1] "Изтрити са %d файла."
 
 #: src/fsearch_window_actions.c:244
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %'d file to the trash."
 msgid_plural "Moved %'d files to the trash."
-msgstr[0] "Преместени са %d файл (а) в кошчето."
-msgstr[1] "Преместени са %d файл (а) в кошчето."
+msgstr[0] "Преместен е %d файл в кошчето."
+msgstr[1] "Преместени са %d файла в кошчето."
 
 #: src/fsearch_window_actions.c:254
 msgid ""
@@ -1672,13 +1660,11 @@ msgstr ""
 "Това ще бъде коригирано с бъдещи актуализации."
 
 #: src/fsearch_window_actions.c:280
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] ""
-"Наистина ли искате да отворите %d прозореца със свойствата на файла ?"
-msgstr[1] ""
-"Наистина ли искате да отворите %d прозореца със свойствата на файла ?"
+msgstr[0] "Наистина ли искате да отворите %d прозорец със свойствата на файла?"
+msgstr[1] "Наистина ли искате да отворите %d прозореца със свойствата на файла?"
 
 #: src/fsearch_window_actions.c:287
 msgid "Opening file properties…"
