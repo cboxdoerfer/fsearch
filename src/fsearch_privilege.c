@@ -117,14 +117,26 @@ privilege_request_if_needed(int argc, char *argv[]) {
     /* Get current DISPLAY and pass it to the elevated process via CLI arg */
     const char *display = g_getenv("DISPLAY");
 
-    g_debug("[privilege] requesting root via pkexec: %s (DISPLAY=%s)", exe_path, display ? display : "(null)");
+    /* Get XAUTHORITY: env var first, fallback to ~/.Xauthority */
+    g_autofree char *xauthority = NULL;
+    const char *xauth_env = g_getenv("XAUTHORITY");
+    if (xauth_env && *xauth_env) {
+        xauthority = g_strdup(xauth_env);
+    } else {
+        xauthority = g_build_filename(g_get_home_dir(), ".Xauthority", NULL);
+    }
+
+    g_debug("[privilege] requesting root via pkexec: %s (DISPLAY=%s, XAUTHORITY=%s)",
+            exe_path, display ? display : "(null)", xauthority);
 
     /* execlp variadic list ends at first NULL pointer.
      * When display is NULL, the first NULL terminates the list,
-     * so --x-display and its value are simply omitted. */
+     * so --x-display/--x-authority and their values are simply omitted. */
     execlp("pkexec", "pkexec", exe_path, "--privileged",
            display ? "--x-display" : NULL,
            display ? display : NULL,
+           "--x-authority",
+           xauthority,
            (char *)NULL);
 
     /* execlp returned = authorization denied or pkexec not available */

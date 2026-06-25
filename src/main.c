@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 
-/* Strip --privileged and handle --x-display parameters */
+/* Strip --privileged and handle --x-display/--x-authority parameters */
 static void
 strip_privileged_flag(int *argc, char *argv[]) {
     char **dst = argv;
@@ -37,6 +37,10 @@ strip_privileged_flag(int *argc, char *argv[]) {
         } else if (g_strcmp0(*src, "--x-display") == 0 && *(src + 1)) {
             /* Restore DISPLAY env var after pkexec elevation */
             g_setenv("DISPLAY", *(src + 1), true);
+            src += 2;
+        } else if (g_strcmp0(*src, "--x-authority") == 0 && *(src + 1)) {
+            /* Restore XAUTHORITY env var after pkexec elevation */
+            g_setenv("XAUTHORITY", *(src + 1), true);
             src += 2;
         } else {
             *(dst++) = *(src++);
