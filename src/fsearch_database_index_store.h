@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_config.h"
 #include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
@@ -42,6 +43,7 @@ FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
                                  FsearchDatabaseIndexPropertyFlags flags,
+                                 GPtrArray *ntfs_partitions,
                                  FsearchDatabaseIndexStoreEventFunc event_func,
                                  gpointer event_func_data);
 
@@ -52,6 +54,7 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
                                               FsearchDatabaseIncludeManager *include_manager,
                                               FsearchDatabaseExcludeManager *exclude_manager,
                                               FsearchDatabaseIndexPropertyFlags flags,
+                                              GPtrArray *ntfs_partitions,
                                               FsearchDatabaseIndexStoreEventFunc event_func,
                                               gpointer event_func_data);
 
@@ -99,6 +102,13 @@ fsearch_database_index_store_get_include_manager(FsearchDatabaseIndexStore *stor
 
 FsearchDatabaseExcludeManager *
 fsearch_database_index_store_get_exclude_manager(FsearchDatabaseIndexStore *store);
+
+GPtrArray *
+fsearch_database_index_store_get_ntfs_partitions(FsearchDatabaseIndexStore *store);
+
+void
+fsearch_database_index_store_set_ntfs_partitions(FsearchDatabaseIndexStore *store,
+                                                 GPtrArray *ntfs_partitions);
 
 uint32_t
 fsearch_database_index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *store);

@@ -5,10 +5,13 @@
 #include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_exclude_manager.h"
+#include "fsearch_config.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_scan.h"
+
+
 #include "fsearch_file_utils.h"
 #include "fsearch_folder_monitor_event.h"
 #include "fsearch_folder_monitor_fanotify.h"
@@ -953,7 +956,10 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     g_autoptr(GTimer) scan_timer = g_timer_new();
 
-    if (!db_scan_folder(fsearch_database_include_get_path(self->include),
+    const char *include_path = fsearch_database_include_get_path(self->include);
+
+    /* readdir scan: pure include folder scanning */
+    if (!db_scan_folder(include_path,
                         NULL,
                         folders,
                         files,

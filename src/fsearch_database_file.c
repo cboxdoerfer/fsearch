@@ -1201,6 +1201,7 @@ bool
 fsearch_database_file_load(const char *file_path,
                            void (*status_cb)(const char *),
                            FsearchDatabaseIndexStore **store_out,
+                           GPtrArray *ntfs_partitions,
                            FsearchDatabaseIndexStoreEventFunc event_func,
                            void *event_func_user_data) {
     g_return_val_if_fail(file_path, false);
@@ -1364,6 +1365,7 @@ fsearch_database_file_load(const char *file_path,
                                                                include_manager,
                                                                exclude_manager,
                                                                index_flags,
+                                                               ntfs_partitions,
                                                                event_func,
                                                                event_func_user_data);
 

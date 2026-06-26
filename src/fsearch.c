@@ -212,6 +212,9 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         config_save(self->config);
 
         if (config_diff.database_config_changed) {
+            /* Update NTFS partition config in the running database before scanning */
+            fsearch_database_set_ntfs_partitions(self->db, self->config->ntfs_fast_scan_enabled, self->config->ntfs_partitions);
+
             if (self->work_scan) {
                 fsearch_database_work_cancel(self->work_scan);
                 g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
@@ -456,7 +459,7 @@ fsearch_application_startup(GApplication *app) {
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    self->db = fsearch_database_new(g_steal_pointer(&db_file));
+    self->db = fsearch_database_new(g_steal_pointer(&db_file), self->config->ntfs_fast_scan_enabled, self->config->ntfs_partitions);
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
@@ -654,15 +657,22 @@ static int
 database_scan_in_local_instance() {
     g_autoptr(GTimer) timer = g_timer_new();
 
+    /* Load config to get NTFS partition settings */
+    FsearchConfig *config = g_new0(FsearchConfig, 1);
+    config_load_default(config);
+    config_load(config);
+
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file));
-    FsearchResult result = fsearch_database_rescan_blocking(db);
+    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file), config->ntfs_fast_scan_enabled, config->ntfs_partitions);
+    FsearchResult result = fsearch_database_rescan_blocking(db, config->ntfs_partitions);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
 
     g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);
+
+    config_free(config);
 
     return result == FSEARCH_RESULT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }

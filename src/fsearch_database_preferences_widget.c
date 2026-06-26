@@ -1,10 +1,13 @@
 #define G_LOG_DOMAIN "fsearch-database-preferences-widget"
 
 #include "fsearch_database_preferences_widget.h"
+#include "fsearch_config.h"
 #include "fsearch_database_exclude.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_include_manager.h"
+#include "fsearch_privilege.h"
+#include "fsearch_filesystem_detect.h"
 
 #include <config.h>
 #include <gio/gio.h>
@@ -22,6 +25,9 @@ struct _FsearchDatabasePreferencesWidget {
 
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
+
+    // NTFS config
+    bool ntfs_config_fast_scan;
 
     // Include page
     GtkTreeView *include_list;
@@ -47,6 +53,13 @@ struct _FsearchDatabasePreferencesWidget {
     GtkListStore *exclude_type_model;
     GtkListStore *exclude_scope_model;
     GtkListStore *exclude_target_model;
+
+    // NTFS page
+    GtkTreeView *ntfs_partition_list;
+    GtkListStore *ntfs_partition_model;
+    GtkToggleButton *ntfs_enable_fast_scan;
+    GtkLabel *ntfs_status_libntfs;
+    GtkLabel *ntfs_status_root;
 };
 
 enum {
@@ -69,7 +82,15 @@ enum {
     NUM_EXCLUDE_COLUMNS
 };
 
-enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, NUM_PROPERTIES };
+enum {
+    COL_NTFS_DEVICE,
+    COL_NTFS_MOUNTPOINT,
+    COL_NTFS_INCLUDE,
+    COL_NTFS_MONITOR,
+    NUM_NTFS_COLUMNS
+};
+
+enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, PROP_NTFS_FAST_SCAN_ENABLED, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
@@ -614,6 +635,110 @@ column_combo_append(GtkTreeView *view,
 }
 
 static void
+on_column_ntfs_include_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *model = GTK_TREE_MODEL(data);
+    on_column_toggled(path_str, model, COL_NTFS_INCLUDE);
+}
+
+static void
+on_column_ntfs_monitor_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *model = GTK_TREE_MODEL(data);
+    on_column_toggled(path_str, model, COL_NTFS_MONITOR);
+}
+
+static void
+init_ntfs_page(FsearchDatabasePreferencesWidget *self) {
+    self->ntfs_partition_model = gtk_list_store_new(NUM_NTFS_COLUMNS,
+                                                    G_TYPE_STRING,  // device
+                                                    G_TYPE_STRING,  // mountpoint
+                                                    G_TYPE_BOOLEAN, // include
+                                                    G_TYPE_BOOLEAN); // monitor
+    gtk_tree_view_set_model(self->ntfs_partition_list, GTK_TREE_MODEL(self->ntfs_partition_model));
+
+    column_text_append(self->ntfs_partition_list, _("Device"), FALSE, COL_NTFS_DEVICE);
+    column_text_append(self->ntfs_partition_list, _("Mount Point"), TRUE, COL_NTFS_MOUNTPOINT);
+    column_toggle_append(self->ntfs_partition_list,
+                         GTK_TREE_MODEL(self->ntfs_partition_model),
+                         _("Include"),
+                         COL_NTFS_INCLUDE,
+                         G_CALLBACK(on_column_ntfs_include_toggled),
+                         self->ntfs_partition_model);
+    column_toggle_append(self->ntfs_partition_list,
+                         GTK_TREE_MODEL(self->ntfs_partition_model),
+                         _("Monitor"),
+                         COL_NTFS_MONITOR,
+                         G_CALLBACK(on_column_ntfs_monitor_toggled),
+                         self->ntfs_partition_model);
+
+    /* Configure sizing on ALL columns to fix empty-table column width issue */
+    GtkTreeViewColumn *col;
+
+    /* Device: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_DEVICE);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 80);
+
+    /* Mount Point: GROW_ONLY + expand (only column that can grow) */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_MOUNTPOINT);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_GROW_ONLY);
+    gtk_tree_view_column_set_expand(col, TRUE);
+
+    /* Include: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_INCLUDE);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 90);
+
+    /* Monitor: FIXED */
+    col = gtk_tree_view_get_column(self->ntfs_partition_list, COL_NTFS_MONITOR);
+    gtk_tree_view_column_set_sizing(col, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_column_set_fixed_width(col, 90);
+
+    /* Populate partition list from detected NTFS partitions */
+    GPtrArray *partitions = fs_detect_ntfs_partitions();
+    if (partitions) {
+        for (guint i = 0; i < partitions->len; i++) {
+            FsearchPartitionInfo *info = g_ptr_array_index(partitions, i);
+            GtkTreeIter iter;
+            gtk_list_store_append(self->ntfs_partition_model, &iter);
+            gtk_list_store_set(self->ntfs_partition_model, &iter,
+                               COL_NTFS_DEVICE, info->device,
+                               COL_NTFS_MOUNTPOINT, info->mountpoint,
+                               COL_NTFS_INCLUDE, TRUE,
+                               COL_NTFS_MONITOR, TRUE,
+                               -1);
+        }
+        fs_partition_array_free(partitions);
+    }
+
+    /* Initialize status labels — startup snapshot, not real-time */
+    g_autofree char *status_text = privilege_get_status_text();
+    gtk_label_set_text(self->ntfs_status_root, status_text);
+}
+
+/* "Enable MFT fast scan" toggled callback — show restart dialog */
+static void
+on_ntfs_enable_fast_scan_toggled(GtkToggleButton *button, gpointer user_data) {
+    FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
+
+    if (!gtk_toggle_button_get_active(button)) {
+        return;
+    }
+
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
+    GtkWidget *dialog = gtk_message_dialog_new(
+        GTK_WINDOW(toplevel),
+        GTK_DIALOG_DESTROY_WITH_PARENT,
+        GTK_MESSAGE_INFO,
+        GTK_BUTTONS_OK,
+        _("NTFS MFT fast scan requires root privileges.\n"
+          "The feature will take effect after restarting FSearch.\n"
+          "Please restart FSearch to enable this feature."));
+
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
+static void
 init_exclude_page(FsearchDatabasePreferencesWidget *self) {
     self->exclude_model = gtk_list_store_new(NUM_EXCLUDE_COLUMNS,
                                              G_TYPE_BOOLEAN,
@@ -933,6 +1058,9 @@ fsearch_database_preferences_widget_set_property(GObject *object, guint prop_id,
     case PROP_EXCLUDE_MANAGER:
         g_set_object(&self->exclude_manager, g_value_get_object(value));
         break;
+    case PROP_NTFS_FAST_SCAN_ENABLED:
+        self->ntfs_config_fast_scan = g_value_get_boolean(value);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
         break;
@@ -948,6 +1076,7 @@ fsearch_database_preferences_widget_dispose(GObject *object) {
     g_clear_object(&self->exclude_type_model);
     g_clear_object(&self->exclude_scope_model);
     g_clear_object(&self->exclude_target_model);
+    g_clear_object(&self->ntfs_partition_model);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->dispose(object);
 }
@@ -958,6 +1087,9 @@ fsearch_database_preferences_widget_constructed(GObject *object) {
 
     populate_include_page(self);
     populate_exclude_page(self);
+
+    /* Apply NTFS config to checkboxes */
+    gtk_toggle_button_set_active(self->ntfs_enable_fast_scan, self->ntfs_config_fast_scan);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->constructed(object);
 }
@@ -986,6 +1118,12 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
                                                            FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER,
                                                            (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
                                                             | G_PARAM_STATIC_STRINGS));
+    properties[PROP_NTFS_FAST_SCAN_ENABLED] = g_param_spec_boolean("ntfs-fast-scan-enabled",
+                                                                    "NTFS Fast Scan Enabled",
+                                                                    "Whether NTFS MFT fast scan is enabled",
+                                                                    false,
+                                                                    (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                                     | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -1019,6 +1157,12 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
 
+    // NTFS page
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_partition_list);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_enable_fast_scan);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_libntfs);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, ntfs_status_root);
+
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_add_path_button_clicked);
     gtk_widget_class_bind_template_callback(widget_class, on_include_remove_button_clicked);
@@ -1034,6 +1178,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_callback(widget_class, on_path_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_selection_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_exclude_reset_to_defaults_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_ntfs_enable_fast_scan_toggled);
 }
 
 static void
@@ -1042,16 +1187,20 @@ fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self)
 
     init_include_page(self);
     init_exclude_page(self);
+    init_ntfs_page(self);
 }
 
 FsearchDatabasePreferencesWidget *
 fsearch_database_preferences_widget_new(FsearchDatabaseIncludeManager *include_manager,
-                                        FsearchDatabaseExcludeManager *exclude_manager) {
+                                        FsearchDatabaseExcludeManager *exclude_manager,
+                                        bool ntfs_fast_scan_enabled) {
     return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE,
                         "include-manager",
                         include_manager,
                         "exclude-manager",
                         exclude_manager,
+                        "ntfs-fast-scan-enabled",
+                        ntfs_fast_scan_enabled,
                         NULL);
 }
 
@@ -1148,4 +1297,74 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
                                                         gtk_toggle_button_get_active(self->exclude_hidden_items_button));
 
     return g_steal_pointer(&exclude_manager);
+}
+
+void
+fsearch_database_preferences_widget_set_ntfs_partitions(FsearchDatabasePreferencesWidget *self,
+                                                        GPtrArray *ntfs_partitions) {
+    g_return_if_fail(self);
+
+    /* Iterate over the GtkListStore and apply saved Include/Monitor state */
+    GtkTreeModel *model = GTK_TREE_MODEL(self->ntfs_partition_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        g_autofree char *mountpoint = NULL;
+        gtk_tree_model_get(model, &iter, COL_NTFS_MOUNTPOINT, &mountpoint, -1);
+
+        if (ntfs_partitions) {
+            const FsearchNtfsPartitionConfig *pc = fsearch_ntfs_get_partition_config(ntfs_partitions, mountpoint);
+            if (pc) {
+                gtk_list_store_set(self->ntfs_partition_model, &iter,
+                                   COL_NTFS_INCLUDE, pc->include,
+                                   COL_NTFS_MONITOR, pc->monitor,
+                                   -1);
+            }
+        }
+        /* No saved config for this mountpoint — keep defaults */
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+}
+
+GPtrArray *
+fsearch_database_preferences_widget_get_ntfs_partitions(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(self, NULL);
+
+    GPtrArray *partitions = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)fsearch_ntfs_partition_config_free);
+
+    GtkTreeModel *model = GTK_TREE_MODEL(self->ntfs_partition_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        g_autofree char *device = NULL;
+        g_autofree char *mountpoint = NULL;
+        gboolean include = FALSE;
+        gboolean monitor = FALSE;
+        gtk_tree_model_get(model, &iter,
+                           COL_NTFS_DEVICE, &device,
+                           COL_NTFS_MOUNTPOINT, &mountpoint,
+                           COL_NTFS_INCLUDE, &include,
+                           COL_NTFS_MONITOR, &monitor,
+                           -1);
+
+        if (mountpoint) {
+            FsearchNtfsPartitionConfig *pc = fsearch_ntfs_partition_config_new(mountpoint, include, monitor);
+            g_ptr_array_add(partitions, pc);
+        }
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    return partitions;
+}
+
+void
+fsearch_database_preferences_widget_get_ntfs_config(FsearchDatabasePreferencesWidget *self,
+                                                    bool *ntfs_fast_scan_enabled) {
+    g_return_if_fail(self);
+
+    if (ntfs_fast_scan_enabled) {
+        *ntfs_fast_scan_enabled = gtk_toggle_button_get_active(self->ntfs_enable_fast_scan);
+    }
 }

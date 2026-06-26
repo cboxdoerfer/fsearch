@@ -147,6 +147,26 @@ static const FsearchKeyData DIALOG_SECTION[] = {
     CONF_BOOL(show_dialog_failed_opening, true),
 };
 
+static const FsearchKeyData NTFS_SECTION[] = {
+    CONF_BOOL(ntfs_fast_scan_enabled, false),
+};
+
+typedef struct {
+    char *mountpoint;
+    bool include;
+    bool monitor;
+} FsearchConfigNtfsPartitionKeys;
+
+static const FsearchKeyData NTFS_PARTITION_KEYS[] = {
+    CONF_STR_OF(FsearchConfigNtfsPartitionKeys, mountpoint, NULL),
+    CONF_BOOL_OF(FsearchConfigNtfsPartitionKeys, include, false),
+    CONF_BOOL_OF(FsearchConfigNtfsPartitionKeys, monitor, false),
+};
+
+/* Forward declarations for NTFS partition config */
+static void config_save_ntfs_partitions(GKeyFile *key_file, GPtrArray *partitions);
+static GPtrArray *config_load_ntfs_partitions(GKeyFile *key_file);
+
 typedef struct {
     char *name;
     char *query;
@@ -644,6 +664,10 @@ config_load(FsearchConfig *config) {
         // Search
         CONFIG_LOAD_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
+        // NTFS
+        CONFIG_LOAD_SECTION(key_file, "NTFS", NTFS_SECTION, config);
+        config->ntfs_partitions = config_load_ntfs_partitions(key_file);
+
         // Includes
         if (config_has_legacy_includes(key_file)) {
             config->includes = config_load_legacy_includes(key_file);
@@ -685,10 +709,13 @@ config_load_default(FsearchConfig *config) {
     CONFIG_DEFAULT_SECTION(DIALOG_SECTION, config);
     CONFIG_DEFAULT_SECTION(APPLICATIONS_SECTION, config);
     CONFIG_DEFAULT_SECTION(SEARCH_SECTION, config);
+    CONFIG_DEFAULT_SECTION(NTFS_SECTION, config);
 
     config->filters = fsearch_filter_manager_new_with_defaults();
     config->includes = fsearch_database_include_manager_new_with_defaults();
     config->excludes = fsearch_database_exclude_manager_new_with_defaults();
+    config->ntfs_partitions = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)fsearch_ntfs_partition_config_free);
 
     return true;
 }
@@ -772,6 +799,44 @@ config_save_excludes(GKeyFile *key_file, FsearchDatabaseExcludeManager *exclude_
                            fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager));
 }
 
+static void
+config_save_ntfs_partitions(GKeyFile *key_file, GPtrArray *partitions) {
+    if (!partitions) {
+        return;
+    }
+    for (uint32_t i = 0; i < partitions->len; ++i) {
+        FsearchNtfsPartitionConfig *pc = g_ptr_array_index(partitions, i);
+        FsearchConfigNtfsPartitionKeys keys = {
+            .mountpoint = pc->mountpoint,
+            .include = pc->include,
+            .monitor = pc->monitor,
+        };
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "NTFS", "partition", i, NTFS_PARTITION_KEYS, &keys);
+    }
+}
+
+static GPtrArray *
+config_load_ntfs_partitions(GKeyFile *key_file) {
+    GPtrArray *partitions = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)fsearch_ntfs_partition_config_free);
+    if (!g_key_file_has_group(key_file, "NTFS")) {
+        return partitions;
+    }
+    for (uint32_t i = 0;; i++) {
+        FsearchConfigNtfsPartitionKeys keys = {};
+        CONFIG_LOAD_OBJECT_KEYS(key_file, "NTFS", "partition", i, NTFS_PARTITION_KEYS, &keys);
+        if (!keys.mountpoint || fsearch_string_is_empty(keys.mountpoint)) {
+            g_free(keys.mountpoint);
+            break;
+        }
+        FsearchNtfsPartitionConfig *pc = fsearch_ntfs_partition_config_new(
+            keys.mountpoint, keys.include, keys.monitor);
+        g_ptr_array_add(partitions, pc);
+        g_free(keys.mountpoint);
+    }
+    return partitions;
+}
+
 bool
 config_save(FsearchConfig *config) {
     g_assert(config);
@@ -795,6 +860,10 @@ config_save(FsearchConfig *config) {
 
     // Search
     CONFIG_SAVE_SECTION(key_file, "Search", SEARCH_SECTION, config);
+
+    // NTFS
+    CONFIG_SAVE_SECTION(key_file, "NTFS", NTFS_SECTION, config);
+    config_save_ntfs_partitions(key_file, config->ntfs_partitions);
 
     // Filters
     config_save_filters(key_file, config->filters);
@@ -846,8 +915,9 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
 
     const bool includes_changed = !fsearch_database_include_manager_equal(c1->includes, c2->includes);
     const bool excludes_changed = !fsearch_database_exclude_manager_equal(c1->excludes, c2->excludes);
+    const bool ntfs_changed = !fsearch_ntfs_partition_configs_equal(c1->ntfs_partitions, c2->ntfs_partitions);
 
-    if (excludes_changed || includes_changed) {
+    if (excludes_changed || includes_changed || ntfs_changed) {
         result.database_config_changed = true;
     }
 
@@ -876,6 +946,17 @@ config_copy(FsearchConfig *config) {
     if (config->filters) {
         copy->filters = fsearch_filter_manager_copy(config->filters);
     }
+    if (config->ntfs_partitions) {
+        copy->ntfs_partitions = g_ptr_array_sized_new(config->ntfs_partitions->len);
+        g_ptr_array_set_free_func(copy->ntfs_partitions,
+                                   (GDestroyNotify)fsearch_ntfs_partition_config_free);
+        for (guint i = 0; i < config->ntfs_partitions->len; i++) {
+            FsearchNtfsPartitionConfig *src = g_ptr_array_index(config->ntfs_partitions, i);
+            FsearchNtfsPartitionConfig *dst = fsearch_ntfs_partition_config_new(
+                src->mountpoint, src->include, src->monitor);
+            g_ptr_array_add(copy->ntfs_partitions, dst);
+        }
+    }
     return copy;
 }
 
@@ -888,5 +969,61 @@ config_free(FsearchConfig *config) {
     g_clear_pointer(&config->filters, fsearch_filter_manager_unref);
     g_clear_object(&config->includes);
     g_clear_object(&config->excludes);
+    g_clear_pointer(&config->ntfs_partitions, fsearch_ntfs_partition_configs_free);
     g_clear_pointer(&config, g_free);
+}
+
+/* --- NTFS partition config helpers --- */
+
+FsearchNtfsPartitionConfig *
+fsearch_ntfs_partition_config_new(const char *mountpoint, bool include, bool monitor) {
+    FsearchNtfsPartitionConfig *config = g_new0(FsearchNtfsPartitionConfig, 1);
+    config->mountpoint = g_strdup(mountpoint);
+    config->include = include;
+    config->monitor = monitor;
+    return config;
+}
+
+void
+fsearch_ntfs_partition_config_free(FsearchNtfsPartitionConfig *config) {
+    if (!config) return;
+    g_free(config->mountpoint);
+    g_free(config);
+}
+
+void
+fsearch_ntfs_partition_configs_free(GPtrArray *array) {
+    if (!array) return;
+    g_ptr_array_unref(array);
+}
+
+const FsearchNtfsPartitionConfig *
+fsearch_ntfs_get_partition_config(GPtrArray *partitions, const char *mountpoint) {
+    if (!partitions || !mountpoint) {
+        return NULL;
+    }
+    for (guint i = 0; i < partitions->len; i++) {
+        FsearchNtfsPartitionConfig *pc = g_ptr_array_index(partitions, i);
+        if (g_str_equal(pc->mountpoint, mountpoint)) {
+            return pc;
+        }
+    }
+    return NULL;
+}
+
+bool
+fsearch_ntfs_partition_configs_equal(GPtrArray *a1, GPtrArray *a2) {
+    if (!a1 && !a2) return true;
+    if (!a1 || !a2) return false;
+    if (a1->len != a2->len) return false;
+
+    for (guint i = 0; i < a1->len; i++) {
+        FsearchNtfsPartitionConfig *p1 = g_ptr_array_index(a1, i);
+        FsearchNtfsPartitionConfig *p2 = g_ptr_array_index(a2, i);
+        if (!p1 || !p2) return false;
+        if (!g_str_equal(p1->mountpoint, p2->mountpoint)) return false;
+        if (p1->include != p2->include) return false;
+        if (p1->monitor != p2->monitor) return false;
+    }
+    return true;
 }

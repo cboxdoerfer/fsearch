@@ -74,10 +74,14 @@ else
   have_inotify = false
 endif
 
+# libntfs-3g for NTFS fast scan (required)
+ntfs3g_dep = dependency('libntfs-3g', required : true)
+
 config_h = configuration_data()
 config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
 config_h.set('HAVE_FANOTIFY', have_fanotify)
 config_h.set('HAVE_INOTIFY', have_inotify)
+config_h.set('HAVE_NTFS_FAST_SCAN', true)
 config_h.set_quoted('APP_ID', app_id)
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('VERSION', meson.project_version())

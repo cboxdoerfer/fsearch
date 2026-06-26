@@ -112,7 +112,80 @@ struct _FsearchConfig {
 
     FsearchDatabaseIncludeManager *includes;
     FsearchDatabaseExcludeManager *excludes;
+
+    // NTFS fast scan
+    bool ntfs_fast_scan_enabled;
+    GPtrArray *ntfs_partitions; /* GPtrArray of FsearchNtfsPartitionConfig* */
 };
+
+/**
+ * FsearchNtfsPartitionConfig:
+ * @mountpoint: Mount point path (e.g., "/mnt/data")
+ * @include: Whether to include this partition in the database
+ * @monitor: Whether to monitor this partition for changes
+ *
+ * Holds persistent configuration for an NTFS partition.
+ */
+typedef struct {
+    char *mountpoint;
+    bool include;
+    bool monitor;
+} FsearchNtfsPartitionConfig;
+
+/**
+ * fsearch_ntfs_partition_config_new:
+ * @mountpoint: Mount point path
+ * @include: Include flag
+ * @monitor: Monitor flag
+ *
+ * Creates a new NTFS partition config.
+ *
+ * Returns: (transfer full): A newly allocated #FsearchNtfsPartitionConfig
+ */
+FsearchNtfsPartitionConfig *
+fsearch_ntfs_partition_config_new(const char *mountpoint, bool include, bool monitor);
+
+/**
+ * fsearch_ntfs_partition_config_free:
+ * @config: A #FsearchNtfsPartitionConfig
+ *
+ * Frees an NTFS partition config.
+ */
+void
+fsearch_ntfs_partition_config_free(FsearchNtfsPartitionConfig *config);
+
+/**
+ * fsearch_ntfs_partition_configs_free:
+ * @array: A #GPtrArray of #FsearchNtfsPartitionConfig
+ *
+ * Frees a GPtrArray and all its NTFS partition configs.
+ */
+void
+fsearch_ntfs_partition_configs_free(GPtrArray *array);
+
+/**
+ * fsearch_ntfs_get_partition_config:
+ * @partitions: GPtrArray of #FsearchNtfsPartitionConfig (from FsearchConfig)
+ * @mountpoint: Mount point path to look up
+ *
+ * Gets the NTFS partition config for a given mount point.
+ *
+ * Returns: (transfer none): A #FsearchNtfsPartitionConfig, or %NULL if not found.
+ */
+const FsearchNtfsPartitionConfig *
+fsearch_ntfs_get_partition_config(GPtrArray *partitions, const char *mountpoint);
+
+/**
+ * fsearch_ntfs_partition_configs_equal:
+ * @a1: First GPtrArray of #FsearchNtfsPartitionConfig
+ * @a2: Second GPtrArray of #FsearchNtfsPartitionConfig
+ *
+ * Compares two NTFS partition config arrays for equality.
+ *
+ * Returns: %true if both arrays are equal
+ */
+bool
+fsearch_ntfs_partition_configs_equal(GPtrArray *a1, GPtrArray *a2);
 
 bool
 config_make_dir(void);

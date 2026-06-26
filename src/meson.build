@@ -16,6 +16,7 @@ libfsearch_sources = [
     'fsearch_array.c',
     'fsearch_clipboard.c',
     'fsearch_config.c',
+    'fsearch_privilege.c',
     'fsearch_database.c',
     'fsearch_database_chunked_array.c',
     'fsearch_database_entry.c',
@@ -32,6 +33,8 @@ libfsearch_sources = [
     'fsearch_database_preferences_widget.c',
     'fsearch_database_rescan_manager.c',
     'fsearch_database_scan.c',
+    'fsearch_database_scan_ntfs.c',
+    'fsearch_filesystem_detect.c',
     'fsearch_database_search_info.c',
     'fsearch_database_search_view.c',
     'fsearch_database_sort.c',
@@ -84,6 +87,7 @@ fsearch_deps = [
     dependency('gtk+-3.0', version: '>= 3.18'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 3.8'),
+    dependency('libntfs-3g', required: true),
 ]
 
 fsearch_enums_headers = [
