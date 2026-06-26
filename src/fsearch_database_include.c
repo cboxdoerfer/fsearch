@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "fsearch_database_scan_reason.h"
+#include "fsearch_file_utils.h"
 
 struct _FsearchDatabaseInclude {
     char *path;
@@ -110,7 +111,7 @@ fsearch_database_include_compare(gconstpointer i1, gconstpointer i2) {
     FsearchDatabaseInclude *include1 = *(FsearchDatabaseInclude **)i1;
     FsearchDatabaseInclude *include2 = *(FsearchDatabaseInclude **)i2;
 
-    return include1->id - include2->id;
+    return fsearch_file_utils_cmp_paths(include1->path, include2->path);
 }
 
 FsearchDatabaseInclude *
