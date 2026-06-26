@@ -92,6 +92,9 @@ fsearch_database_include_set_last_scan_reason(FsearchDatabaseInclude *self, Fsea
 gboolean
 fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2);
 
+gboolean
+fsearch_database_include_equal_path(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2);
+
 gint
 fsearch_database_include_compare(gconstpointer i1, gconstpointer i2);
 

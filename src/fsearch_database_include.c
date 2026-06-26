@@ -78,6 +78,19 @@ fsearch_database_include_unref(FsearchDatabaseInclude *self) {
 }
 
 gboolean
+fsearch_database_include_equal_path(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2) {
+    g_return_val_if_fail(i1 != NULL, FALSE);
+    g_return_val_if_fail(i2 != NULL, FALSE);
+    g_return_val_if_fail(i1->ref_count > 0, FALSE);
+    g_return_val_if_fail(i2->ref_count > 0, FALSE);
+
+    if (g_strcmp0(i1->path, i2->path) != 0) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+gboolean
 fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2) {
     g_return_val_if_fail(i1 != NULL, FALSE);
     g_return_val_if_fail(i2 != NULL, FALSE);
