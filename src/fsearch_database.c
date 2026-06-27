@@ -38,6 +38,8 @@ struct _FsearchDatabase {
 
     // The database will be loaded from and saved to this file
     GFile *file;
+    FsearchDatabaseIncludeManager *include_manager;
+    FsearchDatabaseExcludeManager *exclude_manager;
 
     GThread *worker_thread;
     GMainContext *worker_ctx;
@@ -56,7 +58,7 @@ struct _FsearchDatabase {
 
 G_DEFINE_TYPE(FsearchDatabase, fsearch_database, G_TYPE_OBJECT)
 
-enum { PROP_0, PROP_FILE, NUM_PROPERTIES };
+enum { PROP_0, PROP_FILE, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
@@ -293,11 +295,17 @@ database_get_flags(FsearchDatabase *self) {
 
 static FsearchDatabaseExcludeManager *
 database_get_exclude_manager(FsearchDatabase *self) {
+    if (self->exclude_manager) {
+        return g_object_ref(self->exclude_manager);
+    }
     return self->store ? fsearch_database_index_store_get_exclude_manager(self->store) : NULL;
 }
 
 static FsearchDatabaseIncludeManager *
 database_get_include_manager(FsearchDatabase *self) {
+    if (self->include_manager) {
+        return g_object_ref(self->include_manager);
+    }
     return self->store ? fsearch_database_index_store_get_include_manager(self->store) : NULL;
 }
 
@@ -523,6 +531,11 @@ database_set_store(FsearchDatabase *self, FsearchDatabaseIndexStore *store) {
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_index_store_get_include_manager(
         self->store);
+    g_set_object(&self->include_manager, include_manager);
+
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_index_store_get_exclude_manager(
+        self->store);
+    g_set_object(&self->exclude_manager, exclude_manager);
 
     if (self->rescan_manager) {
         fsearch_database_rescan_manager_notify_new_config(self->rescan_manager, include_manager);
@@ -578,7 +591,6 @@ database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
 static void
 database_rescan_sync(FsearchDatabase *db,
-                     const char *file_path,
                      FsearchDatabaseIncludeManager *include_manager,
                      FsearchDatabaseExcludeManager *exclude_manager,
                      FsearchDatabaseIndexPropertyFlags flags) {
@@ -751,11 +763,26 @@ database_load(FsearchDatabase *self) {
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     g_autofree char *file_path = g_file_get_path(self->file);
-    const bool res = fsearch_database_file_load(file_path, NULL, &store, index_store_event_cb, self);
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = database_get_include_manager(self);
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = database_get_exclude_manager(self);
+    if (!include_manager) {
+        include_manager = fsearch_database_include_manager_new_with_defaults();
+    }
+    if (!exclude_manager) {
+        exclude_manager = fsearch_database_exclude_manager_new_with_defaults();
+    }
+
+    const bool res = fsearch_database_file_load(file_path,
+                                                NULL,
+                                                &store,
+                                                include_manager,
+                                                exclude_manager,
+                                                index_store_event_cb,
+                                                self);
 
     if (!res) {
-        store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
-                                                 fsearch_database_exclude_manager_new_with_defaults(),
+        store = fsearch_database_index_store_new(include_manager,
+                                                 exclude_manager,
                                                  database_get_flags(self),
                                                  index_store_event_cb,
                                                  self);
@@ -938,6 +965,8 @@ static void
 fsearch_database_finalize(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
+    g_clear_object(&self->include_manager);
+    g_clear_object(&self->exclude_manager);
     g_clear_object(&self->file);
 
     g_clear_object(&self->cancellable);
@@ -955,6 +984,12 @@ fsearch_database_get_property(GObject *object, guint prop_id, GValue *value, GPa
     case PROP_FILE:
         g_value_set_object(value, self->file);
         break;
+    case PROP_INCLUDE_MANAGER:
+        g_value_set_object(value, self->include_manager);
+        break;
+    case PROP_EXCLUDE_MANAGER:
+        g_value_set_object(value, self->exclude_manager);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
         break;
@@ -968,6 +1003,12 @@ fsearch_database_set_property(GObject *object, guint prop_id, const GValue *valu
     switch (prop_id) {
     case PROP_FILE:
         self->file = g_value_get_object(value);
+        break;
+    case PROP_INCLUDE_MANAGER:
+        self->include_manager = g_value_dup_object(value);
+        break;
+    case PROP_EXCLUDE_MANAGER:
+        self->exclude_manager = g_value_dup_object(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -991,6 +1032,18 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 "default",
                                                 G_TYPE_FILE,
                                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+    properties[PROP_INCLUDE_MANAGER] = g_param_spec_object("include-manager",
+                                                           "Include Manager",
+                                                           "The list of includes this database is initialized with",
+                                                           FSEARCH_TYPE_DATABASE_INCLUDE_MANAGER,
+                                                           G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                               | G_PARAM_STATIC_STRINGS);
+    properties[PROP_EXCLUDE_MANAGER] = g_param_spec_object("exclude-manager",
+                                                           "Exclude Manager",
+                                                           "The list of excludes this database is initialized with",
+                                                           FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER,
+                                                           G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                               | G_PARAM_STATIC_STRINGS);
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -1129,8 +1182,17 @@ fsearch_database_init(FsearchDatabase *self) {
 }
 
 FsearchDatabase *
-fsearch_database_new(GFile *file) {
-    return g_object_new(FSEARCH_TYPE_DATABASE, "file", file, NULL);
+fsearch_database_new(GFile *file,
+                     FsearchDatabaseIncludeManager *include_manager,
+                     FsearchDatabaseExcludeManager *exclude_manager) {
+    return g_object_new(FSEARCH_TYPE_DATABASE,
+                        "file",
+                        file,
+                        "include_manager",
+                        include_manager,
+                        "exclude_manager",
+                        exclude_manager,
+                        NULL);
 }
 
 // endregion
@@ -1231,12 +1293,10 @@ fsearch_database_rescan_blocking(FsearchDatabase *self) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
-    g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
-    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
-    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NONE;
-    fsearch_database_file_load_config(g_file_get_path(self->file), &include_manager, &exclude_manager, &flags);
-    g_autofree char *path = g_file_get_path(self->file);
-    database_rescan_sync(self, path, include_manager, exclude_manager, flags);
+    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                            | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                            | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+    database_rescan_sync(self, self->include_manager, self->exclude_manager, flags);
 
     return FSEARCH_RESULT_SUCCESS;
 }

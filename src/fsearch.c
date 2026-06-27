@@ -456,7 +456,7 @@ fsearch_application_startup(GApplication *app) {
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    self->db = fsearch_database_new(g_steal_pointer(&db_file));
+    self->db = fsearch_database_new(g_steal_pointer(&db_file), self->config->includes, self->config->excludes);
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
@@ -654,15 +654,23 @@ static int
 database_scan_in_local_instance() {
     g_autoptr(GTimer) timer = g_timer_new();
 
+    g_autofree FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
+    g_return_val_if_fail(config, EXIT_FAILURE);
+
+    if (!config_load(config)) {
+        return EXIT_FAILURE;
+    }
+
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file));
+    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file), config->includes, config->excludes);
     FsearchResult result = fsearch_database_rescan_blocking(db);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
 
     g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);
+    g_clear_pointer(&config, config_free);
 
     return result == FSEARCH_RESULT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }

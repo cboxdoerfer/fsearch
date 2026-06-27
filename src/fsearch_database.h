@@ -42,6 +42,8 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfo **info_out);
 
 FsearchDatabase *
-fsearch_database_new(GFile *file);
+fsearch_database_new(GFile *file,
+                     FsearchDatabaseIncludeManager *include_manager,
+                     FsearchDatabaseExcludeManager *exclude_manager);
 
 G_END_DECLS

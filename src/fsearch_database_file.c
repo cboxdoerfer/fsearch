@@ -1205,6 +1205,8 @@ bool
 fsearch_database_file_load(const char *file_path,
                            void (*status_cb)(const char *),
                            FsearchDatabaseIndexStore **store_out,
+                           FsearchDatabaseIncludeManager *config_include_manager,
+                           FsearchDatabaseExcludeManager *config_exclude_manager,
                            FsearchDatabaseIndexStoreEventFunc event_func,
                            void *event_func_user_data) {
     g_return_val_if_fail(file_path, false);
@@ -1254,8 +1256,16 @@ fsearch_database_file_load(const char *file_path,
         g_debug("[db_load] failed to load includes");
         goto load_fail;
     }
+    if (config_include_manager && !fsearch_database_include_manager_equal(include_manager, config_include_manager)) {
+        g_debug("[db_load] includes don't match config. Abort loading.");
+        goto load_fail;
+    }
     if (!database_file_load_excludes(fp, exclude_manager, checksum)) {
         g_debug("[db_load] excludes not loaded");
+        goto load_fail;
+    }
+    if (config_exclude_manager && !fsearch_database_exclude_manager_equal(exclude_manager, config_exclude_manager)) {
+        g_debug("[db_load] excludes don't match config. Abort loading.");
         goto load_fail;
     }
 
