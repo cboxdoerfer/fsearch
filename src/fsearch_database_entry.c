@@ -93,6 +93,14 @@ db_entry_is_file(FsearchDatabaseEntry *entry) {
 }
 
 bool
+db_entry_is_sibling(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_sibling) {
+    if (entry->parent && entry->parent == maybe_sibling->parent) {
+        return true;
+    }
+    return false;
+}
+
+bool
 db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_ancestor) {
     while (entry) {
         if (entry->parent == maybe_ancestor) {

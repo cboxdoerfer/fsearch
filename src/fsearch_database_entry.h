@@ -40,6 +40,9 @@ bool
 db_entry_is_file(FsearchDatabaseEntry *entry);
 
 bool
+db_entry_is_sibling(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_sibling) ;
+
+bool
 db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_ancestor);
 
 uint32_t
