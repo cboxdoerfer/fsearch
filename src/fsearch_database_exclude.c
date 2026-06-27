@@ -41,9 +41,7 @@ fsearch_database_exclude_new(const char *pattern,
         g_autoptr(GError) error = NULL;
         self->regex = g_regex_new(self->pattern, 0, 0, &error);
         if (!self->regex) {
-            g_debug("[exclude] invalid regex pattern '%s': %s",
-                    self->pattern,
-                    error ? error->message : "unknown error");
+            g_debug("[exclude] invalid regex pattern '%s': %s", self->pattern, error ? error->message : "unknown error");
         }
     }
 
@@ -82,7 +80,7 @@ fsearch_database_exclude_equal(FsearchDatabaseExclude *e1, FsearchDatabaseExclud
     g_return_val_if_fail(e2->ref_count > 0, FALSE);
 
     return g_strcmp0(e1->pattern, e2->pattern) == 0 && e1->active == e2->active && e1->type == e2->type
-           && e1->scope == e2->scope && e1->target == e2->target;
+        && e1->scope == e2->scope && e1->target == e2->target;
 }
 
 FsearchDatabaseExclude *
@@ -132,10 +130,7 @@ fsearch_database_exclude_get_target(FsearchDatabaseExclude *self) {
 }
 
 gboolean
-fsearch_database_exclude_matches(FsearchDatabaseExclude *self,
-                                 const char *path,
-                                 const char *basename,
-                                 gboolean is_dir) {
+fsearch_database_exclude_matches(FsearchDatabaseExclude *self, const char *path, const char *basename, gboolean is_dir) {
     g_return_val_if_fail(self != NULL, FALSE);
     g_return_val_if_fail(self->ref_count > 0, FALSE);
     g_return_val_if_fail(path != NULL, FALSE);
@@ -148,8 +143,7 @@ fsearch_database_exclude_matches(FsearchDatabaseExclude *self,
         return FALSE;
     }
 
-    const char *input =
-        self->scope == FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH ? path : basename;
+    const char *input = self->scope == FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH ? path : basename;
 
     switch (self->type) {
     case FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED:
