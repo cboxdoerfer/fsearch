@@ -432,6 +432,10 @@ db_entry_compare_entries_by_position(FsearchDatabaseEntry **a, FsearchDatabaseEn
 
 int
 db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    if (db_entry_is_sibling(*a, *b)) {
+        // same parent hence same path -> sort by name
+        return db_entry_compare_entries_by_name(a, b);
+    }
     FsearchDatabaseEntry *entry_a = *a;
     FsearchDatabaseEntry *entry_b = *b;
     const uint32_t a_n_path_elements = db_entry_get_depth(entry_a) + 1;
