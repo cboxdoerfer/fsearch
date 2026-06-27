@@ -522,7 +522,7 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     int res = 0;
     if (a_depth == b_depth) {
         sort_entry_by_path_recursive(entry_a->parent, entry_b->parent, name_offset, &res);
-        return res == 0 ? db_entry_compare_entries_by_name(a, b) : res;
+        return res;
     }
     else if (a_depth > b_depth) {
         const uint32_t diff = a_depth - b_depth;
