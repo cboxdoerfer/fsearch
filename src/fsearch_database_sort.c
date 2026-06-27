@@ -4,6 +4,8 @@
 
 #include "fsearch_database_entry.h"
 
+#include <glib.h>
+
 static bool
 sort_order_affects_folders(FsearchDatabaseIndexProperty sort_order) {
     if (sort_order == DATABASE_INDEX_PROPERTY_EXTENSION || sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
@@ -168,30 +170,24 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
 }
 
 static int
-compare_by_db_index(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const uint32_t idx_a = db_entry_get_db_index(*a);
-    const uint32_t idx_b = db_entry_get_db_index(*b);
-    return (idx_a > idx_b) - (idx_a < idx_b);
-}
-
-static int
 compare_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    if (db_entry_is_sibling(*a, *b)) {
+        // same parent hence same path and same db index -> sort by name
+        return db_entry_compare_entries_by_name(a, b);
+    }
+
+    // compare by path
     const int res = db_entry_compare_entries_by_path(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
     }
-
-    return compare_by_db_index(a, b);
+    // same path and db index -> compare by name
+    return db_entry_compare_entries_by_name(a, b);
 }
 
 static int
 compare_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const int res = db_entry_compare_entries_by_full_path(a, b);
-    if (G_LIKELY(res != 0)) {
-        return res;
-    }
-
-    return compare_by_db_index(a, b);
+    return db_entry_compare_entries_by_full_path(a, b);
 }
 
 static int
