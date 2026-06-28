@@ -792,7 +792,12 @@ database_load(FsearchDatabase *self) {
     g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
 
     if (self->rescan_manager) {
-        fsearch_database_rescan_manager_trigger_startup_scans(self->rescan_manager);
+        if (!res) {
+            fsearch_database_rescan_manager_request_full_scan(self->rescan_manager);
+        }
+        else {
+            fsearch_database_rescan_manager_trigger_startup_scans(self->rescan_manager);
+        }
     }
 
     signal_emit(self,
