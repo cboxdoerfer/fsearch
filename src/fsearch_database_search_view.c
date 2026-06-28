@@ -301,17 +301,22 @@ search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folder
     fsearch_database_chunked_array_remove_marked_folders(view->folder_chunks);
 
     // Remove it from the selection
-    for (uint32_t i = 0; i < darray_get_num_items(files) && fsearch_selection_get_num_selected(view->file_selection) > 0;
-         ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(files, i);
-        fsearch_selection_unselect(view->file_selection, entry);
+    if (files) {
+        for (uint32_t i = 0;
+             i < darray_get_num_items(files) && fsearch_selection_get_num_selected(view->file_selection) > 0;
+             ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(files, i);
+            fsearch_selection_unselect(view->file_selection, entry);
+        }
     }
     // Remove it from the selection
-    for (uint32_t i = 0;
-         i < darray_get_num_items(folders) && fsearch_selection_get_num_selected(view->folder_selection) > 0;
-         ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(folders, i);
-        fsearch_selection_unselect(view->folder_selection, entry);
+    if (folders) {
+        for (uint32_t i = 0;
+             i < darray_get_num_items(folders) && fsearch_selection_get_num_selected(view->folder_selection) > 0;
+             ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(folders, i);
+            fsearch_selection_unselect(view->folder_selection, entry);
+        }
     }
 }
 
@@ -319,11 +324,50 @@ search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folder
 void
 fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders) {
     g_return_if_fail(view);
+
+    // Use the same match data for all comparisons
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
+
+    g_autoptr(DynamicArray) matching_files = files ? darray_new(darray_get_num_items(files)) : NULL;
+    g_autoptr(DynamicArray) matching_folders = folders ? darray_new(darray_get_num_items(folders)) : NULL;
+
+    // From the files to be added, only select those who match the current query
     if (files) {
-        darray_for_each(files, (DynamicArrayForEachFunc)search_view_result_add, view);
+        const uint32_t num_files = darray_get_num_items(files);
+        for (uint32_t i = 0; i < num_files; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(files, i);
+            if (entry) {
+                fsearch_query_match_data_set_entry(match_data, entry);
+                if (fsearch_query_match(view->query, match_data)) {
+                    darray_add_item(matching_files, entry);
+                }
+            }
+        }
     }
+
+    // From the folders to be added, only select those who match the current query
     if (folders) {
-        darray_for_each(folders, (DynamicArrayForEachFunc)search_view_result_add, view);
+        const uint32_t num_folders = darray_get_num_items(folders);
+        for (uint32_t i = 0; i < num_folders; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(folders, i);
+            if (entry) {
+                fsearch_query_match_data_set_entry(match_data, entry);
+                if (fsearch_query_match(view->query, match_data)) {
+                    darray_add_item(matching_folders, entry);
+                }
+            }
+        }
+    }
+
+    g_clear_pointer(&match_data, fsearch_query_match_data_free);
+
+    // Bulk insert the matches
+    if (matching_files && darray_get_num_items(matching_files) > 0) {
+        fsearch_database_chunked_array_insert_array(view->file_chunks, matching_files);
+    }
+
+    if (matching_folders && darray_get_num_items(matching_folders) > 0) {
+        fsearch_database_chunked_array_insert_array(view->folder_chunks, matching_folders);
     }
 }
 
