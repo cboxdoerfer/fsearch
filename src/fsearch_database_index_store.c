@@ -244,12 +244,23 @@ static void
 index_store_remove_from_store_worker(FsearchDatabaseChunkedArray *chunks, DynamicArray *entries) {
     g_return_if_fail(chunks);
     g_return_if_fail(entries);
-
-    for (uint32_t j = 0; j < darray_get_num_items(entries); ++j) {
-        FsearchDatabaseEntry *entry = darray_get_item(entries, j);
-        if (!fsearch_database_chunked_array_steal(chunks, entry)) {
-            g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-            g_assert_not_reached();
+    const uint32_t num_entries = darray_get_num_items(entries);
+    // TOOD: Do some more testing to find the best way to decide when its worth to remove in bulk or not
+    if (num_entries > 256) {
+        // When removing lots of entries, its usually more efficient to walk the entire list of entries and remove
+        // marked ones in bulk
+        uint32_t removed_entries = fsearch_database_chunked_array_remove_marked_folders(chunks);
+        g_assert(removed_entries == num_entries);
+    }
+    else {
+        // When there are only few entries to be removed, we avoid iterating over the entire list of entires
+        // and instead remove them one by one with binary search lookups
+        for (uint32_t j = 0; j < num_entries; ++j) {
+            FsearchDatabaseEntry *entry = darray_get_item(entries, j);
+            if (!fsearch_database_chunked_array_steal(chunks, entry)) {
+                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+                g_assert_not_reached();
+            }
         }
     }
 }
@@ -1015,6 +1026,10 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     // 5. At the end update the array size to the last write idx + 1
     g_autoptr(DynamicArray) old_files = fsearch_database_index_get_files(old_index);
     g_autoptr(DynamicArray) old_folders = fsearch_database_index_get_folders(old_index);
+    for (uint32_t i = 0; i < darray_get_num_items(old_folders); ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(old_folders, i);
+        db_entry_set_mark(entry, 1);
+    }
     index_store_remove_entries_locked(store, old_files, old_folders);
 
     fsearch_database_index_unlock(old_index);

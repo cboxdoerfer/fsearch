@@ -297,6 +297,7 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
 
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry) {
+    return entry ? ((entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MARKED) != 0) : 0;
     return entry ? entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MARKED : 0;
 }
 

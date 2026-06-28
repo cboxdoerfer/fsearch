@@ -303,6 +303,127 @@ fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchD
     return NULL;
 }
 
+static inline bool
+is_marked(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
+    if (type == DATABASE_ENTRY_TYPE_FILE) {
+        if (db_entry_get_mark(entry) == 1) {
+            return true;
+        }
+        entry = db_entry_get_parent(entry);
+    }
+    if (!entry) {
+        return false;
+    }
+    return db_entry_get_mark(entry) == 1 ? true : false;
+}
+
+// TODO: Refactor to avoid code duplication
+DynamicArray *
+fsearch_database_chunked_array_steal_marked_folders(FsearchDatabaseChunkedArray *self) {
+    g_return_val_if_fail(self, 0);
+
+    uint32_t chunk_idx = 0;
+    uint32_t entry_start_idx = 0;
+
+    DynamicArray *marked_entries = darray_new(128);
+
+    while (chunk_idx < darray_get_num_items(self->chunks)) {
+        DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
+        uint32_t entry_idx = entry_start_idx;
+        while (entry_idx < darray_get_num_items(chunk)) {
+            FsearchDatabaseEntry *maybe_marked = darray_get_item(chunk, entry_idx);
+            if (is_marked(maybe_marked, self->entry_type)) {
+                uint32_t n_elements = 1;
+
+                // Peek ahead to find the full contiguous block of marked_entries
+                while (entry_idx + n_elements < darray_get_num_items(chunk)) {
+                    FsearchDatabaseEntry *next_entry = darray_get_item(chunk, entry_idx + n_elements);
+                    if (!is_marked(next_entry, self->entry_type)) {
+                        break; // End of contiguous block
+                    }
+                    n_elements++;
+                }
+
+                // Steal the entire contiguous block at once to minimize memmoves
+                darray_steal(chunk, entry_idx, n_elements, marked_entries);
+
+                // Note: Do NOT increment entry_idx here.
+                // Stealing the elements shifts the rest of the array left,
+                // so the next unchecked item naturally falls into the current entry_idx.
+            }
+            else {
+                // Only move forward if we didn't remove anything
+                entry_idx++;
+            }
+        }
+        // Remove the chunk if it became empty
+        if (darray_get_num_items(chunk) == 0) {
+            darray_remove(self->chunks, chunk_idx, 1);
+            g_clear_pointer(&chunk, darray_unref);
+        }
+        else {
+            chunk_idx++;
+        }
+        // We must set the start index back to zero before we move on to the next entry chunk
+        entry_start_idx = 0;
+    }
+
+    self->num_entries -= darray_get_num_items(marked_entries);
+    return marked_entries;
+}
+
+uint32_t
+fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self) {
+    g_return_val_if_fail(self, 0);
+
+    uint32_t chunk_idx = 0;
+    uint32_t entry_start_idx = 0;
+    uint32_t removed_entries = 0;
+    while (chunk_idx < darray_get_num_items(self->chunks)) {
+        DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
+        uint32_t entry_idx = entry_start_idx;
+        while (entry_idx < darray_get_num_items(chunk)) {
+            FsearchDatabaseEntry *maybe_marked = darray_get_item(chunk, entry_idx);
+            if (is_marked(maybe_marked, self->entry_type)) {
+                uint32_t n_elements = 1;
+
+                // Peek ahead to find the full contiguous block of marked_entries
+                while (entry_idx + n_elements < darray_get_num_items(chunk)) {
+                    FsearchDatabaseEntry *next_entry = darray_get_item(chunk, entry_idx + n_elements);
+                    if (!is_marked(next_entry, self->entry_type)) {
+                        break; // End of contiguous block
+                    }
+                    n_elements++;
+                }
+
+                // Steal the entire contiguous block at once to minimize memmoves
+                removed_entries += darray_remove(chunk, entry_idx, n_elements);
+
+                // Note: Do NOT increment entry_idx here.
+                // Stealing the elements shifts the rest of the array left,
+                // so the next unchecked item naturally falls into the current entry_idx.
+            }
+            else {
+                // Only move forward if we didn't remove anything
+                entry_idx++;
+            }
+        }
+        // Remove the chunk if it became empty
+        if (darray_get_num_items(chunk) == 0) {
+            darray_remove(self->chunks, chunk_idx, 1);
+            g_clear_pointer(&chunk, darray_unref);
+        }
+        else {
+            chunk_idx++;
+        }
+        // We must set the start index back to zero before we move on to the next entry chunk
+        entry_start_idx = 0;
+    }
+
+    self->num_entries -= removed_entries;
+    return removed_entries;
+}
+
 DynamicArray *
 fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
                                                  FsearchDatabaseEntry *folder,

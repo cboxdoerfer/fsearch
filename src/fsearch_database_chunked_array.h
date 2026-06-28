@@ -50,6 +50,12 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
                                                  FsearchDatabaseEntry *folder,
                                                  int32_t num_known_descendants);
 
+uint32_t
+fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self);
+
+DynamicArray *
+fsearch_database_chunked_array_steal_marked_folders(FsearchDatabaseChunkedArray *self);
+
 FsearchDatabaseEntry *
 fsearch_database_chunked_array_find(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);
 

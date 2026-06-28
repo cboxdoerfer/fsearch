@@ -358,6 +358,7 @@ remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEnt
 
     g_autoptr(DynamicArray) files = darray_new(1);
     darray_add_item(files, entry);
+    db_entry_set_mark(entry, 1);
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
 
@@ -376,21 +377,19 @@ remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseE
     // 2. Notify listeners about the removal of all descendants and the folder
     // 3. Unparent, unwatch and free all entries
 
+    // Don't forget to mark the folder itself for removal
+    db_entry_set_mark(folder_entry_to_remove, 1);
+
     g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_steal_descendants(self->folder_chunks,
                                                                                        folder_entry_to_remove,
                                                                                        -1);
 
-    // It's worth iterating over all folders to calculate the exact number of file descendants we must find,
-    // because this means we can steal the files in huge chunks, which is much faster.
-    uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
     for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
         FsearchDatabaseEntry *folder_entry = darray_get_item(folders, i);
-        num_file_descendants += db_entry_folder_get_num_files(folder_entry);
+        db_entry_set_mark(folder_entry, 1);
     }
-
-    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_steal_descendants(self->file_chunks,
-                                                                                     folder_entry_to_remove,
-                                                                                     (int32_t)num_file_descendants);
+    // TODO: Rely on num_files to steal descendants instead
+    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_steal_marked_folders(self->file_chunks);
 
     num_descendant_counted++;
     g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
