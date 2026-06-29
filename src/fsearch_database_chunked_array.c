@@ -40,6 +40,7 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseChunkedArray,
                     fsearch_database_chunked_array_unref)
 
 #define TARGET_CHUNK_SIZE 2048
+#define MIN_ENTRIES_FOR_BULK_INSERT 8192
 
 static int32_t
 chunk_compare_func(DynamicArray **chunk_ptr, FsearchDatabaseEntry **entry_ptr, FsearchDatabaseChunkedArray *self) {
@@ -252,15 +253,125 @@ fsearch_database_chunked_array_insert(FsearchDatabaseChunkedArray *self, Fsearch
     balance_chunk(self, chunk, chunk_idx);
 }
 
+static DynamicArray *
+get_next_nonempty_chunk(DynamicArray *chunks, uint32_t start_chunk_idx, uint32_t *out_chunk_idx) {
+    while (start_chunk_idx < darray_get_num_items(chunks)) {
+        DynamicArray *chunk = darray_get_item(chunks, start_chunk_idx);
+        if (darray_get_num_items(chunk) > 0) {
+            *out_chunk_idx = start_chunk_idx;
+            return chunk;
+        }
+        start_chunk_idx++;
+    }
+    return NULL;
+}
+
 void
 fsearch_database_chunked_array_insert_array(FsearchDatabaseChunkedArray *self, DynamicArray *array) {
     g_return_if_fail(self);
     g_return_if_fail(array);
 
-    for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(array, i);
-        fsearch_database_chunked_array_insert(self, entry);
+    const uint32_t num_new_entries = darray_get_num_items(array);
+    if (num_new_entries == 0) {
+        return;
     }
+
+    // If the number of items being inserted is small,
+    // the overhead of flattening/merging isn't worth it.
+    // Fall back to lookups + memmoves.
+    const uint64_t individual_insertion_cost = num_new_entries * self->target_chunk_size;
+    const uint64_t bulk_insertion_cost = num_new_entries + self->num_entries;
+    if ((num_new_entries < MIN_ENTRIES_FOR_BULK_INSERT || individual_insertion_cost < bulk_insertion_cost)) {
+        for (uint32_t i = 0; i < num_new_entries; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(array, i);
+            fsearch_database_chunked_array_insert(self, entry);
+        }
+        // g_print("slow array insert: %f\n", g_timer_elapsed(timer, NULL));
+        return;
+    }
+
+    g_autoptr(DynamicArray) sorted_new_entries = darray_copy_borrowed(array);
+    darray_sort(sorted_new_entries, self->entry_comp_func, NULL, self->compare_context);
+
+    // Calculate the exact even distribution of our new chunks
+    const uint32_t total_entries = self->num_entries + num_new_entries;
+    const uint32_t num_chunks_target = ceil(total_entries / (double)self->target_chunk_size);
+    const uint32_t num_items_per_chunk = floor(total_entries / (double)num_chunks_target);
+
+    g_autoptr(DynamicArray) new_chunks = darray_new(num_chunks_target);
+
+    // Allocate slightly extra space in case the final chunk absorbs the remainder
+    g_autoptr(DynamicArray) current_chunk = darray_new_full(num_items_per_chunk + 2, self->entry_free_func);
+    uint32_t chunks_created = 0;
+
+    uint32_t old_chunk_idx = 0;
+    uint32_t old_entry_idx = 0;
+    uint32_t new_entry_idx = 0;
+
+    // Find the first chunk which actually contains entries
+    DynamicArray *current_old_chunk = get_next_nonempty_chunk(self->chunks, old_chunk_idx, &old_chunk_idx);
+
+    // Merge directly into evenly-sized chunks
+    while (current_old_chunk != NULL || new_entry_idx < num_new_entries) {
+        void *entry_to_add = NULL;
+
+        if (current_old_chunk != NULL && new_entry_idx < num_new_entries) {
+            // Find entry to insert
+            void *entry_old = darray_get_item(current_old_chunk, old_entry_idx);
+            void *entry_new = darray_get_item(sorted_new_entries, new_entry_idx);
+
+            if (self->entry_comp_func(&entry_old, &entry_new, self->compare_context) <= 0) {
+                entry_to_add = entry_old;
+                old_entry_idx++;
+            }
+            else {
+                entry_to_add = entry_new;
+                new_entry_idx++;
+            }
+        }
+        else if (current_old_chunk != NULL) {
+            entry_to_add = darray_get_item(current_old_chunk, old_entry_idx);
+            old_entry_idx++;
+        }
+        else {
+            entry_to_add = darray_get_item(sorted_new_entries, new_entry_idx);
+            new_entry_idx++;
+        }
+
+        // Advance to the next old chunk if we've exhausted the current one
+        if (current_old_chunk != NULL && old_entry_idx >= darray_get_num_items(current_old_chunk)) {
+            old_chunk_idx++;
+            current_old_chunk = get_next_nonempty_chunk(self->chunks, old_chunk_idx, &old_chunk_idx);
+            old_entry_idx = 0;
+        }
+
+        // Add the "smaller" entry to our new chunk
+        darray_add_item(current_chunk, entry_to_add);
+
+        // Add the chunk if it hits the calculated even size
+        // Ensure the very last chunk is allowed to absorb a few more entries
+        if (darray_get_num_items(current_chunk) == num_items_per_chunk && chunks_created < num_chunks_target - 1) {
+            darray_add_item(new_chunks, g_steal_pointer(&current_chunk));
+            chunks_created++;
+            current_chunk = darray_new_full(num_items_per_chunk + 2, self->entry_free_func);
+        }
+    }
+
+    // Add the final remainder chunk
+    if (darray_get_num_items(current_chunk) > 0) {
+        darray_add_item(new_chunks, g_steal_pointer(&current_chunk));
+    }
+
+    // Clean up old chunks (preventing entries from being freed)
+    for (uint32_t c = 0; c < darray_get_num_items(self->chunks); ++c) {
+        DynamicArray *chunk = darray_get_item(self->chunks, c);
+        darray_set_free_func(chunk, NULL);
+    }
+    g_clear_pointer(&self->chunks, darray_unref);
+
+    // Commit the new chunk array
+    self->chunks = g_steal_pointer(&new_chunks);
+    self->num_entries = total_entries;
 }
 
 FsearchDatabaseEntry *
