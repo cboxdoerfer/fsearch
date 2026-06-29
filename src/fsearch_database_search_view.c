@@ -374,7 +374,7 @@ fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *
 void
 fsearch_database_search_view_remove(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders) {
     g_return_if_fail(view);
-    search_view_results_remove(view, files, folders);
+    search_view_results_remove(view, folders, files);
 }
 
 // Getters
