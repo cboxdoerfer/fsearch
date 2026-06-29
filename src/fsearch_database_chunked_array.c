@@ -284,6 +284,7 @@ fsearch_database_chunked_array_find(FsearchDatabaseChunkedArray *self, FsearchDa
 FsearchDatabaseEntry *
 fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(self, NULL);
+    g_assert(db_entry_get_type(entry) == self->entry_type);
     g_return_val_if_fail(db_entry_get_type(entry) == self->entry_type, NULL);
 
     if (self->num_entries == 0) {
