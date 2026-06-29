@@ -6,8 +6,8 @@
 
 #include <config.h>
 #include <fcntl.h>
-#include <glib.h>
 #include <glib-unix.h>
+#include <glib.h>
 #include <linux/fanotify.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -18,7 +18,6 @@
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <unistd.h>
-
 
 #define FANOTIFY_FOLDER_MASK                                                                                           \
     (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
@@ -66,27 +65,24 @@ typedef struct {
     char absent_symbol;
 } FanotifyFlag;
 
-static const FanotifyFlag FANOTIFY_FLAGS[] = {
-    {FAN_CREATE, 'c', '-'},
-    {FAN_CLOSE_WRITE, 'w', '-'},
-    {FAN_ATTRIB, 'a', '-'},
-    {FAN_DELETE, 'd', '-'},
-    {FAN_DELETE_SELF, 'D', '-'},
-    {FAN_MOVED_TO, 'm', '-'},
-    {FAN_MOVED_FROM, 'M', '-'},
-    {FAN_MOVE_SELF, 'S', '-'},
-    {FAN_EVENT_ON_CHILD, 'o', '-'},
-    {FAN_ONDIR, '+', '-'}
-};
+static const FanotifyFlag FANOTIFY_FLAGS[] = {{FAN_CREATE, 'c', '-'},
+                                              {FAN_CLOSE_WRITE, 'w', '-'},
+                                              {FAN_ATTRIB, 'a', '-'},
+                                              {FAN_DELETE, 'd', '-'},
+                                              {FAN_DELETE_SELF, 'D', '-'},
+                                              {FAN_MOVED_TO, 'm', '-'},
+                                              {FAN_MOVED_FROM, 'M', '-'},
+                                              {FAN_MOVE_SELF, 'S', '-'},
+                                              {FAN_EVENT_ON_CHILD, 'o', '-'},
+                                              {FAN_ONDIR, '+', '-'}};
 
 static void
 print_fanotify_mask(uint32_t mask) {
     const size_t num_flags = G_N_ELEMENTS(FANOTIFY_FLAGS);
 
     for (size_t i = 0; i < num_flags; i++) {
-        uint8_t symbol = (mask & FANOTIFY_FLAGS[i].flag)
-                             ? FANOTIFY_FLAGS[i].present_symbol
-                             : FANOTIFY_FLAGS[i].absent_symbol;
+        uint8_t symbol = (mask & FANOTIFY_FLAGS[i].flag) ? FANOTIFY_FLAGS[i].present_symbol
+                                                         : FANOTIFY_FLAGS[i].absent_symbol;
         g_print("%c", symbol);
     }
 }
@@ -115,12 +111,9 @@ queue_monitor_event(GAsyncQueue *event_queue,
                     FsearchDatabaseEntry *watched_entry,
                     int event_type,
                     bool is_dir) {
-    g_async_queue_push(event_queue,
-                       fsearch_folder_monitor_event_new(file_name,
-                                                        watched_entry,
-                                                        event_type,
-                                                        FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                        is_dir));
+    g_async_queue_push(
+        event_queue,
+        fsearch_folder_monitor_event_new(file_name, watched_entry, event_type, FSEARCH_FOLDER_MONITOR_FANOTIFY, is_dir));
 }
 
 static gboolean
@@ -177,8 +170,8 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 file_name = NULL;
             }
 
-            //print_fanotify_mask(metadata->mask);
-            //g_print(": %s\n", file_name ? file_name : "UNKNOWN");
+            // print_fanotify_mask(metadata->mask);
+            // g_print(": %s\n", file_name ? file_name : "UNKNOWN");
 
             if (!watched_entry) {
                 g_debug("[fanotify_listener] no watched entry for handle found: %llu -> %s",
@@ -209,30 +202,18 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             if (has_multiple_create_delete_events(metadata->mask)) {
                 // There's no way to know in which order those events happened, hence we must do a rescan.
                 g_print("multiple create/delete events: %s\n", file_name ? file_name : ".");
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_RESCAN,
-                                    is_dir);
+                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_RESCAN, is_dir);
                 // We can skip other events in the same mask here, since we're going to rescan the file/folder anyway
                 continue;
             }
 
             if (metadata->mask & FAN_CREATE) {
                 self->skip_attrib = true;
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_CREATE,
-                                    is_dir);
+                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_CREATE, is_dir);
             }
             if (metadata->mask & FAN_DELETE) {
                 self->skip_attrib = true;
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
-                                    is_dir);
+                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_DELETE, is_dir);
             }
             if (metadata->mask & FAN_MOVED_FROM) {
                 self->skip_attrib = true;
@@ -300,8 +281,7 @@ fsearch_folder_monitor_fanotify_new(GMainContext *monitor_context, GAsyncQueue *
     self->event_queue = g_async_queue_ref(event_queue);
 
     self->handles_to_folders = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
-    self->folders_to_handles =
-        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)g_bytes_unref);
+    self->folders_to_handles = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)g_bytes_unref);
 
     self->monitor_context = monitor_context;
 
@@ -340,9 +320,7 @@ fsearch_folder_monitor_fanotify_free(FsearchFolderMonitorFanotify *self) {
 }
 
 bool
-fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
-                                      FsearchDatabaseEntry *folder,
-                                      const char *path) {
+fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder, const char *path) {
     g_assert(folder != NULL);
     struct statfs buf;
     if (statfs(path, &buf) < 0) {
@@ -351,8 +329,9 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
         return false;
     }
 
-    g_autofree FsearchDatabaseIndexHandleData *handle_data =
-        calloc(1, sizeof(FsearchDatabaseIndexHandleData) + self->file_handle_payload);
+    g_autofree FsearchDatabaseIndexHandleData *handle_data = calloc(1,
+                                                                    sizeof(FsearchDatabaseIndexHandleData)
+                                                                        + self->file_handle_payload);
 
     while (true) {
         int32_t mntid = -1;
