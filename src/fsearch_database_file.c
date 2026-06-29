@@ -982,6 +982,10 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_debug("[db_save] updating folder indices...");
     folder_chunks = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
     folders = fsearch_database_chunked_array_get_joined(folder_chunks);
+    if (!folders) {
+        g_debug("[db_save] failed saving. DB has no folders.");
+        goto save_fail;
+    }
     update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
