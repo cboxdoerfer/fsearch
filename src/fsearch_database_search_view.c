@@ -296,28 +296,33 @@ search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *v
 }
 
 static void
-search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folders, DynamicArray *files) {
-    fsearch_database_chunked_array_remove_marked_folders(view->file_chunks);
-    fsearch_database_chunked_array_remove_marked_folders(view->folder_chunks);
+remove_results(DynamicArray *entries_to_remove,
+               FsearchDatabaseChunkedArray *chunks_to_remove_from,
+               GHashTable *selection_to_remove_from) {
+    if (!entries_to_remove) {
+        return;
+    }
+    const uint32_t num_entries = darray_get_num_items(entries_to_remove);
+    if (num_entries < 256) {
+        for (uint32_t i = 0; i < num_entries; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(entries_to_remove, i);
+            fsearch_database_chunked_array_steal(chunks_to_remove_from, entry);
+            fsearch_selection_unselect(selection_to_remove_from, entry);
+        }
+    }
+    else {
+        fsearch_database_chunked_array_remove_marked_folders(chunks_to_remove_from);
+        for (uint32_t i = 0; i < num_entries && fsearch_selection_get_num_selected(selection_to_remove_from) > 0; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(entries_to_remove, i);
+            fsearch_selection_unselect(selection_to_remove_from, entry);
+        }
+    }
+}
 
-    // Remove it from the selection
-    if (files) {
-        for (uint32_t i = 0;
-             i < darray_get_num_items(files) && fsearch_selection_get_num_selected(view->file_selection) > 0;
-             ++i) {
-            FsearchDatabaseEntry *entry = darray_get_item(files, i);
-            fsearch_selection_unselect(view->file_selection, entry);
-        }
-    }
-    // Remove it from the selection
-    if (folders) {
-        for (uint32_t i = 0;
-             i < darray_get_num_items(folders) && fsearch_selection_get_num_selected(view->folder_selection) > 0;
-             ++i) {
-            FsearchDatabaseEntry *entry = darray_get_item(folders, i);
-            fsearch_selection_unselect(view->folder_selection, entry);
-        }
-    }
+static void
+search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folders, DynamicArray *files) {
+    remove_results(files, view->file_chunks, view->file_selection);
+    remove_results(folders, view->folder_chunks, view->folder_selection);
 }
 
 // Manipulation
