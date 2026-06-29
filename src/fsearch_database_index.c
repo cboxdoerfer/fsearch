@@ -583,7 +583,9 @@ static void
 process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     event->watched_entry = fsearch_database_chunked_array_find(self->folder_chunks, event->watched_entry_copy);
     if (!event->watched_entry) {
-        g_debug("Watched entry no longer present!");
+        g_debug("Watched entry no longer present: (%s) %s",
+                fsearch_folder_monitor_event_kind_to_string(event->event_kind),
+                db_entry_get_name_raw(event->watched_entry_copy));
         return;
     }
 
