@@ -649,7 +649,7 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
         insertion_sort(array, comp_func, data);
     }
     else {
-        g_debug("[sort] merge sort: %d\n", array->num_items);
+        g_debug("[sort] merge sort: %d", array->num_items);
         merge_sort(array, cancellable, comp_func, data);
     }
 }

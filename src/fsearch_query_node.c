@@ -252,7 +252,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     qnode->flags = flags;
 
     if (pcre2_jit_compile(regex, PCRE2_JIT_COMPLETE) != 0) {
-        g_debug("[regex] JIT compilation failed.\n");
+        g_debug("[regex] JIT compilation failed.");
         qnode->regex_jit_available = false;
     }
     else {
