@@ -545,11 +545,22 @@ db_entry_update_folder_size(FsearchDatabaseEntry *folder, off_t size) {
         return;
     }
     g_assert(db_entry_is_folder(folder));
-    off_t old_size = 0;
-    db_entry_get_attribute(folder, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
-    old_size += size;
-    db_entry_set_attribute(folder, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
-    db_entry_update_folder_size(folder->parent, size);
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(folder->attribute_flags, DATABASE_INDEX_PROPERTY_SIZE, &offset)) {
+        off_t old_size = 0;
+
+        db_entry_get_attribute_for_offset(folder, offset, &old_size, sizeof(old_size));
+
+        if (size < 0 && old_size + size < 0) {
+            g_warning("[db_entry] size to be set below zero. Set to zero instead.");
+            old_size = 0;
+        }
+        else {
+            old_size += size;
+        }
+        db_entry_set_attribute_for_offset(folder, offset, &old_size, sizeof(old_size));
+        db_entry_update_folder_size(folder->parent, size);
+    }
 }
 
 int
@@ -576,12 +587,14 @@ db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime) {
 
 void
 db_entry_set_size(FsearchDatabaseEntry *entry, off_t size) {
-
     off_t old_size = 0;
-    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
-    if (old_size != size) {
-        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
-        db_entry_update_folder_size(entry->parent, size - old_size);
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_SIZE, &offset)) {
+        db_entry_get_attribute_for_offset(entry, offset, &old_size, sizeof(old_size));
+        if (old_size != size) {
+            db_entry_set_attribute_for_offset(entry, offset, &size, sizeof(size));
+            db_entry_update_folder_size(entry->parent, size - old_size);
+        }
     }
 }
 
@@ -595,37 +608,49 @@ db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
 static inline void
 decrement_num_files(FsearchDatabaseEntry *entry) {
     uint32_t num_files = 0;
-    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
-    if (num_files > 0) {
-        num_files -= 1;
-        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NUM_FILES, &offset)) {
+        db_entry_get_attribute_for_offset(entry, offset, &num_files, sizeof(num_files));
+        if (num_files > 0) {
+            num_files -= 1;
+            db_entry_set_attribute_for_offset(entry, offset, &num_files, sizeof(num_files));
+        }
     }
 }
 
 static inline void
 decrement_num_folders(FsearchDatabaseEntry *entry) {
     uint32_t num_folders = 0;
-    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
-    if (num_folders > 0) {
-        num_folders -= 1;
-        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &offset)) {
+        db_entry_get_attribute_for_offset(entry, offset, &num_folders, sizeof(num_folders));
+        if (num_folders > 0) {
+            num_folders -= 1;
+            db_entry_set_attribute_for_offset(entry, offset, &num_folders, sizeof(num_folders));
+        }
     }
 }
 
 static inline void
 increment_num_files(FsearchDatabaseEntry *entry) {
     uint32_t num_files = 0;
-    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
-    num_files += 1;
-    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NUM_FILES, &offset)) {
+        db_entry_get_attribute_for_offset(entry, offset, &num_files, sizeof(num_files));
+        num_files += 1;
+        db_entry_set_attribute_for_offset(entry, offset, &num_files, sizeof(num_files));
+    }
 }
 
 static inline void
 increment_num_folders(FsearchDatabaseEntry *entry) {
     uint32_t num_folders = 0;
-    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
-    num_folders += 1;
-    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    size_t offset = 0;
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &offset)) {
+        db_entry_get_attribute_for_offset(entry, offset, &num_folders, sizeof(num_folders));
+        num_folders += 1;
+        db_entry_set_attribute_for_offset(entry, offset, &num_folders, sizeof(num_folders));
+    }
 }
 
 void
@@ -941,7 +966,7 @@ db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offse
 }
 
 void
-db_entry_get_attribute_for_offest(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size) {
+db_entry_get_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size) {
     g_return_if_fail(entry);
     g_return_if_fail(dest);
     memcpy(dest, entry->attributes + offset, size);
@@ -957,6 +982,11 @@ db_entry_get_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty
         return true;
     }
     return false;
+}
+
+void
+db_entry_set_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *src, size_t size) {
+    memcpy(entry->attributes + offset, src, size);
 }
 
 bool
