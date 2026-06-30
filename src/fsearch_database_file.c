@@ -362,7 +362,7 @@ database_file_load_files(FILE *fp,
         }
 
         FsearchDatabaseEntry *parent = darray_get_item(folders, parent_idx);
-        db_entry_set_parent(entry, parent);
+        db_entry_set_parent_update_childcount(entry, parent);
 
         darray_add_item(files, g_steal_pointer(&entry));
     }
@@ -1328,7 +1328,9 @@ fsearch_database_file_load(const char *file_path,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *folder = darray_get_item(folders, i);
         const uint32_t parent_idx = GPOINTER_TO_UINT(db_entry_get_parent(folder));
-        db_entry_set_parent_no_update(folder, parent_idx == UINT32_MAX ? NULL : darray_get_item(folders, parent_idx));
+        FsearchDatabaseEntry *parent = parent_idx == UINT32_MAX ? NULL : darray_get_item(folders, parent_idx);
+        db_entry_set_parent_no_update(folder, parent);
+        db_entry_increment_childcount(parent, DATABASE_ENTRY_TYPE_FOLDER);
     }
 
     if (status_cb) {
