@@ -35,8 +35,6 @@ struct FsearchFolderMonitorFanotify {
     int32_t fd;
 
     ssize_t file_handle_payload;
-    int32_t skip_create_delete;
-    int32_t skip_attrib;
 
     GMutex mutex;
 };
@@ -181,10 +179,11 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
 
             const bool is_dir = metadata->mask & FAN_ONDIR ? true : false;
+            bool skip_attrib = false;
 
             // Always push MOVE_SELF and DELETE_SELF
             if (metadata->mask & FAN_MOVE_SELF) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
                                     watched_entry,
@@ -192,7 +191,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                                     is_dir);
             }
             if (metadata->mask & FAN_DELETE_SELF) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
                                     watched_entry,
@@ -208,15 +207,15 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
 
             if (metadata->mask & FAN_CREATE) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_CREATE, is_dir);
             }
             if (metadata->mask & FAN_DELETE) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_DELETE, is_dir);
             }
             if (metadata->mask & FAN_MOVED_FROM) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
                                     watched_entry,
@@ -224,14 +223,14 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                                     is_dir);
             }
             if (metadata->mask & FAN_MOVED_TO) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
                                     watched_entry,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO,
                                     is_dir);
             }
-            if (!self->skip_attrib) {
+            if (!skip_attrib) {
                 if (metadata->mask & FAN_ATTRIB) {
                     queue_monitor_event(self->event_queue,
                                         file_name,
