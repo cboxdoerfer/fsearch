@@ -635,6 +635,50 @@ db_entry_set_parent_no_update(FsearchDatabaseEntry *entry, FsearchDatabaseEntry 
 }
 
 void
+db_entry_increment_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
+    if (!entry) {
+        return;
+    }
+    g_assert(db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER);
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
+        increment_num_folders(entry);
+    }
+    else if (type == DATABASE_ENTRY_TYPE_FILE) {
+        increment_num_files(entry);
+    }
+}
+
+void
+db_entry_set_parent_update_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
+    g_return_if_fail(entry != NULL);
+    if (entry->parent) {
+        // The entry already has a parent. First un-parent it and update its current parents state:
+        // * Decrement file/folder count
+        FsearchDatabaseEntry *p = entry->parent;
+        if (db_entry_is_folder(entry)) {
+            decrement_num_folders(p);
+        }
+        else if (db_entry_is_file(entry)) {
+            decrement_num_files(p);
+        }
+    }
+
+    if (parent) {
+        // parent is non-NULL, increment its file/folder count
+        g_assert(db_entry_is_folder(parent));
+        if (db_entry_is_folder(entry)) {
+            uint32_t num_folders = 0;
+            db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+            increment_num_folders(parent);
+        }
+        else if (db_entry_is_file(entry)) {
+            increment_num_files(parent);
+        }
+    }
+    entry->parent = parent;
+}
+
+void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
     g_return_if_fail(entry != NULL);
     if (entry->parent) {

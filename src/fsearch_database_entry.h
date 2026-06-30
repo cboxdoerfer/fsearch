@@ -73,6 +73,12 @@ void
 db_entry_set_parent_no_update(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
 
 void
+db_entry_increment_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
+
+void
+db_entry_set_parent_update_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
+
+void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
 
 void
