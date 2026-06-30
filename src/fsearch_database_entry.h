@@ -212,7 +212,7 @@ const char *
 db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offset);
 
 void
-db_entry_get_attribute_for_offest(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size);
+db_entry_get_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size);
 
 bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,

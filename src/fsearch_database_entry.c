@@ -667,8 +667,6 @@ db_entry_set_parent_update_childcount(FsearchDatabaseEntry *entry, FsearchDataba
         // parent is non-NULL, increment its file/folder count
         g_assert(db_entry_is_folder(parent));
         if (db_entry_is_folder(entry)) {
-            uint32_t num_folders = 0;
-            db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
             increment_num_folders(parent);
         }
         else if (db_entry_is_file(entry)) {
