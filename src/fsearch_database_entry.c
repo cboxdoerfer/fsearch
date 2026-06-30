@@ -576,7 +576,13 @@ db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime) {
 
 void
 db_entry_set_size(FsearchDatabaseEntry *entry, off_t size) {
-    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
+
+    off_t old_size = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
+    if (old_size != size) {
+        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
+        db_entry_update_folder_size(entry->parent, size - old_size);
+    }
 }
 
 void
