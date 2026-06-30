@@ -363,6 +363,7 @@ remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEnt
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
 
     num_file_deletes++;
+    db_entry_set_parent(entry, NULL);
     g_clear_pointer(&entry, db_entry_free);
 }
 
@@ -424,6 +425,8 @@ remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseE
         }
         // The last folder (the one explicitly deleted) needs to be freed normally
         FsearchDatabaseEntry *last_folder = darray_get_item(folders, darray_get_num_items(folders) - 1);
+        // We must unparent this folder so its parent can update its childcount and size
+        db_entry_set_parent(last_folder, NULL);
         g_clear_pointer(&last_folder, db_entry_free);
 
         num_folder_deletes += darray_get_num_items(folders);
