@@ -647,11 +647,9 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
         else if (db_entry_is_file(entry)) {
             decrement_num_files(p);
         }
-        // * Update the size
-        // while (p) {
-        //    p->super.size = p->super.size > entry->size ? p->super.size - entry->size : 0;
-        //    p = p->super.parent;
-        //}
+        off_t size = 0;
+        db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
+        db_entry_update_folder_size(p, -size);
     }
 
     if (parent) {
@@ -663,12 +661,10 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
         else if (db_entry_is_file(entry)) {
             increment_num_files(parent);
         }
-        // * Update the size
-        // FsearchDatabaseEntryFolder *p = parent;
-        // while (p) {
-        //    p->super.size += entry->size;
-        //    p = p->super.parent;
-        //}
+
+        off_t size = 0;
+        db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
+        db_entry_update_folder_size(parent, size);
     }
     entry->parent = parent;
 }
