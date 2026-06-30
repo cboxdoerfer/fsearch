@@ -826,7 +826,8 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
     va_list args;
     va_start(args, type);
 
-    FsearchDatabaseEntry *entry = db_entry_new(attribute_flags, name, parent, type);
+    // Set Parent to NULL. We will set the parent anyway after setting all the attributes
+    FsearchDatabaseEntry *entry = db_entry_new(attribute_flags, name, NULL, type);
 
     FsearchDatabaseIndexProperty attribute = va_arg(args, int);
     while (attribute != DATABASE_INDEX_PROPERTY_NONE) {
@@ -866,6 +867,12 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
     }
 
     va_end(args);
+
+    // Set parent at the end after all properties have ben set. This ensures that the entry has the correct size
+    // and the parent entry size is updated properly
+    if (parent) {
+        db_entry_set_parent(entry, parent);
+    }
 
     return entry;
 }
