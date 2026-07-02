@@ -68,7 +68,7 @@ void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store);
 
 FsearchDatabaseIndex *
-fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, uint32_t index_id);
+fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, const char *path);
 
 bool
 fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *new_index);

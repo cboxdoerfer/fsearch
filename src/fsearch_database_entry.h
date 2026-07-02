@@ -81,9 +81,6 @@ db_entry_set_parent_update_childcount(FsearchDatabaseEntry *entry, FsearchDataba
 void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
 
-void
-db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
-
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry);
 
@@ -96,14 +93,14 @@ db_entry_get_idx(FsearchDatabaseEntry *entry);
 uint32_t
 db_entry_get_depth(FsearchDatabaseEntry *entry);
 
-uint32_t
-db_entry_get_db_index(FsearchDatabaseEntry *entry);
-
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);
 
 GString *
 db_entry_get_path_full(FsearchDatabaseEntry *entry);
+
+const char *
+db_entry_get_root_path(FsearchDatabaseEntry *entry);
 
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);

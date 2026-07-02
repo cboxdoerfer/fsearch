@@ -18,8 +18,7 @@
 #include <time.h>
 
 #define DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS                                                                   \
-    (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES                                 \
-     | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX)
+    (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES)
 
 typedef struct FsearchDatabaseEntry {
     FsearchDatabaseEntry *parent;
@@ -131,6 +130,18 @@ db_entry_folder_get_num_folders(FsearchDatabaseEntry *entry) {
     uint32_t num_folders = 0;
     db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
     return num_folders;
+}
+
+const char *
+db_entry_get_root_path(FsearchDatabaseEntry *entry) {
+    if (!entry) {
+        return NULL;
+    }
+
+    while (entry->parent) {
+        entry = entry->parent;
+    }
+    return db_entry_get_name_raw(entry);
 }
 
 GString *
@@ -325,21 +336,6 @@ db_entry_get_depth(FsearchDatabaseEntry *entry) {
         depth++;
     }
     return depth;
-}
-
-uint32_t
-db_entry_get_db_index(FsearchDatabaseEntry *entry) {
-    if (!db_entry_is_folder(entry)) {
-        entry = entry->parent;
-    }
-    if (G_UNLIKELY(!entry)) {
-        return 0;
-    }
-    uint32_t db_index = 0;
-    if (db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_DB_INDEX, &db_index, sizeof(db_index))) {
-        return db_index;
-    }
-    return 0;
 }
 
 static FsearchDatabaseEntry *
@@ -736,14 +732,6 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
     entry->parent = parent;
 }
 
-void
-db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index) {
-    if (!db_entry_is_folder(entry)) {
-        return;
-    }
-    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_DB_INDEX, &db_index, sizeof(db_index));
-}
-
 bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
                               FsearchDatabaseIndexProperty attribute,
@@ -775,12 +763,6 @@ db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
             goto out;
         }
         offset_tmp += sizeof(int64_t);
-    }
-    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) != 0) {
-        if (attribute == DATABASE_INDEX_PROPERTY_DB_INDEX) {
-            goto out;
-        }
-        offset_tmp += sizeof(int32_t);
     }
     if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES) != 0) {
         if (attribute == DATABASE_INDEX_PROPERTY_NUM_FILES) {
@@ -835,9 +817,6 @@ entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, cons
     }
     if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_STATUS_CHANGE_TIME) != 0) {
         size += sizeof(int64_t);
-    }
-    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) != 0) {
-        size += sizeof(int32_t);
     }
     if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES) != 0) {
         size += sizeof(int32_t);
@@ -915,7 +894,6 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
             // db_entry_get_attribute(entry, attribute, &attribute_val_test_i64, sizeof(attribute_val_test_i64));
             // g_assert(attribute_val_test_i64 == attribute_val_i64);
             break;
-        case DATABASE_INDEX_PROPERTY_DB_INDEX:
         case DATABASE_INDEX_PROPERTY_NUM_FILES:
         case DATABASE_INDEX_PROPERTY_NUM_FOLDERS:
             attribute_val_i32 = va_arg(args, int32_t);

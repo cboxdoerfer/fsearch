@@ -42,8 +42,6 @@ struct _FsearchDatabaseIndex {
 
     GMutex mutex;
 
-    uint32_t id;
-
     gdouble max_process_time;
 
     FsearchDatabaseIndexEventFunc event_func;
@@ -140,19 +138,12 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
 }
 
 static inline FsearchDatabaseEntry *
-create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type, uint32_t db_index) {
+create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type) {
     FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
 
     if (type == DATABASE_ENTRY_TYPE_FOLDER) {
-        flags |= DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX;
-        return db_entry_new_with_attributes(flags,
-                                            name,
-                                            parent,
-                                            type,
-                                            DATABASE_INDEX_PROPERTY_DB_INDEX,
-                                            db_index,
-                                            DATABASE_INDEX_PROPERTY_NONE);
+        return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
     }
 
     // Files don't need the DB_INDEX attribute, they inherit it from 'parent'
@@ -254,8 +245,7 @@ lookup_entry_for_event_locked(FsearchDatabaseIndex *self, FsearchFolderMonitorEv
     FsearchDatabaseEntry *entry_tmp = create_dummy_entry(event->name ? event->name->str : event->path->str,
                                                          event->name ? event->watched_entry : NULL,
                                                          event->is_dir ? DATABASE_ENTRY_TYPE_FOLDER
-                                                                       : DATABASE_ENTRY_TYPE_FILE,
-                                                         self->id);
+                                                                       : DATABASE_ENTRY_TYPE_FILE);
 
     FsearchDatabaseChunkedArray *chunks = event->is_dir ? self->folder_chunks : self->file_chunks;
 
@@ -449,7 +439,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                                                   event->path->str,
                                                   event->name ? event->name->str : basename,
                                                   is_dir)) {
-        g_debug("[index-%d] monitor create excluded: %s", self->id, event->path->str);
+        g_debug("[index-%s] monitor create excluded: %s", fsearch_database_index_get_path(self), event->path->str);
         return;
     }
     g_autoptr(DynamicArray) folders = NULL;
@@ -465,7 +455,6 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                            self->exclude_manager,
                            self->fanotify_monitor,
                            self->inotify_monitor,
-                           self->id,
                            fsearch_database_include_get_one_file_system(self->include),
                            NULL,
                            NULL,
@@ -644,11 +633,11 @@ fsearch_database_index_process_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-create_dummy_entry_chain(const char *root_path, const char *target_path, FsearchDatabaseEntryType target_type, uint32_t id) {
+create_dummy_entry_chain(const char *root_path, const char *target_path, FsearchDatabaseEntryType target_type) {
     if (g_strcmp0(root_path, target_path) == 0) {
         // target is the root itself
         return target_type == DATABASE_ENTRY_TYPE_FOLDER
-                 ? create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER, id)
+                 ? create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER)
                  : NULL;
     }
 
@@ -665,7 +654,7 @@ create_dummy_entry_chain(const char *root_path, const char *target_path, Fsearch
         return NULL; // target_path is not a child of root_path
     }
 
-    FsearchDatabaseEntry *current = create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER, id);
+    FsearchDatabaseEntry *current = create_dummy_entry(root_path, NULL, DATABASE_ENTRY_TYPE_FOLDER);
 
     g_auto(GStrv) parts = g_strsplit(rel_path, G_DIR_SEPARATOR_S, -1);
 
@@ -673,7 +662,7 @@ create_dummy_entry_chain(const char *root_path, const char *target_path, Fsearch
         // The last part takes the requested type (FILE or FOLDER), everything in between is a FOLDER
         FsearchDatabaseEntryType type = (parts[i + 1] == NULL) ? target_type : DATABASE_ENTRY_TYPE_FOLDER;
 
-        FsearchDatabaseEntry *child = create_dummy_entry(parts[i], current, type, id);
+        FsearchDatabaseEntry *child = create_dummy_entry(parts[i], current, type);
         current = child;
     }
 
@@ -691,7 +680,7 @@ fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path,
     // Edge Case: Check if the removed path is the root of this index
     const char *root_path = fsearch_database_include_get_path(self->include);
     if (g_strcmp0(path, root_path) == 0) {
-        g_debug("[index-%d] remove_path: root folder removed: %s", self->id, root_path);
+        g_debug("[index-%s] remove_path: root folder removed: %s", fsearch_database_index_get_path(self), root_path);
         index_clear_locked(self);
         self->needs_root_reappear_poll = true;
         *root_removed = true;
@@ -699,7 +688,7 @@ fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path,
     }
 
     // Try finding it as a file first using a dummy entry
-    FsearchDatabaseEntry *dummy_file = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FILE, self->id);
+    FsearchDatabaseEntry *dummy_file = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FILE);
     if (dummy_file) {
         FsearchDatabaseEntry *entry = fsearch_database_chunked_array_steal(self->file_chunks, dummy_file);
         g_clear_pointer(&dummy_file, db_entry_free_full);
@@ -711,7 +700,7 @@ fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path,
     }
 
     // If not a file, try finding it as a folder
-    FsearchDatabaseEntry *dummy_folder = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FOLDER, self->id);
+    FsearchDatabaseEntry *dummy_folder = create_dummy_entry_chain(root_path, path, DATABASE_ENTRY_TYPE_FOLDER);
     if (dummy_folder) {
         FsearchDatabaseEntry *entry = fsearch_database_chunked_array_steal(self->folder_chunks, dummy_folder);
         g_clear_pointer(&dummy_folder, db_entry_free_full);
@@ -756,8 +745,7 @@ index_free(FsearchDatabaseIndex *self) {
 }
 
 FsearchDatabaseIndex *
-fsearch_database_index_new(uint32_t id,
-                           FsearchDatabaseInclude *include,
+fsearch_database_index_new(FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GMainContext *monitor_ctx,
@@ -768,7 +756,6 @@ fsearch_database_index_new(uint32_t id,
 
     self->ref_count = 1;
 
-    self->id = id;
     self->include = fsearch_database_include_ref(include);
     self->exclude_manager = g_object_ref(exclude_manager);
     self->flags = flags;
@@ -797,8 +784,7 @@ fsearch_database_index_new(uint32_t id,
 }
 
 FsearchDatabaseIndex *
-fsearch_database_index_new_with_content(uint32_t id,
-                                        FsearchDatabaseInclude *include,
+fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
                                         FsearchDatabaseExcludeManager *exclude_manager,
                                         DynamicArray *folders,
                                         DynamicArray *files,
@@ -808,7 +794,6 @@ fsearch_database_index_new_with_content(uint32_t id,
 
     self->ref_count = 1;
 
-    self->id = id;
     self->include = fsearch_database_include_ref(include);
     self->exclude_manager = g_object_ref(exclude_manager);
     self->flags = flags;
@@ -888,16 +873,16 @@ fsearch_database_index_get_folders(FsearchDatabaseIndex *self) {
     return fsearch_database_chunked_array_get_joined(self->folder_chunks);
 }
 
-uint32_t
-fsearch_database_index_get_id(FsearchDatabaseIndex *self) {
-    g_assert(self);
-    return self->id;
-}
-
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self) {
     g_assert(self);
     return self->flags;
+}
+
+const char *
+fsearch_database_index_get_path(FsearchDatabaseIndex *self) {
+    g_assert(self);
+    return self->include ? fsearch_database_include_get_path(self->include) : NULL;
 }
 
 bool
@@ -964,7 +949,6 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                         self->exclude_manager,
                         self->fanotify_monitor,
                         self->inotify_monitor,
-                        self->id,
                         fsearch_database_include_get_one_file_system(self->include),
                         cancellable,
                         scan_status_cb,

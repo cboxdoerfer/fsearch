@@ -9,7 +9,7 @@ G_BEGIN_DECLS
 
 typedef struct _FsearchDatabaseRescanManager FsearchDatabaseRescanManager;
 
-typedef void (*FsearchDatabaseRescanIndexFunc)(uint32_t index_id, gpointer user_data);
+typedef void (*FsearchDatabaseRescanIndexFunc)(const char *path, gpointer user_data);
 typedef void (*FsearchDatabaseRescanFullFunc)(gpointer user_data);
 
 FsearchDatabaseRescanManager *
@@ -26,19 +26,19 @@ void
 fsearch_database_rescan_manager_reschedule(FsearchDatabaseRescanManager *self);
 
 void
-fsearch_database_rescan_manager_request_index_scan(FsearchDatabaseRescanManager *self, uint32_t index_id);
+fsearch_database_rescan_manager_request_index_scan(FsearchDatabaseRescanManager *self, const char *path);
 void
 fsearch_database_rescan_manager_request_full_scan(FsearchDatabaseRescanManager *self);
 void
 fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManager *self);
 
 void
-fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, uint32_t index_id);
+fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, const char *path);
 void
 fsearch_database_rescan_manager_notify_new_config(FsearchDatabaseRescanManager *self,
                                                   FsearchDatabaseIncludeManager *include_manager);
 
 void
-fsearch_database_rescan_manager_notify_index_offline(FsearchDatabaseRescanManager *self, uint32_t index_id);
+fsearch_database_rescan_manager_notify_index_offline(FsearchDatabaseRescanManager *self, const char *path);
 
 G_END_DECLS

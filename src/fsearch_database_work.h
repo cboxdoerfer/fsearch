@@ -45,13 +45,13 @@ FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index(uint32_t index_id);
+fsearch_database_work_new_rescan_index(const char *root_path);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index);
 
-uint32_t
-fsearch_database_work_rescan_index_get_id(FsearchDatabaseWork *work);
+const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndex *
 fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work);

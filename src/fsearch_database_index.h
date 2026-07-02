@@ -19,8 +19,7 @@ G_BEGIN_DECLS
 
 typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
-typedef void
-(*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *, FsearchDatabaseIndexEvent *event, gpointer);
+typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *, FsearchDatabaseIndexEvent *event, gpointer);
 
 GType
 fsearch_database_index_get_type(void);
@@ -32,8 +31,7 @@ void
 fsearch_database_index_unref(FsearchDatabaseIndex *self);
 
 FsearchDatabaseIndex *
-fsearch_database_index_new(uint32_t id,
-                           FsearchDatabaseInclude *include,
+fsearch_database_index_new(FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GMainContext *monitor_ctx,
@@ -41,15 +39,16 @@ fsearch_database_index_new(uint32_t id,
                            gpointer event_func_data);
 
 FsearchDatabaseIndex *
-fsearch_database_index_new_with_content(uint32_t id,
-                                        FsearchDatabaseInclude *include,
+fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
                                         FsearchDatabaseExcludeManager *exclude_manager,
                                         DynamicArray *folders,
                                         DynamicArray *files,
                                         FsearchDatabaseIndexPropertyFlags flags);
 
 void
-fsearch_database_index_set_event_func(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventFunc event_func, gpointer event_func_data);
+fsearch_database_index_set_event_func(FsearchDatabaseIndex *self,
+                                      FsearchDatabaseIndexEventFunc event_func,
+                                      gpointer event_func_data);
 
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self);
@@ -63,11 +62,11 @@ fsearch_database_index_get_files(FsearchDatabaseIndex *self);
 DynamicArray *
 fsearch_database_index_get_folders(FsearchDatabaseIndex *self);
 
-uint32_t
-fsearch_database_index_get_id(FsearchDatabaseIndex *self);
-
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
+
+const char *
+fsearch_database_index_get_path(FsearchDatabaseIndex *self);
 
 bool
 fsearch_database_index_wants_root_reappear_poll(FsearchDatabaseIndex *self);

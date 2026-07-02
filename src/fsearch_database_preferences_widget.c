@@ -56,7 +56,6 @@ enum {
     COL_INCLUDE_MONITOR,
     COL_INCLUDE_SCAN_AFTER_LAUNCH,
     COL_INCLUDE_RESCAN_AFTER,
-    COL_INCLUDE_ID,
     NUM_INCLUDE_COLUMNS
 };
 
@@ -187,42 +186,6 @@ compare_int(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
 }
 
-static gint
-get_unique_include_id(GtkListStore *store) {
-    g_assert(store);
-    GtkTreeModel *model = GTK_TREE_MODEL(store);
-
-    // We want to have the smallest possible unique ID >= 0:
-    // 1. First we fetch all ids currently present in the model
-    g_autoptr(GArray) model_ids = g_array_new(FALSE, FALSE, sizeof(gint));
-    GtkTreeIter iter = {};
-    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
-    while (valid) {
-        gint id = -1;
-        gtk_tree_model_get(model, &iter, COL_INCLUDE_ID, &id, -1);
-        g_array_append_val(model_ids, id);
-
-        valid = gtk_tree_model_iter_next(model, &iter);
-    }
-
-    // 2. Then we sort them ascendingly
-    g_array_sort(model_ids, compare_int);
-
-    // 3. Then we find the first ID, starting with 0, which isn't in the array. That's the unique ID we want.
-    for (gint i = 0; i < model_ids->len; ++i) {
-        gint model_id = g_array_index(model_ids, gint, i);
-        if (i != model_id) {
-            // Found the smallest unique ID
-            return i;
-        }
-    }
-
-    // The model is either empty or has no gaps in between IDs, 0, 1, 2, ..., model_idx->len - 1
-    // Our new unique ID therefore is the length of the array, which is either 0 or 1 greater than the largest ID in the
-    // model:
-    return (gint)model_ids->len;
-}
-
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -311,7 +274,6 @@ include_append_row(GtkListStore *store,
                    gboolean monitor,
                    gboolean scan_after_launch,
                    gint64 rescan_after,
-                   gint id,
                    GtkTreeIter *out_iter) {
     if (!include_path_is_unique(store, path)) {
         return FALSE;
@@ -332,8 +294,6 @@ include_append_row(GtkListStore *store,
                        scan_after_launch,
                        COL_INCLUDE_RESCAN_AFTER,
                        rescan_after,
-                       COL_INCLUDE_ID,
-                       id,
                        -1);
     if (out_iter) {
         *out_iter = iter;
@@ -343,7 +303,7 @@ include_append_row(GtkListStore *store,
 
 static gboolean
 on_include_append_new_row(GtkListStore *store, const char *path, GtkTreeIter *out_iter) {
-    return include_append_row(store, TRUE, path, FALSE, FALSE, FALSE, 0, get_unique_include_id(store), out_iter);
+    return include_append_row(store, TRUE, path, FALSE, FALSE, FALSE, 0, out_iter);
 }
 
 static void
@@ -925,7 +885,6 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_include_get_monitored(include),
                            fsearch_database_include_get_scan_after_launch(include),
                            fsearch_database_include_get_rescan_after(include),
-                           fsearch_database_include_get_id(include),
                            NULL);
     }
 }
@@ -1138,14 +1097,12 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            &scan_after_launch,
                            COL_INCLUDE_RESCAN_AFTER,
                            &rescan_after,
-                           COL_INCLUDE_ID,
-                           &id,
                            -1);
 
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, monitor, scan_after_launch, rescan_after, id));
+                fsearch_database_include_new(path, active, one_file_system, monitor, scan_after_launch, rescan_after));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);

@@ -22,10 +22,8 @@ test_database_include() {
                                                                                  includes[i].one_file_system,
                                                                                  includes[i].monitor,
                                                                                  includes[i].scan_after_load,
-                                                                                 0,
-                                                                                 includes[i].id);
+                                                                                 0);
         g_assert_cmpstr(fsearch_database_include_get_path(include), ==, includes[i].path);
-        g_assert_cmpint(fsearch_database_include_get_id(include), ==, includes[i].id);
         g_assert_cmpint(fsearch_database_include_get_one_file_system(include), ==, includes[i].one_file_system);
         g_assert_cmpint(fsearch_database_include_get_monitored(include), ==, includes[i].monitor);
         g_assert_cmpint(fsearch_database_include_get_scan_after_launch(include), ==, includes[i].scan_after_load);
@@ -36,15 +34,13 @@ test_database_include() {
                                                                         includes[0].one_file_system,
                                                                         includes[0].monitor,
                                                                         includes[0].scan_after_load,
-                                                                        0,
-                                                                        includes[0].id);
+                                                                        0);
     g_autoptr(FsearchDatabaseInclude) i2 = fsearch_database_include_new(includes[1].path,
                                                                         includes[1].active,
                                                                         includes[1].one_file_system,
                                                                         includes[1].monitor,
                                                                         includes[1].scan_after_load,
-                                                                        0,
-                                                                        includes[1].id);
+                                                                        0);
     g_assert_false(fsearch_database_include_equal(i1, i2));
     g_assert_true(fsearch_database_include_equal(i1, i1));
     g_assert_true(fsearch_database_include_equal(i2, i2));
@@ -67,8 +63,7 @@ test_database_include_manager() {
                                                                                  includes[i].one_file_system,
                                                                                  includes[i].monitor,
                                                                                  includes[i].scan_after_load,
-                                                                                 0,
-                                                                                 includes[i].id);
+                                                                                 0);
         fsearch_database_include_manager_add(include_manager, include);
     }
     g_autoptr(GPtrArray) i = fsearch_database_include_manager_get_includes(include_manager);

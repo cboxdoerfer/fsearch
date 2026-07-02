@@ -470,9 +470,9 @@ database_save(FsearchDatabase *self, gboolean notify) {
 }
 
 static void
-on_index_scan_requested(uint32_t index_id, gpointer user_data) {
+on_index_scan_requested(const char *path, gpointer user_data) {
     FsearchDatabase *self = FSEARCH_DATABASE(user_data);
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_rescan_index(index_id);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_rescan_index(path);
     fsearch_database_queue_work(self, work);
 }
 
@@ -503,11 +503,11 @@ io_thread_cb(gpointer data, gpointer user_data) {
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED: {
         g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_work_rescan_index_finished_get_index(work);
         if (!fsearch_database_index_scan(new_index, db->cancellable)) {
-            g_debug("[db] index rescan failed for index %u", fsearch_database_index_get_id(new_index));
+            g_debug("[db] index rescan failed: %s", fsearch_database_index_get_path(new_index));
 
             if (db->rescan_manager) {
                 fsearch_database_rescan_manager_notify_index_offline(db->rescan_manager,
-                                                                     fsearch_database_index_get_id(new_index));
+                                                                     fsearch_database_index_get_path(new_index));
             }
             break;
         }
@@ -655,13 +655,12 @@ database_rescan_index(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self->store);
     g_return_if_fail(work);
 
-    const uint32_t index_id = fsearch_database_work_rescan_index_get_id(work);
+    const char *path = fsearch_database_work_rescan_index_get_path(work);
 
-    g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_index_store_create_index_for_rescan(self->store,
-                                                                                                     index_id);
+    g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_index_store_create_index_for_rescan(self->store, path);
 
     if (!new_index) {
-        g_warning("[db] rescan_index: failed to create index for rescan (id=%u)", index_id);
+        g_warning("[db] rescan_index: failed to create index for rescan: %s", path);
         return;
     }
 
@@ -696,7 +695,7 @@ database_rescan_index_finished(FsearchDatabase *self, FsearchDatabaseWork *work)
 
     if (self->rescan_manager) {
         fsearch_database_rescan_manager_notify_index_finished(self->rescan_manager,
-                                                              fsearch_database_index_get_id(new_index));
+                                                              fsearch_database_index_get_path(new_index));
     }
 
     g_autoptr(GMutexLocker) store_locker = fsearch_database_index_store_get_locker(self->store);

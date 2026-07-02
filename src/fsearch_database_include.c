@@ -21,8 +21,6 @@ struct _FsearchDatabaseInclude {
     uint32_t last_scanned_folder_count;
     FsearchDatabaseScanReason last_scan_reason;
 
-    gint id;
-
     volatile gint ref_count;
 };
 
@@ -37,8 +35,7 @@ fsearch_database_include_new(const char *path,
                              gboolean one_file_system,
                              gboolean monitor,
                              gboolean scan_after_load,
-                             int64_t rescan_after,
-                             gint id) {
+                             int64_t rescan_after) {
     FsearchDatabaseInclude *self;
 
     g_return_val_if_fail(path, NULL);
@@ -51,7 +48,6 @@ fsearch_database_include_new(const char *path,
     self->monitor = monitor;
     self->scan_after_launch = scan_after_load;
     self->rescan_after = rescan_after;
-    self->id = id;
     self->ref_count = 1;
 
     return self;
@@ -122,8 +118,7 @@ fsearch_database_include_copy(FsearchDatabaseInclude *self) {
                                         self->one_file_system,
                                         self->monitor,
                                         self->scan_after_launch,
-                                        self->rescan_after,
-                                        self->id);
+                                        self->rescan_after);
 }
 
 void
@@ -246,12 +241,4 @@ FsearchDatabaseScanReason
 fsearch_database_include_get_last_scan_reason(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self, FSEARCH_DATABASE_SCAN_REASON_UNKNOWN);
     return self->last_scan_reason;
-}
-
-gint
-fsearch_database_include_get_id(FsearchDatabaseInclude *self) {
-    g_return_val_if_fail(self != NULL, -1);
-    g_return_val_if_fail(self->ref_count > 0, -1);
-
-    return self->id;
 }

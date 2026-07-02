@@ -23,7 +23,6 @@ typedef struct DatabaseWalkContext {
     DynamicArray *files;
     FsearchFolderMonitorFanotify *fanotify_monitor;
     FsearchFolderMonitorInotify *inotify_monitor;
-    uint32_t index_id;
     bool one_file_system;
     GTimer *timer;
     GMutex *monitor_lock;
@@ -53,18 +52,12 @@ watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, co
 }
 
 static FsearchDatabaseEntry *
-add_folder(DatabaseWalkContext *walk_context,
-           const char *name,
-           const char *path,
-           time_t mtime,
-           FsearchDatabaseEntry *parent) {
+add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path, time_t mtime, FsearchDatabaseEntry *parent) {
     FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                      | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                          | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
                                                                       name,
                                                                       parent,
                                                                       DATABASE_ENTRY_TYPE_FOLDER,
-                                                                      DATABASE_INDEX_PROPERTY_DB_INDEX,
-                                                                      walk_context->index_id,
                                                                       DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                                       mtime,
                                                                       DATABASE_INDEX_PROPERTY_NONE);
@@ -76,10 +69,7 @@ add_folder(DatabaseWalkContext *walk_context,
         g_assert_cmpstr(name, ==, n);
     }
     time_t t = 0;
-    if (db_entry_get_attribute(folder_entry,
-                               DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                               (void *)&t,
-                               sizeof(time_t))) {
+    if (db_entry_get_attribute(folder_entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, (void *)&t, sizeof(time_t))) {
         g_assert(t == mtime);
     }
     watch_folder(walk_context, folder_entry, path);
@@ -91,7 +81,7 @@ add_folder(DatabaseWalkContext *walk_context,
 FsearchDatabaseEntry *
 add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntry *parent) {
     FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                    | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                        | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
                                                                     name,
                                                                     parent,
                                                                     DATABASE_ENTRY_TYPE_FILE,
@@ -214,7 +204,6 @@ db_scan_folder(const char *path,
                FsearchDatabaseExcludeManager *exclude_manager,
                FsearchFolderMonitorFanotify *fanotify_monitor,
                FsearchFolderMonitorInotify *inotify_monitor,
-               uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *, gpointer),
@@ -249,7 +238,6 @@ db_scan_folder(const char *path,
         .exclude_manager = exclude_manager,
         .path = path_string,
         .one_file_system = one_file_system,
-        .index_id = index_id,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,

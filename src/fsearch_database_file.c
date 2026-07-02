@@ -27,7 +27,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DATABASE_MAJOR_VERSION 5
+#define DATABASE_MAJOR_VERSION 6
 #define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 #define DATABASE_CHECKSUM_SIZE 16
@@ -239,12 +239,12 @@ database_file_load_header(FILE *fp, GChecksum *checksum) {
 
 static void
 database_file_load_add_to_index_array(GHashTable *index_table, FsearchDatabaseEntry *entry) {
-    const uint32_t db_index = db_entry_get_db_index(entry);
-    DynamicArray *index_array = g_hash_table_lookup(index_table, GUINT_TO_POINTER(db_index));
+    const char *root_path = db_entry_get_root_path(entry);
+    DynamicArray *index_array = g_hash_table_lookup(index_table, root_path);
 
     if (!index_array) {
         index_array = darray_new(1024);
-        g_hash_table_insert(index_table, GUINT_TO_POINTER(db_index), index_array);
+        g_hash_table_insert(index_table, (gpointer)root_path, index_array);
     }
     darray_add_item(index_array, entry);
 }
@@ -272,10 +272,6 @@ database_file_load_folders(FILE *fp,
     for (idx = 0; idx < num_folders; idx++) {
         g_autoptr(FsearchDatabaseEntry) folder = NULL;
 
-        // db_index: the database index this folder belongs to
-        uint16_t db_index = 0;
-        cursor_read(&cursor, &db_index, sizeof(db_index));
-
         database_file_load_entry(&cursor, index_flags, previous_entry_name, &folder, DATABASE_ENTRY_TYPE_FOLDER);
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -290,8 +286,6 @@ database_file_load_folders(FILE *fp,
             g_debug("[db_load] Corrupt parent index: %d", parent_idx);
             return false;
         }
-
-        db_entry_set_db_index(folder, db_index);
 
         if (parent_idx != idx) {
             // Until all folders are ready, we have to reference parents by their index
@@ -481,12 +475,6 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        int32_t id = 0;
-        if (!database_file_read_element(&id, sizeof(id), fp, checksum)) {
-            g_debug("[db_load] failed to read id of include");
-            return false;
-        }
-
         g_autofree char *path = database_file_read_string(fp, 4 * PATH_MAX, checksum);
         if (!path) {
             g_debug("[db_load] failed to read path of include");
@@ -557,8 +545,7 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
                                                                                  one_file_system,
                                                                                  is_monitored,
                                                                                  scan_after_launch,
-                                                                                 rescan_after,
-                                                                                 id);
+                                                                                 rescan_after);
         fsearch_database_include_set_last_scan_time(include, last_scan_time);
         fsearch_database_include_set_last_scan_duration(include, last_scan_duration);
         fsearch_database_include_set_last_scanned_file_count(include, last_scanned_file_count);
@@ -800,9 +787,6 @@ database_file_save_folders(DatabaseFileWriteCursor *cursor,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
-        const uint16_t db_index = db_entry_get_db_index(entry);
-        cursor_write(cursor, &db_index, sizeof(db_index));
-
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
         database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
@@ -830,9 +814,6 @@ database_file_save_includes(DatabaseFileWriteCursor *cursor, FsearchDatabaseInde
 
         const uint32_t type = 0;
         cursor_write(cursor, &type, sizeof(type));
-
-        const int32_t id = fsearch_database_include_get_id(include);
-        cursor_write(cursor, &id, sizeof(id));
 
         const char *path = fsearch_database_include_get_path(include);
         const uint32_t path_len = strlen(path);
@@ -1229,12 +1210,12 @@ fsearch_database_file_load(const char *file_path,
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_direct_hash,
-                                                                      g_direct_equal,
+    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_str_hash,
+                                                                      g_str_equal,
                                                                       NULL,
                                                                       (GDestroyNotify)darray_unref);
-    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_direct_hash,
-                                                                    g_direct_equal,
+    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_str_hash,
+                                                                    g_str_equal,
                                                                     NULL,
                                                                     (GDestroyNotify)darray_unref);
 
@@ -1361,21 +1342,22 @@ fsearch_database_file_load(const char *file_path,
         database_file_load_add_to_index_array(file_index_arrays, file);
     }
 
+    g_ptr_array_sort(includes, fsearch_database_include_compare);
+
     for (uint32_t i = 0; i < includes->len; i++) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        const uint32_t id = fsearch_database_include_get_id(include);
-        DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, GINT_TO_POINTER(id));
-        DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, GINT_TO_POINTER(id));
+        const char *root_path = fsearch_database_include_get_path(include);
+        DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, root_path);
+        DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, root_path);
         if (!folder_array_index) {
             folder_array_index = darray_new(0);
-            g_hash_table_insert(folder_index_arrays, GINT_TO_POINTER(id), folder_array_index);
+            g_hash_table_insert(folder_index_arrays, (gpointer)root_path, folder_array_index);
         }
         if (!file_array_index) {
             file_array_index = darray_new(0);
-            g_hash_table_insert(file_index_arrays, GINT_TO_POINTER(id), file_array_index);
+            g_hash_table_insert(file_index_arrays, (gpointer)root_path, file_array_index);
         }
-        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(id,
-                                                                              include,
+        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(include,
                                                                               exclude_manager,
                                                                               folder_array_index,
                                                                               file_array_index,

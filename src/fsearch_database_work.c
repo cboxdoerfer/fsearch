@@ -56,7 +56,7 @@ struct FsearchDatabaseWork {
 
         // FSEARCH_DATABASE_WORK_RESCAN_INDEX
         struct {
-            uint32_t rescan_index_id;
+            GString *root_path;
         };
 
         // FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED
@@ -94,12 +94,13 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
     case FSEARCH_DATABASE_WORK_RESCAN:
-    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
     case FSEARCH_DATABASE_WORK_SORT:
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
     case FSEARCH_DATABASE_WORK_QUIT:
         break;
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
+        g_string_free(g_steal_pointer(&work->root_path), TRUE);
     case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
         g_clear_pointer(&work->item_paths, darray_unref);
         break;
@@ -159,10 +160,10 @@ fsearch_database_work_new_rescan() {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index(uint32_t index_id) {
+fsearch_database_work_new_rescan_index(const char *root_path) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX;
-    work->rescan_index_id = index_id;
+    work->root_path = g_string_new(root_path);
     return work;
 }
 
@@ -401,11 +402,11 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
     return work->selection_type;
 }
 
-uint32_t
-fsearch_database_work_rescan_index_get_id(FsearchDatabaseWork *work) {
+const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX, 0);
-    return work->rescan_index_id;
+    return work->root_path->str;
 }
 
 FsearchDatabaseIndex *

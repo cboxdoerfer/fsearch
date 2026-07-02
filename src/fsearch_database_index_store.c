@@ -198,13 +198,20 @@ index_store_flags_equal(const FsearchDatabaseIndexStore *store, FsearchDatabaseI
 }
 
 static bool
-index_store_has_index_with_same_id(const FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *index) {
+index_store_has_index_with_same_path(const FsearchDatabaseIndexStore *store,
+                                     FsearchDatabaseIndex *index,
+                                     uint32_t *index_idx_out) {
     g_assert(store);
     g_assert(index);
 
+    const char *index_path = fsearch_database_index_get_path(index);
     for (uint32_t i = 0; i < store->indices->len; ++i) {
         FsearchDatabaseIndex *index_stored = g_ptr_array_index(store->indices, i);
-        if (fsearch_database_index_get_id(index_stored) == fsearch_database_index_get_id(index)) {
+        const char *index_stored_path = fsearch_database_index_get_path(index_stored);
+        if (g_strcmp0(index_path, index_stored_path) == 0) {
+            if (index_idx_out) {
+                *index_idx_out = i;
+            }
             return true;
         }
     }
@@ -569,14 +576,11 @@ index_store_root_reappear_poll_cb(gpointer user_data) {
             continue;
         }
 
-        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_index_get_include(index);
-        const char *include_path = fsearch_database_include_get_path(include);
-        if (!g_file_test(include_path, G_FILE_TEST_IS_DIR)) {
+        const char *index_path = fsearch_database_index_get_path(index);
+        if (!g_file_test(index_path, G_FILE_TEST_IS_DIR)) {
             continue;
         }
-        g_debug("[index-%d] root folder reappeared, rescanning: %s",
-                fsearch_database_include_get_id(include),
-                include_path);
+        g_debug("[index-%d] root folder reappeared, rescanning: %s", i, index_path);
         if (fsearch_database_index_scan(index, NULL)) {
             fsearch_database_index_lock(index);
 
@@ -788,8 +792,7 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         if (!fsearch_database_include_get_active(include)) {
             continue;
         }
-        g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(fsearch_database_include_get_id(include),
-                                                                           include,
+        g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(include,
                                                                            store->exclude_manager,
                                                                            store->flags,
                                                                            store->monitor.ctx,
@@ -813,7 +816,7 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
             continue;
         }
 
-        if (index_store_has_index_with_same_id(store, index)
+        if (index_store_has_index_with_same_path(store, index, NULL)
             || !index_store_flags_equal(store, fsearch_database_index_get_flags(index))) {
             // We don't need that index: free it
             g_clear_pointer(&index, fsearch_database_index_unref);
@@ -950,7 +953,7 @@ fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store) 
 }
 
 FsearchDatabaseIndex *
-fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, uint32_t index_id) {
+fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, const char *path) {
     g_return_val_if_fail(store, NULL);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
@@ -959,14 +962,15 @@ fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *
     FsearchDatabaseIndex *old_index = NULL;
     for (uint32_t i = 0; i < store->indices->len; i++) {
         FsearchDatabaseIndex *idx = g_ptr_array_index(store->indices, i);
-        if (fsearch_database_index_get_id(idx) == index_id) {
+        const char *index_path = fsearch_database_index_get_path(idx);
+        if (g_strcmp0(index_path, path) == 0) {
             old_index = idx;
             break;
         }
     }
 
     if (!old_index) {
-        g_warning("[index-store] create_index_for_rescan: no index with id %u", index_id);
+        g_warning("[index-store] create_index_for_rescan: index missing: %s", path);
         return NULL;
     }
 
@@ -974,13 +978,7 @@ fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_index_get_exclude_manager(old_index);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_index_get_flags(old_index);
 
-    return fsearch_database_index_new(index_id,
-                                      include,
-                                      exclude_manager,
-                                      flags,
-                                      store->monitor.ctx,
-                                      index_store_index_event_cb,
-                                      store);
+    return fsearch_database_index_new(include, exclude_manager, flags, store->monitor.ctx, index_store_index_event_cb, store);
 }
 
 bool
@@ -991,20 +989,10 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
     g_assert_nonnull(locker);
 
-    const uint32_t index_id = fsearch_database_index_get_id(new_index);
-
     // Find the old index.
-    int32_t old_idx_pos = -1;
-    for (uint32_t i = 0; i < store->indices->len; i++) {
-        FsearchDatabaseIndex *idx = g_ptr_array_index(store->indices, i);
-        if (fsearch_database_index_get_id(idx) == index_id) {
-            old_idx_pos = i;
-            break;
-        }
-    }
-
-    if (old_idx_pos < 0) {
-        g_warning("[index-store] replace_index: no index with id %u", index_id);
+    uint32_t old_idx_pos = 0;
+    if (!index_store_has_index_with_same_path(store, new_index, &old_idx_pos)) {
+        g_warning("[index-store] replace_index: no index with path %s", fsearch_database_index_get_path(new_index));
         return false;
     }
 
@@ -1089,7 +1077,7 @@ fsearch_database_index_store_remove_paths(FsearchDatabaseIndexStore *store,
                 // Handle the offline edge case
                 if (root_removed && rescan_manager) {
                     fsearch_database_rescan_manager_notify_index_offline(rescan_manager,
-                                                                         fsearch_database_index_get_id(index));
+                                                                         fsearch_database_index_get_path(index));
                 }
             }
         }
@@ -1345,6 +1333,8 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     g_return_val_if_fail(store, false);
     g_return_val_if_fail(store->search_results, false);
 
+    g_autoptr(GTimer) timer = g_timer_new();
+
     g_autoptr(FsearchDatabaseChunkedArray) file_chunks = fsearch_database_index_store_get_files(store, sort_order);
     g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
 
@@ -1389,6 +1379,7 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                                                            DATABASE_INDEX_PROPERTY_NONE,
                                                                            sort_type);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
+        g_debug("[index_store] search duration: %f", g_timer_elapsed(timer, NULL));
 
         return true;
     }

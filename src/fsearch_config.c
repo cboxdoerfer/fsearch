@@ -166,7 +166,6 @@ static const FsearchKeyData FILTER_KEYS[] = {
 };
 
 typedef struct {
-    int id;
     char *path;
     bool active;
     bool one_file_system;
@@ -177,7 +176,6 @@ typedef struct {
 
 static const FsearchKeyData INCLUDE_KEYS[] = {
     CONF_BOOL_OF(FsearchConfigIncludeKeys, active, false),
-    CONF_INT_OF(FsearchConfigIncludeKeys, id, 0),
     CONF_STR_OF(FsearchConfigIncludeKeys, path, NULL),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, one_file_system, false),
     CONF_BOOL_OF(FsearchConfigIncludeKeys, monitor, false),
@@ -460,8 +458,7 @@ config_load_includes(GKeyFile *key_file) {
                                                                                  include_keys.one_file_system,
                                                                                  include_keys.monitor,
                                                                                  include_keys.scan_after_launch,
-                                                                                 include_keys.rescan_after,
-                                                                                 include_keys.id);
+                                                                                 include_keys.rescan_after);
         fsearch_database_include_manager_add(include_manager, include);
 
         g_clear_pointer(&include_keys.path, g_free);
@@ -533,9 +530,8 @@ config_load_legacy_includes(GKeyFile *key_file) {
         g_string_printf(key, "%s_one_filesystem_%d", prefix, pos);
         const gboolean one_filesystem = g_key_file_get_boolean(key_file, group, key->str, NULL);
 
-        fsearch_database_include_manager_add(
-            include_manager,
-            fsearch_database_include_new(path, enabled, one_filesystem, FALSE, FALSE, 0, pos - 1));
+        fsearch_database_include_manager_add(include_manager,
+                                             fsearch_database_include_new(path, enabled, one_filesystem, FALSE, FALSE, 0));
     }
 
     return include_manager;
@@ -737,8 +733,7 @@ config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_
                                                  .one_file_system = fsearch_database_include_get_one_file_system(include),
                                                  .scan_after_launch = fsearch_database_include_get_scan_after_launch(
                                                      include),
-                                                 .rescan_after = fsearch_database_include_get_rescan_after(include),
-                                                 .id = fsearch_database_include_get_id(include)};
+                                                 .rescan_after = fsearch_database_include_get_rescan_after(include)};
 
         CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
     }

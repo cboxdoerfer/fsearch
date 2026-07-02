@@ -20,8 +20,7 @@ fsearch_database_include_new(const char *path,
                              gboolean one_file_system,
                              gboolean monitor,
                              gboolean scan_after_load,
-                             int64_t rescan_after,
-                             gint id);
+                             int64_t rescan_after);
 
 FsearchDatabaseInclude *
 fsearch_database_include_ref(FsearchDatabaseInclude *self);
@@ -67,9 +66,6 @@ fsearch_database_include_get_last_scanned_file_count(FsearchDatabaseInclude *sel
 
 FsearchDatabaseScanReason
 fsearch_database_include_get_last_scan_reason(FsearchDatabaseInclude *self);
-
-gint
-fsearch_database_include_get_id(FsearchDatabaseInclude *self);
 
 void
 fsearch_database_include_set_last_scan_time(FsearchDatabaseInclude *self, int64_t time);
