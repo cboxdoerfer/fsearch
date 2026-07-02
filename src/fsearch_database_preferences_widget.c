@@ -1100,9 +1100,13 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            -1);
 
         if (path) {
-            fsearch_database_include_manager_add(
-                include_manager,
-                fsearch_database_include_new(path, active, one_file_system, monitor, scan_after_launch, rescan_after));
+            g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(path,
+                                                                                     active,
+                                                                                     one_file_system,
+                                                                                     monitor,
+                                                                                     scan_after_launch,
+                                                                                     rescan_after);
+            fsearch_database_include_manager_add(include_manager, include);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
@@ -1142,12 +1146,12 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
                            -1);
 
         if (pattern && *pattern) {
-            fsearch_database_exclude_manager_add(exclude_manager,
-                                                 fsearch_database_exclude_new(pattern,
-                                                                              active,
-                                                                              (FsearchDatabaseExcludeType)type,
-                                                                              (FsearchDatabaseExcludeMatchScope)scope,
-                                                                              (FsearchDatabaseExcludeTarget)target));
+            g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
+                                                                                     active,
+                                                                                     (FsearchDatabaseExcludeType)type,
+                                                                                     (FsearchDatabaseExcludeMatchScope)scope,
+                                                                                     (FsearchDatabaseExcludeTarget)target);
+            fsearch_database_exclude_manager_add(exclude_manager, exclude);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
