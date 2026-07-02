@@ -1253,12 +1253,14 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    if (!g_mutex_trylock(&self->mutex)) {
+        return FSEARCH_RESULT_DB_BUSY;
+    }
 
     g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
 
     if (!fsearch_database_index_store_trylock(self->store)) {
+        g_mutex_unlock(&self->mutex);
         return FSEARCH_RESULT_DB_BUSY;
     }
 
@@ -1266,6 +1268,7 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
     FsearchResult res = database_get_entry_info_non_blocking(self, work, info_out);
 
     fsearch_database_index_store_unlock(self->store);
+    g_mutex_unlock(&self->mutex);
 
     return res;
 }
@@ -1275,18 +1278,21 @@ fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInf
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    if (!g_mutex_trylock(&self->mutex)) {
+        return FSEARCH_RESULT_DB_BUSY;
+    }
 
     g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
 
     if (!fsearch_database_index_store_trylock(self->store)) {
+        g_mutex_unlock(&self->mutex);
         return FSEARCH_RESULT_DB_BUSY;
     }
 
     *info_out = database_get_info(self);
 
     fsearch_database_index_store_unlock(self->store);
+    g_mutex_unlock(&self->mutex);
 
     return FSEARCH_RESULT_SUCCESS;
 }
