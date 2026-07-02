@@ -327,8 +327,17 @@ search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folder
 
 // Manipulation
 void
-fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders) {
+fsearch_database_search_view_add(FsearchDatabaseSearchView *view,
+                                 DynamicArray *files,
+                                 DynamicArray *folders,
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     g_return_if_fail(view);
+
+    // Skip adding when none of the results aren't sorted by any of the affected sort orders
+    if (!fsearch_database_index_property_is_set(affected_sort_orders, view->sort_order)
+        && !fsearch_database_index_property_is_set(affected_sort_orders, view->secondardy_sort_order)) {
+        return;
+    }
 
     // Use the same match data for all comparisons
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
@@ -377,8 +386,16 @@ fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *
 }
 
 void
-fsearch_database_search_view_remove(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders) {
+fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
+                                    DynamicArray *files,
+                                    DynamicArray *folders,
+                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     g_return_if_fail(view);
+    // Skip removal when none of the results aren't sorted by any of the affected sort orders
+    if (!fsearch_database_index_property_is_set(affected_sort_orders, view->sort_order)
+        && !fsearch_database_index_property_is_set(affected_sort_orders, view->secondardy_sort_order)) {
+        return;
+    }
     search_view_results_remove(view, folders, files);
 }
 

@@ -107,6 +107,7 @@ typedef struct {
             FsearchDatabaseSearchView *view;
             DynamicArray *files;
             DynamicArray *folders;
+            FsearchDatabaseIndexPropertyFlags affected_sort_orders;
         } update_results;
     };
 } IndexStoreWorkerPoolData;
@@ -116,6 +117,7 @@ typedef struct {
     DynamicArray *folders;
     DynamicArray *files;
     uint32_t *num_workers;
+    FsearchDatabaseIndexPropertyFlags affected_sort_orders;
 } IndexStoreAddRemoveContext;
 
 static gboolean
@@ -285,6 +287,7 @@ index_store_enqueue_add_results_cb(gpointer key, gpointer value, gpointer user_d
     pool_data->update_results.view = view;
     pool_data->update_results.files = ctx->files;
     pool_data->update_results.folders = ctx->folders;
+    pool_data->update_results.affected_sort_orders = ctx->affected_sort_orders;
 
     (*ctx->num_workers)++;
 
@@ -324,6 +327,7 @@ index_store_add_entries_locked(FsearchDatabaseIndexStore *store,
         .store = store,
         .folders = folders,
         .files = files,
+        .affected_sort_orders = affected_sort_orders,
         .num_workers = &num_workers,
     };
 
@@ -383,6 +387,7 @@ index_store_enqueue_remove_results_cb(gpointer key, gpointer value, gpointer use
     pool_data->update_results.view = view;
     pool_data->update_results.files = ctx->files;
     pool_data->update_results.folders = ctx->folders;
+    pool_data->update_results.affected_sort_orders = ctx->affected_sort_orders;
 
     (*ctx->num_workers)++;
 
@@ -402,6 +407,7 @@ index_store_remove_entries_locked(FsearchDatabaseIndexStore *store,
         .store = store,
         .folders = folders,
         .files = files,
+        .affected_sort_orders = affected_sort_orders,
         .num_workers = &num_workers,
     };
 
@@ -461,14 +467,16 @@ index_store_worker_pool_func(gpointer pool_data, gpointer user_data) {
     case INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_TO_RESULTS: {
         fsearch_database_search_view_add(data->update_results.view,
                                          data->update_results.files,
-                                         data->update_results.folders);
+                                         data->update_results.folders,
+                                         data->update_results.affected_sort_orders);
         g_async_queue_push(store->worker_pool_collect_queue, data);
         break;
     }
     case INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_FROM_RESULTS: {
         fsearch_database_search_view_remove(data->update_results.view,
                                             data->update_results.files,
-                                            data->update_results.folders);
+                                            data->update_results.folders,
+                                            data->update_results.affected_sort_orders);
         g_async_queue_push(store->worker_pool_collect_queue, data);
         break;
     }

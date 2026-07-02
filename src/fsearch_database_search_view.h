@@ -1,13 +1,13 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_query.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
+#include "fsearch_query.h"
 
-#include <glib.h>
 #include <gio/gio.h>
+#include <glib.h>
 #include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -31,10 +31,16 @@ fsearch_database_search_view_free(FsearchDatabaseSearchView *view);
 
 // Manipulation
 void
-fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders);
+fsearch_database_search_view_add(FsearchDatabaseSearchView *view,
+                                 DynamicArray *files,
+                                 DynamicArray *folders,
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders);
 
 void
-fsearch_database_search_view_remove(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders);
+fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
+                                    DynamicArray *files,
+                                    DynamicArray *folders,
+                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders);
 
 void
 fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
