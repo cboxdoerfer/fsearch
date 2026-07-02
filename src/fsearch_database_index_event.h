@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_database_index_properties.h"
 
 typedef enum {
     FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED,
@@ -20,6 +21,7 @@ typedef struct {
         struct {
             DynamicArray *folders;
             DynamicArray *files;
+            FsearchDatabaseIndexPropertyFlags affected_sort_orders;
         } entries;
 
         char *path;
@@ -30,7 +32,8 @@ FsearchDatabaseIndexEvent *
 fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind,
                                  DynamicArray *folders,
                                  DynamicArray *files,
-                                 const char *path);
+                                 const char *path,
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders);
 
 void
 fsearch_database_index_event_free(FsearchDatabaseIndexEvent *event);

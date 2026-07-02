@@ -312,7 +312,10 @@ index_store_enqueue_add_entries(FsearchDatabaseChunkedArray *chunks,
 }
 
 void
-index_store_add_entries_locked(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders) {
+index_store_add_entries_locked(FsearchDatabaseIndexStore *store,
+                               DynamicArray *files,
+                               DynamicArray *folders,
+                               FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     g_return_if_fail(store);
 
     uint32_t num_workers = 0;
@@ -327,6 +330,10 @@ index_store_add_entries_locked(FsearchDatabaseIndexStore *store, DynamicArray *f
     g_hash_table_foreach(store->search_results, index_store_enqueue_add_results_cb, &ctx);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        if (!fsearch_database_index_property_is_set(affected_sort_orders, i)) {
+            continue;
+        }
+
         if (files && store->file_chunks[i]) {
             index_store_enqueue_add_entries(store->file_chunks[i], files, store->worker_pool, &num_workers);
         }
@@ -383,7 +390,10 @@ index_store_enqueue_remove_results_cb(gpointer key, gpointer value, gpointer use
 }
 
 void
-index_store_remove_entries_locked(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders) {
+index_store_remove_entries_locked(FsearchDatabaseIndexStore *store,
+                                  DynamicArray *files,
+                                  DynamicArray *folders,
+                                  FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     g_return_if_fail(store);
 
     uint32_t num_workers = 0;
@@ -398,6 +408,10 @@ index_store_remove_entries_locked(FsearchDatabaseIndexStore *store, DynamicArray
     g_hash_table_foreach(store->search_results, index_store_enqueue_remove_results_cb, &ctx);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        if (!fsearch_database_index_property_is_set(affected_sort_orders, i)) {
+            continue;
+        }
+
         if (files && store->file_chunks[i]) {
             index_store_enqueue_remove_entries(store->file_chunks[i], files, store->worker_pool, &num_workers);
         }
@@ -506,10 +520,16 @@ index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEven
 
     switch (event->kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        index_store_add_entries_locked(store, event->entries.files, event->entries.folders);
+        index_store_add_entries_locked(store,
+                                       event->entries.files,
+                                       event->entries.folders,
+                                       event->entries.affected_sort_orders);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        index_store_remove_entries_locked(store, event->entries.files, event->entries.folders);
+        index_store_remove_entries_locked(store,
+                                          event->entries.files,
+                                          event->entries.folders,
+                                          event->entries.affected_sort_orders);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCANNING:
         if (store->event_func) {
@@ -589,7 +609,7 @@ index_store_root_reappear_poll_cb(gpointer user_data) {
 
             fsearch_database_index_start_monitoring(index, true);
 
-            index_store_add_entries_locked(store, files, folders);
+            index_store_add_entries_locked(store, files, folders, DATABASE_INDEX_PROPERTY_FLAG_ALL);
             index_store_content_changed(store);
 
             fsearch_database_index_unlock(index);
@@ -1018,7 +1038,7 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
         FsearchDatabaseEntry *entry = darray_get_item(old_folders, i);
         db_entry_set_mark(entry, 1);
     }
-    index_store_remove_entries_locked(store, old_files, old_folders);
+    index_store_remove_entries_locked(store, old_files, old_folders, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 
     fsearch_database_index_unlock(old_index);
 
@@ -1034,7 +1054,7 @@ fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, Fse
     // and then join them from the end
     g_autoptr(DynamicArray) new_files = fsearch_database_index_get_files(new_index);
     g_autoptr(DynamicArray) new_folders = fsearch_database_index_get_folders(new_index);
-    index_store_add_entries_locked(store, new_files, new_folders);
+    index_store_add_entries_locked(store, new_files, new_folders, DATABASE_INDEX_PROPERTY_FLAG_ALL);
     fsearch_database_index_unlock(new_index);
 
     // 5. Enable monitoring on the new index.

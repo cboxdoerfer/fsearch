@@ -1,9 +1,11 @@
 #define G_LOG_DOMAIN "fsearch-database-index"
 
 #include "fsearch_database_index.h"
+
 #include "fsearch_array.h"
 #include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_entry_flags.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_index_event.h"
@@ -65,14 +67,19 @@ static uint32_t num_descendant_counted = 0;
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
-propagate_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, DynamicArray *folders, DynamicArray *files);
-
-static void
-propagate_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, DynamicArray *folders, DynamicArray *files) {
+propagate_event(FsearchDatabaseIndex *self,
+                FsearchDatabaseIndexEventKind kind,
+                DynamicArray *folders,
+                DynamicArray *files,
+                FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     if (!self->event_func) {
         return;
     }
-    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, NULL);
+    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind,
+                                                                                  folders,
+                                                                                  files,
+                                                                                  NULL,
+                                                                                  affected_sort_orders);
     self->event_func(self, event, self->event_func_data);
 }
 
@@ -310,7 +317,7 @@ index_clear_locked(FsearchDatabaseIndex *self) {
 
     g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(self->folder_chunks);
     g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(self->file_chunks);
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 
 #ifdef HAVE_FANOTIFY
     fsearch_folder_monitor_fanotify_free(self->fanotify_monitor);
@@ -350,7 +357,7 @@ remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEnt
     darray_add_item(files, entry);
     db_entry_set_mark(entry, 1);
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 
     num_file_deletes++;
     db_entry_set_parent(entry, NULL);
@@ -391,7 +398,7 @@ remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseE
     }
     darray_add_item(folders, folder_entry_to_remove);
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 
     // Free all entries
     if (files) {
@@ -483,7 +490,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     num_folder_creates += folders ? darray_get_num_items(folders) : 0;
     num_file_creates += files ? darray_get_num_items(files) : 0;
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 }
 
 static void
@@ -537,8 +544,14 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         return;
     }
 
+    FsearchDatabaseIndexPropertyFlags affected_sort_orders = DATABASE_INDEX_PROPERTY_FLAG_NONE;
+    if (old_mtime != mtime) {
+        affected_sort_orders |= DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+    }
+
     g_autoptr(DynamicArray) folders = NULL;
     if (old_size != size) {
+        affected_sort_orders |= DATABASE_INDEX_PROPERTY_FLAG_SIZE;
 
         // When an entry size changed its parents need to be updated as well, since their size will change as well
         folders = darray_new(16);
@@ -565,10 +578,10 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         darray_add_item(files, entry);
     }
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, affected_sort_orders);
     db_entry_set_mtime(entry, mtime);
     db_entry_set_size(entry, size);
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, affected_sort_orders);
     num_attrib_changes++;
 }
 
@@ -945,7 +958,8 @@ scan_status_cb(const char *path, gpointer user_data) {
     g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(FSEARCH_DATABASE_INDEX_EVENT_SCANNING,
                                                                                   NULL,
                                                                                   NULL,
-                                                                                  path);
+                                                                                  path,
+                                                                                  DATABASE_INDEX_PROPERTY_FLAG_NONE);
     self->event_func(self, event, self->event_func_data);
 }
 
