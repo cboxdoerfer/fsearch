@@ -537,12 +537,38 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         return;
     }
 
-    g_autoptr(DynamicArray) entries = darray_new(1);
-    darray_add_item(entries, entry);
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, is_dir ? entries : NULL, !is_dir ? entries : NULL);
+    g_autoptr(DynamicArray) folders = NULL;
+    if (old_size != size) {
+
+        // When an entry size changed its parents need to be updated as well, since their size will change as well
+        folders = darray_new(16);
+        FsearchDatabaseEntry *entry_tmp = entry;
+        while (true) {
+            FsearchDatabaseEntry *parent = db_entry_get_parent(entry_tmp);
+            if (!parent) {
+                break;
+            }
+            darray_add_item(folders, parent);
+            entry_tmp = parent;
+        }
+    }
+
+    g_autoptr(DynamicArray) files = NULL;
+    if (is_dir) {
+        if (!folders) {
+            folders = darray_new(1);
+        }
+        darray_add_item(folders, entry);
+    }
+    else {
+        files = darray_new(1);
+        darray_add_item(files, entry);
+    }
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
     db_entry_set_mtime(entry, mtime);
     db_entry_set_size(entry, size);
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, is_dir ? entries : NULL, !is_dir ? entries : NULL);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
     num_attrib_changes++;
 }
 
