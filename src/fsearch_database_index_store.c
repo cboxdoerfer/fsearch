@@ -266,9 +266,15 @@ index_store_remove_from_store_worker(FsearchDatabaseChunkedArray *chunks, Dynami
         // and instead remove them one by one with binary search lookups
         for (uint32_t j = 0; j < num_entries; ++j) {
             FsearchDatabaseEntry *entry = darray_get_item(entries, j);
-            if (!fsearch_database_chunked_array_steal(chunks, entry)) {
-                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-                g_assert_not_reached();
+            if (G_UNLIKELY(!fsearch_database_chunked_array_steal(chunks, entry))) {
+                if (!fsearch_database_chunked_array_find_slow(chunks, entry)) {
+                    g_warning("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+                    g_assert_not_reached();
+                }
+                else {
+                    g_warning("store: sort order corrupted: %s", db_entry_get_name_raw_for_display(entry));
+                    g_assert_not_reached();
+                }
             }
         }
     }

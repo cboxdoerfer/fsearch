@@ -45,6 +45,9 @@ fsearch_database_chunked_array_insert_array(FsearchDatabaseChunkedArray *self, D
 FsearchDatabaseEntry *
 fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);
 
+FsearchDatabaseEntry *
+fsearch_database_chunked_array_find_slow(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);
+
 DynamicArray *
 fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
                                                  FsearchDatabaseEntry *folder,

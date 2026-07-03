@@ -393,6 +393,21 @@ fsearch_database_chunked_array_find(FsearchDatabaseChunkedArray *self, FsearchDa
 }
 
 FsearchDatabaseEntry *
+fsearch_database_chunked_array_find_slow(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry) {
+    for (uint32_t i = 0; i < darray_get_num_items(self->chunks); ++i) {
+        DynamicArray *chunk = darray_get_item(self->chunks, i);
+        for (uint32_t j = 0; j < darray_get_num_items(chunk); ++j) {
+            FsearchDatabaseEntry *e = darray_get_item(chunk, j);
+            const int32_t res = self->entry_comp_func((void *)&e, (void *)&entry, self->compare_context);
+            if (res == 0) {
+                return e;
+            }
+        }
+    }
+    return NULL;
+}
+
+FsearchDatabaseEntry *
 fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(self, NULL);
     g_assert(db_entry_get_type(entry) == self->entry_type);
