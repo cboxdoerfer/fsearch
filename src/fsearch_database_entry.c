@@ -881,8 +881,6 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
     while (attribute != DATABASE_INDEX_PROPERTY_NONE) {
         int32_t attribute_val_i32 = 0;
         int64_t attribute_val_i64 = 0;
-        int32_t attribute_val_test_i32 = 0;
-        int64_t attribute_val_test_i64 = 0;
         switch (attribute) {
         case DATABASE_INDEX_PROPERTY_SIZE:
         case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
@@ -891,15 +889,11 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
         case DATABASE_INDEX_PROPERTY_STATUS_CHANGE_TIME:
             attribute_val_i64 = va_arg(args, int64_t);
             db_entry_set_attribute(entry, attribute, &attribute_val_i64, sizeof(int64_t));
-            // db_entry_get_attribute(entry, attribute, &attribute_val_test_i64, sizeof(attribute_val_test_i64));
-            // g_assert(attribute_val_test_i64 == attribute_val_i64);
             break;
         case DATABASE_INDEX_PROPERTY_NUM_FILES:
         case DATABASE_INDEX_PROPERTY_NUM_FOLDERS:
             attribute_val_i32 = va_arg(args, int32_t);
             db_entry_set_attribute(entry, attribute, &attribute_val_i32, sizeof(int32_t));
-            // db_entry_get_attribute(entry, attribute, &attribute_val_test_i32, sizeof(attribute_val_test_i32));
-            // g_assert(attribute_val_test_i32 == attribute_val_i32);
             break;
         case DATABASE_INDEX_PROPERTY_NONE:
         case DATABASE_INDEX_PROPERTY_NAME:
