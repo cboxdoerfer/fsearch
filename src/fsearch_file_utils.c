@@ -60,6 +60,26 @@ add_error_message(GString *error_messages, const char *error_message) {
     g_string_append_c(error_messages, '\n');
 }
 
+gchar *
+fsearch_file_utils_get_app_user_state_dir() {
+#if GLIB_CHECK_VERSION(2, 72, 0)
+    const gchar *state_dir = g_get_user_state_dir();
+    return g_build_filename(state_dir, data_folder_name, NULL);
+
+#else
+    const gchar *xdg_state_home = g_getenv("XDG_STATE_HOME");
+
+    if (xdg_state_home != NULL && xdg_state_home[0] != '\0') {
+        return g_build_filename(xdg_state_home, data_folder_name, NULL);
+    }
+    else {
+        /* Default to ~/.local/state as per the spec */
+        const gchar *home_dir = g_get_home_dir();
+        return g_build_filename(home_dir, ".local", "state", data_folder_name, NULL);
+    }
+#endif
+}
+
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path);

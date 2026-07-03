@@ -7,6 +7,7 @@
         <file compressed="true">fsearch_overlay.ui</file>
         <file compressed="true">fsearch_preferences.ui</file>
         <file compressed="true">fsearch_statusbar.ui</file>
+        <file compressed="true">fsearch_welcome_dialog.ui</file>
         <file compressed="true">fsearch_window.ui</file>
         <file compressed="true">menus.ui</file>
         <file compressed="true">shared.css</file>

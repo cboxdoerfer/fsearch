@@ -528,6 +528,64 @@ fsearch_application_init(FsearchApplication *app) {
     g_action_map_add_action_entries(G_ACTION_MAP(app), fsearch_app_entries, G_N_ELEMENTS(fsearch_app_entries), app);
 }
 
+static bool
+should_show_welcome_dialog(void) {
+    g_autofree gchar *state_dir = fsearch_file_utils_get_app_user_state_dir();
+
+    // Ensure the state directory exists
+    g_mkdir_with_parents(state_dir, 0700);
+
+    g_autofree gchar *state_file = g_build_filename(state_dir, "fsearch.ini", NULL);
+
+    g_autoptr(GKeyFile) key_file = g_key_file_new();
+    bool should_show = false;
+
+    // Try to load the existing INI file. If it fails, we assume it's the first run.
+    if (g_key_file_load_from_file(key_file, state_file, G_KEY_FILE_NONE, NULL)) {
+        g_autofree gchar *last_version = g_key_file_get_string(key_file, "State", "last_seen_version", NULL);
+
+        if (g_strcmp0(last_version, PACKAGE_VERSION) != 0) {
+            should_show = true;
+        }
+    }
+    else {
+        should_show = true;
+    }
+
+    // Update the INI file so the dialog isn't shown again for this version
+    if (should_show) {
+        g_key_file_set_string(key_file, "State", "last_seen_version", PACKAGE_VERSION);
+
+        g_autoptr(GError) error = NULL;
+        if (!g_key_file_save_to_file(key_file, state_file, &error)) {
+            g_warning("[app] Failed to write welcome state to INI: %s", error->message);
+        }
+    }
+
+    return should_show;
+}
+
+static void
+fsearch_welcome_dialog_show(GtkWindow *parent) {
+    g_return_if_fail(parent != NULL);
+
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                  "fsearch_welcome_dialog.ui");
+
+    GtkWidget *dialog = GTK_WIDGET(gtk_builder_get_object(builder, "welcome_dialog"));
+
+    if (!dialog) {
+        g_warning("[app] Failed to load the welcome dialog from the UI resource.");
+        return;
+    }
+
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 static void
 fsearch_application_activate(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
@@ -544,6 +602,13 @@ fsearch_application_activate(GApplication *app) {
     }
 
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", g_variant_new_boolean(self->minimized));
+    if (should_show_welcome_dialog()) {
+        FsearchApplicationWindow *window = get_first_application_window(self);
+        if (window) {
+            g_debug("[app] Triggering welcome dialog for version %s", PACKAGE_VERSION);
+            fsearch_welcome_dialog_show(GTK_WINDOW(window));
+        }
+    }
 }
 
 static gint

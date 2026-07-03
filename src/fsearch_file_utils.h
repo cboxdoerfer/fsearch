@@ -27,6 +27,9 @@ typedef void
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len);
 
+gchar *
+fsearch_file_utils_get_app_user_state_dir(void);
+
 bool
 fsearch_file_utils_create_dir(const char *path);
 
