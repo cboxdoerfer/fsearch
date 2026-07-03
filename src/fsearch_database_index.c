@@ -349,19 +349,52 @@ index_clear_locked(FsearchDatabaseIndex *self) {
     g_clear_pointer(&self->folder_chunks, fsearch_database_chunked_array_unref);
 }
 
+static DynamicArray *
+get_parent_entries(FsearchDatabaseEntry *entry) {
+    const uint32_t num_parents = db_entry_get_depth(entry);
+    DynamicArray *parent_folders = darray_new(num_parents);
+    while (true) {
+        FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
+        if (!parent) {
+            break;
+        }
+        darray_add_item(parent_folders, parent);
+        entry = parent;
+    }
+    return parent_folders;
+}
+
 static void
-remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
-    g_assert(db_entry_is_file(entry));
+remove_and_free_file_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseEntry *file) {
+    g_assert(db_entry_is_file(file));
 
     g_autoptr(DynamicArray) files = darray_new(1);
-    darray_add_item(files, entry);
-    db_entry_set_mark(entry, 1);
+    darray_add_item(files, file);
+    db_entry_set_mark(file, 1);
 
+    // By removing a file the size of the parent folders changes as well, hence they need to be updated too:
+    // First delete the parent folders from the size sorted indexes
+    g_autoptr(DynamicArray) parent_folders = get_parent_entries(file);
+    propagate_event(self,
+                    FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+                    parent_folders,
+                    NULL,
+                    DATABASE_INDEX_PROPERTY_FLAG_SIZE);
+
+    // Delete the file from all indexes
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
 
+    // Unparent the file, thereby updating the parent folders sizes
     num_file_deletes++;
-    db_entry_set_parent(entry, NULL);
-    g_clear_pointer(&entry, db_entry_free);
+    db_entry_set_parent(file, NULL);
+    g_clear_pointer(&file, db_entry_free);
+
+    // Insert the parents with the updated sizes again
+    propagate_event(self,
+                    FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
+                    parent_folders,
+                    NULL,
+                    DATABASE_INDEX_PROPERTY_FLAG_SIZE);
 }
 
 static void
@@ -377,6 +410,14 @@ remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseE
 
     // Don't forget to mark the folder itself for removal
     db_entry_set_mark(folder_entry_to_remove, 1);
+
+    // Remove all parent folders to update their position in the size sorted indexes
+    g_autoptr(DynamicArray) parent_folders = get_parent_entries(folder_entry_to_remove);
+    propagate_event(self,
+                    FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+                    parent_folders,
+                    NULL,
+                    DATABASE_INDEX_PROPERTY_FLAG_SIZE);
 
     g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_steal_descendants(self->folder_chunks,
                                                                                        folder_entry_to_remove,
@@ -426,6 +467,13 @@ remove_and_free_folder_entry_locked(FsearchDatabaseIndex *self, FsearchDatabaseE
         db_entry_set_parent(last_folder, NULL);
         g_clear_pointer(&last_folder, db_entry_free);
 
+        // Insert the parents with the updated sizes again
+        propagate_event(self,
+                        FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
+                        parent_folders,
+                        NULL,
+                        DATABASE_INDEX_PROPERTY_FLAG_SIZE);
+
         num_folder_deletes += darray_get_num_items(folders);
     }
 }
@@ -451,6 +499,21 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     }
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
+
+    // Remove watched entry and its parents from the size sorted indexes because while adding the newly created files or
+    // folders, they're size will get updated
+    const uint32_t watched_entry_depth = db_entry_get_depth(event->watched_entry);
+    g_autoptr(DynamicArray) parent_folders = darray_new(watched_entry_depth + 1);
+    FsearchDatabaseEntry *parent_tmp = event->watched_entry;
+    while (parent_tmp) {
+        darray_add_item(parent_folders, parent_tmp);
+        parent_tmp = db_entry_get_parent(parent_tmp);
+    }
+    propagate_event(self,
+                    FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+                    parent_folders,
+                    NULL,
+                    DATABASE_INDEX_PROPERTY_FLAG_SIZE);
 
     if (is_dir) {
         folders = darray_new(128);
@@ -491,6 +554,11 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     num_file_creates += files ? darray_get_num_items(files) : 0;
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, DATABASE_INDEX_PROPERTY_FLAG_ALL);
+    propagate_event(self,
+                    FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
+                    parent_folders,
+                    NULL,
+                    DATABASE_INDEX_PROPERTY_FLAG_SIZE);
 }
 
 static void
@@ -554,16 +622,7 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         affected_sort_orders |= DATABASE_INDEX_PROPERTY_FLAG_SIZE;
 
         // When an entry size changed its parents need to be updated as well, since their size will change as well
-        folders = darray_new(16);
-        FsearchDatabaseEntry *entry_tmp = entry;
-        while (true) {
-            FsearchDatabaseEntry *parent = db_entry_get_parent(entry_tmp);
-            if (!parent) {
-                break;
-            }
-            darray_add_item(folders, parent);
-            entry_tmp = parent;
-        }
+        folders = get_parent_entries(entry);
     }
 
     g_autoptr(DynamicArray) files = NULL;
