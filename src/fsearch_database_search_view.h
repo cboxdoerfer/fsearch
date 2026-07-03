@@ -40,7 +40,8 @@ void
 fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
                                     DynamicArray *files,
                                     DynamicArray *folders,
-                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders);
+                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                    bool marked);
 
 void
 fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,

@@ -275,35 +275,16 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
     }
 }
 
-static bool
-search_view_entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
-    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
-    fsearch_query_match_data_set_entry(match_data, entry);
-
-    const bool found = fsearch_query_match(view->query, match_data);
-    g_clear_pointer(&match_data, fsearch_query_match_data_free);
-    return found;
-}
-
-static bool
-search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
-    if (!entry || !search_view_entry_matches_query(view, entry)) {
-        return true;
-    }
-
-    fsearch_database_chunked_array_insert(db_entry_is_folder(entry) ? view->folder_chunks : view->file_chunks, entry);
-    return true;
-}
-
 static void
 remove_results(DynamicArray *entries_to_remove,
                FsearchDatabaseChunkedArray *chunks_to_remove_from,
-               GHashTable *selection_to_remove_from) {
+               GHashTable *selection_to_remove_from,
+               bool marked) {
     if (!entries_to_remove) {
         return;
     }
     const uint32_t num_entries = darray_get_num_items(entries_to_remove);
-    if (num_entries < 256) {
+    if (!marked || num_entries < 256) {
         for (uint32_t i = 0; i < num_entries; ++i) {
             FsearchDatabaseEntry *entry = darray_get_item(entries_to_remove, i);
             fsearch_database_chunked_array_steal(chunks_to_remove_from, entry);
@@ -317,12 +298,6 @@ remove_results(DynamicArray *entries_to_remove,
             fsearch_selection_unselect(selection_to_remove_from, entry);
         }
     }
-}
-
-static void
-search_view_results_remove(FsearchDatabaseSearchView *view, DynamicArray *folders, DynamicArray *files) {
-    remove_results(files, view->file_chunks, view->file_selection);
-    remove_results(folders, view->folder_chunks, view->folder_selection);
 }
 
 // Manipulation
@@ -389,14 +364,16 @@ void
 fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
                                     DynamicArray *files,
                                     DynamicArray *folders,
-                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
+                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                    bool marked) {
     g_return_if_fail(view);
     // Skip removal when none of the results aren't sorted by any of the affected sort orders
     if (!fsearch_database_index_property_is_set(affected_sort_orders, view->sort_order)
         && !fsearch_database_index_property_is_set(affected_sort_orders, view->secondardy_sort_order)) {
         return;
     }
-    search_view_results_remove(view, folders, files);
+    remove_results(files, view->file_chunks, view->file_selection, marked);
+    remove_results(folders, view->folder_chunks, view->folder_selection, marked);
 }
 
 // Getters

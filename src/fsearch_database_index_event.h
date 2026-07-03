@@ -22,6 +22,7 @@ typedef struct {
             DynamicArray *folders;
             DynamicArray *files;
             FsearchDatabaseIndexPropertyFlags affected_sort_orders;
+            bool marked;
         } entries;
 
         char *path;
@@ -33,7 +34,8 @@ fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind,
                                  DynamicArray *folders,
                                  DynamicArray *files,
                                  const char *path,
-                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders);
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                 bool marked);
 
 void
 fsearch_database_index_event_free(FsearchDatabaseIndexEvent *event);
