@@ -105,7 +105,7 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
 
     const uint32_t num_items_in_chunk = darray_get_num_items(chunk);
     if (num_items_in_chunk <= target_chunk_size) {
-        DynamicArray *chunks = darray_new(1);
+        DynamicArray *chunks = darray_new_full(1, (GDestroyNotify)darray_unref);
         DynamicArray *chunk_copy = darray_copy(chunk);
         darray_set_free_func(chunk_copy, entry_free_func);
         darray_add_item(chunks, chunk_copy);
@@ -119,7 +119,7 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
     g_debug("[chunk] num_chunks: %d", num_chunks);
     g_debug("[chunk] num_items_per_chunk: %d", num_items_per_chunk);
 
-    DynamicArray *chunks = darray_new(num_chunks);
+    DynamicArray *chunks = darray_new_full(num_chunks, (GDestroyNotify)darray_unref);
     for (uint32_t n = 0; n < num_chunks; ++n) {
         DynamicArray *chunk_slice = darray_get_range(chunk,
                                                      n * num_items_per_chunk,
@@ -141,10 +141,9 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             return;
         }
         g_debug("[balance_chunk] remove empty: %d", chunk_idx);
-        darray_remove_fast(self->chunks, chunk_idx, 1);
-        // Make sure to set free_func to NULL, to avoid entries being freed
         darray_set_free_func(chunk, NULL);
-        g_clear_pointer(&chunk, darray_unref);
+        darray_remove(self->chunks, chunk_idx, 1);
+        chunk = NULL;
         return;
     }
 
@@ -159,14 +158,13 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             darray_get_num_items(chunk),
             darray_get_num_items(splitted));
 
-    darray_remove_fast(self->chunks, chunk_idx, 1);
-    // Make sure to set free_func to NULL, to avoid entries being freed
     darray_set_free_func(chunk, NULL);
-    g_clear_pointer(&chunk, darray_unref);
+    darray_remove(self->chunks, chunk_idx, 1);
+    chunk = NULL;
 
     for (uint32_t i = 0; i < darray_get_num_items(splitted); ++i) {
         DynamicArray *c = darray_get_item(splitted, i);
-        darray_insert_item(self->chunks, c, chunk_idx++);
+        darray_insert_item(self->chunks, darray_ref(c), chunk_idx++);
     }
 }
 
@@ -230,9 +228,6 @@ fsearch_database_chunked_array_unref(FsearchDatabaseChunkedArray *self) {
     g_return_if_fail(self->ref_count > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
-        for (uint32_t i = 0; i < darray_get_num_items(self->chunks); ++i) {
-            darray_unref(darray_get_item(self->chunks, i));
-        }
         g_clear_pointer(&self->chunks, darray_unref);
         g_clear_pointer(&self->compare_context, db_entry_compare_context_free);
         g_free(self);
@@ -298,7 +293,7 @@ fsearch_database_chunked_array_insert_array(FsearchDatabaseChunkedArray *self, D
     const uint32_t num_chunks_target = ceil(total_entries / (double)self->target_chunk_size);
     const uint32_t num_items_per_chunk = floor(total_entries / (double)num_chunks_target);
 
-    g_autoptr(DynamicArray) new_chunks = darray_new(num_chunks_target);
+    g_autoptr(DynamicArray) new_chunks = darray_new_full(num_chunks_target, (GDestroyNotify)darray_unref);
 
     // Allocate slightly extra space in case the final chunk absorbs the remainder
     g_autoptr(DynamicArray) current_chunk = darray_new_full(num_items_per_chunk + 2, self->entry_free_func);
@@ -485,8 +480,8 @@ fsearch_database_chunked_array_steal_marked_folders(FsearchDatabaseChunkedArray 
         }
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove_fast(self->chunks, chunk_idx, 1);
-            g_clear_pointer(&chunk, darray_unref);
+            darray_remove(self->chunks, chunk_idx, 1);
+            chunk = NULL;
         }
         else {
             chunk_idx++;
@@ -537,8 +532,8 @@ fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray
         }
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove_fast(self->chunks, chunk_idx, 1);
-            g_clear_pointer(&chunk, darray_unref);
+            darray_remove(self->chunks, chunk_idx, 1);
+            chunk = NULL;
         }
         else {
             chunk_idx++;
@@ -605,8 +600,8 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
 
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove_fast(self->chunks, chunk_idx, 1);
-            g_clear_pointer(&chunk, darray_unref);
+            darray_remove(self->chunks, chunk_idx, 1);
+            chunk = NULL;
         }
         else {
             chunk_idx++;
