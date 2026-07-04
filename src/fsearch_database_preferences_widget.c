@@ -181,11 +181,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
-static int
-compare_int(const void *a, const void *b) {
-    return (*(int *)a - *(int *)b);
-}
-
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -1082,7 +1077,6 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         gboolean monitor = FALSE;
         gboolean scan_after_launch = FALSE;
         gint64 rescan_after = 0;
-        gint id = -1;
         gtk_tree_model_get(model,
                            &iter,
                            COL_INCLUDE_PATH,

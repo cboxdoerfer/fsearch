@@ -1000,7 +1000,7 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     }
 
     uint64_t file_block_size = 0;
-    const uint64_t file_block_size_offset = cursor.bytes_written;
+    // const uint64_t file_block_size_offset = cursor.bytes_written;
     g_debug("[db_save] saving file block size...");
     cursor_write(&cursor, &file_block_size, sizeof(file_block_size));
     if (cursor.error == true) {

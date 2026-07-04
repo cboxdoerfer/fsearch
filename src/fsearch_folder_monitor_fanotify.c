@@ -63,6 +63,7 @@ typedef struct {
     char absent_symbol;
 } FanotifyFlag;
 
+/*
 static const FanotifyFlag FANOTIFY_FLAGS[] = {{FAN_CREATE, 'c', '-'},
                                               {FAN_CLOSE_WRITE, 'w', '-'},
                                               {FAN_ATTRIB, 'a', '-'},
@@ -84,6 +85,7 @@ print_fanotify_mask(uint32_t mask) {
         g_print("%c", symbol);
     }
 }
+*/
 
 static bool
 has_multiple_create_delete_events(uint32_t mask) {

@@ -276,18 +276,6 @@ signal_emit_database_progress(FsearchDatabase *self, char *text) {
 // endregion
 
 // region Database private
-static void
-database_unlock(FsearchDatabase *self) {
-    g_assert(FSEARCH_IS_DATABASE(self));
-    g_mutex_unlock(&self->mutex);
-}
-
-static void
-database_lock(FsearchDatabase *self) {
-    g_assert(FSEARCH_IS_DATABASE(self));
-    g_mutex_lock(&self->mutex);
-}
-
 static FsearchDatabaseIndexPropertyFlags
 database_get_flags(FsearchDatabase *self) {
     return self->store ? fsearch_database_index_store_get_flags(self->store) : DATABASE_INDEX_PROPERTY_FLAG_NONE;
