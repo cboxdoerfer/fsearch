@@ -1005,11 +1005,29 @@ db_entry_set_monitored_fanotify(FsearchDatabaseEntry *entry) {
     entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY;
 }
 
+void
+db_entry_set_monitored_failed(FsearchDatabaseEntry *entry) {
+    g_return_if_fail(entry);
+    g_assert(db_entry_is_folder(entry));
+    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FAILED;
+}
+
+bool
+db_entry_is_monitored_failed(FsearchDatabaseEntry *entry) {
+    g_return_val_if_fail(entry, false);
+    if (db_entry_is_file(entry)) {
+        entry = entry->parent;
+    }
+    return entry ? (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FAILED) != 0 : false;
+}
+
 bool
 db_entry_is_monitored_fanotify(FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(entry, false);
-    g_assert(db_entry_is_folder(entry));
-    return (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY) != 0;
+    if (db_entry_is_file(entry)) {
+        entry = entry->parent;
+    }
+    return entry ? (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY) != 0 : false;
 }
 
 void
@@ -1029,6 +1047,8 @@ db_entry_set_monitored_inotify(FsearchDatabaseEntry *entry) {
 bool
 db_entry_is_monitored_inotify(FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(entry, false);
-    g_assert(db_entry_is_folder(entry));
-    return (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_INOTIFY) != 0;
+    if (db_entry_is_file(entry)) {
+        entry = entry->parent;
+    }
+    return entry ? (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_INOTIFY) != 0 : false;
 }

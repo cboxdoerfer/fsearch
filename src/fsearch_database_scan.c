@@ -49,6 +49,9 @@ watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, co
         }
     }
 #endif
+    if (walk_context->fanotify_monitor || walk_context->inotify_monitor) {
+        db_entry_set_monitored_failed(folder);
+    }
 }
 
 static FsearchDatabaseEntry *

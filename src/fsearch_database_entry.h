@@ -5,8 +5,8 @@
 #include <stdint.h>
 
 #include "fsearch_array.h"
-#include "fsearch_database_index_properties.h"
 #include "fsearch_database_entry_flags.h"
+#include "fsearch_database_index_properties.h"
 
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
@@ -40,7 +40,7 @@ bool
 db_entry_is_file(FsearchDatabaseEntry *entry);
 
 bool
-db_entry_is_sibling(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_sibling) ;
+db_entry_is_sibling(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_sibling);
 
 bool
 db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_ancestor);
@@ -224,8 +224,14 @@ db_entry_set_unmonitored_fanotify(FsearchDatabaseEntry *entry);
 void
 db_entry_set_monitored_fanotify(FsearchDatabaseEntry *entry);
 
+void
+db_entry_set_monitored_failed(FsearchDatabaseEntry *entry);
+
 bool
 db_entry_is_monitored_fanotify(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_monitored_failed(FsearchDatabaseEntry *entry);
 
 void
 db_entry_set_unmonitored_inotify(FsearchDatabaseEntry *entry);
