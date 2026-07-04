@@ -141,7 +141,7 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             return;
         }
         g_debug("[balance_chunk] remove empty: %d", chunk_idx);
-        darray_remove(self->chunks, chunk_idx, 1);
+        darray_remove_fast(self->chunks, chunk_idx, 1);
         // Make sure to set free_func to NULL, to avoid entries being freed
         darray_set_free_func(chunk, NULL);
         g_clear_pointer(&chunk, darray_unref);
@@ -159,7 +159,7 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             darray_get_num_items(chunk),
             darray_get_num_items(splitted));
 
-    darray_remove(self->chunks, chunk_idx, 1);
+    darray_remove_fast(self->chunks, chunk_idx, 1);
     // Make sure to set free_func to NULL, to avoid entries being freed
     darray_set_free_func(chunk, NULL);
     g_clear_pointer(&chunk, darray_unref);
@@ -485,7 +485,7 @@ fsearch_database_chunked_array_steal_marked_folders(FsearchDatabaseChunkedArray 
         }
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
+            darray_remove_fast(self->chunks, chunk_idx, 1);
             g_clear_pointer(&chunk, darray_unref);
         }
         else {
@@ -537,7 +537,7 @@ fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray
         }
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
+            darray_remove_fast(self->chunks, chunk_idx, 1);
             g_clear_pointer(&chunk, darray_unref);
         }
         else {
@@ -594,7 +594,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
                 FsearchDatabaseEntry *maybe_descendant = darray_get_item(chunk, entry_idx);
                 if (db_entry_is_descendant(maybe_descendant, folder)) {
                     darray_add_item(descendants, maybe_descendant);
-                    darray_remove(chunk, entry_idx, 1);
+                    darray_remove_fast(chunk, entry_idx, 1);
                     continue;
                 }
                 entry_idx++;
@@ -605,7 +605,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
 
         // Remove the chunk if it became empty
         if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
+            darray_remove_fast(self->chunks, chunk_idx, 1);
             g_clear_pointer(&chunk, darray_unref);
         }
         else {

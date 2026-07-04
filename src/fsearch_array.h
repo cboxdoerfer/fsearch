@@ -25,14 +25,10 @@
 
 typedef struct DynamicArray DynamicArray;
 
-typedef bool
-(*DynamicArrayStealFunc)(void *a, void *data);
-typedef int32_t
-(*DynamicArrayCompareFunc)(void *a, void *b);
-typedef int32_t
-(*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
-typedef bool
-(*DynamicArrayForEachFunc)(void *, void *data);
+typedef bool (*DynamicArrayStealFunc)(void *a, void *data);
+typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
+typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
+typedef bool (*DynamicArrayForEachFunc)(void *, void *data);
 
 void
 darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data);
@@ -73,11 +69,7 @@ DynamicArray *
 darray_get_range(DynamicArray *array, uint32_t start_idx, uint32_t num_items);
 
 bool
-darray_get_item_idx(DynamicArray *array,
-                    void *item,
-                    DynamicArrayCompareDataFunc compare_func,
-                    void *data,
-                    uint32_t *index);
+darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index);
 
 void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items);
@@ -101,13 +93,13 @@ uint32_t
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
 
 uint32_t
+darray_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements);
+
+uint32_t
 darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination);
 
 void
-darray_remove_items_sorted(DynamicArray *array,
-                           DynamicArray *items,
-                           DynamicArrayCompareDataFunc compare_func,
-                           void *data);
+darray_remove_items_sorted(DynamicArray *array, DynamicArray *items, DynamicArrayCompareDataFunc compare_func, void *data);
 
 DynamicArray *
 darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data);

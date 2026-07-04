@@ -42,17 +42,26 @@ struct DynamicArray {
 };
 
 static void
+darray_free_items(DynamicArray *array, uint32_t start_idx, uint32_t num_items) {
+    if (array->item_free_func && start_idx < array->num_items) {
+        const uint32_t items_left = array->num_items - start_idx;
+        const uint32_t items_to_free = MIN(num_items, items_left);
+        const uint32_t end = start_idx + items_to_free;
+
+        for (uint32_t i = start_idx; i < end; ++i) {
+            array->item_free_func(array->data[i]);
+        }
+    }
+}
+
+static void
 darray_free(DynamicArray *array) {
     if (array == NULL) {
         return;
     }
 
-    //g_debug("[darray_free] freed");
-    if (array->item_free_func) {
-        for (uint32_t i = 0; i < array->num_items; ++i) {
-            array->item_free_func(array->data[i]);
-        }
-    }
+    // g_debug("[darray_free] freed");
+    darray_free_items(array, 0, array->num_items);
 
     g_clear_pointer(&array->data, free);
     g_clear_pointer(&array, free);
@@ -167,10 +176,7 @@ split_merge(DynamicArray *src,
 }
 
 static void
-merge_sort(DynamicArray *to_sort,
-           GCancellable *cancellable,
-           DynamicArrayCompareDataFunc comp_func,
-           gpointer comp_data) {
+merge_sort(DynamicArray *to_sort, GCancellable *cancellable, DynamicArrayCompareDataFunc comp_func, gpointer comp_data) {
     g_assert(to_sort);
     g_assert(comp_func);
     if (g_cancellable_is_cancelled(cancellable)) {
@@ -343,7 +349,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
         void *item = array->data[i];
         if (item && func(item, data)) {
             darray_add_item(stolen_entries, item);
-            darray_remove(array, i, 1);
+            darray_remove_fast(array, i, 1);
             continue;
         }
         i++;
@@ -353,7 +359,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
 }
 
 static uint32_t
-darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
+darray_steal_or_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
     g_assert(array);
     g_assert(array->data);
 
@@ -397,7 +403,7 @@ darray_steal_item(DynamicArray *array, uint32_t idx) {
     }
 
     void *item = array->data[idx];
-    darray_remove(array, idx, 1);
+    darray_remove_fast(array, idx, 1);
     return item;
 }
 
@@ -406,21 +412,53 @@ darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);
     g_assert(array->data);
 
-    return darray_steal_or_remove(array, index, n_elements, NULL);
+    if (n_elements == 0) {
+        // No need to remove anything
+        return 0;
+    }
+
+    if (index >= array->num_items) {
+        return 0;
+    }
+    if (n_elements >= array->num_items - index) {
+        // The end of the items to be removed is also the end of the array.
+        // No need to memmove, just to decrement the number of array items.
+        n_elements = array->num_items - index;
+
+        darray_free_items(array, index, n_elements);
+
+        array->num_items -= n_elements;
+
+        return n_elements;
+    }
+
+    darray_free_items(array, index, n_elements);
+
+    memmove(array->data + index,
+            array->data + index + n_elements,
+            (array->num_items - index - n_elements) * sizeof(void *));
+    array->num_items -= n_elements;
+
+    return n_elements;
+}
+
+uint32_t
+darray_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+    g_assert(array);
+    g_assert(array->data);
+
+    return darray_steal_or_remove_fast(array, index, n_elements, NULL);
 }
 
 uint32_t
 darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination) {
     g_assert(destination);
 
-    return darray_steal_or_remove(array, index, n_elements, destination);
+    return darray_steal_or_remove_fast(array, index, n_elements, destination);
 }
 
 void
-darray_remove_items_sorted(DynamicArray *array,
-                           DynamicArray *items,
-                           DynamicArrayCompareDataFunc compare_func,
-                           void *data) {
+darray_remove_items_sorted(DynamicArray *array, DynamicArray *items, DynamicArrayCompareDataFunc compare_func, void *data) {
     g_assert(array);
     g_assert(items);
     g_assert(compare_func);
@@ -435,11 +473,7 @@ darray_remove_items_sorted(DynamicArray *array,
 }
 
 bool
-darray_get_item_idx(DynamicArray *array,
-                    void *item,
-                    DynamicArrayCompareDataFunc compare_func,
-                    void *data,
-                    uint32_t *index) {
+darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     g_assert(array);
     g_assert(index);
 
@@ -725,15 +759,15 @@ darray_copy_borrowed(DynamicArray *array) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
     g_assert(new);
 
-    new -> max_items = array->max_items;
-    new -> num_items = array->num_items;
+    new->max_items = array->max_items;
+    new->num_items = array->num_items;
 
-    new -> data = calloc(new->max_items, sizeof(void *));
+    new->data = calloc(new->max_items, sizeof(void *));
     g_assert(new->data);
 
     new->item_free_func = NULL;
 
-    new -> ref_count = 1;
+    new->ref_count = 1;
 
     memcpy(new->data, array->data, new->num_items * sizeof(void *));
 
@@ -759,15 +793,15 @@ darray_copy(DynamicArray *array) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
     g_assert(new);
 
-    new -> max_items = array->max_items;
-    new -> num_items = array->num_items;
+    new->max_items = array->max_items;
+    new->num_items = array->num_items;
 
-    new -> data = calloc(new->max_items, sizeof(void *));
+    new->data = calloc(new->max_items, sizeof(void *));
     g_assert(new->data);
 
     new->item_free_func = array->item_free_func;
 
-    new -> ref_count = 1;
+    new->ref_count = 1;
 
     memcpy(new->data, array->data, new->num_items * sizeof(void *));
 
