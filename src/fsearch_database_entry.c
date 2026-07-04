@@ -48,7 +48,7 @@ build_path_recursively(FsearchDatabaseEntry *folder, GString *str, size_t name_o
         build_path_recursively(folder->parent, str, name_offset);
     }
     const char *name = db_entry_get_attribute_name_for_offset(folder, name_offset);
-    if (G_LIKELY(strcmp(name, "") != 0)) {
+    if (G_LIKELY(name[0] != '\0' && strcmp(name, G_DIR_SEPARATOR_S) != 0)) {
         g_string_append(str, name);
     }
     g_string_append_c(str, G_DIR_SEPARATOR);
