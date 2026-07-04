@@ -93,7 +93,7 @@ uint32_t
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
 
 uint32_t
-darray_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements);
+darray_drop(DynamicArray *array, uint32_t index, uint32_t n_elements);
 
 uint32_t
 darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination);

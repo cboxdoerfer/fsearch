@@ -349,7 +349,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
         void *item = array->data[i];
         if (item && func(item, data)) {
             darray_add_item(stolen_entries, item);
-            darray_remove_fast(array, i, 1);
+            darray_drop(array, i, 1);
             continue;
         }
         i++;
@@ -359,7 +359,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
 }
 
 static uint32_t
-darray_steal_or_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
+darray_steal_or_drop(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
     g_assert(array);
     g_assert(array->data);
 
@@ -403,7 +403,7 @@ darray_steal_item(DynamicArray *array, uint32_t idx) {
     }
 
     void *item = array->data[idx];
-    darray_remove_fast(array, idx, 1);
+    darray_drop(array, idx, 1);
     return item;
 }
 
@@ -443,18 +443,18 @@ darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
 }
 
 uint32_t
-darray_remove_fast(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+darray_drop(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);
     g_assert(array->data);
 
-    return darray_steal_or_remove_fast(array, index, n_elements, NULL);
+    return darray_steal_or_drop(array, index, n_elements, NULL);
 }
 
 uint32_t
 darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination) {
     g_assert(destination);
 
-    return darray_steal_or_remove_fast(array, index, n_elements, destination);
+    return darray_steal_or_drop(array, index, n_elements, destination);
 }
 
 void

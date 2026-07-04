@@ -589,7 +589,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
                 FsearchDatabaseEntry *maybe_descendant = darray_get_item(chunk, entry_idx);
                 if (db_entry_is_descendant(maybe_descendant, folder)) {
                     darray_add_item(descendants, maybe_descendant);
-                    darray_remove_fast(chunk, entry_idx, 1);
+                    darray_drop(chunk, entry_idx, 1);
                     continue;
                 }
                 entry_idx++;
