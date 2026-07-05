@@ -212,7 +212,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 To enable this feature go to the Database section of the Preferences dialog.
 
-See the online dolcumentation for more information:
+See the online documentation for more information:
 &lt;a href="URL"&gt;https://github.com/cboxdoerfer/fsearch/wiki/Database-update&lt;/a&gt;</property>
                                         <property name="use-markup">True</property>
                                         <property name="wrap">True</property>
