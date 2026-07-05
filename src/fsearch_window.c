@@ -561,10 +561,7 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 }
 
 static void
-on_fsearch_list_view_row_activated(FsearchListView *view,
-                                   FsearchDatabaseIndexProperty col,
-                                   int row_idx,
-                                   gpointer user_data) {
+on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexProperty col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -700,8 +697,8 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
     fsearch_list_view_column_set_tooltip(type_col,
                                          _("Sorting by <b>Type</b> can take a few seconds with many results.\n\n"
-                                             "This sort order is not persistent, it will be reset when the search term "
-                                             "changes."));
+                                           "This sort order is not persistent, it will be reset when the search term "
+                                           "changes."));
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
@@ -762,7 +759,8 @@ static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
-    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/" "fsearch_overlay.ui");
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                  "fsearch_overlay.ui");
 
     win->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
     win->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
@@ -824,11 +822,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     add_columns(list_view, config);
 
     g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
-    g_signal_connect_object(list_view,
-                            "row-activated",
-                            G_CALLBACK(on_fsearch_list_view_row_activated),
-                            win,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
 
     win->result_view->list_view = list_view;
@@ -1163,17 +1157,16 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order
-                                                  ? get_sort_order_for_name(config->sort_by)
-                                                  : DATABASE_INDEX_PROPERTY_NAME;
+    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order ? get_sort_order_for_name(config->sort_by)
+                                                                         : DATABASE_INDEX_PROPERTY_NAME;
     if (sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
     }
     const GtkSortType sort_type = config->restore_sort_order
-                                      ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
-                                      : GTK_SORT_ASCENDING;
+                                    ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
+                                    : GTK_SORT_ASCENDING;
 
     fsearch_window_apply_config(win);
     fsearch_list_view_set_config(win->result_view->list_view, 0, sort_order, sort_type);
