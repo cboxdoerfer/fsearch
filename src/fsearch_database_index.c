@@ -147,14 +147,9 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
 
 static inline FsearchDatabaseEntry *
 create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type) {
-    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                            | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+    const FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                   | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
 
-    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
-        return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
-    }
-
-    // Files don't need the DB_INDEX attribute, they inherit it from 'parent'
     return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
 }
 
