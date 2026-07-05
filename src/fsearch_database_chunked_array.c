@@ -168,6 +168,15 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
     }
 }
 
+static uint32_t
+advance_past_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t chunk_idx) {
+    if (darray_get_num_items(chunk) > 0 || darray_get_num_items(self->chunks) == 1) {
+        return chunk_idx + 1;
+    }
+    darray_remove(self->chunks, chunk_idx, 1);
+    return chunk_idx;
+}
+
 FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_new(DynamicArray *array,
                                    gboolean is_array_sorted,
@@ -479,14 +488,8 @@ remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destinati
                 entry_idx++;
             }
         }
-        // Remove the chunk if it became empty
-        if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
-            chunk = NULL;
-        }
-        else {
-            chunk_idx++;
-        }
+        // Remove the chunk if it became empty (unless it's the last one left).
+        chunk_idx = advance_past_chunk(self, chunk, chunk_idx);
         // We must set the start index back to zero before we move on to the next entry chunk
         entry_start_idx = 0;
     }
@@ -563,14 +566,8 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
         // We must set the start index back to zero before we move on to the next entry chunk
         entry_start_idx = 0;
 
-        // Remove the chunk if it became empty
-        if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
-            chunk = NULL;
-        }
-        else {
-            chunk_idx++;
-        }
+        // Remove the chunk if it became empty (unless it's the last one left).
+        chunk_idx = advance_past_chunk(self, chunk, chunk_idx);
     }
 
     if (num_known_descendants >= 0) {

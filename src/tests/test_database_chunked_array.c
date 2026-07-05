@@ -919,6 +919,8 @@ test_steal_descendants_known_count_path_full_fast_path(void) {
     g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, sub, num_children);
     g_assert_cmpuint(darray_get_num_items(descendants), ==, num_children);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 0);
+    // Stealing every entry must not remove the very last chunk, same guarantee as steal().
+    g_assert_cmpuint(num_chunks(arr), ==, 1);
 }
 
 static void
@@ -1117,13 +1119,10 @@ test_steal_marked_returns_removed_entries(void) {
 }
 
 static void
-test_steal_marked_all_marked_can_empty_all_chunks(void) {
-    // Unlike fsearch_database_chunked_array_steal() (whose balance_chunk() call explicitly
-    // refuses to ever remove the very last chunk, see test_steal_all_entries_keeps_one_chunk),
-    // the marked-removal cleanup loop shared by remove_marked_folders()/steal_marked_folders()
-    // has no such guard: removing every entry can leave zero chunks behind. This isn't
-    // directly exploitable because get_chunk_for_entry() lazily creates a fresh chunk again
-    // on the next insert, but it's a real inconsistency between the two removal code paths.
+test_steal_marked_all_marked_keeps_one_chunk(void) {
+    // Mirrors test_steal_all_entries_keeps_one_chunk(): removing every entry via
+    // steal_marked_folders()/remove_marked_folders() must not remove the very last chunk
+    // either, same as fsearch_database_chunked_array_steal()'s balance_chunk() guarantee.
     g_autoptr(DynamicArray) input = make_sorted_files("f", 5);
     for (uint32_t i = 0; i < 5; i++) {
         db_entry_set_mark(darray_get_item(input, i), 1);
@@ -1136,14 +1135,14 @@ test_steal_marked_all_marked_can_empty_all_chunks(void) {
     g_autoptr(DynamicArray) stolen = fsearch_database_chunked_array_steal_marked_folders(arr);
     g_assert_cmpuint(darray_get_num_items(stolen), ==, 5);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 0);
-    g_assert_cmpuint(num_chunks(arr), ==, 0);
+    g_assert_cmpuint(num_chunks(arr), ==, 1);
 
     free_stolen(g_steal_pointer(&stolen));
 
-    // The array must still be usable afterwards: get_chunk_for_entry() lazily recreates a
-    // chunk on the next insert even when self->chunks was left completely empty.
+    // The array must still be usable afterwards.
     fsearch_database_chunked_array_insert(arr, make_file("new"));
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 1);
+    g_assert_cmpuint(num_chunks(arr), ==, 1);
     g_assert_cmpuint(num_chunks(arr), ==, 1);
 }
 
@@ -1239,8 +1238,8 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_spans_chunk_boundary",
                     test_remove_marked_spanning_chunk_boundary);
     g_test_add_func("/FSearch/database/chunked_array/steal_marked_returns_entries", test_steal_marked_returns_removed_entries);
-    g_test_add_func("/FSearch/database/chunked_array/steal_marked_all_can_empty_all_chunks",
-                    test_steal_marked_all_marked_can_empty_all_chunks);
+    g_test_add_func("/FSearch/database/chunked_array/steal_marked_all_keeps_one_chunk",
+                    test_steal_marked_all_marked_keeps_one_chunk);
 
     return g_test_run();
 }
