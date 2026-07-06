@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 21:34+0200\n"
-"PO-Revision-Date: 2026-06-10 12:01+0000\n"
+"PO-Revision-Date: 2026-07-06 13:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.7.1.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -1505,22 +1505,25 @@ msgstr "DÜZENLİ İFADE"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "FSearch'teki Yenilikler"
 
 #: src/fsearch_welcome_dialog.ui:69
 msgid ""
 "<b>Database Update Required:</b> This update will migrate your database "
 "index format. This may take a moment."
 msgstr ""
+"<b>Veri Tabanı Güncellemesi Gerekiyor:</b> Bu güncelleme, veri tabanınızın "
+"indeks biçimini değiştirecektir. Bu işlem biraz zaman alabilir."
 
 #: src/fsearch_welcome_dialog.ui:127
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
 msgstr ""
+"<span size=\"xx-large\" weight=\"bold\">FSearch 0.3'teki Yenilikler</span>"
 
 #: src/fsearch_welcome_dialog.ui:197
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>Dosya Sistemi İzleme</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:211
 msgid ""
@@ -1534,20 +1537,32 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"Artık sık sık yeniden tarama işlemlerini ortadan kaldırmak için belirli "
+"klasörleri etkin bir şekilde izleyebilirsiniz. Dosya değişiklikleri, arama "
+"sonuçlarınızda anında görünür.\n"
+"\n"
+"Bu özelliği etkinleştirmek için Tercihler iletişim kutusundaki Veri Tabanı "
+"bölümüne gidin.\n"
+"\n"
+"Daha fazla bilgi için çevrim içi belgelere bakın:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:280
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>Klasöre Özel Yeniden Tarama Zamanlamaları</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:294
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"Artık her bir klasör için otomatik güncelleme aralıklarını bağımsız olarak "
+"ve her bir konumun özelliklerine göre ayarlayabilirsiniz."
 
 #: src/fsearch_welcome_dialog.ui:357
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>İyileştirilmiş Hariç Tutma Kuralları</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:371
 msgid ""
@@ -1556,6 +1571,11 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"Artık joker karakterleri ve düzenli ifadeleri kullanarak daha etkili hariç "
+"tutma kuralları tanımlayabilirsiniz.\n"
+"Kurallar, dosyalara, klasörlere veya her ikisine birden özel olarak "
+"yönlendirilebilir ve dosya adı ya da tam mutlak yol ile eşleşecek şekilde "
+"yapılandırılabilir."
 
 #: src/fsearch_window.c:667 src/menus.ui:279
 msgid "Size"
