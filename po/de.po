@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 21:34+0200\n"
 "PO-Revision-Date: 2026-07-06 13:01+0000\n"
-"Last-Translator: Masowick <Demian@gmx.co.uk>\n"
+"Last-Translator: anon <anon0000000000@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -452,9 +452,8 @@ msgid "Scan after launch"
 msgstr "Nach dem Start scannen"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Einzelnes Dateisystem"
+msgstr "Im Dateisystem bleiben"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
