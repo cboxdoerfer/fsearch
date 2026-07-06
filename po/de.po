@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 21:34+0200\n"
-"PO-Revision-Date: 2026-06-22 20:01+0000\n"
-"Last-Translator: Masowick <Demian@gmx.co.uk>\n"
+"PO-Revision-Date: 2026-07-06 13:01+0000\n"
+"Last-Translator: anon <anon0000000000@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.7.1.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -452,9 +452,8 @@ msgid "Scan after launch"
 msgstr "Nach dem Start scannen"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "Einzelnes Dateisystem"
+msgstr "Im Dateisystem bleiben"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -1515,22 +1514,25 @@ msgstr "REGEX"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "Neuerungen in FSearch"
 
 #: src/fsearch_welcome_dialog.ui:69
 msgid ""
 "<b>Database Update Required:</b> This update will migrate your database "
 "index format. This may take a moment."
 msgstr ""
+"<b>Datenbankaktualisierung notwendig:</b> Dieses Update migriert das "
+"Datenbankindexformat. Das kann einen Moment dauern."
 
 #: src/fsearch_welcome_dialog.ui:127
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
 msgstr ""
+"<span size=\"xx-large\" weight=\"bold\">Neuerungen in FSearch 0.3</span>"
 
 #: src/fsearch_welcome_dialog.ui:197
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>Dateisystemüberwachung</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:211
 msgid ""
@@ -1544,20 +1546,33 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"Es lassen sich jetzt einzelne Ordner aktiv überwachen, um häufige Neuscannen "
+"zu vermeiden. Dateiänderungen werden dann sofort in den Suchergebnissen "
+"angezeigt.\n"
+"\n"
+"Um diese Funktion zu aktivieren, im Dialogfeld „Einstellungen“ zum Abschnitt "
+"„Datenbank“ wechseln.\n"
+"\n"
+"Weitere Informationen finden sich in der Online-Dokumentation:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:280
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>Ordnerspezifische Zeitpläne für das Neuscannen</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:294
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"Jetzt können die Intervalle für automatische Aktualisierungen für einzelne "
+"Ordner unabhängig voneinander und individuell an den jeweiligen Speicherort "
+"angepasst konfiguriert werden."
 
 #: src/fsearch_welcome_dialog.ui:357
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>Verbesserte Ausschlussregeln</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:371
 msgid ""
@@ -1566,6 +1581,11 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"Es können nun Platzhalter und reguläre Ausdrücke verwendet werden, um "
+"umfangreiche Ausschlussregeln zu definieren.\n"
+"Regeln können gezielt auf Dateien, Ordner oder beides angewendet werden und "
+"so konfiguriert werden, dass sie entweder mit dem Basisnamen oder dem "
+"vollständigen absoluten Pfad abgeglichen werden."
 
 #: src/fsearch_window.c:667 src/menus.ui:279
 msgid "Size"
