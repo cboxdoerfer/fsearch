@@ -397,18 +397,24 @@ fsearch_result_view_row_cache_reset(FsearchResultView *result_view) {
 }
 
 static void
-on_item_info_ready(FsearchDatabase *db, guint view_id, FsearchDatabaseEntryInfo *info, FsearchResultView *view) {
-    if (!info) {
-        return;
-    }
+on_item_info_ready(FsearchDatabase *db, guint view_id, guint idx, FsearchDatabaseEntryInfo *info, FsearchResultView *view) {
     if (view_id != view->view_id) {
         return;
     }
-    const uint32_t row = fsearch_database_entry_info_get_index(info);
-    gpointer key = get_key_from_row_idx(row);
+    gpointer key = get_key_from_row_idx(idx);
+    if (!info) {
+        // The row no longer exists in the current search view (e.g. a newer or cancelled search
+        // replaced it while this request was in flight). Drop any placeholder cached for it so
+        // the next time it's rendered we ask again, instead of leaving it stuck blank until the
+        // whole cache happens to get reset.
+        if (g_hash_table_remove(view->item_info_cache, key)) {
+            fsearch_list_view_redraw_row(view->list_view, idx);
+        }
+        return;
+    }
     if (!g_hash_table_lookup(view->item_info_cache, key)) {
         g_hash_table_insert(view->item_info_cache, key, fsearch_database_entry_info_ref(info));
-        fsearch_list_view_redraw_row(view->list_view, row);
+        fsearch_list_view_redraw_row(view->list_view, idx);
     }
 }
 
@@ -426,8 +432,10 @@ fsearch_result_view_new(guint view_id) {
     g_assert(result_view);
 
     result_view->view_id = view_id;
-    result_view->item_info_cache =
-        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)entry_info_free);
+    result_view->item_info_cache = g_hash_table_new_full(g_direct_hash,
+                                                         g_direct_equal,
+                                                         NULL,
+                                                         (GDestroyNotify)entry_info_free);
     result_view->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     result_view->pixbuf_cache = g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
     result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);

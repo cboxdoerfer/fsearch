@@ -8,7 +8,16 @@ test_database_include = executable('test_database_include', 'test_database_inclu
 test_database_exclude = executable('test_database_exclude', 'test_database_exclude.c', dependencies : libfsearch_dep)
 test_database_chunked_array = executable('test_database_chunked_array', 'test_database_chunked_array.c', dependencies : libfsearch_dep)
 test_database_index_store = executable('test_database_index_store', 'test_database_index_store.c', dependencies : libfsearch_dep)
+test_database = executable('test_database', 'test_database.c', dependencies : libfsearch_dep)
 
+test('test_database',
+     test_database,
+     env : [
+         'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
+         'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
+     ],
+     timeout : 60,
+)
 test('test_database_chunked_array',
      test_database_chunked_array,
      env : [

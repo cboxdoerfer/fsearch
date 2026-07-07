@@ -96,8 +96,10 @@ typedef struct FsearchSignalEmitContext {
     FsearchDatabaseSignalType type;
     gpointer arg1;
     gpointer arg2;
+    gpointer arg3;
     GDestroyNotify arg1_free_func;
     GDestroyNotify arg2_free_func;
+    GDestroyNotify arg3_free_func;
     guint n_args;
 } FsearchSignalEmitContext;
 
@@ -109,6 +111,9 @@ signal_emit_context_free(FsearchSignalEmitContext *ctx) {
     if (ctx->arg2_free_func) {
         g_clear_pointer(&ctx->arg2, ctx->arg2_free_func);
     }
+    if (ctx->arg3_free_func) {
+        g_clear_pointer(&ctx->arg3, ctx->arg3_free_func);
+    }
     g_clear_object(&ctx->db);
     g_clear_pointer(&ctx, free);
 }
@@ -118,9 +123,11 @@ signal_emit_context_new(FsearchDatabase *db,
                         FsearchDatabaseSignalType type,
                         gpointer arg1,
                         gpointer arg2,
+                        gpointer arg3,
                         guint n_args,
                         GDestroyNotify arg1_free_func,
-                        GDestroyNotify arg2_free_func) {
+                        GDestroyNotify arg2_free_func,
+                        GDestroyNotify arg3_free_func) {
     FsearchSignalEmitContext *ctx = calloc(1, sizeof(FsearchSignalEmitContext));
     g_assert(ctx != NULL);
 
@@ -128,9 +135,11 @@ signal_emit_context_new(FsearchDatabase *db,
     ctx->type = type;
     ctx->arg1 = arg1;
     ctx->arg2 = arg2;
+    ctx->arg3 = arg3;
     ctx->n_args = n_args;
     ctx->arg1_free_func = arg1_free_func;
     ctx->arg2_free_func = arg2_free_func;
+    ctx->arg3_free_func = arg3_free_func;
     return ctx;
 }
 
@@ -186,6 +195,9 @@ signal_emit_cb(gpointer user_data) {
     case 2:
         g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
         break;
+    case 3:
+        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2, ctx->arg3);
+        break;
     default:
         g_assert_not_reached();
     }
@@ -201,7 +213,7 @@ signal_emit0(FsearchDatabase *self, FsearchDatabaseSignalType type) {
         g_debug("signal_emit0: cancelling signal %s", signal_type_to_name(type));
         return;
     }
-    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
+    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, NULL, 0, NULL, NULL, NULL));
 }
 
 static void
@@ -216,18 +228,41 @@ signal_emit(FsearchDatabase *self,
         g_debug("signal_emit: cancelling signal %s", signal_type_to_name(type));
         return;
     }
-    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, arg1, arg2, n_args, arg1_free_func, arg2_free_func));
+    g_idle_add(signal_emit_cb,
+               signal_emit_context_new(self, type, arg1, arg2, NULL, n_args, arg1_free_func, arg2_free_func, NULL));
 }
 
 static void
-signal_emit_item_info_ready(FsearchDatabase *self, guint id, FsearchDatabaseEntryInfo *info) {
-    signal_emit(self,
-                SIGNAL_ITEM_INFO_READY,
-                GUINT_TO_POINTER(id),
-                info,
-                2,
-                NULL,
-                (GDestroyNotify)fsearch_database_entry_info_unref);
+signal_emit3(FsearchDatabase *self,
+             FsearchDatabaseSignalType type,
+             gpointer arg1,
+             gpointer arg2,
+             gpointer arg3,
+             GDestroyNotify arg1_free_func,
+             GDestroyNotify arg2_free_func,
+             GDestroyNotify arg3_free_func) {
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        g_debug("signal_emit3: cancelling signal %s", signal_type_to_name(type));
+        return;
+    }
+    g_idle_add(signal_emit_cb,
+               signal_emit_context_new(self, type, arg1, arg2, arg3, 3, arg1_free_func, arg2_free_func, arg3_free_func));
+}
+
+static void
+signal_emit_item_info_ready(FsearchDatabase *self, guint id, guint idx, FsearchDatabaseEntryInfo *info) {
+    // `info` may be NULL: the requested row no longer exists in the current search view (e.g. it
+    // was replaced by a newer/cancelled search while this request was in flight). Emitting the
+    // signal regardless of success lets callers clear any placeholder they cached for `idx`
+    // instead of it being stuck unresolved until their whole cache is later reset wholesale.
+    signal_emit3(self,
+                 SIGNAL_ITEM_INFO_READY,
+                 GUINT_TO_POINTER(id),
+                 GUINT_TO_POINTER(idx),
+                 info,
+                 NULL,
+                 NULL,
+                 (GDestroyNotify)fsearch_database_entry_info_unref);
 }
 
 static void
@@ -873,9 +908,13 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
         FsearchDatabaseEntryInfo *info = NULL;
         database_get_entry_info(self, work, &info);
-        if (info) {
-            signal_emit_item_info_ready(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
-        }
+        // Emit regardless of whether info was found: a NULL result (e.g. the row no longer
+        // exists in the current search view) still needs to reach the caller so it can stop
+        // treating this index as "pending" and retry later instead of getting stuck.
+        signal_emit_item_info_ready(self,
+                                    fsearch_database_work_get_view_id(work),
+                                    fsearch_database_work_item_info_get_index(work),
+                                    g_steal_pointer(&info));
         break;
     }
     default:
@@ -1148,7 +1187,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                    NULL,
                                                    NULL,
                                                    G_TYPE_NONE,
-                                                   2,
+                                                   3,
+                                                   G_TYPE_UINT,
                                                    G_TYPE_UINT,
                                                    FSEARCH_TYPE_DATABASE_ENTRY_INFO);
 }
