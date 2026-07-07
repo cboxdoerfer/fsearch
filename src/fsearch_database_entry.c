@@ -60,24 +60,17 @@ db_entry_compare_context_free(FsearchDatabaseEntryCompareContext *ctx) {
 
     g_clear_pointer(&ctx->file_type_table, g_hash_table_unref);
     g_clear_pointer(&ctx->entry_to_file_type_table, g_hash_table_unref);
-    if (ctx->next_comp_func_data_free_func) {
-        g_clear_pointer(&ctx->next_comp_func_data, ctx->next_comp_func_data_free_func);
-    }
     g_clear_pointer(&ctx, free);
 }
 
 FsearchDatabaseEntryCompareContext *
-db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
-                             void *next_comp_func_data,
-                             GDestroyNotify next_comp_func_data_free_func) {
+db_entry_compare_context_new(FsearchDatabaseSortOrderChain chain) {
     FsearchDatabaseEntryCompareContext *ctx = calloc(1, sizeof(FsearchDatabaseEntryCompareContext));
     g_assert(ctx);
 
     ctx->file_type_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     ctx->entry_to_file_type_table = g_hash_table_new(NULL, NULL);
-    ctx->next_comp_func = next_comp_func;
-    ctx->next_comp_func_data = next_comp_func_data;
-    ctx->next_comp_func_data_free_func = next_comp_func_data_free_func;
+    ctx->chain = chain;
     return ctx;
 }
 
@@ -402,11 +395,44 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     const char *file_type_a = get_file_type(*a, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
     const char *file_type_b = get_file_type(*b, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
 
-    int res = strcmp(file_type_a, file_type_b);
-    if (res != 0) {
-        return res;
+    return strcmp(file_type_a, file_type_b);
+}
+
+static int
+compare_entries_by_property(FsearchDatabaseEntry **a,
+                            FsearchDatabaseEntry **b,
+                            FsearchDatabaseIndexProperty property,
+                            FsearchDatabaseEntryCompareContext *ctx) {
+    switch (property) {
+    case DATABASE_INDEX_PROPERTY_NAME:
+        return db_entry_compare_entries_by_name(a, b);
+    case DATABASE_INDEX_PROPERTY_PATH:
+        return db_entry_compare_entries_by_path(a, b);
+    case DATABASE_INDEX_PROPERTY_PATH_FULL:
+        return db_entry_compare_entries_by_full_path(a, b);
+    case DATABASE_INDEX_PROPERTY_SIZE:
+        return db_entry_compare_entries_by_size(a, b);
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
+        return db_entry_compare_entries_by_extension(a, b);
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
+        return db_entry_compare_entries_by_modification_time(a, b);
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
+        return db_entry_compare_entries_by_type(a, b, ctx);
+    default:
+        return 0;
     }
-    return comp_ctx->next_comp_func ? comp_ctx->next_comp_func((void *)a, (void *)b, comp_ctx->next_comp_func_data) : res;
+}
+
+int
+db_entry_compare_entries_by_chain(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data) {
+    FsearchDatabaseEntryCompareContext *ctx = data;
+    for (uint32_t i = 0; i < ctx->chain.length; ++i) {
+        const int res = compare_entries_by_property(a, b, ctx->chain.properties[i], ctx);
+        if (res != 0) {
+            return res;
+        }
+    }
+    return 0;
 }
 
 int

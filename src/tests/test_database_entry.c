@@ -26,7 +26,7 @@
  *   - db_entry_get_deep_copy
  *   - db_entry_free / db_entry_free_no_unparent / db_entry_free_full
  *   - db_entry_compare_context_new / db_entry_compare_context_free
- *   - db_entry_compare_entries_by_{name,size,extension,type,modification_time,position,path,full_path}
+ *   - db_entry_compare_entries_by_{name,size,extension,type,modification_time,position,path,full_path,chain}
  *   - db_entry_{set,is}_monitored_{fanotify,inotify} / db_entry_set_monitored_failed / db_entry_is_monitored_failed
  *
  * Not exercised: db_entry_get_idx, db_entry_get_member_flags and
@@ -54,10 +54,6 @@ static FsearchDatabaseEntry *
 new_file(FsearchDatabaseIndexPropertyFlags flags, const char *name, FsearchDatabaseEntry *parent) {
     return db_entry_new(flags, name, parent, DATABASE_ENTRY_TYPE_FILE);
 }
-
-// Adapter matching DynamicArrayCompareDataFunc, mirroring the direct function-pointer
-// casts used throughout fsearch_database_sort.c.
-#define AS_COMPARE_DATA_FUNC(f) ((DynamicArrayCompareDataFunc)(f))
 
 /* ------------------------------------------------------------------------ *
  * Creation & type
@@ -965,16 +961,17 @@ test_compare_by_position_always_zero(void) {
 }
 
 static void
-test_compare_by_type_folders_are_equal_and_fall_back_to_name(void) {
-    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(AS_COMPARE_DATA_FUNC(
-                                                                               db_entry_compare_entries_by_name),
-                                                                           NULL,
-                                                                           NULL);
+test_compare_by_type_folders_always_equal(void) {
+    // db_entry_compare_entries_by_type() only ever compares the type itself now; falling back to
+    // another property on a tie is the job of db_entry_compare_entries_by_chain(), not this
+    // function, so two folders (which always share the "Folder" type string) always compare equal
+    // regardless of name.
+    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new((FsearchDatabaseSortOrderChain){});
     FsearchDatabaseEntry *dir_a = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a", NULL);
     FsearchDatabaseEntry *dir_b = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b", NULL);
 
-    g_assert_cmpint(db_entry_compare_entries_by_type(&dir_a, &dir_b, ctx), <, 0);
-    g_assert_cmpint(db_entry_compare_entries_by_type(&dir_b, &dir_a, ctx), >, 0);
+    g_assert_cmpint(db_entry_compare_entries_by_type(&dir_a, &dir_b, ctx), ==, 0);
+    g_assert_cmpint(db_entry_compare_entries_by_type(&dir_b, &dir_a, ctx), ==, 0);
     g_assert_cmpint(db_entry_compare_entries_by_type(&dir_a, &dir_a, ctx), ==, 0);
 
     // Both folders share the "Folder" type string, so exactly one entry is added to the
@@ -989,7 +986,7 @@ test_compare_by_type_folders_are_equal_and_fall_back_to_name(void) {
 
 static void
 test_compare_by_type_folder_and_file_differ(void) {
-    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(NULL, NULL, NULL);
+    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new((FsearchDatabaseSortOrderChain){});
     FsearchDatabaseEntry *dir = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "dir", NULL);
     FsearchDatabaseEntry *file = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "file.txt", NULL);
 
@@ -1001,19 +998,24 @@ test_compare_by_type_folder_and_file_differ(void) {
 }
 
 static void
-mark_freed(gpointer data) {
-    *(gboolean *)data = TRUE;
-}
+test_compare_by_chain_type_then_name(void) {
+    // db_entry_compare_entries_by_chain() is what actually implements "fall back to the next
+    // property on a tie" -- here [TYPE, NAME], so two folders (tied on TYPE) fall back to NAME.
+    FsearchDatabaseSortOrderChain chain = {
+        .properties = {DATABASE_INDEX_PROPERTY_FILETYPE, DATABASE_INDEX_PROPERTY_NAME},
+        .length = 2,
+    };
+    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(chain);
+    FsearchDatabaseEntry *dir_a = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a", NULL);
+    FsearchDatabaseEntry *dir_b = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b", NULL);
 
-static void
-test_compare_context_free_invokes_data_free_func(void) {
-    gboolean freed = FALSE;
-    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(NULL, &freed, mark_freed);
-    g_assert_true(ctx->next_comp_func_data == &freed);
+    g_assert_cmpint(db_entry_compare_entries_by_chain(&dir_a, &dir_b, ctx), <, 0);
+    g_assert_cmpint(db_entry_compare_entries_by_chain(&dir_b, &dir_a, ctx), >, 0);
+    g_assert_cmpint(db_entry_compare_entries_by_chain(&dir_a, &dir_a, ctx), ==, 0);
 
     db_entry_compare_context_free(ctx);
-
-    g_assert_true(freed);
+    db_entry_free(dir_a);
+    db_entry_free(dir_b);
 }
 
 static void
@@ -1372,12 +1374,11 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/entry/compare_by_extension_folder_empty",
                     test_compare_by_extension_folder_treated_as_empty);
     g_test_add_func("/FSearch/database/entry/compare_by_position_always_zero", test_compare_by_position_always_zero);
-    g_test_add_func("/FSearch/database/entry/compare_by_type_folders_equal_fallback_name",
-                    test_compare_by_type_folders_are_equal_and_fall_back_to_name);
+    g_test_add_func("/FSearch/database/entry/compare_by_type_folders_always_equal",
+                    test_compare_by_type_folders_always_equal);
     g_test_add_func("/FSearch/database/entry/compare_by_type_folder_file_differ",
                     test_compare_by_type_folder_and_file_differ);
-    g_test_add_func("/FSearch/database/entry/compare_context_free_invokes_destroy_func",
-                    test_compare_context_free_invokes_data_free_func);
+    g_test_add_func("/FSearch/database/entry/compare_by_chain_type_then_name", test_compare_by_chain_type_then_name);
     g_test_add_func("/FSearch/database/entry/compare_by_path_siblings_name_order",
                     test_compare_by_path_siblings_use_name_order);
     g_test_add_func("/FSearch/database/entry/compare_by_path_different_depth", test_compare_by_path_different_depth);

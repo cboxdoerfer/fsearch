@@ -2,6 +2,7 @@
 
 #include <glib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define DATABASE_INDEX_PROPERTY_NAME_STRING "Name"
 #define DATABASE_INDEX_PROPERTY_PATH_STRING "Path"
@@ -50,6 +51,17 @@ typedef enum {
     NUM_DATABASE_INDEX_PROPERTIES,
 } FsearchDatabaseIndexProperty;
 
+// An explicit, ordered chain of properties describing the full comparator a sorted array is
+// actually ordered by, e.g. [TYPE, SIZE, NAME, PATH]. Used instead of a single "secondary sort
+// order" property because a manual (non-fast-indexed) sort layers on top of whatever order the
+// array already had, which can itself be several properties deep.
+#define FSEARCH_DATABASE_SORT_ORDER_CHAIN_MAX_LENGTH NUM_DATABASE_INDEX_PROPERTIES
+
+typedef struct FsearchDatabaseSortOrderChain {
+    FsearchDatabaseIndexProperty properties[FSEARCH_DATABASE_SORT_ORDER_CHAIN_MAX_LENGTH];
+    uint32_t length;
+} FsearchDatabaseSortOrderChain;
+
 static inline bool
 fsearch_database_index_property_is_set(FsearchDatabaseIndexPropertyFlags flags, FsearchDatabaseIndexProperty property) {
     static const FsearchDatabaseIndexPropertyFlags prop_to_flag[NUM_DATABASE_INDEX_PROPERTIES] = {
@@ -75,3 +87,16 @@ fsearch_database_index_property_is_set(FsearchDatabaseIndexPropertyFlags flags, 
     return (target_flag != 0) && ((flags & target_flag) != 0);
 }
 
+// Whether an update touching `affected_sort_orders` can affect the position of any entry
+// currently ordered by `chain` -- i.e. whether any level of the chain (not just the primary
+// property) is among the affected properties.
+static inline bool
+fsearch_database_sort_order_chain_is_affected(const FsearchDatabaseSortOrderChain *chain,
+                                              FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
+    for (uint32_t i = 0; i < chain->length; ++i) {
+        if (fsearch_database_index_property_is_set(affected_sort_orders, chain->properties[i])) {
+            return true;
+        }
+    }
+    return false;
+}

@@ -107,22 +107,23 @@ make_chunked_array(DynamicArray *array,
                    GDestroyNotify free_func) {
     return fsearch_database_chunked_array_new(array,
                                               is_sorted,
-                                              sort_order,
-                                              DATABASE_INDEX_PROPERTY_NONE,
+                                              fsearch_database_sort_order_chain_for_property(sort_order),
                                               type,
                                               NULL,
                                               free_func);
 }
 
 static void
-assert_sorted(FsearchDatabaseChunkedArray *array, DynamicArrayCompareDataFunc comp_func) {
+assert_sorted_by_property(FsearchDatabaseChunkedArray *array, FsearchDatabaseIndexProperty property) {
+    FsearchDatabaseSortOrderChain chain = fsearch_database_sort_order_chain_for_property(property);
+    g_autoptr(FsearchDatabaseEntryCompareContext) ctx = db_entry_compare_context_new(chain);
     const uint32_t n = fsearch_database_chunked_array_get_num_entries(array);
     FsearchDatabaseEntry *prev = NULL;
     for (uint32_t i = 0; i < n; i++) {
         FsearchDatabaseEntry *cur = fsearch_database_chunked_array_get_entry(array, i);
         g_assert_nonnull(cur);
         if (prev) {
-            g_assert_cmpint(comp_func((void *)&prev, (void *)&cur, NULL), <=, 0);
+            g_assert_cmpint(db_entry_compare_entries_by_chain((void *)&prev, (void *)&cur, ctx), <=, 0);
         }
         prev = cur;
     }
@@ -200,9 +201,7 @@ test_new_large_array_splits_at_construction(void) {
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 5000);
     g_assert_cmpuint(num_chunks(arr), >, 1);
 
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 }
 
 static void
@@ -214,9 +213,7 @@ test_new_unsorted_input_gets_sorted(void) {
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 500);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 }
 
 static void
@@ -379,9 +376,7 @@ test_insert_maintains_sort_order(void) {
         fsearch_database_chunked_array_insert(arr, darray_get_item(to_insert, i));
     }
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 500);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 }
 
 static void
@@ -416,9 +411,7 @@ test_insert_splits_at_2x_threshold(void) {
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 2 * TEST_TARGET_CHUNK_SIZE);
     // Crossing >= 2 * TARGET_CHUNK_SIZE must have triggered a split.
     g_assert_cmpuint(num_chunks(arr), >, 1);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 }
 
 static void
@@ -451,9 +444,7 @@ test_insert_with_size_sort_order(void) {
         g_autofree char *name = g_strdup_printf("f_%zu", i);
         fsearch_database_chunked_array_insert(arr, make_file_with_size(name, sizes[i]));
     }
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_SIZE,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_SIZE);
     g_assert_cmpint(db_entry_get_size(fsearch_database_chunked_array_get_entry(arr, 0)), ==, 1);
     g_assert_cmpint(db_entry_get_size(fsearch_database_chunked_array_get_entry(arr, 4)), ==, 9000);
 }
@@ -489,9 +480,7 @@ test_insert_array_small_uses_individual_path(void) {
     fsearch_database_chunked_array_insert_array(arr, more);
 
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 300);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
     // All "a" entries must still sort before all "b" entries.
     g_assert_cmpstr(db_entry_get_name_raw(fsearch_database_chunked_array_get_entry(arr, 99)), ==, "a_000099");
     g_assert_cmpstr(db_entry_get_name_raw(fsearch_database_chunked_array_get_entry(arr, 100)), ==, "b_000000");
@@ -509,9 +498,7 @@ test_insert_array_bulk_path_at_threshold(void) {
     fsearch_database_chunked_array_insert_array(arr, more);
 
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 100 + TEST_MIN_BULK_INSERT);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 
     // Nothing lost or duplicated: every "b" name from 0..MIN_BULK_INSERT-1 must be findable.
     for (uint32_t i = 0; i < TEST_MIN_BULK_INSERT; i += 777) {
@@ -563,9 +550,7 @@ test_insert_array_bulk_path_into_empty_self(void) {
     fsearch_database_chunked_array_insert_array(arr, many);
 
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, TEST_MIN_BULK_INSERT);
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 }
 
 /* ------------------------------------------------------------------------ *
@@ -1026,9 +1011,7 @@ test_remove_marked_non_contiguous_blocks(void) {
     g_assert_cmpuint(removed, ==, G_N_ELEMENTS(marked_idx));
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 20 - G_N_ELEMENTS(marked_idx));
 
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
     // The surviving entries are exactly {2,3,4,6,7,8,9,13,...,18}.
     g_assert_cmpstr(db_entry_get_name_raw(fsearch_database_chunked_array_get_entry(arr, 0)), ==, "f_000002");
 }
@@ -1084,9 +1067,7 @@ test_remove_marked_spanning_chunk_boundary(void) {
     g_assert_cmpuint(removed, ==, mark_end - mark_start);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, count - (mark_end - mark_start));
 
-    DynamicArrayCompareDataFunc comp = fsearch_database_sort_get_compare_func_for_property(DATABASE_INDEX_PROPERTY_NAME,
-                                                                                           false);
-    assert_sorted(arr, comp);
+    assert_sorted_by_property(arr, DATABASE_INDEX_PROPERTY_NAME);
 
     // Note: can't reuse darray_get_item(input, mark_start) here - remove_marked_folders()
     // already freed that entry via db_entry_free_no_unparent, and `input` only ever held a
@@ -1182,7 +1163,8 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/chunked_array/insert_no_split_below_2x_threshold",
                     test_insert_does_not_split_below_2x_threshold);
     g_test_add_func("/FSearch/database/chunked_array/insert_splits_at_2x_threshold", test_insert_splits_at_2x_threshold);
-    g_test_add_func("/FSearch/database/chunked_array/insert_wrong_type_rejected", test_insert_wrong_entry_type_is_rejected);
+    g_test_add_func("/FSearch/database/chunked_array/insert_wrong_type_rejected",
+                    test_insert_wrong_entry_type_is_rejected);
     g_test_add_func("/FSearch/database/chunked_array/insert_with_size_sort_order", test_insert_with_size_sort_order);
 
     // insert_array
@@ -1200,8 +1182,10 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/chunked_array/find_existing", test_find_existing_entry);
     g_test_add_func("/FSearch/database/chunked_array/find_missing_null", test_find_missing_entry_returns_null);
     g_test_add_func("/FSearch/database/chunked_array/find_empty_array_null", test_find_empty_array_returns_null);
-    g_test_add_func("/FSearch/database/chunked_array/find_slow_existing_and_missing", test_find_slow_existing_and_missing);
-    g_test_add_func("/FSearch/database/chunked_array/find_duplicate_keys", test_find_duplicate_keys_returns_a_matching_entry);
+    g_test_add_func("/FSearch/database/chunked_array/find_slow_existing_and_missing",
+                    test_find_slow_existing_and_missing);
+    g_test_add_func("/FSearch/database/chunked_array/find_duplicate_keys",
+                    test_find_duplicate_keys_returns_a_matching_entry);
     g_test_add_func("/FSearch/database/chunked_array/find_duplicates_across_chunk_boundary",
                     test_find_with_duplicates_spanning_chunk_boundary);
 
@@ -1237,7 +1221,8 @@ main(int argc, char **argv) {
                     test_remove_marked_files_inherit_mark_from_parent);
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_spans_chunk_boundary",
                     test_remove_marked_spanning_chunk_boundary);
-    g_test_add_func("/FSearch/database/chunked_array/steal_marked_returns_entries", test_steal_marked_returns_removed_entries);
+    g_test_add_func("/FSearch/database/chunked_array/steal_marked_returns_entries",
+                    test_steal_marked_returns_removed_entries);
     g_test_add_func("/FSearch/database/chunked_array/steal_marked_all_keeps_one_chunk",
                     test_steal_marked_all_marked_keeps_one_chunk);
 

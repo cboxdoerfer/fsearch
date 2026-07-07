@@ -20,18 +20,16 @@ typedef struct FsearchDatabaseEntry FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryCompareContext {
     GHashTable *file_type_table;
     GHashTable *entry_to_file_type_table;
-    DynamicArrayCompareDataFunc next_comp_func;
-    void *next_comp_func_data;
-    GDestroyNotify next_comp_func_data_free_func;
+    FsearchDatabaseSortOrderChain chain;
 } FsearchDatabaseEntryCompareContext;
 
 void
 db_entry_compare_context_free(FsearchDatabaseEntryCompareContext *ctx);
 
 FsearchDatabaseEntryCompareContext *
-db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
-                             void *next_comp_func_data,
-                             GDestroyNotify next_comp_func_data_free_func);
+db_entry_compare_context_new(FsearchDatabaseSortOrderChain chain);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseEntryCompareContext, db_entry_compare_context_free)
 
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry);
@@ -173,6 +171,11 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseE
 
 int
 db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
+
+// Applies each property in `data`'s chain (a FsearchDatabaseEntryCompareContext *) in order until
+// a non-zero result, giving the full, deterministic total order that chain represents.
+int
+db_entry_compare_entries_by_chain(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data);
 
 FsearchDatabaseEntry *
 db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,

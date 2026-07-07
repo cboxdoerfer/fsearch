@@ -22,8 +22,7 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *files,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
-                                 FsearchDatabaseIndexProperty sort_order,
-                                 FsearchDatabaseIndexProperty secondary_sort_order,
+                                 FsearchDatabaseSortOrderChain chain,
                                  GtkSortType sort_type);
 
 void

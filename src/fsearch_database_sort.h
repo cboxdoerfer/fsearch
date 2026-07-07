@@ -6,9 +6,21 @@
 #include <gio/gio.h>
 #include <stdbool.h>
 
+// Returns the canonical, fully deterministic comparator chain for a single sort property, e.g.
+// SIZE -> [SIZE, NAME, PATH]. FILETYPE has no natural continuation of its own ([FILETYPE]) since
+// there's no fast index to derive one from; see fsearch_database_sort_order_chain_prepend().
+FsearchDatabaseSortOrderChain
+fsearch_database_sort_order_chain_for_property(FsearchDatabaseIndexProperty property);
+
+// Prepends `property` onto `chain` (removing any pre-existing occurrence of `property`) to build
+// the full, explicit comparator chain for a manual (non-fast-indexed) sort layered on top of an
+// array's previous order -- e.g. sorting by TYPE on top of a SIZE-ordered array yields
+// [TYPE, SIZE, NAME, PATH].
+FsearchDatabaseSortOrderChain
+fsearch_database_sort_order_chain_prepend(FsearchDatabaseSortOrderChain chain, FsearchDatabaseIndexProperty property);
+
 void
-fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
-                              FsearchDatabaseIndexProperty old_secondary_sort_order,
+fsearch_database_sort_results(FsearchDatabaseSortOrderChain old_chain,
                               FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
@@ -16,9 +28,5 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               DynamicArray *folders_fast_sort_index,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
-                              FsearchDatabaseIndexProperty *sort_order_out,
-                              FsearchDatabaseIndexProperty *secondary_sort_order_out,
+                              FsearchDatabaseSortOrderChain *chain_out,
                               GCancellable *cancellable);
-
-DynamicArrayCompareDataFunc
-fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property, bool is_dir);

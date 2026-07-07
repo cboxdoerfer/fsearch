@@ -25,8 +25,7 @@ struct FsearchDatabaseSearchView {
     FsearchDatabaseChunkedArray *folder_chunks;
     uint32_t id;
     GtkSortType sort_type;
-    FsearchDatabaseIndexProperty sort_order;
-    FsearchDatabaseIndexProperty secondardy_sort_order;
+    FsearchDatabaseSortOrderChain chain;
     GHashTable *file_selection;
     GHashTable *folder_selection;
 };
@@ -48,29 +47,15 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *files,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
-                                 FsearchDatabaseIndexProperty sort_order,
-                                 FsearchDatabaseIndexProperty secondary_sort_order,
+                                 FsearchDatabaseSortOrderChain chain,
                                  GtkSortType sort_type) {
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
     view->id = id;
     view->query = fsearch_query_ref(query);
-    view->folder_chunks = fsearch_database_chunked_array_new(folders,
-                                                             TRUE,
-                                                             sort_order,
-                                                             secondary_sort_order,
-                                                             DATABASE_ENTRY_TYPE_FOLDER,
-                                                             NULL,
-                                                             NULL);
-    view->file_chunks = fsearch_database_chunked_array_new(files,
-                                                           TRUE,
-                                                           sort_order,
-                                                           secondary_sort_order,
-                                                           DATABASE_ENTRY_TYPE_FILE,
-                                                           NULL,
-                                                           NULL);
-    view->sort_order = sort_order;
-    view->secondardy_sort_order = secondary_sort_order;
+    view->folder_chunks = fsearch_database_chunked_array_new(folders, TRUE, chain, DATABASE_ENTRY_TYPE_FOLDER, NULL, NULL);
+    view->file_chunks = fsearch_database_chunked_array_new(files, TRUE, chain, DATABASE_ENTRY_TYPE_FILE, NULL, NULL);
+    view->chain = chain;
     view->sort_type = sort_type;
     view->file_selection = fsearch_selection_new();
     view->folder_selection = fsearch_selection_new();
@@ -238,8 +223,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
     g_autoptr(DynamicArray) files_in = fsearch_database_chunked_array_get_joined(view->file_chunks);
     g_autoptr(DynamicArray) folders_in = fsearch_database_chunked_array_get_joined(view->folder_chunks);
 
-    fsearch_database_sort_results(view->sort_order,
-                                  view->secondardy_sort_order,
+    fsearch_database_sort_results(view->chain,
                                   sort_order,
                                   files_in,
                                   folders_in,
@@ -247,16 +231,14 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                   folders_fast_sorted,
                                   &files_new,
                                   &folders_new,
-                                  &view->sort_order,
-                                  &view->secondardy_sort_order,
+                                  &view->chain,
                                   cancellable);
 
     if (files_new) {
         g_clear_pointer(&view->file_chunks, fsearch_database_chunked_array_unref);
         view->file_chunks = fsearch_database_chunked_array_new(files_new,
                                                                TRUE,
-                                                               view->sort_order,
-                                                               view->secondardy_sort_order,
+                                                               view->chain,
                                                                DATABASE_ENTRY_TYPE_FILE,
                                                                NULL,
                                                                NULL);
@@ -266,8 +248,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
         g_clear_pointer(&view->folder_chunks, fsearch_database_chunked_array_unref);
         view->folder_chunks = fsearch_database_chunked_array_new(folders_new,
                                                                  TRUE,
-                                                                 view->sort_order,
-                                                                 view->secondardy_sort_order,
+                                                                 view->chain,
                                                                  DATABASE_ENTRY_TYPE_FOLDER,
                                                                  NULL,
                                                                  NULL);
@@ -308,9 +289,8 @@ fsearch_database_search_view_add(FsearchDatabaseSearchView *view,
                                  FsearchDatabaseIndexPropertyFlags affected_sort_orders) {
     g_return_if_fail(view);
 
-    // Skip adding when none of the results aren't sorted by any of the affected sort orders
-    if (!fsearch_database_index_property_is_set(affected_sort_orders, view->sort_order)
-        && !fsearch_database_index_property_is_set(affected_sort_orders, view->secondardy_sort_order)) {
+    // Skip adding when no level of the view's sort order chain is affected by this update
+    if (!fsearch_database_sort_order_chain_is_affected(&view->chain, affected_sort_orders)) {
         return;
     }
 
@@ -367,9 +347,8 @@ fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
                                     FsearchDatabaseIndexPropertyFlags affected_sort_orders,
                                     bool marked) {
     g_return_if_fail(view);
-    // Skip removal when none of the results aren't sorted by any of the affected sort orders
-    if (!fsearch_database_index_property_is_set(affected_sort_orders, view->sort_order)
-        && !fsearch_database_index_property_is_set(affected_sort_orders, view->secondardy_sort_order)) {
+    // Skip removal when no level of the view's sort order chain is affected by this update
+    if (!fsearch_database_sort_order_chain_is_affected(&view->chain, affected_sort_orders)) {
         return;
     }
     remove_results(files, view->file_chunks, view->file_selection, marked);
@@ -387,7 +366,7 @@ fsearch_database_search_view_get_info(FsearchDatabaseSearchView *view) {
                                             search_view_get_num_folder_results(view),
                                             fsearch_selection_get_num_selected(view->file_selection),
                                             fsearch_selection_get_num_selected(view->folder_selection),
-                                            view->sort_order,
+                                            view->chain.properties[0],
                                             view->sort_type);
 }
 

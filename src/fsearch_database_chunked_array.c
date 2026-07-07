@@ -4,7 +4,6 @@
 #include "fsearch_array.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_index_properties.h"
-#include "fsearch_database_sort.h"
 
 #include <gio/giotypes.h>
 #include <glib.h>
@@ -20,12 +19,10 @@ struct _FsearchDatabaseChunkedArray {
     uint32_t num_entries;
     uint32_t target_chunk_size;
 
-    FsearchDatabaseIndexProperty sort_order;
-    FsearchDatabaseIndexProperty secondary_sort_order;
+    FsearchDatabaseSortOrderChain chain;
 
     FsearchDatabaseEntryType entry_type;
     DynamicArrayCompareDataFunc entry_comp_func;
-    DynamicArrayCompareDataFunc secondary_entry_comp_func;
 
     FsearchDatabaseEntryCompareContext *compare_context;
 
@@ -180,8 +177,7 @@ advance_past_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint3
 FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_new(DynamicArray *array,
                                    gboolean is_array_sorted,
-                                   FsearchDatabaseIndexProperty sort_order,
-                                   FsearchDatabaseIndexProperty secondary_sort_order,
+                                   FsearchDatabaseSortOrderChain chain,
                                    FsearchDatabaseEntryType entry_type,
                                    GCancellable *cancellable,
                                    GDestroyNotify entry_free_func) {
@@ -191,21 +187,10 @@ fsearch_database_chunked_array_new(DynamicArray *array,
 
     self->target_chunk_size = TARGET_CHUNK_SIZE;
 
-    self->sort_order = sort_order;
-    self->secondary_sort_order = secondary_sort_order;
-
+    self->chain = chain;
     self->entry_type = entry_type;
-    self->entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
-        self->sort_order,
-        self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
-
-    self->secondary_entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
-        self->secondary_sort_order,
-        self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
-
-    if (self->sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
-        self->compare_context = db_entry_compare_context_new(self->secondary_entry_comp_func, NULL, NULL);
-    }
+    self->entry_comp_func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_chain;
+    self->compare_context = db_entry_compare_context_new(self->chain);
 
     if (!is_array_sorted) {
         darray_sort_multi_threaded(array, self->entry_comp_func, cancellable, self->compare_context);
@@ -523,7 +508,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
 
     uint32_t chunk_idx = 0;
     uint32_t entry_start_idx = 0;
-    if (self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+    if (self->chain.properties[0] == DATABASE_INDEX_PROPERTY_PATH_FULL) {
         DynamicArray *chunk = get_chunk_for_entry(self, folder, &chunk_idx);
         darray_binary_search_with_data(chunk, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
@@ -540,7 +525,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
         DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
         uint32_t entry_idx = entry_start_idx;
 
-        if (num_known_descendants >= 0 && self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+        if (num_known_descendants >= 0 && self->chain.properties[0] == DATABASE_INDEX_PROPERTY_PATH_FULL) {
             // We know the exact number of descendants, and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
             // it is guaranteed that they are all sorted next to each other. Therefore, we can use an optimized code
             // path where we steal them in large chunks, instead of one by one.

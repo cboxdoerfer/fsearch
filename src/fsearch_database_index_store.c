@@ -14,6 +14,7 @@
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_search_view.h"
+#include "fsearch_database_sort.h"
 #include "fsearch_query.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_selection_type.h"
@@ -781,15 +782,13 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
         if (s_folders && s_files) {
             store->folder_chunks[i] = fsearch_database_chunked_array_new(s_folders,
                                                                          TRUE,
-                                                                         i,
-                                                                         DATABASE_INDEX_PROPERTY_NONE,
+                                                                         fsearch_database_sort_order_chain_for_property(i),
                                                                          DATABASE_ENTRY_TYPE_FOLDER,
                                                                          NULL,
                                                                          NULL);
             store->file_chunks[i] = fsearch_database_chunked_array_new(s_files,
                                                                        TRUE,
-                                                                       i,
-                                                                       DATABASE_INDEX_PROPERTY_NONE,
+                                                                       fsearch_database_sort_order_chain_for_property(i),
                                                                        DATABASE_ENTRY_TYPE_FILE,
                                                                        NULL,
                                                                        NULL);
@@ -897,77 +896,73 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
     }
 
     index_store_lock_all_indices(store);
-    store->folder_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(store_folders,
-                                                                                            FALSE,
-                                                                                            DATABASE_INDEX_PROPERTY_NAME,
-                                                                                            DATABASE_INDEX_PROPERTY_NONE,
-                                                                                            DATABASE_ENTRY_TYPE_FOLDER,
-                                                                                            cancellable,
-                                                                                            NULL);
-    store->file_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(store_files,
-                                                                                          FALSE,
-                                                                                          DATABASE_INDEX_PROPERTY_NAME,
-                                                                                          DATABASE_INDEX_PROPERTY_NONE,
-                                                                                          DATABASE_ENTRY_TYPE_FILE,
-                                                                                          cancellable,
-                                                                                          NULL);
-    store->folder_chunks[DATABASE_INDEX_PROPERTY_PATH] = fsearch_database_chunked_array_new(store_folders,
-                                                                                            FALSE,
-                                                                                            DATABASE_INDEX_PROPERTY_PATH,
-                                                                                            DATABASE_INDEX_PROPERTY_NONE,
-                                                                                            DATABASE_ENTRY_TYPE_FOLDER,
-                                                                                            cancellable,
-                                                                                            NULL);
-    store->file_chunks[DATABASE_INDEX_PROPERTY_PATH] = fsearch_database_chunked_array_new(store_files,
-                                                                                          FALSE,
-                                                                                          DATABASE_INDEX_PROPERTY_PATH,
-                                                                                          DATABASE_INDEX_PROPERTY_NONE,
-                                                                                          DATABASE_ENTRY_TYPE_FILE,
-                                                                                          cancellable,
-                                                                                          NULL);
-    store->folder_chunks[DATABASE_INDEX_PROPERTY_SIZE] = fsearch_database_chunked_array_new(store_folders,
-                                                                                            FALSE,
-                                                                                            DATABASE_INDEX_PROPERTY_SIZE,
-                                                                                            DATABASE_INDEX_PROPERTY_NONE,
-                                                                                            DATABASE_ENTRY_TYPE_FOLDER,
-                                                                                            cancellable,
-                                                                                            NULL);
-    store->file_chunks[DATABASE_INDEX_PROPERTY_SIZE] = fsearch_database_chunked_array_new(store_files,
-                                                                                          FALSE,
-                                                                                          DATABASE_INDEX_PROPERTY_SIZE,
-                                                                                          DATABASE_INDEX_PROPERTY_NONE,
-                                                                                          DATABASE_ENTRY_TYPE_FILE,
-                                                                                          cancellable,
-                                                                                          NULL);
+    store->folder_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(
+        store_folders,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_NAME),
+        DATABASE_ENTRY_TYPE_FOLDER,
+        cancellable,
+        NULL);
+    store->file_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(
+        store_files,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_NAME),
+        DATABASE_ENTRY_TYPE_FILE,
+        cancellable,
+        NULL);
+    store->folder_chunks[DATABASE_INDEX_PROPERTY_PATH] = fsearch_database_chunked_array_new(
+        store_folders,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_PATH),
+        DATABASE_ENTRY_TYPE_FOLDER,
+        cancellable,
+        NULL);
+    store->file_chunks[DATABASE_INDEX_PROPERTY_PATH] = fsearch_database_chunked_array_new(
+        store_files,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_PATH),
+        DATABASE_ENTRY_TYPE_FILE,
+        cancellable,
+        NULL);
+    store->folder_chunks[DATABASE_INDEX_PROPERTY_SIZE] = fsearch_database_chunked_array_new(
+        store_folders,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_SIZE),
+        DATABASE_ENTRY_TYPE_FOLDER,
+        cancellable,
+        NULL);
+    store->file_chunks[DATABASE_INDEX_PROPERTY_SIZE] = fsearch_database_chunked_array_new(
+        store_files,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_SIZE),
+        DATABASE_ENTRY_TYPE_FILE,
+        cancellable,
+        NULL);
     store->folder_chunks[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = fsearch_database_chunked_array_new(
         store_folders,
         FALSE,
-        DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-        DATABASE_INDEX_PROPERTY_NONE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_MODIFICATION_TIME),
         DATABASE_ENTRY_TYPE_FOLDER,
         cancellable,
         NULL);
     store->file_chunks[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = fsearch_database_chunked_array_new(
         store_files,
         FALSE,
-        DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-        DATABASE_INDEX_PROPERTY_NONE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_MODIFICATION_TIME),
         DATABASE_ENTRY_TYPE_FILE,
         cancellable,
         NULL);
     store->folder_chunks[DATABASE_INDEX_PROPERTY_EXTENSION] = fsearch_database_chunked_array_new(
         store_folders,
         FALSE,
-        DATABASE_INDEX_PROPERTY_EXTENSION,
-        DATABASE_INDEX_PROPERTY_NONE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_EXTENSION),
         DATABASE_ENTRY_TYPE_FOLDER,
         cancellable,
         NULL);
     store->file_chunks[DATABASE_INDEX_PROPERTY_EXTENSION] = fsearch_database_chunked_array_new(
         store_files,
         FALSE,
-        DATABASE_INDEX_PROPERTY_EXTENSION,
-        DATABASE_INDEX_PROPERTY_NONE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_EXTENSION),
         DATABASE_ENTRY_TYPE_FILE,
         cancellable,
         NULL);
@@ -1415,14 +1410,15 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     }
 
     if (found_files || found_folders) {
-        // After searching the secondary sort order will always be NONE, because we only search in pre-sorted indexes
+        // We only ever search in pre-sorted (fast-indexed) arrays, so the canonical chain for
+        // `sort_order` alone already fully describes the result order.
         FsearchDatabaseSearchView *view = fsearch_database_search_view_new(id,
                                                                            query,
                                                                            found_files,
                                                                            found_folders,
                                                                            NULL,
-                                                                           sort_order,
-                                                                           DATABASE_INDEX_PROPERTY_NONE,
+                                                                           fsearch_database_sort_order_chain_for_property(
+                                                                               sort_order),
                                                                            sort_type);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
         g_debug("[index_store] search duration: %f", g_timer_elapsed(timer, NULL));

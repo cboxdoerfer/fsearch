@@ -10,6 +10,7 @@
 #include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_scan.h"
+#include "fsearch_database_sort.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_folder_monitor_event.h"
 #include "fsearch_folder_monitor_fanotify.h"
@@ -148,7 +149,7 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
 static inline FsearchDatabaseEntry *
 create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type) {
     const FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                   | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+                                                  | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
 
     return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
 }
@@ -901,15 +902,15 @@ fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
 
     self->folder_chunks = fsearch_database_chunked_array_new(folders,
                                                              TRUE,
-                                                             DATABASE_INDEX_PROPERTY_PATH,
-                                                             DATABASE_INDEX_PROPERTY_NONE,
+                                                             fsearch_database_sort_order_chain_for_property(
+                                                                 DATABASE_INDEX_PROPERTY_PATH),
                                                              DATABASE_ENTRY_TYPE_FOLDER,
                                                              NULL,
                                                              (GDestroyNotify)db_entry_free_no_unparent);
     self->file_chunks = fsearch_database_chunked_array_new(files,
                                                            TRUE,
-                                                           DATABASE_INDEX_PROPERTY_PATH,
-                                                           DATABASE_INDEX_PROPERTY_NONE,
+                                                           fsearch_database_sort_order_chain_for_property(
+                                                               DATABASE_INDEX_PROPERTY_PATH),
                                                            DATABASE_ENTRY_TYPE_FILE,
                                                            NULL,
                                                            (GDestroyNotify)db_entry_free_no_unparent);
@@ -1067,15 +1068,15 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     self->file_chunks = fsearch_database_chunked_array_new(files,
                                                            TRUE,
-                                                           DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                           DATABASE_INDEX_PROPERTY_NONE,
+                                                           fsearch_database_sort_order_chain_for_property(
+                                                               DATABASE_INDEX_PROPERTY_PATH_FULL),
                                                            DATABASE_ENTRY_TYPE_FILE,
                                                            NULL,
                                                            (GDestroyNotify)db_entry_free_no_unparent);
     self->folder_chunks = fsearch_database_chunked_array_new(folders,
                                                              TRUE,
-                                                             DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                             DATABASE_INDEX_PROPERTY_NONE,
+                                                             fsearch_database_sort_order_chain_for_property(
+                                                                 DATABASE_INDEX_PROPERTY_PATH_FULL),
                                                              DATABASE_ENTRY_TYPE_FOLDER,
                                                              NULL,
                                                              (GDestroyNotify)db_entry_free_no_unparent);
