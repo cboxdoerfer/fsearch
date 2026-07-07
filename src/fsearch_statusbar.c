@@ -16,6 +16,7 @@ struct _FsearchStatusbar {
     GtkWidget *statusbar_database_updating_label;
     GtkWidget *statusbar_database_updating_spinner;
     GtkWidget *statusbar_match_case_revealer;
+    GtkWidget *statusbar_partial_results_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
     GtkWidget *statusbar_search_stack;
@@ -110,6 +111,9 @@ fsearch_statusbar_set_revealer_visibility(FsearchStatusbar *sb, FsearchStatusbar
         break;
     case FSEARCH_STATUSBAR_REVEALER_REGEX:
         r = GTK_REVEALER(sb->statusbar_search_mode_revealer);
+        break;
+    case FSEARCH_STATUSBAR_REVEALER_PARTIAL_RESULTS:
+        r = GTK_REVEALER(sb->statusbar_partial_results_revealer);
         break;
     default:
         g_debug("unknown revealer");
@@ -334,6 +338,7 @@ fsearch_statusbar_class_init(FsearchStatusbarClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_updating_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_updating_spinner);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_match_case_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_partial_results_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_scan_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_scan_status_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_filter_label);

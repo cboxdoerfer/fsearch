@@ -28,6 +28,7 @@ struct FsearchDatabaseSearchView {
     FsearchDatabaseSortOrderChain chain;
     GHashTable *file_selection;
     GHashTable *folder_selection;
+    bool is_complete;
 };
 
 void
@@ -48,7 +49,8 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
                                  FsearchDatabaseSortOrderChain chain,
-                                 GtkSortType sort_type) {
+                                 GtkSortType sort_type,
+                                 bool is_complete) {
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
     view->id = id;
@@ -57,6 +59,7 @@ fsearch_database_search_view_new(uint32_t id,
     view->file_chunks = fsearch_database_chunked_array_new(files, TRUE, chain, DATABASE_ENTRY_TYPE_FILE, NULL, NULL);
     view->chain = chain;
     view->sort_type = sort_type;
+    view->is_complete = is_complete;
     view->file_selection = fsearch_selection_new();
     view->folder_selection = fsearch_selection_new();
 
@@ -367,7 +370,8 @@ fsearch_database_search_view_get_info(FsearchDatabaseSearchView *view) {
                                             fsearch_selection_get_num_selected(view->file_selection),
                                             fsearch_selection_get_num_selected(view->folder_selection),
                                             view->chain.properties[0],
-                                            view->sort_type);
+                                            view->sort_type,
+                                            view->is_complete);
 }
 
 FsearchQuery *

@@ -1410,6 +1410,12 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     }
 
     if (found_files || found_folders) {
+        // If the search got cancelled partway through, found_files/found_folders only reflect
+        // whatever was matched before that happened. We still install them (rather than
+        // discarding the work), but mark the view as incomplete so callers can tell a partial
+        // result set apart from a genuinely finished search.
+        const bool is_complete = !g_cancellable_is_cancelled(cancellable);
+
         // We only ever search in pre-sorted (fast-indexed) arrays, so the canonical chain for
         // `sort_order` alone already fully describes the result order.
         FsearchDatabaseSearchView *view = fsearch_database_search_view_new(id,
@@ -1419,11 +1425,12 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                                                            NULL,
                                                                            fsearch_database_sort_order_chain_for_property(
                                                                                sort_order),
-                                                                           sort_type);
+                                                                           sort_type,
+                                                                           is_complete);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
         g_debug("[index_store] search duration: %f", g_timer_elapsed(timer, NULL));
 
-        return true;
+        return is_complete;
     }
 
     return false;

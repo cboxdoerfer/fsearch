@@ -9,6 +9,7 @@ struct _FsearchDatabaseSearchInfo {
     uint32_t num_folders_selected;
     GtkSortType sort_type;
     FsearchDatabaseIndexProperty sort_order;
+    bool is_complete;
 
     volatile gint ref_count;
 };
@@ -47,7 +48,8 @@ fsearch_database_search_info_new(uint32_t id,
                                  uint32_t num_files_selected,
                                  uint32_t num_folders_selected,
                                  FsearchDatabaseIndexProperty sort_order,
-                                 GtkSortType sort_type) {
+                                 GtkSortType sort_type,
+                                 bool is_complete) {
     FsearchDatabaseSearchInfo *info = calloc(1, sizeof(FsearchDatabaseSearchInfo));
     g_assert(info);
 
@@ -59,6 +61,7 @@ fsearch_database_search_info_new(uint32_t id,
     info->num_folders_selected = num_folders_selected;
     info->sort_order = sort_order;
     info->sort_type = sort_type;
+    info->is_complete = is_complete;
 
     info->ref_count = 1;
 
@@ -123,4 +126,10 @@ FsearchQuery *
 fsearch_database_search_info_get_query(FsearchDatabaseSearchInfo *info) {
     g_return_val_if_fail(info, NULL);
     return fsearch_query_ref(info->query);
+}
+
+bool
+fsearch_database_search_info_get_is_complete(FsearchDatabaseSearchInfo *info) {
+    g_return_val_if_fail(info, true);
+    return info->is_complete;
 }

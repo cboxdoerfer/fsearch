@@ -365,6 +365,9 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                                   FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
                                                   query->triggers_auto_match_path);
     }
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                              FSEARCH_STATUSBAR_REVEALER_PARTIAL_RESULTS,
+                                              !fsearch_database_search_info_get_is_complete(info));
 
     win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
     win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);

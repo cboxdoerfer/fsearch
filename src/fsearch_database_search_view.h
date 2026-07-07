@@ -23,7 +23,8 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
                                  FsearchDatabaseSortOrderChain chain,
-                                 GtkSortType sort_type);
+                                 GtkSortType sort_type,
+                                 bool is_complete);
 
 void
 fsearch_database_search_view_free(FsearchDatabaseSearchView *view);
