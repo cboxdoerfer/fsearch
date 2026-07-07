@@ -566,7 +566,7 @@ new_array_from_data(void **data, uint32_t num_items) {
 }
 
 static GArray *
-merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellable *cancellable) {
+merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, gpointer comp_data, GCancellable *cancellable) {
     if (merge_me->len == 1) {
         return merge_me;
     }
@@ -590,6 +590,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
         merge_ctx.m1 = i1;
         merge_ctx.m2 = i2;
         merge_ctx.comp_func = comp_func;
+        merge_ctx.user_data = comp_data;
         merge_ctx.dest = darray_new(i1->num_items + i2->num_items);
 
         g_array_insert_val(merged_data, i, merge_ctx);
@@ -607,7 +608,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
     }
     g_clear_pointer(&merge_me, g_array_unref);
 
-    return merge_sorted(g_steal_pointer(&merged_data), comp_func, cancellable);
+    return merge_sorted(g_steal_pointer(&merged_data), comp_func, comp_data, cancellable);
 }
 
 static int
@@ -650,7 +651,7 @@ darray_sort_multi_threaded(DynamicArray *array,
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    g_autoptr(GArray) result = merge_sorted(g_steal_pointer(&sort_ctx_array), comp_func, cancellable);
+    g_autoptr(GArray) result = merge_sorted(g_steal_pointer(&sort_ctx_array), comp_func, data, cancellable);
 
     if (result) {
         // Apply results if sorting wasn't canceled
