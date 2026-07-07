@@ -416,11 +416,24 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
     }
 }
 
+// Detects a finished signal from a sort that was already superseded by a newer one.
+static bool
+sort_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+    if (!win->work_sort) {
+        return false;
+    }
+    return fsearch_database_work_sort_get_sort_order(win->work_sort) == fsearch_database_search_info_get_sort_order(info)
+        && fsearch_database_work_sort_get_sort_type(win->work_sort) == fsearch_database_search_info_get_sort_type(info);
+}
+
 static void
 on_sort_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer user_data) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!sort_info_matches_tracked_work(win, info)) {
+            return;
+        }
         apply_search_info(win, info, true);
 
         g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
@@ -445,11 +458,25 @@ on_selection_changed(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *i
     }
 }
 
+// Detects a finished signal from a search that was already superseded by a newer one.
+static bool
+search_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+    if (!win->work_search) {
+        return false;
+    }
+    g_autoptr(FsearchQuery) tracked_query = fsearch_database_work_search_get_query(win->work_search);
+    g_autoptr(FsearchQuery) info_query = fsearch_database_search_info_get_query(info);
+    return tracked_query == info_query;
+}
+
 static void
 on_search_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!search_info_matches_tracked_work(win, info)) {
+            return;
+        }
         apply_search_info(win, info, true);
         g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
