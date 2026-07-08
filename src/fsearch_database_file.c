@@ -40,18 +40,45 @@ typedef struct {
     FsearchDatabaseIndexPropertyFlags flags;
 } LoadSaveContext;
 
-static void
-update_folder_indices(DynamicArray *folders) {
-    g_assert(folders);
-    const uint32_t num_folders = darray_get_num_items(folders);
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-        if (!folder) {
-            continue;
-        }
-        db_entry_set_index(folder, i);
-    }
+// Entries have no permanent `index` field, so during save we borrow `parent` (via the raw,
+// bookkeeping-free db_entry_set_parent_no_update()) to stash each entry's own canonical index.
+// Safe only because the store's lock is held for the whole save, so nothing else can observe it.
+static inline uint32_t
+db_entry_get_encoded_index(FsearchDatabaseEntry *entry) {
+    return (uint32_t)(uintptr_t)db_entry_get_parent(entry);
 }
+
+typedef struct {
+    DynamicArray *entries;
+    FsearchDatabaseEntry **real_parents;
+} EncodedEntryIndices;
+
+static EncodedEntryIndices
+database_file_encode_indices(DynamicArray *entries) {
+    const uint32_t num_entries = darray_get_num_items(entries);
+    FsearchDatabaseEntry **real_parents = g_new(FsearchDatabaseEntry *, num_entries);
+    for (uint32_t i = 0; i < num_entries; i++) {
+        real_parents[i] = db_entry_get_parent(darray_get_item(entries, i));
+    }
+    for (uint32_t i = 0; i < num_entries; i++) {
+        db_entry_set_parent_no_update(darray_get_item(entries, i), (FsearchDatabaseEntry *)(uintptr_t)i);
+    }
+    return (EncodedEntryIndices){.entries = entries, .real_parents = real_parents};
+}
+
+static void
+encoded_entry_indices_clear(EncodedEntryIndices *encoded) {
+    if (!encoded->real_parents) {
+        return; // zero-initialized, never encoded
+    }
+    const uint32_t num_entries = darray_get_num_items(encoded->entries);
+    for (uint32_t i = 0; i < num_entries; i++) {
+        db_entry_set_parent_no_update(darray_get_item(encoded->entries, i), encoded->real_parents[i]);
+    }
+    g_clear_pointer(&encoded->real_parents, g_free);
+}
+
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC(EncodedEntryIndices, encoded_entry_indices_clear)
 
 static uint16_t
 get_name_offset(const char *old, const char *new) {
@@ -686,16 +713,16 @@ static void
 database_file_save_files(DatabaseFileWriteCursor *cursor,
                          FsearchDatabaseIndexPropertyFlags index_flags,
                          DynamicArray *files,
-                         uint32_t num_files) {
+                         uint32_t num_files,
+                         FsearchDatabaseEntry **real_parents_of_files) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(files, i);
 
-        db_entry_set_index(entry, i);
-        FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = db_entry_get_index(parent);
+        FsearchDatabaseEntry *real_parent = real_parents_of_files[i];
+        const uint32_t parent_idx = db_entry_get_encoded_index(real_parent);
         database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
@@ -713,7 +740,7 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
 
     for (int i = 0; i < num_entries; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        indexes[i] = db_entry_get_index(entry);
+        indexes[i] = db_entry_get_encoded_index(entry);
     }
     return indexes;
 }
@@ -780,15 +807,16 @@ static void
 database_file_save_folders(DatabaseFileWriteCursor *cursor,
                            FsearchDatabaseIndexPropertyFlags index_flags,
                            DynamicArray *folders,
-                           uint32_t num_folders) {
+                           uint32_t num_folders,
+                           FsearchDatabaseEntry **real_parents_of_folders) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
-        FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
+        FsearchDatabaseEntry *real_parent = real_parents_of_folders[i];
+        const uint32_t parent_idx = real_parent ? db_entry_get_encoded_index(real_parent) : i;
         database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
@@ -912,6 +940,9 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_autoptr(DynamicArray) files = NULL;
     g_autoptr(DynamicArray) folders = NULL;
 
+    g_auto(EncodedEntryIndices) encoded_folders = {0};
+    g_auto(EncodedEntryIndices) encoded_files = {0};
+
     g_debug("[db_save] trying to open temporary database file: %s", file_tmp_path->str);
 
     g_autoptr(FILE) fp = file_open_locked(file_tmp_path->str, "wb");
@@ -960,14 +991,12 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
-    g_debug("[db_save] updating folder indices...");
     folder_chunks = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
     folders = fsearch_database_chunked_array_get_joined(folder_chunks);
     if (!folders) {
         g_debug("[db_save] failed saving. DB has no folders.");
         goto save_fail;
     }
-    update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
     cursor_write(&cursor, &num_folders, sizeof(num_folders));
@@ -1013,25 +1042,31 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     uint8_t checksum_placeholder[DATABASE_CHECKSUM_SIZE] = {};
     cursor_write(&cursor, checksum_placeholder, sizeof(checksum_placeholder));
 
+    // From here on, every folder's/file's `parent` is repurposed as its canonical index (safe
+    // because database_save() holds the store's lock for this whole call); g_auto restores it
+    // regardless of how this function returns.
+    encoded_folders = database_file_encode_indices(folders);
+    encoded_files = database_file_encode_indices(files);
+
     g_debug("[db_save] saving folders...");
     uint64_t current_cursor_size = cursor.bytes_written;
-    database_file_save_folders(&cursor, index_flags, folders, num_folders);
-    if (cursor.error == true) {
-        goto save_fail;
-    }
+    database_file_save_folders(&cursor, index_flags, folders, num_folders, encoded_folders.real_parents);
     folder_block_size = cursor.bytes_written - current_cursor_size;
 
-    g_debug("[db_save] saving files...");
-    current_cursor_size = cursor.bytes_written;
-    database_file_save_files(&cursor, index_flags, files, num_files);
-    if (cursor.error == true) {
-        goto save_fail;
+    if (!cursor.error) {
+        g_debug("[db_save] saving files...");
+        current_cursor_size = cursor.bytes_written;
+        database_file_save_files(&cursor, index_flags, files, num_files, encoded_files.real_parents);
+        file_block_size = cursor.bytes_written - current_cursor_size;
     }
-    file_block_size = cursor.bytes_written - current_cursor_size;
 
-    g_debug("[db_save] saving sorted arrays...");
-    database_file_save_sorted_arrays(&cursor, store, num_files, num_folders);
-    if (cursor.error == true) {
+    if (!cursor.error) {
+        g_debug("[db_save] saving sorted arrays...");
+        database_file_save_sorted_arrays(&cursor, store, num_files, num_folders);
+    }
+
+    if (cursor.error) {
+        g_debug("[db_save] failed saving folders/files/sorted arrays");
         goto save_fail;
     }
 

@@ -53,9 +53,6 @@ uint32_t
 db_entry_folder_get_num_folders(FsearchDatabaseEntry *entry);
 
 void
-db_entry_set_index(FsearchDatabaseEntry *entry, uint32_t idx);
-
-void
 db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime);
 
 void
@@ -207,9 +204,6 @@ db_entry_get_attribute_offsets(FsearchDatabaseIndexPropertyFlags attribute_flags
 
 uint32_t
 db_entry_get_member_flags(FsearchDatabaseEntry *entry);
-
-uint32_t
-db_entry_get_index(FsearchDatabaseEntry *entry);
 
 const char *
 db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offset);

@@ -23,9 +23,7 @@
 typedef struct FsearchDatabaseEntry {
     FsearchDatabaseEntry *parent;
 
-    // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
     uint32_t attribute_flags;
-    uint32_t index;
     uint16_t flags;
     // Make sure the attributes member is aligned to its largest data type
     alignas(int64_t) uint8_t attributes[];
@@ -997,18 +995,6 @@ db_entry_set_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty
         return true;
     }
     return false;
-}
-
-uint32_t
-db_entry_get_index(FsearchDatabaseEntry *entry) {
-    g_return_val_if_fail(entry, 0);
-    return entry->index;
-}
-
-void
-db_entry_set_index(FsearchDatabaseEntry *entry, uint32_t index) {
-    g_return_if_fail(entry);
-    entry->index = index;
 }
 
 FsearchDatabaseEntryFlags

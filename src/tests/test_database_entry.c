@@ -8,7 +8,6 @@
  *   - db_entry_folder_get_num_children / _num_files / _num_folders
  *   - db_entry_increment_childcount
  *   - db_entry_set_parent / _set_parent_no_update / _set_parent_update_childcount / db_entry_get_parent
- *   - db_entry_set_index / db_entry_get_index
  *   - db_entry_set_mtime / db_entry_get_mtime
  *   - db_entry_set_size / db_entry_get_size
  *   - db_entry_set_mark / db_entry_get_mark
@@ -383,18 +382,6 @@ test_mark_set_and_clear(void) {
 static void
 test_mark_null_entry_returns_zero(void) {
     g_assert_cmpuint(db_entry_get_mark(NULL), ==, 0);
-}
-
-/* ------------------------------------------------------------------------ *
- * Index
- * ------------------------------------------------------------------------ */
-
-static void
-test_set_get_index_roundtrip(void) {
-    FsearchDatabaseEntry *e = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "f", NULL);
-    db_entry_set_index(e, 12345);
-    g_assert_cmpuint(db_entry_get_index(e), ==, 12345);
-    db_entry_free(e);
 }
 
 /* ------------------------------------------------------------------------ *
@@ -1307,9 +1294,6 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/entry/mark_default_unset", test_mark_default_is_unset);
     g_test_add_func("/FSearch/database/entry/mark_set_clear", test_mark_set_and_clear);
     g_test_add_func("/FSearch/database/entry/mark_null_entry", test_mark_null_entry_returns_zero);
-
-    // Index
-    g_test_add_func("/FSearch/database/entry/index_roundtrip", test_set_get_index_roundtrip);
 
     // set_name stub
     g_test_add_func("/FSearch/database/entry/set_name_noop", test_set_name_is_currently_a_noop);
