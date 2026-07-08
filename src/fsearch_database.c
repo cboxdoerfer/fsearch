@@ -840,7 +840,7 @@ typedef struct {
 static DatabaseWorkWrapper *
 db_work_wrapper_new(FsearchDatabase *db, FsearchDatabaseWork *work) {
     DatabaseWorkWrapper *wrapper = g_new0(DatabaseWorkWrapper, 1);
-    wrapper->db = g_object_ref(db);
+    wrapper->db = db;
     wrapper->work = fsearch_database_work_ref(work);
     return wrapper;
 }
@@ -848,7 +848,6 @@ db_work_wrapper_new(FsearchDatabase *db, FsearchDatabaseWork *work) {
 static void
 db_work_wrapper_free(DatabaseWorkWrapper *wrapper) {
     g_return_if_fail(wrapper);
-    g_clear_object(&wrapper->db);
     g_clear_pointer(&wrapper->work, fsearch_database_work_unref);
     g_free(wrapper);
 }
