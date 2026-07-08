@@ -170,7 +170,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
         const size_t d_name_len = strlen(dent->d_name);
-        if (d_name_len >= 256) {
+        if (d_name_len > UINT16_MAX) {
             g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %zd)", dent->d_name, d_name_len);
             continue;
         }
