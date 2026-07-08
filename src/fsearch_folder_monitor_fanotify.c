@@ -106,14 +106,12 @@ has_multiple_create_delete_events(uint32_t mask) {
 }
 
 static void
-queue_monitor_event(GAsyncQueue *event_queue,
-                    const char *file_name,
-                    FsearchDatabaseEntry *watched_entry,
-                    int event_type,
-                    bool is_dir) {
+queue_monitor_event(GAsyncQueue *event_queue, const char *file_name, GBytes *fid_bytes, int event_type, bool is_dir) {
+    // fid_bytes needs to be copied to survive this call
+    GBytes *owned_handle = g_bytes_new(g_bytes_get_data(fid_bytes, NULL), g_bytes_get_size(fid_bytes));
     g_async_queue_push(
         event_queue,
-        fsearch_folder_monitor_event_new(file_name, watched_entry, event_type, FSEARCH_FOLDER_MONITOR_FANOTIFY, is_dir));
+        fsearch_folder_monitor_event_new(file_name, owned_handle, event_type, FSEARCH_FOLDER_MONITOR_FANOTIFY, is_dir));
 }
 
 static gboolean
@@ -161,8 +159,9 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             FsearchDatabaseIndexHandleData *handle = (FsearchDatabaseIndexHandleData *)&fid->fsid;
             g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
 
+            // Membership check only -- never dereference an entry off this thread.
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->handles_to_folders, fid_bytes);
+            const bool is_watched = g_hash_table_contains(self->handles_to_folders, fid_bytes);
             g_mutex_unlock(&self->mutex);
 
             const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
@@ -173,7 +172,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             // print_fanotify_mask(metadata->mask);
             // g_print(": %s\n", file_name ? file_name : "UNKNOWN");
 
-            if (!watched_entry) {
+            if (!is_watched) {
                 g_debug("[fanotify_listener] no watched entry for handle found: %llu -> %s",
                         metadata->mask,
                         file_name ? file_name : ".");
@@ -188,7 +187,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF,
                                     is_dir);
             }
@@ -196,31 +195,31 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF,
                                     is_dir);
             }
             if (has_multiple_create_delete_events(metadata->mask)) {
                 // There's no way to know in which order those events happened, hence we must do a rescan.
                 g_print("multiple create/delete events: %s\n", file_name ? file_name : ".");
-                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_RESCAN, is_dir);
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_RESCAN, is_dir);
                 // We can skip other events in the same mask here, since we're going to rescan the file/folder anyway
                 continue;
             }
 
             if (metadata->mask & FAN_CREATE) {
                 skip_attrib = true;
-                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_CREATE, is_dir);
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_CREATE, is_dir);
             }
             if (metadata->mask & FAN_DELETE) {
                 skip_attrib = true;
-                queue_monitor_event(self->event_queue, file_name, watched_entry, FSEARCH_FOLDER_MONITOR_EVENT_DELETE, is_dir);
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_DELETE, is_dir);
             }
             if (metadata->mask & FAN_MOVED_FROM) {
                 skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVED_FROM,
                                     is_dir);
             }
@@ -228,7 +227,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO,
                                     is_dir);
             }
@@ -236,14 +235,14 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 if (metadata->mask & FAN_ATTRIB) {
                     queue_monitor_event(self->event_queue,
                                         file_name,
-                                        watched_entry,
+                                        fid_bytes,
                                         FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB,
                                         is_dir);
                 }
                 else if (metadata->mask & FAN_CLOSE_WRITE) {
                     queue_monitor_event(self->event_queue,
                                         file_name,
-                                        watched_entry,
+                                        fid_bytes,
                                         FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE,
                                         is_dir);
                 }
@@ -411,4 +410,12 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
         g_debug("[unwatch_folder] no fanotify handle found for folder: %s", path_full->str);
     }
+}
+
+FsearchDatabaseEntry *
+fsearch_folder_monitor_fanotify_resolve(FsearchFolderMonitorFanotify *self, gpointer handle) {
+    g_return_val_if_fail(self, NULL);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return g_hash_table_lookup(self->handles_to_folders, handle);
 }

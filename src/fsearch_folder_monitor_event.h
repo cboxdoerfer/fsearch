@@ -28,6 +28,10 @@ typedef struct {
     GString *name;
     GString *path;
 
+    // Per-backend key for the watched folder (GBytes* fanotify handle, or GINT_TO_POINTER(wd) for
+    // inotify); resolved to watched_entry_copy/path later by the caller, not here.
+    gpointer watched_entry_handle;
+
     FsearchDatabaseEntry *watched_entry;
     FsearchDatabaseEntry *watched_entry_copy;
 
@@ -38,10 +42,13 @@ typedef struct {
 
 FsearchFolderMonitorEvent *
 fsearch_folder_monitor_event_new(const char *file_name,
-                                 FsearchDatabaseEntry *watched_entry,
+                                 gpointer watched_entry_handle,
                                  FsearchFolderMonitorEventKind event_kind,
                                  FsearchFolderMonitorKind monitor_kind,
                                  bool is_dir);
+
+void
+fsearch_folder_monitor_event_set_watched_entry(FsearchFolderMonitorEvent *self, FsearchDatabaseEntry *watched_entry);
 
 void
 fsearch_folder_monitor_event_free(FsearchFolderMonitorEvent *self);

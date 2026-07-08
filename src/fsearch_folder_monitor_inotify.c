@@ -96,12 +96,13 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
+            // Membership check only -- never dereference an entry off this thread.
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntry *folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
-                                                               GINT_TO_POINTER(event->wd));
+            const bool is_watched = g_hash_table_contains(self->watch_descriptors_to_folders,
+                                                           GINT_TO_POINTER(event->wd));
             g_mutex_unlock(&self->mutex);
 
-            if (!folder) {
+            if (!is_watched) {
                 if (event->mask & IN_IGNORED) {
                     // The only expected situation when a watched entry is no longer present for a given event,
                     // is when the IN_IGNORED bit is set. This happens after a watched folder was removed or
@@ -122,7 +123,7 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
             g_async_queue_push(self->event_queue,
                                fsearch_folder_monitor_event_new(event->len ? event->name : NULL,
-                                                                folder,
+                                                                GINT_TO_POINTER(event->wd),
                                                                 get_index_event_kind_for_inotify_mask(event->mask),
                                                                 FSEARCH_FOLDER_MONITOR_INOTIFY,
                                                                 event->mask & IN_ISDIR ? true : false));
@@ -249,4 +250,12 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
         g_debug("[unwatch_folder] no inotify fd found for folder: %s", path_full->str);
     }
+}
+
+FsearchDatabaseEntry *
+fsearch_folder_monitor_inotify_resolve(FsearchFolderMonitorInotify *self, gpointer handle) {
+    g_return_val_if_fail(self, NULL);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return g_hash_table_lookup(self->watch_descriptors_to_folders, handle);
 }

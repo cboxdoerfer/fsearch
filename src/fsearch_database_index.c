@@ -154,6 +154,27 @@ create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDataba
     return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
 }
 
+// Resolves event->watched_entry_handle to a live entry via whichever backend queued the event.
+static FsearchDatabaseEntry *
+resolve_watched_entry(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
+    switch (event->monitor_kind) {
+    case FSEARCH_FOLDER_MONITOR_FANOTIFY:
+#ifdef HAVE_FANOTIFY
+        return fsearch_folder_monitor_fanotify_resolve(self->fanotify_monitor, event->watched_entry_handle);
+#else
+        return NULL;
+#endif
+    case FSEARCH_FOLDER_MONITOR_INOTIFY:
+#ifdef HAVE_INOTIFY
+        return fsearch_folder_monitor_inotify_resolve(self->inotify_monitor, event->watched_entry_handle);
+#else
+        return NULL;
+#endif
+    default:
+        g_assert_not_reached();
+    }
+}
+
 static gboolean
 process_queued_events(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self, FALSE);
@@ -169,6 +190,9 @@ process_queued_events(FsearchDatabaseIndex *self) {
     // 1. Pop all events into an array for faster traversal and build an array for all folders to be removed
     // The later will be used to detect skippable delete events. For example, a delete event for folder /a makes the
     // delete event for /a/b obsolete, since by removing /a from the index we also remove all its children
+    //
+    // Resolved here (not by the monitor thread) since this runs under the index store's lock, same as every
+    // entry-freeing path.
     g_autoptr(GPtrArray) events = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_folder_monitor_event_free);
     g_autoptr(GPtrArray) folder_delete_events = g_ptr_array_new();
     while (true) {
@@ -176,6 +200,15 @@ process_queued_events(FsearchDatabaseIndex *self) {
         if (!event) {
             break;
         }
+        FsearchDatabaseEntry *watched_entry = resolve_watched_entry(self, event);
+        if (!watched_entry) {
+            // Folder is no longer watched: it was unwatched (and possibly freed) since this event
+            // was queued. Nothing to process.
+            g_debug("[index] watched entry no longer present for queued event, dropping");
+            fsearch_folder_monitor_event_free(event);
+            continue;
+        }
+        fsearch_folder_monitor_event_set_watched_entry(event, watched_entry);
         g_ptr_array_add(events, event);
         if (event->is_dir && (is_delete_event(event->event_kind) || is_special_delete_event(event->event_kind))) {
             g_ptr_array_add(folder_delete_events, event);
