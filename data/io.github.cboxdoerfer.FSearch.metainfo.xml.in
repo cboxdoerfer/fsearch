@@ -72,6 +72,9 @@
     <developer id="io.github.cboxdoerfer">
       <name translate="no">Christian Boxdörfer</name>
     </developer>
+    <!-- Kept for appstreamcli < 1.0 (e.g. Ubuntu 20.04/22.04 PPA builds), which doesn't know <developer>. -->
+    <!-- Translators: please do NOT translate this. -->
+    <developer_name>Christian Boxdörfer</developer_name>
     <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
     <translation type="gettext">fsearch</translation>
     <content_rating type="oars-1.1" />
