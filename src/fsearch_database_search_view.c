@@ -268,7 +268,11 @@ remove_results(DynamicArray *entries_to_remove,
         return;
     }
     const uint32_t num_entries = darray_get_num_items(entries_to_remove);
-    if (!marked || num_entries < 256) {
+    const uint32_t num_total = fsearch_database_chunked_array_get_num_entries(chunks_to_remove_from);
+    // Bulk removal scans the whole result set once (O(num_total)), so the crossover with per-entry
+    // steal scales with the view size, not a fixed count. Same reasoning (and ~num_total/100
+    // threshold) as index_store_remove_from_store_worker().
+    if (!marked || num_entries <= num_total / 100) {
         for (uint32_t i = 0; i < num_entries; ++i) {
             FsearchDatabaseEntry *entry = darray_get_item(entries_to_remove, i);
             fsearch_database_chunked_array_steal(chunks_to_remove_from, entry);

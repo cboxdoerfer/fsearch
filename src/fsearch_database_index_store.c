@@ -258,8 +258,11 @@ index_store_remove_from_store_worker(FsearchDatabaseChunkedArray *chunks, Dynami
     g_return_if_fail(chunks);
     g_return_if_fail(entries);
     const uint32_t num_entries = darray_get_num_items(entries);
-    // TOOD: Do some more testing to find the best way to decide when its worth to remove in bulk or not
-    if (marked && num_entries > 256) {
+    const uint32_t num_total = fsearch_database_chunked_array_get_num_entries(chunks);
+    // Bulk removal scans the whole array once (O(num_total)), so the crossover with per-entry
+    // steal scales with the array size, not a fixed count. Benchmarks put it near num_total/100
+    // across sort orders
+    if (marked && num_entries > num_total / 100) {
         // When removing lots of entries, its usually more efficient to walk the entire list of entries and remove
         // marked ones in bulk
         uint32_t removed_entries = fsearch_database_chunked_array_remove_marked_folders(chunks);
