@@ -29,8 +29,6 @@ typedef struct FsearchDatabaseEntry {
     alignas(int64_t) uint8_t attributes[];
 } FsearchDatabaseEntry;
 
-static size_t entry_base_size = 0;
-
 static size_t
 entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, const char *name, size_t name_len);
 
@@ -880,7 +878,6 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
     if (db_entry_get_attribute_offset(attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
         memcpy(entry->attributes + name_offset, name, name_len + 1);
     }
-    entry_base_size = name_offset;
 
     if (parent) {
         // set parent must happen after entry->type was set, so best set it at the end
