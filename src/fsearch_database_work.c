@@ -128,7 +128,7 @@ work_free(FsearchDatabaseWork *work) {
 FsearchDatabaseWork *
 fsearch_database_work_ref(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work != NULL, NULL);
-    g_return_val_if_fail(work->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&work->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&work->ref_count);
 
@@ -138,7 +138,7 @@ fsearch_database_work_ref(FsearchDatabaseWork *work) {
 void
 fsearch_database_work_unref(FsearchDatabaseWork *work) {
     g_return_if_fail(work != NULL);
-    g_return_if_fail(work->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&work->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&work->ref_count)) {
         g_clear_pointer(&work, work_free);

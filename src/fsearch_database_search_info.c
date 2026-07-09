@@ -22,7 +22,7 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseSearchInfo,
 FsearchDatabaseSearchInfo *
 fsearch_database_search_info_ref(FsearchDatabaseSearchInfo *info) {
     g_return_val_if_fail(info != NULL, NULL);
-    g_return_val_if_fail(info->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&info->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&info->ref_count);
 
@@ -32,7 +32,7 @@ fsearch_database_search_info_ref(FsearchDatabaseSearchInfo *info) {
 void
 fsearch_database_search_info_unref(FsearchDatabaseSearchInfo *info) {
     g_return_if_fail(info != NULL);
-    g_return_if_fail(info->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&info->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&info->ref_count)) {
         g_clear_pointer(&info->query, fsearch_query_unref);

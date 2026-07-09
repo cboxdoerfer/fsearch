@@ -804,7 +804,7 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_ref(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store != NULL, NULL);
-    g_return_val_if_fail(store->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&store->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&store->ref_count);
 
@@ -814,7 +814,7 @@ fsearch_database_index_store_ref(FsearchDatabaseIndexStore *store) {
 void
 fsearch_database_index_store_unref(FsearchDatabaseIndexStore *store) {
     g_return_if_fail(store != NULL);
-    g_return_if_fail(store->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&store->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&store->ref_count)) {
         g_clear_pointer(&store, index_store_free);

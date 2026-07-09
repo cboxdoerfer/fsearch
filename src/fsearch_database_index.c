@@ -956,7 +956,7 @@ fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
 FsearchDatabaseIndex *
 fsearch_database_index_ref(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&self->ref_count);
 
@@ -966,7 +966,7 @@ fsearch_database_index_ref(FsearchDatabaseIndex *self) {
 void
 fsearch_database_index_unref(FsearchDatabaseIndex *self) {
     g_return_if_fail(self != NULL);
-    g_return_if_fail(self->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&self->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
         g_clear_pointer(&self, index_free);

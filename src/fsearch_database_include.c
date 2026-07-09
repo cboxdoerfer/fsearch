@@ -56,7 +56,7 @@ fsearch_database_include_new(const char *path,
 FsearchDatabaseInclude *
 fsearch_database_include_ref(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&self->ref_count);
 
@@ -66,7 +66,7 @@ fsearch_database_include_ref(FsearchDatabaseInclude *self) {
 void
 fsearch_database_include_unref(FsearchDatabaseInclude *self) {
     g_return_if_fail(self != NULL);
-    g_return_if_fail(self->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&self->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
         g_clear_pointer(&self->path, g_free);
@@ -78,8 +78,8 @@ gboolean
 fsearch_database_include_equal_path(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2) {
     g_return_val_if_fail(i1 != NULL, FALSE);
     g_return_val_if_fail(i2 != NULL, FALSE);
-    g_return_val_if_fail(i1->ref_count > 0, FALSE);
-    g_return_val_if_fail(i2->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&i1->ref_count) > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&i2->ref_count) > 0, FALSE);
 
     if (g_strcmp0(i1->path, i2->path) != 0) {
         return FALSE;
@@ -91,8 +91,8 @@ gboolean
 fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclude *i2) {
     g_return_val_if_fail(i1 != NULL, FALSE);
     g_return_val_if_fail(i2 != NULL, FALSE);
-    g_return_val_if_fail(i1->ref_count > 0, FALSE);
-    g_return_val_if_fail(i2->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&i1->ref_count) > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&i2->ref_count) > 0, FALSE);
 
     if (i1->active != i2->active || i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system
         || i1->rescan_after != i2->rescan_after || i1->scan_after_launch != i2->scan_after_launch
@@ -164,7 +164,7 @@ fsearch_database_include_set_last_scan_reason(FsearchDatabaseInclude *self, Fsea
 gboolean
 fsearch_database_include_get_active(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, 0);
-    g_return_val_if_fail(self->ref_count > 0, 0);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, 0);
 
     return self->active;
 }
@@ -172,7 +172,7 @@ fsearch_database_include_get_active(FsearchDatabaseInclude *self) {
 const char *
 fsearch_database_include_get_path(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     return self->path;
 }
@@ -180,7 +180,7 @@ fsearch_database_include_get_path(FsearchDatabaseInclude *self) {
 gboolean
 fsearch_database_include_get_one_file_system(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, FALSE);
-    g_return_val_if_fail(self->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FALSE);
 
     return self->one_file_system;
 }
@@ -188,7 +188,7 @@ fsearch_database_include_get_one_file_system(FsearchDatabaseInclude *self) {
 gboolean
 fsearch_database_include_get_monitored(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, FALSE);
-    g_return_val_if_fail(self->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FALSE);
 
     return self->monitor;
 }
@@ -196,7 +196,7 @@ fsearch_database_include_get_monitored(FsearchDatabaseInclude *self) {
 gboolean
 fsearch_database_include_get_scan_after_launch(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, FALSE);
-    g_return_val_if_fail(self->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FALSE);
 
     return self->scan_after_launch;
 }

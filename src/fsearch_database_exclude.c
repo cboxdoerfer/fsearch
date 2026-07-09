@@ -53,7 +53,7 @@ fsearch_database_exclude_new(const char *pattern,
 FsearchDatabaseExclude *
 fsearch_database_exclude_ref(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&self->ref_count);
 
@@ -63,7 +63,7 @@ fsearch_database_exclude_ref(FsearchDatabaseExclude *self) {
 void
 fsearch_database_exclude_unref(FsearchDatabaseExclude *self) {
     g_return_if_fail(self != NULL);
-    g_return_if_fail(self->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&self->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
         g_clear_pointer(&self->pattern, g_free);
@@ -76,8 +76,8 @@ gboolean
 fsearch_database_exclude_equal(FsearchDatabaseExclude *e1, FsearchDatabaseExclude *e2) {
     g_return_val_if_fail(e1 != NULL, FALSE);
     g_return_val_if_fail(e2 != NULL, FALSE);
-    g_return_val_if_fail(e1->ref_count > 0, FALSE);
-    g_return_val_if_fail(e2->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&e1->ref_count) > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&e2->ref_count) > 0, FALSE);
 
     return g_strcmp0(e1->pattern, e2->pattern) == 0 && e1->active == e2->active && e1->type == e2->type
         && e1->scope == e2->scope && e1->target == e2->target;
@@ -92,7 +92,7 @@ fsearch_database_exclude_copy(FsearchDatabaseExclude *self) {
 const char *
 fsearch_database_exclude_get_pattern(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     return self->pattern;
 }
@@ -100,7 +100,7 @@ fsearch_database_exclude_get_pattern(FsearchDatabaseExclude *self) {
 gboolean
 fsearch_database_exclude_get_active(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, FALSE);
-    g_return_val_if_fail(self->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FALSE);
 
     return self->active;
 }
@@ -108,7 +108,7 @@ fsearch_database_exclude_get_active(FsearchDatabaseExclude *self) {
 FsearchDatabaseExcludeType
 fsearch_database_exclude_get_exclude_type(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED);
-    g_return_val_if_fail(self->ref_count > 0, FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED);
 
     return self->type;
 }
@@ -116,7 +116,7 @@ fsearch_database_exclude_get_exclude_type(FsearchDatabaseExclude *self) {
 FsearchDatabaseExcludeMatchScope
 fsearch_database_exclude_get_match_scope(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH);
-    g_return_val_if_fail(self->ref_count > 0, FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH);
 
     return self->scope;
 }
@@ -124,7 +124,7 @@ fsearch_database_exclude_get_match_scope(FsearchDatabaseExclude *self) {
 FsearchDatabaseExcludeTarget
 fsearch_database_exclude_get_target(FsearchDatabaseExclude *self) {
     g_return_val_if_fail(self != NULL, FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH);
-    g_return_val_if_fail(self->ref_count > 0, FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH);
 
     return self->target;
 }
@@ -132,7 +132,7 @@ fsearch_database_exclude_get_target(FsearchDatabaseExclude *self) {
 gboolean
 fsearch_database_exclude_matches(FsearchDatabaseExclude *self, const char *path, const char *basename, gboolean is_dir) {
     g_return_val_if_fail(self != NULL, FALSE);
-    g_return_val_if_fail(self->ref_count > 0, FALSE);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, FALSE);
     g_return_val_if_fail(path != NULL, FALSE);
     g_return_val_if_fail(basename != NULL, FALSE);
 
