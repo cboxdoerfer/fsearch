@@ -44,54 +44,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </packing>
         </child>
         <child>
-          <object class="GtkInfoBar" id="db_update_infobar">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <child internal-child="action_area">
-              <object class="GtkButtonBox">
-                <property name="can-focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child internal-child="content_area">
-              <object class="GtkBox">
-                <property name="can-focus">False</property>
-                <property name="spacing">16</property>
-                <child>
-                  <object class="GtkLabel" id="db_update_label">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Database Update Required:&lt;/b&gt; This update will migrate your database index format. This may take a moment.</property>
-                    <property name="use-markup">True</property>
-                    <property name="wrap">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkBox" id="content_box">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -408,7 +360,7 @@ Rules can be targeted specifically at files, folders, or both, and can be config
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
