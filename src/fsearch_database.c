@@ -708,17 +708,15 @@ database_rescan_index_finished(FsearchDatabase *self, FsearchDatabaseWork *work)
     }
     signal_emit_database_progress(self, g_strdup(_("Index rescan: applying changes…")));
 
-    if (!fsearch_database_index_store_replace_index(self->store, new_index)) {
-        return;
-    }
-
+    if (fsearch_database_index_store_replace_index(self->store, new_index)) {
 #ifdef HAVE_MALLOC_TRIM
-    malloc_trim(0);
+        malloc_trim(0);
 #endif
 
-    if (self->rescan_manager) {
-        fsearch_database_rescan_manager_notify_index_finished(self->rescan_manager,
-                                                              fsearch_database_index_get_path(new_index));
+        if (self->rescan_manager) {
+            fsearch_database_rescan_manager_notify_index_finished(self->rescan_manager,
+                                                                  fsearch_database_index_get_path(new_index));
+        }
     }
 
     g_autoptr(GMutexLocker) store_locker = fsearch_database_index_store_get_locker(self->store);
