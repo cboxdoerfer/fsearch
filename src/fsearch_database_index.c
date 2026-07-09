@@ -1089,7 +1089,10 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                         cancellable,
                         scan_status_cb,
                         self)) {
-        self->needs_root_reappear_poll = true;
+        // A cancelled scan isn't a sign the root went away -- don't schedule reappear polling for it.
+        if (!g_cancellable_is_cancelled(cancellable)) {
+            self->needs_root_reappear_poll = true;
+        }
         return false;
     }
 
