@@ -58,6 +58,8 @@ struct _FsearchDatabase {
     FsearchDatabaseRescanManager *rescan_manager;
 
     GMutex mutex;
+
+    bool disposed;
 };
 
 G_DEFINE_TYPE(FsearchDatabase, fsearch_database, G_TYPE_OBJECT)
@@ -96,7 +98,8 @@ index_store_event_cb(FsearchDatabaseIndexStore *store,
 
 // region Signaling
 typedef struct FsearchSignalEmitContext {
-    FsearchDatabase *db;
+    // Weak, so queued emissions can't resurrect a database that's already being disposed
+    GWeakRef db;
     FsearchDatabaseSignalType type;
     gpointer arg1;
     gpointer arg2;
@@ -118,7 +121,7 @@ signal_emit_context_free(FsearchSignalEmitContext *ctx) {
     if (ctx->arg3_free_func) {
         g_clear_pointer(&ctx->arg3, ctx->arg3_free_func);
     }
-    g_clear_object(&ctx->db);
+    g_weak_ref_clear(&ctx->db);
     g_clear_pointer(&ctx, free);
 }
 
@@ -135,7 +138,7 @@ signal_emit_context_new(FsearchDatabase *db,
     FsearchSignalEmitContext *ctx = calloc(1, sizeof(FsearchSignalEmitContext));
     g_assert(ctx != NULL);
 
-    ctx->db = g_object_ref(db);
+    g_weak_ref_init(&ctx->db, db);
     ctx->type = type;
     ctx->arg1 = arg1;
     ctx->arg2 = arg2;
@@ -189,18 +192,25 @@ static gboolean
 signal_emit_cb(gpointer user_data) {
     FsearchSignalEmitContext *ctx = user_data;
 
+    g_autoptr(FsearchDatabase) db = g_weak_ref_get(&ctx->db);
+    if (!db) {
+        // The database is already gone, drop the emission
+        g_clear_pointer(&ctx, signal_emit_context_free);
+        return G_SOURCE_REMOVE;
+    }
+
     switch (ctx->n_args) {
     case 0:
-        g_signal_emit(ctx->db, signals[ctx->type], 0);
+        g_signal_emit(db, signals[ctx->type], 0);
         break;
     case 1:
-        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1);
+        g_signal_emit(db, signals[ctx->type], 0, ctx->arg1);
         break;
     case 2:
-        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
+        g_signal_emit(db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
         break;
     case 3:
-        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2, ctx->arg3);
+        g_signal_emit(db, signals[ctx->type], 0, ctx->arg1, ctx->arg2, ctx->arg3);
         break;
     default:
         g_assert_not_reached();
@@ -1018,6 +1028,13 @@ fsearch_database_constructed(GObject *object) {
 static void
 fsearch_database_dispose(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
+
+    // Dispose can run more than once 
+    if (self->disposed) {
+        G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
+        return;
+    }
+    self->disposed = true;
 
     // Cancel ongoing work
     g_cancellable_cancel(self->cancellable);
