@@ -67,6 +67,11 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
 void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store);
 
+// True once fsearch_database_index_store_start() has completed without being cancelled.
+// False if it was never called, is still in progress, or was aborted via `cancellable`.
+bool
+fsearch_database_index_store_is_running(FsearchDatabaseIndexStore *store);
+
 FsearchDatabaseIndex *
 fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, const char *path);
 

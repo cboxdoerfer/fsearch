@@ -168,11 +168,15 @@ fsearch_database_work_new_rescan_index(const char *root_path) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index) {
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable) {
     g_return_val_if_fail(new_index, NULL);
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED;
     work->rescan_new_index = fsearch_database_index_ref(new_index);
+    if (cancellable) {
+        // Carry forward the cancellable of the work item that requested this rescan
+        g_set_object(&work->cancellable, cancellable);
+    }
     return work;
 }
 
@@ -191,12 +195,16 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
 FsearchDatabaseWork *
 fsearch_database_work_new_scan_finished(void *index_store,
                                         void *(*index_ref_func)(void *),
-                                        void (*index_free_func)(void *)) {
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN_FINISHED;
     work->index_store = index_ref_func(index_store);
     work->index_store_ref_func = index_ref_func;
     work->index_store_free_func = index_free_func;
+    if (cancellable) {
+        g_set_object(&work->cancellable, cancellable);
+    }
     return work;
 }
 

@@ -64,8 +64,6 @@ struct _FsearchApplication {
 
     uint32_t num_files;
     uint32_t num_folders;
-
-    FsearchDatabaseWork *work_scan;
 };
 
 static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
@@ -212,17 +210,13 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         config_save(self->config);
 
         if (config_diff.database_config_changed) {
-            if (self->work_scan) {
-                fsearch_database_work_cancel(self->work_scan);
-                g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-            }
-            self->work_scan = fsearch_database_work_new_scan(self->config->includes,
-                                                             self->config->excludes,
-                                                             DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                                 | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                                 | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                                 | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
-            fsearch_database_queue_work(self->db, self->work_scan);
+            fsearch_database_cancel_scan(self->db);
+            g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
+                self->config->includes,
+                self->config->excludes,
+                DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                    | DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+            fsearch_database_queue_work(self->db, work);
         }
 
         g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
@@ -264,23 +258,17 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
 static void
 action_cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-    if (self->work_scan) {
-        fsearch_database_work_cancel(self->work_scan);
-        g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    }
+    fsearch_database_cancel_scan(self->db);
 }
 
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
 
-    if (self->work_scan) {
-        fsearch_database_work_cancel(self->work_scan);
-        g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    }
-    self->work_scan = fsearch_database_work_new_rescan();
+    fsearch_database_cancel_scan(self->db);
 
-    fsearch_database_queue_work(self->db, self->work_scan);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_rescan();
+    fsearch_database_queue_work(self->db, work);
 }
 
 static void
@@ -329,7 +317,6 @@ fsearch_application_shutdown(GApplication *app) {
     // close the preview
     fsearch_preview_call_close();
 
-    g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
     g_clear_object(&self->db);
 
     g_clear_pointer(&self->option_search_term, g_free);
@@ -421,17 +408,13 @@ on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoint
 
     if (includes_changed || excludes_changed) {
         g_debug("[app] database config differs from config file, triggering rescan");
-        if (self->work_scan) {
-            fsearch_database_work_cancel(self->work_scan);
-            g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-        }
-        self->work_scan = fsearch_database_work_new_scan(self->config->includes,
-                                                         self->config->excludes,
-                                                         DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
-        fsearch_database_queue_work(self->db, self->work_scan);
+        fsearch_database_cancel_scan(self->db);
+        g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
+            self->config->includes,
+            self->config->excludes,
+            DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                | DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+        fsearch_database_queue_work(self->db, work);
     }
 }
 

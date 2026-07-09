@@ -980,6 +980,12 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
     return;
 }
 
+bool
+fsearch_database_index_store_is_running(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, false);
+    return store->running;
+}
+
 void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store) {
     g_return_if_fail(store);

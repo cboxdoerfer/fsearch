@@ -48,7 +48,7 @@ FsearchDatabaseWork *
 fsearch_database_work_new_rescan_index(const char *root_path);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index);
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable);
 
 const char *
 fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work);
@@ -65,7 +65,10 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_func)(void *), void (*index_free_func)(void *));
+fsearch_database_work_new_scan_finished(void *index_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id,

@@ -49,6 +49,10 @@ struct _FsearchDatabase {
 
     GCancellable *cancellable;
 
+    // Cancellable of the most recently queued scan
+    GCancellable *scan_cancellable;
+    GMutex scan_mutex;
+
     FsearchDatabaseIndexStore *store;
     FsearchDatabaseIndexStore *pending_store;
     FsearchDatabaseRescanManager *rescan_manager;
@@ -519,13 +523,19 @@ io_thread_cb(gpointer data, gpointer user_data) {
     switch (kind) {
     case FSEARCH_DATABASE_WORK_SCAN_FINISHED: {
         g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_work_scan_finished_get_index_store(work);
-        fsearch_database_index_store_start(store, db->cancellable);
+        g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+        fsearch_database_index_store_start(store, cancellable);
         queue_work = true;
         break;
     }
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED: {
         g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_work_rescan_index_finished_get_index(work);
-        if (!fsearch_database_index_scan(new_index, db->cancellable)) {
+        g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+        if (!fsearch_database_index_scan(new_index, cancellable)) {
+            if (g_cancellable_is_cancelled(cancellable)) {
+                queue_work = true;
+                break;
+            }
             g_debug("[db] index rescan failed: %s", fsearch_database_index_get_path(new_index));
 
             if (db->rescan_manager) {
@@ -580,6 +590,16 @@ database_remove_items(FsearchDatabase *self, FsearchDatabaseWork *work) {
     fsearch_database_index_store_remove_paths(self->store, item_paths, self->rescan_manager);
 }
 
+// Clears self->scan_cancellable, unless a newer scan has already replaced it.
+static void
+database_clear_scan_cancellable_if_current(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->scan_mutex);
+    if (self->scan_cancellable == cancellable) {
+        g_clear_object(&self->scan_cancellable);
+    }
+}
+
 static void
 database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
     // DB must be locked
@@ -592,16 +612,22 @@ database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
         g_clear_pointer(&self->pending_store, fsearch_database_index_store_unref);
     }
 
-    database_set_store(self, store);
+    // If the scan was cancelled, fsearch_database_index_store_start() never finished building
+    // `store`. leave the current, still-intact store in place.
+    if (fsearch_database_index_store_is_running(store)) {
+        database_set_store(self, store);
 
-    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
-    g_assert_nonnull(locker);
+        g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+        g_assert_nonnull(locker);
 
-    fsearch_database_index_store_start_monitoring(self->store);
+        fsearch_database_index_store_start_monitoring(self->store);
 
 #ifdef HAVE_MALLOC_TRIM
-    malloc_trim(0);
+        malloc_trim(0);
 #endif
+    }
+
+    database_clear_scan_cancellable_if_current(self, work);
 
     signal_emit(self,
                 SIGNAL_SCAN_FINISHED,
@@ -632,12 +658,20 @@ database_rescan_sync(FsearchDatabase *db,
 }
 
 static void
-database_rescan(FsearchDatabase *self) {
+database_rescan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     // DB must be locked
     g_return_if_fail(self);
+    g_return_if_fail(work);
     g_return_if_fail(self->store || self->pending_store);
 
+    // Shutting down: don't push a scan the io pool would have to finish before it can be freed
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        return;
+    }
+
     signal_emit0(self, SIGNAL_SCAN_STARTED);
+
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
@@ -663,12 +697,13 @@ database_rescan(FsearchDatabase *self) {
     self->pending_store = fsearch_database_index_store_ref(store);
 
     // The IO thread is expecting work objects -> use scan_finished kind to wrap the index store
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan_finished(
+    g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_scan_finished(
         store,
         (void *(*)(void *))fsearch_database_index_store_ref,
-        (GDestroyNotify)fsearch_database_index_store_unref);
+        (GDestroyNotify)fsearch_database_index_store_unref,
+        cancellable);
 
-    g_thread_pool_push(self->io_pool, g_steal_pointer(&work), NULL);
+    g_thread_pool_push(self->io_pool, g_steal_pointer(&new_work), NULL);
 }
 
 static void
@@ -678,19 +713,27 @@ database_rescan_index(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self->store);
     g_return_if_fail(work);
 
+    // Shutting down: don't push a scan the io pool would have to finish before it can be freed
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        return;
+    }
+
     const char *path = fsearch_database_work_rescan_index_get_path(work);
 
     g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_index_store_create_index_for_rescan(self->store, path);
 
     if (!new_index) {
         g_warning("[db] rescan_index: failed to create index for rescan: %s", path);
+        database_clear_scan_cancellable_if_current(self, work);
         return;
     }
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+
     // Push to the IO pool to perform the actual scan
-    g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_rescan_index_finished(new_index);
+    g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_rescan_index_finished(new_index, cancellable);
     g_thread_pool_push(self->io_pool, g_steal_pointer(&new_work), NULL);
 }
 
@@ -706,18 +749,26 @@ database_rescan_index_finished(FsearchDatabase *self, FsearchDatabaseWork *work)
         // The store was fully replaced by a concurrent full rescan - nothing to do.
         return;
     }
-    signal_emit_database_progress(self, g_strdup(_("Index rescan: applying changes…")));
 
-    if (fsearch_database_index_store_replace_index(self->store, new_index)) {
+    // If cancelled, don't apply `new_index` -- but always emit SIGNAL_SCAN_FINISHED below so the
+    // UI's cancel state clears.
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+    if (!g_cancellable_is_cancelled(cancellable)) {
+        signal_emit_database_progress(self, g_strdup(_("Index rescan: applying changes…")));
+
+        if (fsearch_database_index_store_replace_index(self->store, new_index)) {
 #ifdef HAVE_MALLOC_TRIM
-        malloc_trim(0);
+            malloc_trim(0);
 #endif
 
-        if (self->rescan_manager) {
-            fsearch_database_rescan_manager_notify_index_finished(self->rescan_manager,
-                                                                  fsearch_database_index_get_path(new_index));
+            if (self->rescan_manager) {
+                fsearch_database_rescan_manager_notify_index_finished(self->rescan_manager,
+                                                                      fsearch_database_index_get_path(new_index));
+            }
         }
     }
+
+    database_clear_scan_cancellable_if_current(self, work);
 
     g_autoptr(GMutexLocker) store_locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(store_locker);
@@ -737,6 +788,11 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
+    // Shutting down: don't push a scan the io pool would have to finish before it can be freed
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        return;
+    }
+
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_work_scan_get_include_manager(work);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
@@ -747,12 +803,15 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     if (self->store && fsearch_database_include_manager_equal(database_get_include_manager(self), include_manager)
         && fsearch_database_exclude_manager_equal(database_get_exclude_manager(self), exclude_manager)) {
         g_debug("[scan] new config is identical to the current one. No scan necessary.");
+        database_clear_scan_cancellable_if_current(self, work);
         return;
     }
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
+
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
                                                                                   exclude_manager,
@@ -768,7 +827,8 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseWork) new_work = fsearch_database_work_new_scan_finished(
         store,
         (void *(*)(void *))fsearch_database_index_store_ref,
-        (GDestroyNotify)fsearch_database_index_store_unref);
+        (GDestroyNotify)fsearch_database_index_store_unref,
+        cancellable);
 
     g_thread_pool_push(self->io_pool, g_steal_pointer(&new_work), NULL);
 }
@@ -876,7 +936,7 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
         database_load(self);
         break;
     case FSEARCH_DATABASE_WORK_RESCAN:
-        database_rescan(self);
+        database_rescan(self, work);
         break;
     case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
         database_rescan_index(self, work);
@@ -956,6 +1016,7 @@ fsearch_database_dispose(GObject *object) {
 
     // Cancel ongoing work
     g_cancellable_cancel(self->cancellable);
+    fsearch_database_cancel_scan(self);
 
     // Notify worker  thread to exit itself
     g_autoptr(FsearchDatabaseWork) quit_work = fsearch_database_work_new_quit();
@@ -998,8 +1059,10 @@ fsearch_database_finalize(GObject *object) {
     g_clear_object(&self->file);
 
     g_clear_object(&self->cancellable);
+    g_clear_object(&self->scan_cancellable);
 
     g_mutex_clear(&self->mutex);
+    g_mutex_clear(&self->scan_mutex);
 
     G_OBJECT_CLASS(fsearch_database_parent_class)->finalize(object);
 }
@@ -1193,6 +1256,7 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
 static void
 fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init(&self->mutex);
+    g_mutex_init(&self->scan_mutex);
     self->cancellable = g_cancellable_new();
 #if GLIB_CHECK_VERSION(2, 70, 0)
     self->io_pool = g_thread_pool_new_full(io_thread_cb, self, (GDestroyNotify)fsearch_database_work_unref, 1, TRUE, NULL);
@@ -1232,12 +1296,33 @@ fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
+    // Publish scan cancellables at queue time, so cancel_scan() also reaches scans still waiting
+    // in the work queue.
+    const FsearchDatabaseWorkKind kind = fsearch_database_work_get_kind(work);
+    if (kind == FSEARCH_DATABASE_WORK_SCAN || kind == FSEARCH_DATABASE_WORK_RESCAN
+        || kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX) {
+        g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
+        g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->scan_mutex);
+        g_set_object(&self->scan_cancellable, cancellable);
+    }
+
     DatabaseWorkWrapper *wrapper = db_work_wrapper_new(self, work);
 
     g_autoptr(GSource) idle_source = g_idle_source_new();
     g_source_set_priority(idle_source, G_PRIORITY_DEFAULT);
     g_source_set_callback(idle_source, handle_work_in_worker_thread_cb, wrapper, (GDestroyNotify)db_work_wrapper_free);
     g_source_attach(idle_source, self->worker_ctx);
+}
+
+void
+fsearch_database_cancel_scan(FsearchDatabase *self) {
+    g_return_if_fail(self);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->scan_mutex);
+
+    if (self->scan_cancellable) {
+        g_cancellable_cancel(self->scan_cancellable);
+    }
 }
 
 FsearchResult

@@ -19,6 +19,11 @@ typedef void
 void
 fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work);
 
+// Cancels the most recently queued scan (SCAN/RESCAN/RESCAN_INDEX), however it was triggered.
+// No-op if none is pending. Only the filesystem walk can be aborted, not applying its results.
+void
+fsearch_database_cancel_scan(FsearchDatabase *self);
+
 FsearchResult
 fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
 
