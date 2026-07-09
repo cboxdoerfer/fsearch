@@ -471,7 +471,12 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     fsearch_database_index_store_modify_selection(self->store, view_id, type, start_idx, end_idx);
 
-    signal_emit_selection_changed(self, fsearch_database_index_store_get_search_info(self->store, view_id));
+    FsearchDatabaseSearchInfo *info = fsearch_database_index_store_get_search_info(self->store, view_id);
+    if (!info) {
+        // No search view for this id (e.g. the search matched nothing) - nothing was selected
+        return;
+    }
+    signal_emit_selection_changed(self, info);
 }
 
 static void
