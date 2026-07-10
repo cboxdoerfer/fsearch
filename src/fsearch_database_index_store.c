@@ -591,6 +591,11 @@ index_store_proces_events_cb(gpointer data) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
     g_assert_nonnull(locker);
 
+    if (!store->running) {
+        // store isn't fully started yet
+        return G_SOURCE_CONTINUE;
+    }
+
     gboolean store_was_updated = FALSE;
     for (uint32_t i = 0; i < store->indices->len; ++i) {
         FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
@@ -799,6 +804,8 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
     }
 
     store->is_sorted = true;
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
+    g_assert_nonnull(locker);
     store->running = true;
 
     return store;
@@ -978,6 +985,8 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         return;
     }
 
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&store->mutex);
+    g_assert_nonnull(locker);
     store->running = true;
 
     return;
