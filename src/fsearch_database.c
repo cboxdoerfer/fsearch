@@ -238,12 +238,15 @@ signal_emit(FsearchDatabase *self,
             guint n_args,
             GDestroyNotify arg1_free_func,
             GDestroyNotify arg2_free_func) {
+    FsearchSignalEmitContext
+        *ctx = signal_emit_context_new(self, type, arg1, arg2, NULL, n_args, arg1_free_func, arg2_free_func, NULL);
     if (g_cancellable_is_cancelled(self->cancellable)) {
         g_debug("signal_emit: cancelling signal %s", signal_type_to_name(type));
+        // Still free the ownership-transferred args (worker thread keeps emitting until it joins)
+        g_clear_pointer(&ctx, signal_emit_context_free);
         return;
     }
-    g_idle_add(signal_emit_cb,
-               signal_emit_context_new(self, type, arg1, arg2, NULL, n_args, arg1_free_func, arg2_free_func, NULL));
+    g_idle_add(signal_emit_cb, ctx);
 }
 
 static void
@@ -255,12 +258,14 @@ signal_emit3(FsearchDatabase *self,
              GDestroyNotify arg1_free_func,
              GDestroyNotify arg2_free_func,
              GDestroyNotify arg3_free_func) {
+    FsearchSignalEmitContext
+        *ctx = signal_emit_context_new(self, type, arg1, arg2, arg3, 3, arg1_free_func, arg2_free_func, arg3_free_func);
     if (g_cancellable_is_cancelled(self->cancellable)) {
         g_debug("signal_emit3: cancelling signal %s", signal_type_to_name(type));
+        g_clear_pointer(&ctx, signal_emit_context_free);
         return;
     }
-    g_idle_add(signal_emit_cb,
-               signal_emit_context_new(self, type, arg1, arg2, arg3, 3, arg1_free_func, arg2_free_func, arg3_free_func));
+    g_idle_add(signal_emit_cb, ctx);
 }
 
 static void
@@ -1029,7 +1034,7 @@ static void
 fsearch_database_dispose(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
-    // Dispose can run more than once 
+    // Dispose can run more than once
     if (self->disposed) {
         G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
         return;
