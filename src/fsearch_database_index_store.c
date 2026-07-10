@@ -718,6 +718,10 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  gpointer event_func_data) {
     FsearchDatabaseIndexStore *store = g_new0(FsearchDatabaseIndexStore, 1);
 
+    // Must be initialized before any thread/source below can lock it.
+    g_mutex_init(&store->mutex);
+    store->ref_count = 1;
+
     store->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
     store->search_results = g_hash_table_new_full(g_direct_hash,
                                                   g_direct_equal,
@@ -753,10 +757,6 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     g_source_set_priority(store->worker_index_root_reappear_poll_source, G_PRIORITY_DEFAULT_IDLE);
     g_source_set_callback(store->worker_index_root_reappear_poll_source, index_store_root_reappear_poll_cb, store, NULL);
     g_source_attach(store->worker_index_root_reappear_poll_source, store->worker.ctx);
-
-    g_mutex_init(&store->mutex);
-
-    store->ref_count = 1;
 
     return store;
 }
