@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2021 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
+<!-- Copyright 2026 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
 <component type="desktop-application">
     <id>io.github.cboxdoerfer.FSearch</id>
     <metadata_license>CC-BY-SA-4.0</metadata_license>
@@ -83,7 +83,7 @@
         <value key="Purism::form_factor">workstation</value>
     </custom>
     <releases>
-        <release date="2026-06-06" version="0.3-beta2">
+        <release date="2026-07-11" version="0.3">
             <description>
                 <ul>
                     <li>DB rewrite</li>
@@ -94,6 +94,9 @@
                     <li>DB: Store database config in DB file</li>
                     <li>DB: Add checksum to DB file</li>
                     <li>Make icon and file info gathering asynchronous (no UI blocking)</li>
+                    <li>Reduce memory usage</li>
+                    <li>Add contextual help for all preferences</li>
+                    <li>Numerous bug fixes and stability and performance improvements</li>
                 </ul>
             </description>
         </release>
