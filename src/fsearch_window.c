@@ -67,6 +67,10 @@ struct _FsearchApplicationWindow {
     FsearchDatabaseWork *work_search;
     FsearchDatabaseWork *work_sort;
 
+    guint apply_overlay_timeout_id;
+    int32_t apply_depth;
+    bool applying_overlay_shown;
+
     uint32_t num_files_selected;
     uint32_t num_folders_selected;
 
@@ -92,6 +96,9 @@ perform_search(FsearchApplicationWindow *win);
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
+
+static void
+fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win, uint32_t num_items);
 
 static void
 on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
@@ -176,12 +183,73 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
 }
 
 static void
+apply_overlay_reset(FsearchApplicationWindow *win) {
+    if (win->apply_overlay_timeout_id) {
+        g_source_remove(win->apply_overlay_timeout_id);
+        win->apply_overlay_timeout_id = 0;
+    }
+    win->apply_depth = 0;
+    win->applying_overlay_shown = false;
+}
+
+static gboolean
+on_apply_overlay_timeout(gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    win->apply_overlay_timeout_id = 0;
+    win->applying_overlay_shown = true;
+    // Bring the database overlay stack to the front (over the results), then show the updating page.
+    show_overlay(win, OVERLAY_DATABASE);
+    show_overlay(win, OVERLAY_DATABASE_UPDATING);
+    return G_SOURCE_REMOVE;
+}
+
+static void
+on_database_apply_started(FsearchDatabase *db, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    win->apply_depth++;
+    if (win->apply_depth == 1 && !win->apply_overlay_timeout_id && !win->applying_overlay_shown) {
+        win->apply_overlay_timeout_id = g_timeout_add(500, on_apply_overlay_timeout, win);
+    }
+}
+
+static void
+on_database_apply_finished(FsearchDatabase *db, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    if (win->apply_depth > 0) {
+        win->apply_depth--;
+    }
+    if (win->apply_depth > 0) {
+        // Probably won't ever be reached in practice, since no two index updates will be applied simultanously
+        // But still we should correctly handle this case and still keep the overlay up
+        return;
+    }
+
+    if (win->apply_overlay_timeout_id) {
+        g_source_remove(win->apply_overlay_timeout_id);
+        win->apply_overlay_timeout_id = 0;
+    }
+    if (win->applying_overlay_shown) {
+        win->applying_overlay_shown = false;
+        // No need to perform a new search here, the results will be updated inplace and we receive a content changed
+        // signal
+        FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+        fsearch_window_set_overlay_for_database_state(win, fsearch_application_get_num_db_entries(app));
+    }
+}
+
+static void
 database_load_started(FsearchApplicationWindow *win) {
+    apply_overlay_reset(win);
     show_overlay(win, OVERLAY_DATABASE_LOADING);
 }
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
+    apply_overlay_reset(win);
     show_overlay(win, OVERLAY_DATABASE_UPDATING);
 
     GtkWidget *cancel_update_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
@@ -309,6 +377,10 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
+    if (self->apply_overlay_timeout_id) {
+        g_source_remove(self->apply_overlay_timeout_id);
+        self->apply_overlay_timeout_id = 0;
+    }
     g_clear_pointer(&self->active_filter_name, free);
     g_clear_pointer(&self->result_view, fsearch_result_view_free);
     g_clear_pointer(&self->work_search, fsearch_database_work_unref);
@@ -933,6 +1005,8 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "selection-changed", G_CALLBACK(on_selection_changed), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "apply-started", G_CALLBACK(on_database_apply_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "apply-finished", G_CALLBACK(on_database_apply_finished), self, G_CONNECT_AFTER);
 }
 
 static void

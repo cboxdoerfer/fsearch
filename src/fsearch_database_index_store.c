@@ -596,6 +596,18 @@ index_store_proces_events_cb(gpointer data) {
         return G_SOURCE_CONTINUE;
     }
 
+    gboolean has_pending = FALSE;
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
+        g_return_val_if_fail(index, G_SOURCE_REMOVE);
+        has_pending |= fsearch_database_index_has_pending_events(index);
+    }
+
+    // Notify the UI for a potential slow index update
+    if (has_pending && store->event_func) {
+        store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_STARTED, NULL, store->event_func_data);
+    }
+
     gboolean store_was_updated = FALSE;
     for (uint32_t i = 0; i < store->indices->len; ++i) {
         FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
@@ -605,6 +617,10 @@ index_store_proces_events_cb(gpointer data) {
 
     if (store_was_updated) {
         index_store_content_changed(store);
+    }
+
+    if (has_pending && store->event_func) {
+        store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_FINISHED, NULL, store->event_func_data);
     }
 
     return G_SOURCE_CONTINUE;

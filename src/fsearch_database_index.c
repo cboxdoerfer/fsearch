@@ -766,6 +766,17 @@ fsearch_database_index_process_events(FsearchDatabaseIndex *self) {
     return process_queued_events(self);
 }
 
+bool
+fsearch_database_index_has_pending_events(FsearchDatabaseIndex *self) {
+    g_return_val_if_fail(self, false);
+
+    if (g_atomic_int_get(&self->monitor) == 0 || g_atomic_int_get(&self->initialized) == 0) {
+        return false;
+    }
+
+    return g_async_queue_length(self->event_queue) > 0;
+}
+
 static FsearchDatabaseEntry *
 create_dummy_entry_chain(const char *root_path, const char *target_path, FsearchDatabaseEntryType target_type) {
     if (g_strcmp0(root_path, target_path) == 0) {

@@ -87,6 +87,9 @@ gboolean
 fsearch_database_index_process_events(FsearchDatabaseIndex *self);
 
 bool
+fsearch_database_index_has_pending_events(FsearchDatabaseIndex *self);
+
+bool
 fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path, bool *root_removed);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

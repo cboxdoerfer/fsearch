@@ -83,6 +83,8 @@ typedef enum FsearchDatabaseSignalType {
     SIGNAL_SELECTION_CHANGED,
     SIGNAL_DATABASE_CHANGED,
     SIGNAL_DATABASE_PROGRESS,
+    SIGNAL_APPLY_STARTED,
+    SIGNAL_APPLY_FINISHED,
     NUM_DATABASE_SIGNALS,
 } FsearchDatabaseSignalType;
 
@@ -181,6 +183,10 @@ signal_type_to_name(FsearchDatabaseSignalType type) {
         return "SIGNAL_DATABASE_CHANGED";
     case SIGNAL_DATABASE_PROGRESS:
         return "SIGNAL_DATABASE_PROGRESS";
+    case SIGNAL_APPLY_STARTED:
+        return "SIGNAL_APPLY_STARTED";
+    case SIGNAL_APPLY_FINISHED:
+        return "SIGNAL_APPLY_FINISHED";
     case NUM_DATABASE_SIGNALS:
         return "UNKNOWN";
     default:
@@ -327,6 +333,16 @@ signal_emit_database_progress(FsearchDatabase *self, char *text) {
     signal_emit(self, SIGNAL_DATABASE_PROGRESS, text, NULL, 1, (GDestroyNotify)free, NULL);
 }
 
+static void
+signal_emit_apply_started(FsearchDatabase *self) {
+    signal_emit0(self, SIGNAL_APPLY_STARTED);
+}
+
+static void
+signal_emit_apply_finished(FsearchDatabase *self) {
+    signal_emit0(self, SIGNAL_APPLY_FINISHED);
+}
+
 // endregion
 
 // region Database private
@@ -459,6 +475,12 @@ index_store_event_cb(FsearchDatabaseIndexStore *store,
         break;
     case FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED:
         signal_emit_selection_changed(self, (FsearchDatabaseSearchInfo *)data);
+        break;
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_STARTED:
+        signal_emit_apply_started(self);
+        break;
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_FINISHED:
+        signal_emit_apply_finished(self);
         break;
     default:
         g_assert_not_reached();
@@ -771,7 +793,11 @@ database_rescan_index_finished(FsearchDatabase *self, FsearchDatabaseWork *work)
     if (!g_cancellable_is_cancelled(cancellable)) {
         signal_emit_database_progress(self, g_strdup(_("Index rescan: applying changes…")));
 
-        if (fsearch_database_index_store_replace_index(self->store, new_index)) {
+        signal_emit_apply_started(self);
+        const bool replaced = fsearch_database_index_store_replace_index(self->store, new_index);
+        signal_emit_apply_finished(self);
+
+        if (replaced) {
 #ifdef HAVE_MALLOC_TRIM
             malloc_trim(0);
 #endif
@@ -1274,6 +1300,24 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                    G_TYPE_UINT,
                                                    G_TYPE_UINT,
                                                    FSEARCH_TYPE_DATABASE_ENTRY_INFO);
+    signals[SIGNAL_APPLY_STARTED] = g_signal_new("apply-started",
+                                                 G_TYPE_FROM_CLASS(klass),
+                                                 G_SIGNAL_RUN_LAST,
+                                                 0,
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
+                                                 G_TYPE_NONE,
+                                                 0);
+    signals[SIGNAL_APPLY_FINISHED] = g_signal_new("apply-finished",
+                                                  G_TYPE_FROM_CLASS(klass),
+                                                  G_SIGNAL_RUN_LAST,
+                                                  0,
+                                                  NULL,
+                                                  NULL,
+                                                  NULL,
+                                                  G_TYPE_NONE,
+                                                  0);
 }
 
 static void
