@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 21:34+0200\n"
+"POT-Creation-Date: 2026-07-11 17:26+0200\n"
 "PO-Revision-Date: 2026-05-12 09:11+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -142,15 +142,21 @@ msgstr "ツール"
 msgid "everything"
 msgstr "すべて"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#. Kept for appstreamcli < 1.0 (e.g. Ubuntu 20.04/22.04 PPA builds), which doesn't know <developer>.
+#. Translators: please do NOT translate this.
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:77
+msgid "Christian Boxdörfer"
+msgstr "Christian Boxdörfer"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
 msgstr "DB のリライト"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add support for filesystem monitoring"
 msgstr "DB: ファイルシステムの監視に対応"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
@@ -158,70 +164,70 @@ msgstr ""
 "DB: 固定文字列/ワイルドカード/正規表現に基づいてファイルとフォルダーを除外で"
 "きる機能を追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
 msgstr "DB: データベースの設定を DB ファイルに保存するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid "DB: Add checksum to DB file"
 msgstr "DB: DB ファイルにチェックサムを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr "アイコンとファイル情報の取得を非同期に変更 (UI をブロッキングしない)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "New search engine"
 msgstr "新しい検索エンジン"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Greatly improved highlighting of search terms"
 msgstr "検索文字列の強調表示を大幅に改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Custom filters"
 msgstr "カスタムフィルター"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Improved sort performance"
 msgstr "ソートパフォーマンスを改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Improved scroll performance"
 msgstr "スクロールパフォーマンスを改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Remember file selection after a database update"
 msgstr "選択中のファイルをデータベース更新後も維持するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "自由選択モードで自動的に結果リストをスクロールするように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "自由選択モードで 'Ctrl' を押すと、選択を反転するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Focus search entry when the main window gets activated"
 msgstr ""
 "メインウィンドウがアクティブになった際、検索欄にフォーカスするように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "アプリケーション (.desktop ファイル) 用のフィルターを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -229,15 +235,15 @@ msgstr ""
 ".desktop ファイルを開くのではなく、直接アプリケーションを起動するオプションを"
 "追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Show application icons for .desktop files"
 msgstr ".desktop ファイルのアプリケーションアイコンを表示するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add .odp and .ods files to document filter"
 msgstr "ドキュメントフィルターに .odp と .ods ファイルを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -245,7 +251,7 @@ msgstr ""
 "選択したファイルを処理できるアプリケーションだけを'次で開く'メニューに表示す"
 "るように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -253,165 +259,165 @@ msgstr ""
 "タイプが同じ複数のファイルを開く処理を改善 (ひとつずつではなくリストとしてア"
 "プリケーションに渡すように修正)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Better support for opening files in sandboxed mode"
 msgstr "サンドボックス内でファイルを開く対応を改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "イシュートラッカー、フォーラム、寄付ページへのリンクをメニュー項目として追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid "Improve support for non-Linux systems"
 msgstr "Linux 以外のシステムへの対応を改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
 "Esc キー押下時にウィンドウ最小化ではなく FSearch を終了するオプションを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "デフォルトで '/proc' と '/sys' を除外"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "'メニュー'キーまたは 'Shift + F10' の押下時にコンテキストメニューを開くように"
 "修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "そして、大量のバグ修正/翻訳の更新/軽微な改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:130
 msgid "Initial release."
 msgstr "最初のリリース。"
 
-#: src/fsearch.c:183
+#: src/fsearch.c:181
 msgid "translator-credits"
 msgstr "Ryo Nakano <ryonakaknock3@gmail.com>"
 
-#: src/fsearch.c:185
+#: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
 msgstr "パフォーマンスと高度な機能を重視した検索ユーティリティ"
 
-#: src/fsearch.c:787
+#: src/fsearch.c:766
 msgid "Open a new application window"
 msgstr "新しいアプリケーションウィンドウを開く"
 
-#: src/fsearch.c:788
+#: src/fsearch.c:767
 msgid "Minimize the application window"
 msgstr "アプリケーションウィンドウを最小化する"
 
-#: src/fsearch.c:789
+#: src/fsearch.c:768
 msgid "Show the application preferences"
 msgstr "アプリケーションの設定を表示する"
 
-#: src/fsearch.c:790
+#: src/fsearch.c:769
 msgid "Set the search pattern"
 msgstr "検索パターンを指定する"
 
-#: src/fsearch.c:791
+#: src/fsearch.c:770
 msgid "Update the database and exit"
 msgstr "データベースを更新して終了する"
 
-#: src/fsearch.c:792
+#: src/fsearch.c:771
 msgid "Print version information and exit"
 msgstr "バージョン情報を表示して終了する"
 
-#: src/fsearch_database.c:686
+#: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
 msgstr "インデックスの再スキャン: 変更を適用しています…"
 
-#: src/fsearch_database_file.c:1302
+#: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
 msgstr "フォルダーを読み込んでいます…"
 
-#: src/fsearch_database_file.c:1318
+#: src/fsearch_database_file.c:1353
 msgid "Loading files…"
 msgstr "ファイルを読み込んでいます…"
 
-#: src/fsearch_database_index_store.c:895 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:920 src/fsearch_statusbar.c:73
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "ソートしています…"
 
-#: src/fsearch_database_preferences_widget.c:156
-#: src/fsearch_database_preferences_widget.c:170
+#: src/fsearch_database_preferences_widget.c:162
+#: src/fsearch_database_preferences_widget.c:176
 msgid "Select folder"
 msgstr "フォルダーを選択"
 
-#: src/fsearch_database_preferences_widget.c:159
-#: src/fsearch_database_preferences_widget.c:174
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
+#: src/fsearch_database_preferences_widget.c:165
+#: src/fsearch_database_preferences_widget.c:180
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:331
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
 
-#: src/fsearch_database_preferences_widget.c:161
-#: src/fsearch_database_preferences_widget.c:173
+#: src/fsearch_database_preferences_widget.c:167
+#: src/fsearch_database_preferences_widget.c:179
 msgid "_Select"
 msgstr "選択(_S)"
 
-#: src/fsearch_database_preferences_widget.c:388
+#: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
 msgstr "文字列"
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Wildcard"
 msgstr "ワイルドカード"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
 msgstr "正規表現"
 
-#: src/fsearch_database_preferences_widget.c:413
+#: src/fsearch_database_preferences_widget.c:414
 msgid "Full Path"
 msgstr "フルパス"
 
-#: src/fsearch_database_preferences_widget.c:415
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
 msgstr "ファイル/フォルダー名"
 
-#: src/fsearch_database_preferences_widget.c:433
+#: src/fsearch_database_preferences_widget.c:434
 msgid "Files & Folders"
 msgstr "ファイルとフォルダー"
 
-#: src/fsearch_database_preferences_widget.c:435 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "ファイル"
 
-#: src/fsearch_database_preferences_widget.c:437 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "フォルダー"
 
-#: src/fsearch_database_preferences_widget.c:634
-#: src/fsearch_database_preferences_widget.c:859
+#: src/fsearch_database_preferences_widget.c:635
+#: src/fsearch_database_preferences_widget.c:860
 msgid "Active"
 msgstr "有効"
 
-#: src/fsearch_database_preferences_widget.c:639
+#: src/fsearch_database_preferences_widget.c:640
 msgid "Pattern"
 msgstr "パターン"
 
-#: src/fsearch_database_preferences_widget.c:693 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
 msgid "Type"
 msgstr "タイプ"
 
-#: src/fsearch_database_preferences_widget.c:699
+#: src/fsearch_database_preferences_widget.c:700
 msgid "Match"
 msgstr "一致"
 
-#: src/fsearch_database_preferences_widget.c:705
+#: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
 msgstr "適用先"
 
-#: src/fsearch_database_preferences_widget.c:863 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "パス"
@@ -583,7 +589,7 @@ msgstr "動画"
 msgid "Macro names must not contain `:` characters."
 msgstr "マクロ名に `:` を含めないでください。"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:313
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:332
 msgid "_OK"
 msgstr "OK(_O)"
 
@@ -637,7 +643,7 @@ msgstr ""
 msgid "Add filter"
 msgstr "フィルターを追加"
 
-#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:653
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
 #: src/menus.ui:215 src/menus.ui:263
 msgid "Name"
 msgstr "名前"
@@ -1189,6 +1195,15 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1240
 msgid ""
+"<b>Add a specific path:</b>\n"
+"\n"
+"Type the full path of a folder here and click the button next to it to "
+"include that folder in the database. This is useful for adding a path "
+"directly without browsing for it."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1257
+msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected folder from the list of included folders."
@@ -1197,47 +1212,111 @@ msgstr ""
 "\n"
 "含まれるフォルダーのリストから選択したフォルダーを削除します。"
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1274
 msgid ""
-"<b>Excluded folders:</b>\n"
+"<b>Attempt to monitor:</b>\n"
 "\n"
-"This list contains all folders you want to exclude from the database.\n"
+"If enabled, FSearch watches this folder for changes and keeps the database "
+"up to date automatically, so you don't have to rescan manually.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database and "
-"can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
+"Monitoring isn't supported on every file system and uses a small amount of "
+"system resources per watched folder. For large directory trees with many "
+"files the system may run out of resources to watch them all."
 msgstr ""
-"<b>除外されるフォルダー:</b>\n"
-"\n"
-"データベースから除外したいすべてのフォルダーを、このリストに追加します。\n"
-"\n"
-"\t• <b>有効:</b> 有効にすると、パスはデータベースから除外され、検索対象になり"
-"ません。\n"
-"\t• <b>パス:</b> 除外したいフルパス。"
 
-#: src/fsearch_preferences.ui:1277
+#: src/fsearch_preferences.ui:1293
 msgid ""
-"<b>Exclude folder from database:</b>\n"
+"<b>Scan after launch:</b>\n"
 "\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
+"If enabled, this folder is rescanned every time FSearch starts, so the "
+"database reflects any changes made while FSearch wasn't running."
 msgstr ""
-"<b>フォルダーをデータベースから除外:</b>\n"
-"\n"
-"このボタンは、データベースから除外したいフォルダーを選択可能なダイアログを開"
-"きます。"
 
-#: src/fsearch_preferences.ui:1294
+#: src/fsearch_preferences.ui:1310
+msgid ""
+"<b>Stay on one file system:</b>\n"
+"\n"
+"If enabled, FSearch won't cross file system boundaries while scanning this "
+"folder. Mounted file systems below it (e.g. external drives or network "
+"shares) are skipped."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1327
+msgid ""
+"<b>Rescan every:</b>\n"
+"\n"
+"If enabled, this folder is rescanned automatically at the given interval. "
+"Use the hours and minutes fields to set how often the rescan happens.\n"
+"\n"
+"This is useful for folders on file systems that can't be monitored for "
+"changes."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1346
+msgid ""
+"<b>Exclude rules:</b>\n"
+"\n"
+"This list contains rules for the files and folders you want to exclude from "
+"the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the rule is applied and matching items are "
+"excluded.\n"
+"\t• <b>Pattern:</b> The text matched against each item, interpreted "
+"according to the Type.\n"
+"\t• <b>Type:</b> How the pattern is interpreted — <i>Literal</i> (exact "
+"text), <i>Wildcard</i> (using * and ?) or <i>Regex</i> (a regular "
+"expression).\n"
+"\t• <b>Match:</b> Whether the pattern is matched against the item's <i>Full "
+"Path</i> or only its <i>Basename</i> (the name without the path).\n"
+"\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
+"or both."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1369
+msgid ""
+"<b>Add exclude rule:</b>\n"
+"\n"
+"This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
+"Applies To columns to control what gets excluded from the database."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1386
+#, fuzzy
+#| msgid ""
+#| "<b>Remove selected row:</b>\n"
+#| "\n"
+#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of excluded folders."
+"This removes the selected rule from the list of exclude rules."
 msgstr ""
 "<b>選択した行を削除:</b>\n"
 "\n"
 "除外されるフォルダーのリストから選択したフォルダーを削除します。"
 
-#: src/fsearch_preferences.ui:1311
+#: src/fsearch_preferences.ui:1403
+#, fuzzy
+#| msgid ""
+#| "<b>Restore default filters:</b>\n"
+#| "\n"
+#| "This button restores the default filter configuration.\n"
+#| "\n"
+#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
+msgid ""
+"<b>Restore default exclude rules:</b>\n"
+"\n"
+"This button restores the default set of exclude rules.\n"
+"\n"
+"⚠ All rules which were created or edited by the user will be lost! ⚠"
+msgstr ""
+"<b>デフォルトのフィルターを復元:</b>\n"
+"\n"
+"このボタンは、デフォルトのフィルター設定を復元します。\n"
+"\n"
+"⚠ ユーザーが作成/編集したすべてのフィルターを破棄します! ⚠"
+
+#: src/fsearch_preferences.ui:1422
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1253,7 +1332,7 @@ msgstr ""
 "<i>.cache</i> という名前か、<i>.swp</i> で終わるすべてのファイルやフォルダー"
 "を除外します。"
 
-#: src/fsearch_preferences.ui:1328
+#: src/fsearch_preferences.ui:1439
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1265,12 +1344,12 @@ msgstr ""
 "有効にした場合、隠しファイルと隠しフォルダー <i>(ドットから始まるすべてのファ"
 "イルとフォルダー)</i> はデータベースから除外されます。"
 
-#: src/fsearch_preferences.ui:1345
+#: src/fsearch_preferences.ui:1456
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "設定項目にフォーカスすると、各項目の機能に関する詳細な説明を表示します。"
 
-#: src/fsearch_preferences.ui:1358
+#: src/fsearch_preferences.ui:1469
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1294,7 +1373,7 @@ msgstr ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
-#: src/fsearch_preferences.ui:1379
+#: src/fsearch_preferences.ui:1490
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1310,7 +1389,7 @@ msgstr ""
 "ンランチャーのように使用できます。有効にしない場合、<i>.desktop</i> ファイル"
 "をデフォルトのアプリ (ほとんどの場合はテキストエディター) で開きます。"
 
-#: src/fsearch_preferences.ui:1396
+#: src/fsearch_preferences.ui:1507
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1331,7 +1410,7 @@ msgstr ""
 "必要なときに有効にできます\n"
 "\t• <b>クエリ:</b> データベースをフィルタリングする検索文字列"
 
-#: src/fsearch_preferences.ui:1417
+#: src/fsearch_preferences.ui:1528
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1341,7 +1420,7 @@ msgstr ""
 "\n"
 "このボタンは、新しいフィルターを編集できるダイアログを開きます。"
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1545
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1351,7 +1430,7 @@ msgstr ""
 "\n"
 "このボタンは現在選択中のフィルターを削除します。"
 
-#: src/fsearch_preferences.ui:1451
+#: src/fsearch_preferences.ui:1562
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1361,7 +1440,7 @@ msgstr ""
 "\n"
 "このボタンは、選択したフィルターを編集できるダイアログを開きます。"
 
-#: src/fsearch_preferences.ui:1468
+#: src/fsearch_preferences.ui:1579
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1375,7 +1454,7 @@ msgstr ""
 "\n"
 "⚠ ユーザーが作成/編集したすべてのフィルターを破棄します! ⚠"
 
-#: src/fsearch_preferences.ui:1487
+#: src/fsearch_preferences.ui:1598
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1387,12 +1466,12 @@ msgstr ""
 "有効にした場合、Esc を押すと FSearch はウィンドウを最小化するのではなく終了し"
 "ます。"
 
-#: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1617 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "ヘルプ"
 
-#: src/fsearch_preferences_dialog.c:220
+#: src/fsearch_preferences_dialog.c:238
 msgid "Database"
 msgstr "データベース"
 
@@ -1400,25 +1479,25 @@ msgstr "データベース"
 msgid "Invalid row data"
 msgstr "無効な行データ"
 
-#: src/fsearch_statusbar.c:57
+#: src/fsearch_statusbar.c:58
 #, c-format
 msgid "%'d Item"
 msgstr "%'d 個"
 
-#: src/fsearch_statusbar.c:57 src/fsearch_statusbar.c:182
+#: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 個"
 
-#: src/fsearch_statusbar.c:79
+#: src/fsearch_statusbar.c:80
 msgid "Querying…"
 msgstr "表示中…"
 
-#: src/fsearch_statusbar.c:171
+#: src/fsearch_statusbar.c:175
 msgid "Loading…"
 msgstr "読み込んでいます…"
 
-#: src/fsearch_statusbar.c:176
+#: src/fsearch_statusbar.c:180
 msgid "Scanning…"
 msgstr "スキャンしています…"
 
@@ -1490,26 +1569,30 @@ msgstr "パス"
 msgid "REGEX"
 msgstr "正規表現"
 
+#: src/fsearch_statusbar.ui:726
+msgid ""
+"The search was cancelled before it finished.\n"
+"<b>These results are incomplete.</b>"
+msgstr ""
+
+#: src/fsearch_statusbar.ui:756
+msgid "PARTIAL"
+msgstr ""
+
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:69
-msgid ""
-"<b>Database Update Required:</b> This update will migrate your database "
-"index format. This may take a moment."
-msgstr ""
-
-#: src/fsearch_welcome_dialog.ui:127
+#: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:197
+#: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:211
+#: src/fsearch_welcome_dialog.ui:163
 msgid ""
 "You can now actively watch individual folders to eliminate frequent rescans. "
 "File changes then appear in your search results immediately.\n"
@@ -1517,26 +1600,26 @@ msgid ""
 "To enable this feature go to the Database section of the Preferences "
 "dialog.\n"
 "\n"
-"See the online dolcumentation for more information:\n"
+"See the online documentation for more information:\n"
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:280
+#: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:294
+#: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:357
+#: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:371
+#: src/fsearch_welcome_dialog.ui:323
 msgid ""
 "You can now use wildcards and regular expressions to define more powerful "
 "exclude rules. \n"
@@ -1544,19 +1627,19 @@ msgid ""
 "configured to match against either the basename or the full absolute path."
 msgstr ""
 
-#: src/fsearch_window.c:667 src/menus.ui:279
+#: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
 msgstr "サイズ"
 
-#: src/fsearch_window.c:681 src/menus.ui:271
+#: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
 msgstr "拡張子"
 
-#: src/fsearch_window.c:688 src/menus.ui:283
+#: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
 msgstr "更新日時"
 
-#: src/fsearch_window.c:702
+#: src/fsearch_window.c:801
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1762,6 +1845,34 @@ msgstr "パス + 名前"
 msgid "Move to _Trash"
 msgstr "ゴミ箱に移動(_T)"
 
+#~ msgid ""
+#~ "<b>Excluded folders:</b>\n"
+#~ "\n"
+#~ "This list contains all folders you want to exclude from the database.\n"
+#~ "\n"
+#~ "\t• <b>Active:</b> If enabled, the path will excluded from the database "
+#~ "and can't be searched in.\n"
+#~ "\t• <b>Path:</b> The full path to be excluded."
+#~ msgstr ""
+#~ "<b>除外されるフォルダー:</b>\n"
+#~ "\n"
+#~ "データベースから除外したいすべてのフォルダーを、このリストに追加します。\n"
+#~ "\n"
+#~ "\t• <b>有効:</b> 有効にすると、パスはデータベースから除外され、検索対象に"
+#~ "なりません。\n"
+#~ "\t• <b>パス:</b> 除外したいフルパス。"
+
+#~ msgid ""
+#~ "<b>Exclude folder from database:</b>\n"
+#~ "\n"
+#~ "This button opens a dialog where you can select a folder you want to "
+#~ "exclude from the database."
+#~ msgstr ""
+#~ "<b>フォルダーをデータベースから除外:</b>\n"
+#~ "\n"
+#~ "このボタンは、データベースから除外したいフォルダーを選択可能なダイアログを"
+#~ "開きます。"
+
 #, c-format
 #~ msgid "Deleted %'d file."
 #~ msgid_plural "Deleted %'d files."
@@ -1801,9 +1912,6 @@ msgstr "ゴミ箱に移動(_T)"
 
 #~ msgid "hour(s) and"
 #~ msgstr "時間"
-
-#~ msgid "Christian Boxdörfer"
-#~ msgstr "Christian Boxdörfer"
 
 #~ msgid "Saving…"
 #~ msgstr "保存しています…"

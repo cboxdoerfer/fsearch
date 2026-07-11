@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 21:34+0200\n"
+"POT-Creation-Date: 2026-07-11 17:26+0200\n"
 "PO-Revision-Date: 2023-11-08 01:35+0000\n"
 "Last-Translator: aerowolf <aerowolf@tom.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -132,103 +132,109 @@ msgstr "工具"
 msgid "everything"
 msgstr "everything"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#. Kept for appstreamcli < 1.0 (e.g. Ubuntu 20.04/22.04 PPA builds), which doesn't know <developer>.
+#. Translators: please do NOT translate this.
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:77
+msgid "Christian Boxdörfer"
+msgstr "Christian Boxdörfer"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "New search engine"
 msgstr "新的搜索引擎"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Greatly improved highlighting of search terms"
 msgstr "极大改进了搜索项目的高亮显示"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Custom filters"
 msgstr "自定义过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Improved sort performance"
 msgstr "改进的排序性能"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Improved scroll performance"
 msgstr "改进的滚动性能"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Remember file selection after a database update"
 msgstr "数据库更新之后记住文件选择"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "在矩形选择模式下自动滚动结果列表"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "按住Ctrl键时，使用矩形反选"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Focus search entry when the main window gets activated"
 msgstr "当主窗口被激活时聚焦搜索条目"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "为应用程序（即 .desktop 文件）添加过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr "添加直接启动程序而不是打开 .desktop 文件的选项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Show application icons for .desktop files"
 msgstr "显示 .desktop 文件的应用程序图标"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add .odp and .ods files to document filter"
 msgstr "将 .odp 和 .ods 文件添加到文档过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr "现在“打开方式”菜单中只会显示可处理选定文件的程序"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -236,169 +242,169 @@ msgstr ""
 "改进的多个同类型文件打开方式（它们将以列表形式一次性地传递给程序，而不是重复"
 "调用程序）"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Better support for opening files in sandboxed mode"
 msgstr "更好支持在沙盒模式中打开文件"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr "添加带有问题跟踪器、论坛和捐赠页面链接的菜单项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid "Improve support for non-Linux systems"
 msgstr "改进对非 Linux 系统的支持"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr "添加在按 Esc 键时退出 FSearch，而不是最小化窗口的选项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "默认排除“/proc”和“/sys”"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "按下菜单键或“Shift + F10”时打开上下文菜单"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "以及大量的错误修复、翻译更新和小小改进"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:130
 msgid "Initial release."
 msgstr "首次发布。"
 
-#: src/fsearch.c:183
+#: src/fsearch.c:181
 msgid "translator-credits"
 msgstr ""
 "翻译人员\n"
 "tjw123hh\n"
 "Yuan lijie"
 
-#: src/fsearch.c:185
+#: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: src/fsearch.c:787
+#: src/fsearch.c:766
 msgid "Open a new application window"
 msgstr "打开新的应用程序窗口"
 
-#: src/fsearch.c:788
+#: src/fsearch.c:767
 #, fuzzy
 msgid "Minimize the application window"
 msgstr "打开新的应用程序窗口"
 
-#: src/fsearch.c:789
+#: src/fsearch.c:768
 msgid "Show the application preferences"
 msgstr "显示应用程序首选项"
 
-#: src/fsearch.c:790
+#: src/fsearch.c:769
 msgid "Set the search pattern"
 msgstr "设置搜索模式"
 
-#: src/fsearch.c:791
+#: src/fsearch.c:770
 msgid "Update the database and exit"
 msgstr "更新数据库并退出"
 
-#: src/fsearch.c:792
+#: src/fsearch.c:771
 msgid "Print version information and exit"
 msgstr "显示版本信息并退出"
 
-#: src/fsearch_database.c:686
+#: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
 msgstr ""
 
-#: src/fsearch_database_file.c:1302
+#: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
 msgstr "正在加载文件夹……"
 
-#: src/fsearch_database_file.c:1318
+#: src/fsearch_database_file.c:1353
 msgid "Loading files…"
 msgstr "正在加载文件……"
 
-#: src/fsearch_database_index_store.c:895 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:920 src/fsearch_statusbar.c:73
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "正在排序……"
 
-#: src/fsearch_database_preferences_widget.c:156
-#: src/fsearch_database_preferences_widget.c:170
+#: src/fsearch_database_preferences_widget.c:162
+#: src/fsearch_database_preferences_widget.c:176
 msgid "Select folder"
 msgstr "选择文件夹"
 
-#: src/fsearch_database_preferences_widget.c:159
-#: src/fsearch_database_preferences_widget.c:174
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:312
+#: src/fsearch_database_preferences_widget.c:165
+#: src/fsearch_database_preferences_widget.c:180
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:331
 msgid "_Cancel"
 msgstr "取消(_C)"
 
-#: src/fsearch_database_preferences_widget.c:161
-#: src/fsearch_database_preferences_widget.c:173
+#: src/fsearch_database_preferences_widget.c:167
+#: src/fsearch_database_preferences_widget.c:179
 msgid "_Select"
 msgstr "选择（_S）"
 
-#: src/fsearch_database_preferences_widget.c:388
+#: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:390
+#: src/fsearch_database_preferences_widget.c:391
 #, fuzzy
 msgid "Wildcard"
 msgstr "支持通配符"
 
-#: src/fsearch_database_preferences_widget.c:392
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:413
+#: src/fsearch_database_preferences_widget.c:414
 #, fuzzy
 msgid "Full Path"
 msgstr "路径"
 
-#: src/fsearch_database_preferences_widget.c:415
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:433
+#: src/fsearch_database_preferences_widget.c:434
 #, fuzzy
 msgid "Files & Folders"
 msgstr "文件夹"
 
-#: src/fsearch_database_preferences_widget.c:435 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "文件"
 
-#: src/fsearch_database_preferences_widget.c:437 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "文件夹"
 
-#: src/fsearch_database_preferences_widget.c:634
-#: src/fsearch_database_preferences_widget.c:859
+#: src/fsearch_database_preferences_widget.c:635
+#: src/fsearch_database_preferences_widget.c:860
 msgid "Active"
 msgstr "激活"
 
-#: src/fsearch_database_preferences_widget.c:639
+#: src/fsearch_database_preferences_widget.c:640
 msgid "Pattern"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:693 src/fsearch_window.c:674
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
 msgid "Type"
 msgstr "类型"
 
-#: src/fsearch_database_preferences_widget.c:699
+#: src/fsearch_database_preferences_widget.c:700
 #, fuzzy
 msgid "Match"
 msgstr "匹配大小写"
 
-#: src/fsearch_database_preferences_widget.c:705
+#: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:863 src/fsearch_window.c:660
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "路径"
@@ -574,7 +580,7 @@ msgstr "视频"
 msgid "Macro names must not contain `:` characters."
 msgstr "宏名称不能包含“:”字符。"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:313
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:332
 msgid "_OK"
 msgstr "确定(_O)"
 
@@ -628,7 +634,7 @@ msgstr ""
 msgid "Add filter"
 msgstr "添加筛选器"
 
-#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:653
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
 #: src/menus.ui:215 src/menus.ui:263
 msgid "Name"
 msgstr "名称"
@@ -1155,6 +1161,15 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1240
 msgid ""
+"<b>Add a specific path:</b>\n"
+"\n"
+"Type the full path of a folder here and click the button next to it to "
+"include that folder in the database. This is useful for adding a path "
+"directly without browsing for it."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1257
+msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected folder from the list of included folders."
@@ -1163,45 +1178,111 @@ msgstr ""
 "\n"
 "这将从包含的文件夹列表中删除选定的文件夹。"
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1274
 msgid ""
-"<b>Excluded folders:</b>\n"
+"<b>Attempt to monitor:</b>\n"
 "\n"
-"This list contains all folders you want to exclude from the database.\n"
+"If enabled, FSearch watches this folder for changes and keeps the database "
+"up to date automatically, so you don't have to rescan manually.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database and "
-"can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
+"Monitoring isn't supported on every file system and uses a small amount of "
+"system resources per watched folder. For large directory trees with many "
+"files the system may run out of resources to watch them all."
 msgstr ""
-"<b>排除的文件夹：</b>\n"
-"\n"
-"此列表包含要从数据库中排除的所有文件夹。\n"
-"\n"
-"• <b>Active：</b> 如果启用，路径将从数据库中排除并且无法搜索。\n"
-"• <b>路径：</b> 要排除的完整路径。"
 
-#: src/fsearch_preferences.ui:1277
+#: src/fsearch_preferences.ui:1293
 msgid ""
-"<b>Exclude folder from database:</b>\n"
+"<b>Scan after launch:</b>\n"
 "\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
+"If enabled, this folder is rescanned every time FSearch starts, so the "
+"database reflects any changes made while FSearch wasn't running."
 msgstr ""
-"<b>从数据库中排除文件夹：</b>\n"
-"\n"
-"此按钮会打开一个对话框，您可以在其中选择要从数据库中排除的文件夹。"
 
-#: src/fsearch_preferences.ui:1294
+#: src/fsearch_preferences.ui:1310
+msgid ""
+"<b>Stay on one file system:</b>\n"
+"\n"
+"If enabled, FSearch won't cross file system boundaries while scanning this "
+"folder. Mounted file systems below it (e.g. external drives or network "
+"shares) are skipped."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1327
+msgid ""
+"<b>Rescan every:</b>\n"
+"\n"
+"If enabled, this folder is rescanned automatically at the given interval. "
+"Use the hours and minutes fields to set how often the rescan happens.\n"
+"\n"
+"This is useful for folders on file systems that can't be monitored for "
+"changes."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1346
+msgid ""
+"<b>Exclude rules:</b>\n"
+"\n"
+"This list contains rules for the files and folders you want to exclude from "
+"the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the rule is applied and matching items are "
+"excluded.\n"
+"\t• <b>Pattern:</b> The text matched against each item, interpreted "
+"according to the Type.\n"
+"\t• <b>Type:</b> How the pattern is interpreted — <i>Literal</i> (exact "
+"text), <i>Wildcard</i> (using * and ?) or <i>Regex</i> (a regular "
+"expression).\n"
+"\t• <b>Match:</b> Whether the pattern is matched against the item's <i>Full "
+"Path</i> or only its <i>Basename</i> (the name without the path).\n"
+"\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
+"or both."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1369
+msgid ""
+"<b>Add exclude rule:</b>\n"
+"\n"
+"This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
+"Applies To columns to control what gets excluded from the database."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1386
+#, fuzzy
+#| msgid ""
+#| "<b>Remove selected row:</b>\n"
+#| "\n"
+#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of excluded folders."
+"This removes the selected rule from the list of exclude rules."
 msgstr ""
 "<b>删除选定的行：</b>\n"
 "\n"
 "这将从排除的文件夹列表中删除选定的文件夹。"
 
-#: src/fsearch_preferences.ui:1311
+#: src/fsearch_preferences.ui:1403
+#, fuzzy
+#| msgid ""
+#| "<b>Restore default filters:</b>\n"
+#| "\n"
+#| "This button restores the default filter configuration.\n"
+#| "\n"
+#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
+msgid ""
+"<b>Restore default exclude rules:</b>\n"
+"\n"
+"This button restores the default set of exclude rules.\n"
+"\n"
+"⚠ All rules which were created or edited by the user will be lost! ⚠"
+msgstr ""
+"<b>还原默认筛选器：</b>\n"
+"\n"
+"这个按钮还原默认的筛选器配置。\n"
+"\n"
+"⚠ 该用户编辑或创建的所有筛选器都将丢失！⚠"
+
+#: src/fsearch_preferences.ui:1422
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1216,7 +1297,7 @@ msgstr ""
 "<i>.git;.cache;*.swp</i> 将排除所有名为 <i>.git</i> 或 <i>.cache</i> 或以 "
 "<i>.swp</i>。"
 
-#: src/fsearch_preferences.ui:1328
+#: src/fsearch_preferences.ui:1439
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1228,11 +1309,11 @@ msgstr ""
 "如果启用，隐藏文件和文件夹将从数据库中排除<i>（即所有以点字符开头的文件或文件"
 "夹）</i>。"
 
-#: src/fsearch_preferences.ui:1345
+#: src/fsearch_preferences.ui:1456
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr "聚焦设置以获取其功能的详细说明。"
 
-#: src/fsearch_preferences.ui:1358
+#: src/fsearch_preferences.ui:1469
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1254,7 +1335,7 @@ msgstr ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
-#: src/fsearch_preferences.ui:1379
+#: src/fsearch_preferences.ui:1490
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1269,7 +1350,7 @@ msgstr ""
 "FSearch 可以作为一个应用程序启动器。 不然， <i>.desktop</i>文件将由此文件类型"
 "的默认处理程序打开。通常是文本编辑器。"
 
-#: src/fsearch_preferences.ui:1396
+#: src/fsearch_preferences.ui:1507
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1288,7 +1369,7 @@ msgstr ""
 "• <b>宏：</b> 通过输入宏文本后加上':'，你可以根据需要启用筛选器\n"
 "• <b>查询：</b> 过滤数据库的检索项"
 
-#: src/fsearch_preferences.ui:1417
+#: src/fsearch_preferences.ui:1528
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1298,7 +1379,7 @@ msgstr ""
 "\n"
 "这个按钮打开一个对话框，你可以在其中编辑新筛选器。"
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1545
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1308,7 +1389,7 @@ msgstr ""
 "\n"
 "这个按钮删除当前选中的筛选器。"
 
-#: src/fsearch_preferences.ui:1451
+#: src/fsearch_preferences.ui:1562
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1318,7 +1399,7 @@ msgstr ""
 "\n"
 "这个按钮打开一个对话框，你可以在其中编辑选中的筛选器。"
 
-#: src/fsearch_preferences.ui:1468
+#: src/fsearch_preferences.ui:1579
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1332,7 +1413,7 @@ msgstr ""
 "\n"
 "⚠ 该用户编辑或创建的所有筛选器都将丢失！⚠"
 
-#: src/fsearch_preferences.ui:1487
+#: src/fsearch_preferences.ui:1598
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1343,12 +1424,12 @@ msgstr ""
 "\n"
 "如启用，FSearch 会在按下 Escape 键时而不是最小化窗口时退出。"
 
-#: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1617 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "帮助"
 
-#: src/fsearch_preferences_dialog.c:220
+#: src/fsearch_preferences_dialog.c:238
 msgid "Database"
 msgstr "数据库"
 
@@ -1356,25 +1437,25 @@ msgstr "数据库"
 msgid "Invalid row data"
 msgstr ""
 
-#: src/fsearch_statusbar.c:57
+#: src/fsearch_statusbar.c:58
 #, c-format
 msgid "%'d Item"
 msgstr "%'d 项"
 
-#: src/fsearch_statusbar.c:57 src/fsearch_statusbar.c:182
+#: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: src/fsearch_statusbar.c:79
+#: src/fsearch_statusbar.c:80
 msgid "Querying…"
 msgstr "查询中…"
 
-#: src/fsearch_statusbar.c:171
+#: src/fsearch_statusbar.c:175
 msgid "Loading…"
 msgstr "加载中…"
 
-#: src/fsearch_statusbar.c:176
+#: src/fsearch_statusbar.c:180
 msgid "Scanning…"
 msgstr "扫描中…"
 
@@ -1446,26 +1527,30 @@ msgstr "路径"
 msgid "REGEX"
 msgstr "正则表达式"
 
+#: src/fsearch_statusbar.ui:726
+msgid ""
+"The search was cancelled before it finished.\n"
+"<b>These results are incomplete.</b>"
+msgstr ""
+
+#: src/fsearch_statusbar.ui:756
+msgid "PARTIAL"
+msgstr ""
+
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:69
-msgid ""
-"<b>Database Update Required:</b> This update will migrate your database "
-"index format. This may take a moment."
-msgstr ""
-
-#: src/fsearch_welcome_dialog.ui:127
+#: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:197
+#: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:211
+#: src/fsearch_welcome_dialog.ui:163
 msgid ""
 "You can now actively watch individual folders to eliminate frequent rescans. "
 "File changes then appear in your search results immediately.\n"
@@ -1473,26 +1558,26 @@ msgid ""
 "To enable this feature go to the Database section of the Preferences "
 "dialog.\n"
 "\n"
-"See the online dolcumentation for more information:\n"
+"See the online documentation for more information:\n"
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:280
+#: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:294
+#: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:357
+#: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
 msgstr ""
 
-#: src/fsearch_welcome_dialog.ui:371
+#: src/fsearch_welcome_dialog.ui:323
 msgid ""
 "You can now use wildcards and regular expressions to define more powerful "
 "exclude rules. \n"
@@ -1500,19 +1585,19 @@ msgid ""
 "configured to match against either the basename or the full absolute path."
 msgstr ""
 
-#: src/fsearch_window.c:667 src/menus.ui:279
+#: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
 msgstr "大小"
 
-#: src/fsearch_window.c:681 src/menus.ui:271
+#: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
 msgstr "扩展名"
 
-#: src/fsearch_window.c:688 src/menus.ui:283
+#: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: src/fsearch_window.c:702
+#: src/fsearch_window.c:801
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1718,6 +1803,32 @@ msgstr "路径+名称"
 msgid "Move to _Trash"
 msgstr "移动到回收站(_T)"
 
+#~ msgid ""
+#~ "<b>Excluded folders:</b>\n"
+#~ "\n"
+#~ "This list contains all folders you want to exclude from the database.\n"
+#~ "\n"
+#~ "\t• <b>Active:</b> If enabled, the path will excluded from the database "
+#~ "and can't be searched in.\n"
+#~ "\t• <b>Path:</b> The full path to be excluded."
+#~ msgstr ""
+#~ "<b>排除的文件夹：</b>\n"
+#~ "\n"
+#~ "此列表包含要从数据库中排除的所有文件夹。\n"
+#~ "\n"
+#~ "• <b>Active：</b> 如果启用，路径将从数据库中排除并且无法搜索。\n"
+#~ "• <b>路径：</b> 要排除的完整路径。"
+
+#~ msgid ""
+#~ "<b>Exclude folder from database:</b>\n"
+#~ "\n"
+#~ "This button opens a dialog where you can select a folder you want to "
+#~ "exclude from the database."
+#~ msgstr ""
+#~ "<b>从数据库中排除文件夹：</b>\n"
+#~ "\n"
+#~ "此按钮会打开一个对话框，您可以在其中选择要从数据库中排除的文件夹。"
+
 #, fuzzy, c-format
 #~ msgid "Deleted %'d file."
 #~ msgid_plural "Deleted %'d files."
@@ -1755,9 +1866,6 @@ msgstr "移动到回收站(_T)"
 
 #~ msgid "hour(s) and"
 #~ msgstr "小时和"
-
-#~ msgid "Christian Boxdörfer"
-#~ msgstr "Christian Boxdörfer"
 
 #~ msgid "Saving…"
 #~ msgstr "正在保存…"
