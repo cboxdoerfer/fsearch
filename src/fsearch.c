@@ -322,11 +322,24 @@ fsearch_application_shutdown(GApplication *app) {
         gdk_display_sync(display);
     }
 
-    g_clear_object(&self->db);
+    // Notify the session manager that the database and config are saved, in order to prevent the system from getting
+    // shut down.
+    const guint inhibit_cookie = gtk_application_inhibit(GTK_APPLICATION(self),
+                                                         NULL,
+                                                         GTK_APPLICATION_INHIBIT_LOGOUT | GTK_APPLICATION_INHIBIT_SUSPEND,
+                                                         _("Saving database and config…"));
+
+    g_clear_object(&self->db); // blocks until the database is saved
 
     g_clear_pointer(&self->option_search_term, g_free);
 
     config_save(self->config);
+
+    // database and config have been written at this point.
+    if (inhibit_cookie != 0) {
+        gtk_application_uninhibit(GTK_APPLICATION(self), inhibit_cookie);
+    }
+
     g_clear_pointer(&self->config, config_free);
 
     G_APPLICATION_CLASS(fsearch_application_parent_class)->shutdown(app);
