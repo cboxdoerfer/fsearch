@@ -316,6 +316,13 @@ fsearch_application_shutdown(GApplication *app) {
     // close the preview
     fsearch_preview_call_close();
 
+    // All windows have been closed by now, now we need to notify the windowing system about that
+    // otherwise the windows would be stuck unresponsive during the rest of the shutdown process
+    GdkDisplay *display = gdk_display_get_default();
+    if (display) {
+        gdk_display_sync(display);
+    }
+
     g_clear_object(&self->db);
 
     g_clear_pointer(&self->option_search_term, g_free);
