@@ -76,10 +76,10 @@ endif
 
 fsearch_deps = [
     cc.find_library('m', required: true),
-    dependency('gio-unix-2.0', version: '>= 2.50'),
-    dependency('gtk+-3.0', version: '>= 3.18'),
+    dependency('gio-unix-2.0', version: '>= 2.58'),
+    dependency('gtk+-3.0', version: '>= 3.22'),
     dependency('libpcre2-8', version: '>= 10.21'),
-    dependency('icu-uc', version: '>= 3.8'),
+    dependency('icu-uc', version: '>= 4.4'),
 ]
 
 fsearch_enums_headers = [
