@@ -1234,6 +1234,23 @@ This button opens a dialog where you can select a folder you want to include in 
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkLabel" id="help_index_add_path">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Add a specific path:&lt;/b&gt;
+
+Type the full path of a folder here and click the button next to it to include that folder in the database. This is useful for adding a path directly without browsing for it.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">index_add_path</property>
+                    <property name="title">index_add_path</property>
+                    <property name="position">21</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="help_index_remove">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1251,15 +1268,90 @@ This removes the selected folder from the list of included folders.</property>
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkLabel" id="help_include_monitor">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Attempt to monitor:&lt;/b&gt;
+
+If enabled, FSearch watches this folder for changes and keeps the database up to date automatically, so you don't have to rescan manually.
+
+Monitoring isn't supported on every file system and uses a small amount of system resources per watched folder. For large directory trees with many files the system may run out of resources to watch them all.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">include_monitor</property>
+                    <property name="title">include_monitor</property>
+                    <property name="position">22</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_include_scan_after_launch">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Scan after launch:&lt;/b&gt;
+
+If enabled, this folder is rescanned every time FSearch starts, so the database reflects any changes made while FSearch wasn't running.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">include_scan_after_launch</property>
+                    <property name="title">include_scan_after_launch</property>
+                    <property name="position">23</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_include_onefs">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Stay on one file system:&lt;/b&gt;
+
+If enabled, FSearch won't cross file system boundaries while scanning this folder. Mounted file systems below it (e.g. external drives or network shares) are skipped.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">include_onefs</property>
+                    <property name="title">include_onefs</property>
+                    <property name="position">24</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_include_rescan">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Rescan every:&lt;/b&gt;
+
+If enabled, this folder is rescanned automatically at the given interval. Use the hours and minutes fields to set how often the rescan happens.
+
+This is useful for folders on file systems that can't be monitored for changes.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">include_rescan</property>
+                    <property name="title">include_rescan</property>
+                    <property name="position">25</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="help_exclude_list">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Excluded folders:&lt;/b&gt;
+                    <property name="label" translatable="yes">&lt;b&gt;Exclude rules:&lt;/b&gt;
 
-This list contains all folders you want to exclude from the database.
+This list contains rules for the files and folders you want to exclude from the database.
 
-	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will excluded from the database and can't be searched in.
-	• &lt;b&gt;Path:&lt;/b&gt; The full path to be excluded.</property>
+	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the rule is applied and matching items are excluded.
+	• &lt;b&gt;Pattern:&lt;/b&gt; The text matched against each item, interpreted according to the Type.
+	• &lt;b&gt;Type:&lt;/b&gt; How the pattern is interpreted — &lt;i&gt;Literal&lt;/i&gt; (exact text), &lt;i&gt;Wildcard&lt;/i&gt; (using * and ?) or &lt;i&gt;Regex&lt;/i&gt; (a regular expression).
+	• &lt;b&gt;Match:&lt;/b&gt; Whether the pattern is matched against the item's &lt;i&gt;Full Path&lt;/i&gt; or only its &lt;i&gt;Basename&lt;/i&gt; (the name without the path).
+	• &lt;b&gt;Applies To:&lt;/b&gt; Whether the rule affects &lt;i&gt;Files&lt;/i&gt;, &lt;i&gt;Folders&lt;/i&gt; or both.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1274,9 +1366,9 @@ This list contains all folders you want to exclude from the database.
                   <object class="GtkLabel" id="help_exclude_add">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Exclude folder from database:&lt;/b&gt;
+                    <property name="label" translatable="yes">&lt;b&gt;Add exclude rule:&lt;/b&gt;
 
-This button opens a dialog where you can select a folder you want to exclude from the database.</property>
+This adds a new, empty rule to the list. Edit its Pattern, Type, Match and Applies To columns to control what gets excluded from the database.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1293,7 +1385,7 @@ This button opens a dialog where you can select a folder you want to exclude fro
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected row:&lt;/b&gt;
 
-This removes the selected folder from the list of excluded folders.</property>
+This removes the selected rule from the list of exclude rules.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1302,6 +1394,25 @@ This removes the selected folder from the list of excluded folders.</property>
                     <property name="name">exclude_remove</property>
                     <property name="title">page25</property>
                     <property name="position">24</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_exclude_reset">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Restore default exclude rules:&lt;/b&gt;
+
+This button restores the default set of exclude rules.
+
+⚠ All rules which were created or edited by the user will be lost! ⚠</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">exclude_reset</property>
+                    <property name="title">exclude_reset</property>
+                    <property name="position">25</property>
                   </packing>
                 </child>
                 <child>

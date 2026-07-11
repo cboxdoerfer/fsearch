@@ -28,6 +28,7 @@ struct _FsearchDatabasePreferencesWidget {
     GtkTreeView *include_list;
     GtkListStore *include_model;
     GtkWidget *include_path_entry;
+    GtkButton *include_add_path_button;
     GtkButton *include_add_button;
     GtkButton *include_remove_button;
     GtkTreeSelection *include_selection;
@@ -46,6 +47,7 @@ struct _FsearchDatabasePreferencesWidget {
     GtkTreeSelection *exclude_selection;
     GtkButton *exclude_add_button;
     GtkButton *exclude_remove_button;
+    GtkButton *exclude_reset_to_defaults_button;
     GtkToggleButton *exclude_hidden_items_button;
     // Models for dropdown menus
     GtkListStore *exclude_type_model;
@@ -1005,6 +1007,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_list);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_path_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_add_path_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_add_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_remove_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, include_settings_revealer);
@@ -1028,6 +1031,9 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_add_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_remove_button);
+    gtk_widget_class_bind_template_child(widget_class,
+                                         FsearchDatabasePreferencesWidget,
+                                         exclude_reset_to_defaults_button);
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
 
@@ -1173,11 +1179,20 @@ fsearch_database_preferences_widget_setup_help(FsearchDatabasePreferencesWidget 
         const char *help_page;
     } help_map[] = {
         {GTK_WIDGET(self->include_list), "index_list"},
+        {GTK_WIDGET(self->include_path_entry), "index_add_path"},
+        {GTK_WIDGET(self->include_add_path_button), "index_add_path"},
         {GTK_WIDGET(self->include_add_button), "index_add"},
         {GTK_WIDGET(self->include_remove_button), "index_remove"},
+        {GTK_WIDGET(self->include_monitor_checkbutton), "include_monitor"},
+        {GTK_WIDGET(self->include_scan_after_launch_checkbutton), "include_scan_after_launch"},
+        {GTK_WIDGET(self->include_onefs_checkbutton), "include_onefs"},
+        {GTK_WIDGET(self->include_rescan_scheduled_checkbutton), "include_rescan"},
+        {GTK_WIDGET(self->include_rescan_scheduled_hours_spinbutton), "include_rescan"},
+        {GTK_WIDGET(self->include_rescan_scheduled_minutes_spinbutton), "include_rescan"},
         {GTK_WIDGET(self->exclude_list), "exclude_list"},
         {GTK_WIDGET(self->exclude_add_button), "exclude_add"},
         {GTK_WIDGET(self->exclude_remove_button), "exclude_remove"},
+        {GTK_WIDGET(self->exclude_reset_to_defaults_button), "exclude_reset"},
         {GTK_WIDGET(self->exclude_hidden_items_button), "exclude_hidden"},
     };
 
