@@ -211,10 +211,9 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
 
         if (config_diff.database_config_changed) {
             fsearch_database_cancel_scan(self->db);
-            g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
-                self->config->includes,
-                self->config->excludes,
-                DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+            g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(self->config->includes,
+                                                                                 self->config->excludes,
+                                                                                 DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
             fsearch_database_queue_work(self->db, work);
         }
 
@@ -415,10 +414,9 @@ on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoint
     if (includes_changed || excludes_changed) {
         g_debug("[app] database config differs from config file, triggering rescan");
         fsearch_database_cancel_scan(self->db);
-        g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
-            self->config->includes,
-            self->config->excludes,
-            DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+        g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(self->config->includes,
+                                                                             self->config->excludes,
+                                                                             DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
         fsearch_database_queue_work(self->db, work);
     }
 }
