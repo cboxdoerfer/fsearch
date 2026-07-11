@@ -70,8 +70,7 @@ unwatch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder) 
 
 static FsearchDatabaseEntry *
 add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path, time_t mtime, FsearchDatabaseEntry *parent) {
-    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                          | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                                       name,
                                                                       parent,
                                                                       DATABASE_ENTRY_TYPE_FOLDER,
@@ -97,8 +96,7 @@ add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path
 
 FsearchDatabaseEntry *
 add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntry *parent) {
-    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                        | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                                     name,
                                                                     parent,
                                                                     DATABASE_ENTRY_TYPE_FILE,

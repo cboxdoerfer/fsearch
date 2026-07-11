@@ -148,10 +148,11 @@ get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
 
 static inline FsearchDatabaseEntry *
 create_dummy_entry(const char *name, FsearchDatabaseEntry *parent, FsearchDatabaseEntryType type) {
-    const FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                  | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
-
-    return db_entry_new_with_attributes(flags, name, parent, type, DATABASE_INDEX_PROPERTY_NONE);
+    return db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
+                                        name,
+                                        parent,
+                                        type,
+                                        DATABASE_INDEX_PROPERTY_NONE);
 }
 
 // Resolves event->watched_entry_handle to a live entry via whichever backend queued the event.
@@ -569,8 +570,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         }
     }
     else {
-        FsearchDatabaseEntry *entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                       | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+        FsearchDatabaseEntry *entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                                    event->name->str,
                                                                    event->watched_entry,
                                                                    DATABASE_ENTRY_TYPE_FILE,

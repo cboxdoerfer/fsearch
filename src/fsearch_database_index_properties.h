@@ -34,6 +34,12 @@ typedef enum {
     DATABASE_INDEX_PROPERTY_FLAG_NONE = 0,
 } FsearchDatabaseIndexPropertyFlags;
 
+// The default set of indexed properties.
+// TODO: At one point this might be worth making configurable
+#define DATABASE_INDEX_PROPERTY_FLAG_DEFAULT                                                                            \
+    (DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH | DATABASE_INDEX_PROPERTY_FLAG_SIZE          \
+     | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME)
+
 typedef enum {
     DATABASE_INDEX_PROPERTY_NONE,
     DATABASE_INDEX_PROPERTY_NAME,

@@ -214,8 +214,7 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
             g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
                 self->config->includes,
                 self->config->excludes,
-                DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                    | DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+                DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
             fsearch_database_queue_work(self->db, work);
         }
 
@@ -412,8 +411,7 @@ on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoint
         g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(
             self->config->includes,
             self->config->excludes,
-            DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                | DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
+            DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
         fsearch_database_queue_work(self->db, work);
     }
 }

@@ -60,7 +60,8 @@ test_save_load_roundtrip_preserves_hierarchy_and_sort_orders(void) {
 
     const FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NAME
                                                    | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                   | DATABASE_INDEX_PROPERTY_FLAG_SIZE;
+                                                   | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                   | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
 
     FsearchDatabaseIndexStore *store =
         fsearch_database_index_store_new(include_manager, exclude_manager, flags, NULL, NULL);
@@ -85,9 +86,16 @@ test_save_load_roundtrip_preserves_hierarchy_and_sort_orders(void) {
 
     FsearchDatabaseEntry *files_before_save[3];
     FsearchDatabaseEntry *file_parents_before_save[3];
+    off_t file_sizes_before_save[3];
+    time_t file_mtimes_before_save[3];
     for (uint32_t i = 0; i < 3; i++) {
         files_before_save[i] = fsearch_database_chunked_array_get_entry(name_sorted_files_before_save, i);
         file_parents_before_save[i] = db_entry_get_parent(files_before_save[i]);
+        file_sizes_before_save[i] = db_entry_get_size(files_before_save[i]);
+        file_mtimes_before_save[i] = db_entry_get_mtime(files_before_save[i]);
+        // Sanity: the live store must actually have real values to round-trip.
+        g_assert_cmpint(file_sizes_before_save[i], >, 0);
+        g_assert_cmpint(file_mtimes_before_save[i], >, 0);
     }
     FsearchDatabaseEntry *folders_before_save[2];
     FsearchDatabaseEntry *folder_parents_before_save[2];
@@ -139,6 +147,9 @@ test_save_load_roundtrip_preserves_hierarchy_and_sort_orders(void) {
         else {
             g_assert_cmpstr(db_entry_get_name_raw(parent), ==, "subdir");
         }
+        // Exact size + mtime must survive the roundtrip (files are in NAME order both times).
+        g_assert_cmpint(db_entry_get_size(entry), ==, file_sizes_before_save[i]);
+        g_assert_cmpint(db_entry_get_mtime(entry), ==, file_mtimes_before_save[i]);
     }
 
     // Non-NAME sort order: exercises the self-index lookups used to write each fast-sort order's

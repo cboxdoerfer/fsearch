@@ -330,11 +330,6 @@ signal_emit_database_progress(FsearchDatabase *self, char *text) {
 // endregion
 
 // region Database private
-static FsearchDatabaseIndexPropertyFlags
-database_get_flags(FsearchDatabase *self) {
-    return self->store ? fsearch_database_index_store_get_flags(self->store) : DATABASE_INDEX_PROPERTY_FLAG_NONE;
-}
-
 static FsearchDatabaseExcludeManager *
 database_get_exclude_manager(FsearchDatabase *self) {
     if (self->exclude_manager) {
@@ -881,9 +876,10 @@ database_load(FsearchDatabase *self) {
                                                 self);
 
     if (!res) {
+        // On a failed load we use the default flags
         store = fsearch_database_index_store_new(include_manager,
                                                  exclude_manager,
-                                                 database_get_flags(self),
+                                                 DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                  index_store_event_cb,
                                                  self);
     }
@@ -1440,10 +1436,10 @@ fsearch_database_rescan_blocking(FsearchDatabase *self) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
-    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NAME | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                            | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                            | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
-    database_rescan_sync(self, self->include_manager, self->exclude_manager, flags);
+    database_rescan_sync(self,
+                         self->include_manager,
+                         self->exclude_manager,
+                         DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
 
     return FSEARCH_RESULT_SUCCESS;
 }
