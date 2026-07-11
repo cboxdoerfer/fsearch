@@ -8,6 +8,8 @@
 
 G_BEGIN_DECLS
 
+typedef struct _FsearchPreferencesDialog FsearchPreferencesDialog;
+
 #define FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE (fsearch_database_preferences_widget_get_type())
 
 G_DECLARE_FINAL_TYPE(FsearchDatabasePreferencesWidget,
@@ -25,5 +27,8 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
 
 FsearchDatabaseExcludeManager *
 fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferencesWidget *widget);
+
+void
+fsearch_database_preferences_widget_setup_help(FsearchDatabasePreferencesWidget *self, FsearchPreferencesDialog *dialog);
 
 G_END_DECLS

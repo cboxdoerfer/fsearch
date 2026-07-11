@@ -1211,7 +1211,7 @@ This list contains all folders you want to include in the database.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page20</property>
+                    <property name="name">index_list</property>
                     <property name="title">page20</property>
                     <property name="position">19</property>
                   </packing>
@@ -1228,7 +1228,7 @@ This button opens a dialog where you can select a folder you want to include in 
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page21</property>
+                    <property name="name">index_add</property>
                     <property name="title">page21</property>
                     <property name="position">20</property>
                   </packing>
@@ -1245,7 +1245,7 @@ This removes the selected folder from the list of included folders.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page22</property>
+                    <property name="name">index_remove</property>
                     <property name="title">page22</property>
                     <property name="position">21</property>
                   </packing>
@@ -1265,7 +1265,7 @@ This list contains all folders you want to exclude from the database.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page23</property>
+                    <property name="name">exclude_list</property>
                     <property name="title">page23</property>
                     <property name="position">22</property>
                   </packing>
@@ -1282,7 +1282,7 @@ This button opens a dialog where you can select a folder you want to exclude fro
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page24</property>
+                    <property name="name">exclude_add</property>
                     <property name="title">page24</property>
                     <property name="position">23</property>
                   </packing>
@@ -1299,7 +1299,7 @@ This removes the selected folder from the list of excluded folders.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page25</property>
+                    <property name="name">exclude_remove</property>
                     <property name="title">page25</property>
                     <property name="position">24</property>
                   </packing>
@@ -1333,7 +1333,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page27</property>
+                    <property name="name">exclude_hidden</property>
                     <property name="title">page27</property>
                     <property name="position">26</property>
                   </packing>

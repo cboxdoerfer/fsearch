@@ -107,6 +107,24 @@ on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip
     return GDK_EVENT_PROPAGATE;
 }
 
+void
+fsearch_preferences_dialog_bind_help(FsearchPreferencesDialog *self, GtkWidget *control, const char *help_page_name) {
+    g_return_if_fail(FSEARCH_IS_PREFERENCES_DIALOG(self));
+    g_return_if_fail(GTK_IS_WIDGET(control));
+
+    GtkWidget *page = gtk_stack_get_child_by_name(GTK_STACK(self->help_stack), help_page_name);
+    g_return_if_fail(page);
+
+    // drop any static tooltip so only the dynamic help panel responds
+    gtk_widget_set_tooltip_text(control, NULL);
+    gtk_widget_set_tooltip_markup(control, NULL);
+    gtk_widget_set_has_tooltip(control, TRUE);
+
+    g_signal_connect(control, "query-tooltip", G_CALLBACK(on_help_show), page);
+    g_signal_connect(control, "leave-notify-event", G_CALLBACK(on_help_reset), self);
+    g_signal_connect(control, "focus-out-event", G_CALLBACK(on_help_reset), self);
+}
+
 static void
 update_config(FsearchPreferencesDialog *self) {
     self->config->enable_dark_theme = gtk_toggle_button_get_active(self->enable_dark_theme_button);
@@ -219,6 +237,7 @@ fsearch_preferences_dialog_constructed(GObject *object) {
                                                                           self->config_old->excludes);
     gtk_notebook_append_page(self->main_notebook, GTK_WIDGET(self->database_pref_widget), gtk_label_new(_("Database")));
     gtk_widget_show(GTK_WIDGET(self->database_pref_widget));
+    fsearch_database_preferences_widget_setup_help(self->database_pref_widget, self);
 
     gtk_toggle_button_set_active(self->enable_dark_theme_button, self->config_old->enable_dark_theme);
     gtk_toggle_button_set_active(self->show_menubar_button, !self->config_old->show_menubar);
