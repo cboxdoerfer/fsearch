@@ -847,6 +847,7 @@
                 <property name="margin-top">6</property>
                 <property name="margin-bottom">6</property>
                 <property name="transition-type">crossfade</property>
+                <property name="visible-child">help_description</property>
                 <child>
                   <object class="GtkLabel" id="help_dark_theme">
                     <property name="visible">True</property>
