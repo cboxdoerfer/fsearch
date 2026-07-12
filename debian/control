@@ -2,27 +2,30 @@ Source: fsearch
 Section: utils
 Priority: optional
 Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
-Build-Depends: debhelper (>=9),
-    build-essential,
+Build-Depends: debhelper-compat (= 13),
     appstream,
+    desktop-file-utils,
+    gettext,
     itstool,
-    libtool,
     pkg-config,
-    libicu-dev,
-    libpcre2-dev,
-    libglib2.0-dev,
-    libgtk-3-dev,
-    libxml2-utils,
+    libicu-dev (>= 4.4),
+    libpcre2-dev (>= 10.21),
+    libglib2.0-dev (>= 2.58),
+    libgtk-3-dev (>= 3.22),
     meson
-Standards-Version: 3.9.6
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
 Homepage: https://cboxdoerfer.github.io/fsearch/
+Vcs-Git: https://github.com/cboxdoerfer/fsearch.git
+Vcs-Browser: https://github.com/cboxdoerfer/fsearch
 
 Package: fsearch
 Architecture: any
 Replaces: fsearch-trunk
 Breaks: fsearch-trunk
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: A fast graphical file search utility
-    FSearch is a fast file search utility, based on GTK3.
-    It supports regular expressions, wildcards, fast sorting,
-    instant results with millions of files and more.
+Recommends: yelp
+Description: Fast graphical file search utility
+ FSearch is a fast file search utility, based on GTK3.
+ It supports regular expressions, wildcards, fast sorting,
+ instant results with millions of files and more.
