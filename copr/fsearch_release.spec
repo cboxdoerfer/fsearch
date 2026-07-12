@@ -5,7 +5,7 @@ Summary: A fast file search utility for Unix-like systems based on GTK 3
 Epoch:   1
 Version: 0.3
 Release: 1%{?dist}
-License: GPLv2+
+License: GPL-2.0-or-later
 URL:     https://github.com/cboxdoerfer/fsearch
 Source0: %{giturl}/archive/%{version}/%{name}-%{version}.tar.gz
 
@@ -42,12 +42,26 @@ pushd build
 desktop-file-install \
   --dir=%{buildroot}%{_datadir}/applications/ \
   %{buildroot}%{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
+popd
 
-%files
+%find_lang %{name} --with-gnome
+
+%files -f %{name}.lang
 %{_bindir}/fsearch
 %{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
 %{_datadir}/icons/hicolor/scalable/apps/io.github.cboxdoerfer.FSearch.svg
 %{_datadir}/man/man1/fsearch.1.gz
 %{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.metainfo.xml
-%{_datadir}/locale/*/*/fsearch.mo
 
+%changelog
+* Sun Jul 12 2026 Christian Boxdörfer <christian.boxdoerfer@posteo.de> - 1:0.3-1
+- DB rewrite
+- DB: Add support for filesystem monitoring
+- DB: Allow files and folders to be excluded based on fixed patterns, wildcards or regular expressions
+- DB: Allow included folders to be scheduled and scanned after launch independently
+- DB: Make rescanning more efficient
+- DB: Store database config in DB file
+- DB: Add checksum to DB file
+- Make icon and file info gathering asynchronous (no UI blocking)
+- Reduce memory usage
+- Numerous bug fixes and stability and performance improvements
