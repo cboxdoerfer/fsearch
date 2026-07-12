@@ -17,6 +17,7 @@ BuildRequires: gtk3-devel
 BuildRequires: glib2-devel
 BuildRequires: appstream
 BuildRequires: desktop-file-utils
+BuildRequires: itstool
 
 
 %description
@@ -30,7 +31,7 @@ mv fsearch-%{version} build
 %build
 export LDFLAGS="%{?__global_ldflags} -pthread"
 pushd build
-%meson
+%meson -Dchannel=copr-stable
 %meson_build -v
 popd
 
