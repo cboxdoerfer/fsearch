@@ -23,6 +23,7 @@
 #endif
 
 #include "fsearch.h"
+#include "fsearch_cli.h"
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
@@ -905,6 +906,10 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
     if (g_variant_dict_contains(options, "update-database")) {
         return fsearch_application_local_database_scan();
     }
+    const gchar *search_term = NULL;
+    if (g_variant_dict_lookup(options, "cli", "&s", &search_term)) {
+        return fsearch_cli_search(search_term);
+    }
     if (g_variant_dict_contains(options, "version")) {
         g_autoptr(GString) version = get_application_version();
         g_print("FSearch %s\n", version->str);
@@ -917,6 +922,7 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
 static void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
+        {"cli", 0, 0, G_OPTION_ARG_STRING, NULL, N_("Search the database and print results to stdout"), "PATTERN"},
         {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
         {"search", 's', 0, G_OPTION_ARG_STRING, NULL, N_("Set the search pattern"), "PATTERN"},

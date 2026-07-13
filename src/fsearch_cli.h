@@ -16,24 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include "fsearch.h"
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-#include <locale.h>
+#pragma once
 
 int
-main(int argc, char *argv[]) {
-    setlocale(LC_ALL, "");
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
-
-    g_set_application_name(_("FSearch"));
-    g_set_prgname("io.github.cboxdoerfer.FSearch");
-
-    return g_application_run(G_APPLICATION(fsearch_application_new()), argc, argv);
-}
+fsearch_cli_search(const char *search_term);
