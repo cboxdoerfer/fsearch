@@ -15,4 +15,6 @@ typedef struct FsearchQueryParseContext {
 } FsearchQueryParseContext;
 
 GList *
-fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool in_open_bracket, FsearchQueryFlags flags);
+fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx,
+                                      bool in_open_bracket,
+                                      FsearchQueryFlags flags);

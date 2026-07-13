@@ -24,10 +24,14 @@
 
 #include "fsearch.h"
 #include "fsearch_config.h"
-#include "fsearch_database.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_database_search.h"
+#include "fsearch_database_file.h"
+#include "fsearch_database_index_store.h"
+#include "fsearch_database_search_info.h"
+#include "fsearch_database_search_view.h"
 #include "fsearch_query.h"
+
+#define FSEARCH_CLI_VIEW_ID 0
 
 static FsearchQueryFlags
 get_query_flags(FsearchConfig *config) {
@@ -51,13 +55,25 @@ get_query_flags(FsearchConfig *config) {
 }
 
 static void
-print_entries(DynamicArray *entries) {
-    if (!entries) {
+index_store_event_cb(FsearchDatabaseIndexStore *store,
+                     FsearchDatabaseIndexStoreEventKind kind,
+                     gpointer data,
+                     gpointer user_data) {
+    // The CLI performs a single synchronous search; store events don't matter here.
+}
+
+static void
+print_view_entries(FsearchDatabaseSearchView *view) {
+    g_autoptr(FsearchDatabaseSearchInfo) info = fsearch_database_search_view_get_info(view);
+    if (!info) {
         return;
     }
-    const uint32_t num_entries = darray_get_num_items(entries);
+    const uint32_t num_entries = fsearch_database_search_info_get_num_entries(info);
     for (uint32_t i = 0; i < num_entries; ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+        FsearchDatabaseEntry *entry = fsearch_database_search_view_get_entry_for_idx(view, i);
+        if (!entry) {
+            continue;
+        }
         GString *path = db_entry_get_path_full(entry);
         if (path) {
             printf("%s\n", path->str);
@@ -80,42 +96,34 @@ fsearch_cli_search(const char *search_term) {
     }
 
     g_autofree char *db_path = fsearch_application_get_database_file_path();
-    FsearchDatabase *db = db_new(NULL, NULL, NULL, false);
-    if (!db_load(db, db_path, NULL)) {
+    g_autoptr(FsearchDatabaseIndexStore) store = NULL;
+    if (!fsearch_database_file_load(db_path, NULL, &store, config->includes, config->excludes, index_store_event_cb, NULL)
+        || !store) {
         g_printerr("[fsearch] failed to load database from '%s'\n"
                    "[fsearch] run 'fsearch --update-database' to create it\n",
                    db_path);
-        g_clear_pointer(&db, db_unref);
         g_clear_pointer(&config, config_free);
         return EXIT_FAILURE;
     }
 
-    FsearchQuery *query = fsearch_query_new(search_term, NULL, config->filters, get_query_flags(config), "cli");
+    g_autoptr(FsearchQuery) query =
+        fsearch_query_new(search_term, NULL, config->filters, get_query_flags(config), "cli");
 
-    DynamicArray *folders = db_get_folders(db);
-    DynamicArray *files = db_get_files(db);
-
-    DatabaseSearchResult *result = NULL;
-    if (fsearch_query_matches_everything(query)) {
-        result = db_search_empty(folders, files, DATABASE_INDEX_TYPE_NAME);
-    }
-    else {
-        result = db_search(query, db_get_thread_pool(db), folders, files, DATABASE_INDEX_TYPE_NAME, NULL);
-    }
-
-    if (result) {
-        print_entries(result->folders);
-        print_entries(result->files);
-        g_clear_pointer(&result->folders, darray_unref);
-        g_clear_pointer(&result->files, darray_unref);
-        g_clear_pointer(&result, free);
+    int res = EXIT_FAILURE;
+    if (fsearch_database_index_store_search(store,
+                                            FSEARCH_CLI_VIEW_ID,
+                                            query,
+                                            DATABASE_INDEX_PROPERTY_NAME,
+                                            GTK_SORT_ASCENDING,
+                                            NULL)) {
+        FsearchDatabaseSearchView *view = fsearch_database_index_store_get_search_view(store, FSEARCH_CLI_VIEW_ID);
+        if (view) {
+            print_view_entries(view);
+            res = EXIT_SUCCESS;
+        }
     }
 
-    g_clear_pointer(&folders, darray_unref);
-    g_clear_pointer(&files, darray_unref);
-    g_clear_pointer(&query, fsearch_query_unref);
-    g_clear_pointer(&db, db_unref);
     g_clear_pointer(&config, config_free);
 
-    return EXIT_SUCCESS;
+    return res;
 }

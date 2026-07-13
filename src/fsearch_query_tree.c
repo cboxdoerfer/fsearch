@@ -41,7 +41,7 @@ build_query_tree_from_suffix_list(GList *postfix_query, FsearchQueryFlags flags)
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             GNode *op_node = g_node_new(node);
             GNode *right = g_queue_pop_tail(query_stack);
-            if (node->operator!= FSEARCH_QUERY_NODE_OPERATOR_NOT) {
+            if (node->operator != FSEARCH_QUERY_NODE_OPERATOR_NOT) {
                 GNode *left = g_queue_pop_tail(query_stack);
                 g_node_append(op_node, left ? left : get_everything_matching_node(flags));
             }
@@ -154,7 +154,8 @@ print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
         return;
     }
     g_debug("[QueryParser]");
-    g_debug(" * global_flags: %s", query_flags_to_string_expressive(flags));
+    g_autofree char *query_flags_string = query_flags_to_string_expressive(flags);
+    g_debug(" * global_flags: %s", query_flags_string);
     g_debug(" * input: %s", input);
     g_autoptr(GString) result_str = g_string_new(" * output: ");
     for (GList *n = result; n != NULL; n = n->next) {
@@ -267,7 +268,12 @@ fsearch_query_node_tree_wants_single_threaded_search(GNode *tree) {
     g_assert(tree);
     bool wants_single_threaded_search = false;
 
-    g_node_traverse(tree, G_IN_ORDER, G_TRAVERSE_ALL, -1, node_wants_single_threaded_search, &wants_single_threaded_search);
+    g_node_traverse(tree,
+                    G_IN_ORDER,
+                    G_TRAVERSE_ALL,
+                    -1,
+                    node_wants_single_threaded_search,
+                    &wants_single_threaded_search);
 
     return wants_single_threaded_search;
 }

@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,19 +19,21 @@
 #define G_LOG_DOMAIN "fsearch-utils"
 
 #include "fsearch_file_utils.h"
-#include "fsearch_limits.h"
 #include "fsearch_string_utils.h"
-#include "fsearch_ui_utils.h"
 
 #ifndef __MACH__
 #include <gio/gdesktopappinfo.h>
 #endif
 
+#include <ctype.h>
 #include <gio/gio.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
 
 const char *data_folder_name = "fsearch";
 
@@ -58,10 +60,29 @@ add_error_message(GString *error_messages, const char *error_message) {
     g_string_append_c(error_messages, '\n');
 }
 
+gchar *
+fsearch_file_utils_get_app_user_state_dir() {
+#if GLIB_CHECK_VERSION(2, 72, 0)
+    const gchar *state_dir = g_get_user_state_dir();
+    return g_build_filename(state_dir, data_folder_name, NULL);
+
+#else
+    const gchar *xdg_state_home = g_getenv("XDG_STATE_HOME");
+
+    if (xdg_state_home != NULL && xdg_state_home[0] != '\0') {
+        return g_build_filename(xdg_state_home, data_folder_name, NULL);
+    }
+    else {
+        /* Default to ~/.local/state as per the spec */
+        const gchar *home_dir = g_get_home_dir();
+        return g_build_filename(home_dir, ".local", "state", data_folder_name, NULL);
+    }
+#endif
+}
+
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path);
-    g_assert(len >= 0);
 
     const gchar *xdg_data_dir = g_get_user_data_dir();
     snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);
@@ -241,12 +262,15 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
             if (!path) {
                 continue;
             }
-            #ifdef __MACH__
-            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
-            #else
+#ifdef __MACH__
+            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open",
+                                                                            NULL,
+                                                                            G_APP_INFO_CREATE_NONE,
+                                                                            NULL);
+#else
             GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
-            #endif
-            
+#endif
+
             if (!desktop_app_info) {
                 add_error_message_with_format(ctx->error_messages,
                                               C_("Will be followed by the file path.",
@@ -452,8 +476,10 @@ fsearch_file_utils_open_path_list(GList *paths,
         return launch_default_for_path(paths, app_launch_context, callback, callback_data);
     }
 
-    g_autoptr(GHashTable)
-        content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
+    g_autoptr(GHashTable) content_types = g_hash_table_new_full(g_str_hash,
+                                                                g_str_equal,
+                                                                g_free,
+                                                                (GDestroyNotify)g_ptr_array_unref);
 
     g_autoptr(GString) error_messages = g_string_new(NULL);
     // Before opening any files, we first group them by their content type
@@ -462,8 +488,10 @@ fsearch_file_utils_open_path_list(GList *paths,
         collect_for_content_type(content_types, path, error_messages);
     }
 
-    FsearchFileUtilsLaunchContext *launch_ctx =
-        launch_context_new(app_launch_context, launch_desktop_files, callback, callback_data);
+    FsearchFileUtilsLaunchContext *launch_ctx = launch_context_new(app_launch_context,
+                                                                   launch_desktop_files,
+                                                                   callback,
+                                                                   callback_data);
 
     if (error_messages->len > 0) {
         g_string_append(launch_ctx->error_messages, error_messages->str);
@@ -573,11 +601,11 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
-    #ifdef __MACH__
+#ifdef __MACH__
     g_autoptr(GAppInfo) info = NULL;
-    #else
+#else
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
-    #endif
+#endif
 
     if (!info) {
         goto default_icon;
@@ -649,8 +677,11 @@ char *
 fsearch_file_utils_get_content_type(const char *path, GError **error) {
     g_assert(path);
     g_autoptr(GFile) file = g_file_new_for_path(path);
-    g_autoptr(GFileInfo)
-        info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, error);
+    g_autoptr(GFileInfo) info = g_file_query_info(file,
+                                                  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                                  G_FILE_QUERY_INFO_NONE,
+                                                  NULL,
+                                                  error);
     if (!info) {
         return NULL;
     }
@@ -664,7 +695,7 @@ fsearch_file_utils_get_thumbnail_icon(const char *path) {
     if (!g_file) {
         return NULL;
     }
-    
+
     g_autoptr(GFileInfo) file_info = g_file_query_info(g_file, "thumbnail::path", 0, NULL, NULL);
     if (!file_info) {
         return NULL;
@@ -676,4 +707,141 @@ fsearch_file_utils_get_thumbnail_icon(const char *path) {
     }
 
     return g_icon_new_for_string(thumbnail, NULL);
+}
+
+bool
+fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir) {
+    g_return_val_if_fail(path, false);
+
+    struct stat st;
+    if (lstat(path, &st)) {
+        g_debug("[get_info] can't stat: %s", path);
+        return false;
+    }
+    if (mtime) {
+        *mtime = st.st_mtime;
+    }
+    if (size) {
+        *size = st.st_size;
+    }
+    if (is_dir) {
+        *is_dir = S_ISDIR(st.st_mode) ? true : false;
+    }
+    return true;
+}
+
+// Based on strverscmp from GNU glibc, with slight modification to make sure
+// full paths are sorted properly.
+//
+
+// Make sure path seperators sort before any other characters
+static inline int
+path_char_weight(unsigned char c) {
+    if (c == '\0') {
+        return 0; // Null terminator is always the absolute lowest
+    }
+    if (c == G_DIR_SEPARATOR) {
+        return 1; // Path separator is strictly greater than \0, but less than everything else
+    }
+    // Shift all other characters up by 1 to prevent collisions with G_DIR_SEPARATOR
+    return c + 1;
+}
+
+/* Compare strings while treating digits characters numerically.
+   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>, 1997.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+/* states: S_N: normal, S_I: comparing integral part, S_F: comparing
+           fractionnal parts, S_Z: idem but with leading Zeroes only */
+#define S_N 0x0
+#define S_I 0x3
+#define S_F 0x6
+#define S_Z 0x9
+
+/* result_type: CMP: return diff; LEN: compare using len_diff/diff */
+#define CMP 2
+#define LEN 3
+
+/* Compare S1 and S2 as strings holding indices/version numbers,
+   returning less than, equal to or greater than zero if S1 is less than,
+   equal to or greater than S2 (for more info, see the Glibc texinfo doc).  */
+
+int
+fsearch_file_utils_cmp_paths(const char *s1, const char *s2) {
+    const unsigned char *p1 = (const unsigned char *)s1;
+    const unsigned char *p2 = (const unsigned char *)s2;
+
+    /* Symbol(s)    0       [1-9]   others
+       Transition   (10) 0  (01) d  (00) x   */
+    static const uint8_t next_state[] = {/* state    x    d    0  */
+                                         /* S_N */ S_N,
+                                         S_I,
+                                         S_Z,
+                                         /* S_I */ S_N,
+                                         S_I,
+                                         S_I,
+                                         /* S_F */ S_N,
+                                         S_F,
+                                         S_F,
+                                         /* S_Z */ S_N,
+                                         S_F,
+                                         S_Z};
+
+    static const int8_t result_type[] = {/* state   x/x  x/d  x/0  d/x  d/d  d/0  0/x  0/d  0/0  */
+
+                                         /* S_N */ CMP, CMP, CMP, CMP, LEN, CMP, CMP, CMP, CMP,
+                                         /* S_I */ CMP, -1,  -1,  +1,  LEN, LEN, +1,  LEN, LEN,
+                                         /* S_F */ CMP, CMP, CMP, CMP, CMP, CMP, CMP, CMP, CMP,
+                                         /* S_Z */ CMP, +1,  +1,  -1,  CMP, CMP, -1,  CMP, CMP};
+
+    if (p1 == p2)
+        return 0;
+
+    unsigned char c1 = *p1++;
+    unsigned char c2 = *p2++;
+    /* Hint: '0' is a digit too.  */
+    int state = S_N + ((c1 == '0') + (isdigit(c1) != 0));
+
+    int diff;
+    while ((diff = path_char_weight(c1) - path_char_weight(c2)) == 0) {
+        if (c1 == '\0')
+            return diff;
+
+        state = next_state[state];
+        c1 = *p1++;
+        c2 = *p2++;
+        state += (c1 == '0') + (isdigit(c1) != 0);
+    }
+
+    state = result_type[state * 3 + (((c2 == '0') + (isdigit(c2) != 0)))];
+
+    switch (state) {
+    case CMP:
+        return diff;
+
+    case LEN:
+        while (isdigit(*p1++))
+            if (!isdigit(*p2++))
+                return 1;
+
+        return isdigit(*p2) ? -1 : diff;
+
+    default:
+        return state;
+    }
 }

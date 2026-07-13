@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
 #include "fsearch_filter_manager.h"
 
 typedef struct _FsearchConfig FsearchConfig;
@@ -40,6 +42,9 @@ typedef struct {
 } FsearchConfigCompareResult;
 
 struct _FsearchConfig {
+    // State
+    GString *last_seen_version;
+
     // Search
     bool hide_results_on_empty_search;
     bool search_in_path;
@@ -48,7 +53,6 @@ struct _FsearchConfig {
     bool auto_search_in_path;
     bool auto_match_case;
     bool search_as_you_type;
-    bool show_base_2_units;
 
     // Applications
     char *folder_open_cmd;
@@ -59,6 +63,7 @@ struct _FsearchConfig {
     int32_t window_height;
 
     // Interface
+    bool show_base_2_units;
     bool highlight_search_terms;
     bool single_click_open;
     bool launch_desktop_files;
@@ -106,19 +111,10 @@ struct _FsearchConfig {
     uint32_t size_column_pos;
     uint32_t modified_column_pos;
 
-    // database
-    bool update_database_on_launch;
-    bool update_database_every;
-    uint32_t update_database_every_hours;
-    uint32_t update_database_every_minutes;
-
-    bool exclude_hidden_items;
-    bool follow_symlinks;
-
     FsearchFilterManager *filters;
-    GList *indexes;
-    GList *exclude_locations;
-    char **exclude_files;
+
+    FsearchDatabaseIncludeManager *includes;
+    FsearchDatabaseExcludeManager *excludes;
 };
 
 bool

@@ -33,34 +33,43 @@ typedef struct {
     volatile gint ref_count;
 } FsearchListViewColumn;
 
-typedef char *(*FsearchListViewQueryTooltipFunc)(PangoLayout *layout,
-                                                 uint32_t row_height,
-                                                 uint32_t row,
-                                                 FsearchListViewColumn *col,
-                                                 gpointer user_data);
+typedef char *
+(*FsearchListViewQueryTooltipFunc)(PangoLayout *layout,
+                                   uint32_t row_height,
+                                   uint32_t row,
+                                   FsearchListViewColumn *col,
+                                   gpointer user_data);
 
-typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
-                                           GdkWindow *bin_window,
-                                           PangoLayout *layout,
-                                           GtkStyleContext *context,
-                                           GList *columns,
-                                           cairo_rectangle_int_t *rect,
-                                           uint32_t row,
-                                           gboolean row_selected,
-                                           gboolean row_focused,
-                                           gboolean row_hovered,
-                                           gboolean right_to_left_text,
-                                           gpointer user_data);
+typedef void
+(*FsearchListViewDrawRowFunc)(cairo_t *cr,
+                              GdkWindow *bin_window,
+                              PangoLayout *layout,
+                              GtkStyleContext *context,
+                              GList *columns,
+                              cairo_rectangle_int_t *rect,
+                              uint32_t row,
+                              gboolean row_selected,
+                              gboolean row_focused,
+                              gboolean row_hovered,
+                              gboolean right_to_left_text,
+                              gpointer user_data);
 
-typedef void (*FsearchListViewSortFunc)(int sort_order, GtkSortType sort_type, gpointer user_data);
+typedef void
+(*FsearchListViewSortFunc)(int sort_order, GtkSortType sort_type, gpointer user_data);
 
 // selection handlers
-typedef gboolean (*FsearchListViewIsSelectedFunc)(int row_idx, gpointer user_data);
-typedef void (*FsearchListViewSelectFunc)(int row_idx, gpointer user_data);
-typedef void (*FsearchListViewSelectToggleFunc)(int row_idx, gpointer user_data);
-typedef void (*FsearchListViewSelectRangeFunc)(int start_idx, int end_idx, gpointer user_data);
-typedef void (*FsearchListViewUnselectAllFunc)(gpointer user_data);
-typedef guint (*FsearchListViewNumSelectedFunc)(gpointer user_data);
+typedef gboolean
+(*FsearchListViewIsSelectedFunc)(int row_idx, gpointer user_data);
+typedef void
+(*FsearchListViewSelectFunc)(int row_idx, gpointer user_data);
+typedef void
+(*FsearchListViewSelectToggleFunc)(int row_idx, gpointer user_data);
+typedef void
+(*FsearchListViewSelectRangeFunc)(int start_idx, int end_idx, gpointer user_data);
+typedef void
+(*FsearchListViewUnselectAllFunc)(gpointer user_data);
+typedef guint
+(*FsearchListViewNumSelectedFunc)(gpointer user_data);
 
 FsearchListViewColumn *
 fsearch_list_view_column_ref(FsearchListViewColumn *col);
@@ -110,6 +119,9 @@ FsearchListViewColumn *
 fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type);
 
 void
+fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
+
+void
 fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
 
 gint
@@ -127,6 +139,9 @@ fsearch_list_view_get_sort_order(FsearchListView *view);
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view);
 
+uint32_t
+fsearch_list_view_get_num_rows(FsearchListView *view);
+
 void
 fsearch_list_view_set_sort_func(FsearchListView *view, FsearchListViewSortFunc func, gpointer sort_func_data);
 
@@ -137,3 +152,6 @@ fsearch_list_view_set_query_tooltip_func(FsearchListView *view,
 
 void
 fsearch_list_view_set_draw_row_func(FsearchListView *view, FsearchListViewDrawRowFunc func, gpointer func_data);
+
+gboolean
+fsearch_list_view_redraw_row(FsearchListView *view, int row_idx);

@@ -27,7 +27,7 @@ typedef struct FsearchUtfBuilder {
 } FsearchUtfBuilder;
 
 void
-fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters);
+fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t str_len);
 
 void
 fsearch_utf_builder_clear(FsearchUtfBuilder *builder);

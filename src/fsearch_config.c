@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,19 +18,189 @@
 
 #define G_LOG_DOMAIN "fsearch-config"
 
+#include "fsearch_config.h"
+
+#include "fsearch_database_exclude.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_filter.h"
+#include "fsearch_filter_manager.h"
+#include "fsearch_limits.h"
+#include "fsearch_query_flags.h"
+#include "fsearch_string_utils.h"
+
+#include <glib-object.h>
 #include <glib.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "fsearch_config.h"
-#include "fsearch_exclude_path.h"
-#include "fsearch_index.h"
-#include "fsearch_limits.h"
+typedef enum { TYPE_INT, TYPE_INT64, TYPE_STRING, TYPE_BOOL } FsearchConfigValueType;
 
-const char *config_file_name = "fsearch.conf";
-const char *config_folder_name = "fsearch";
+typedef struct {
+    const char *key_name;
+    FsearchConfigValueType type;
+    size_t struct_offset; // offset to data in config struct
+    union {
+        int i;
+        int64_t i64;
+        bool b;
+        const char *s;
+    } default_val;
+} FsearchKeyData;
+
+#define CONF_INT_OF(S, member, def)                                                                                    \
+    {                                                                                                                  \
+        #member, TYPE_INT, offsetof(S, member), .default_val = {.i = (def) }                                           \
+    }
+#define CONF_INT64_OF(S, member, def)                                                                                  \
+    {                                                                                                                  \
+        #member, TYPE_INT64, offsetof(S, member), .default_val = {.i64 = (def) }                                       \
+    }
+#define CONF_STR_OF(S, member, def)                                                                                    \
+    {                                                                                                                  \
+        #member, TYPE_STRING, offsetof(S, member), .default_val = {.s = (def) }                                        \
+    }
+#define CONF_BOOL_OF(S, member, def)                                                                                   \
+    {                                                                                                                  \
+        #member, TYPE_BOOL, offsetof(S, member), .default_val = {.b = (def) }                                          \
+    }
+
+#define CONF_INT(member, def) CONF_INT_OF(FsearchConfig, member, def)
+#define CONF_INT64(member, def) CONF_INT64_OF(FsearchConfig, member, def)
+#define CONF_STR(member, def) CONF_STR_OF(FsearchConfig, member, def)
+#define CONF_BOOL(member, def) CONF_BOOL_OF(FsearchConfig, member, def)
+
+#define CONFIG_SAVE_SECTION(kf, sec, arr, cfg) config_save_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
+#define CONFIG_LOAD_SECTION(kf, sec, arr, cfg) config_load_section(kf, sec, arr, G_N_ELEMENTS(arr), cfg)
+#define CONFIG_SAVE_OBJECT_KEYS(kf, sec, pre, idx, arr, obj)                                                           \
+    config_save_object(kf, sec, pre, idx, arr, G_N_ELEMENTS(arr), obj)
+#define CONFIG_LOAD_OBJECT_KEYS(kf, sec, pre, idx, arr, obj)                                                           \
+    config_load_object(kf, sec, pre, idx, arr, G_N_ELEMENTS(arr), obj)
+#define CONFIG_DEFAULT_SECTION(arr, cfg) config_get_section_default(arr, G_N_ELEMENTS(arr), cfg)
+
+static const FsearchKeyData SEARCH_SECTION[] = {
+    CONF_BOOL(hide_results_on_empty_search, false),
+    CONF_BOOL(search_in_path, false),
+    CONF_BOOL(enable_regex, false),
+    CONF_BOOL(match_case, false),
+    CONF_BOOL(auto_search_in_path, true),
+    CONF_BOOL(auto_match_case, true),
+    CONF_BOOL(search_as_you_type, true),
+};
+
+static const FsearchKeyData WINDOW_SECTION[] = {
+    CONF_BOOL(restore_window_size, true),
+    CONF_INT(window_width, 850),
+    CONF_INT(window_height, 600),
+};
+
+static const FsearchKeyData APPLICATIONS_SECTION[] = {
+    CONF_STR(folder_open_cmd, NULL),
+};
+
+static const FsearchKeyData INTERFACE_SECTION[] = {
+    CONF_BOOL(show_base_2_units, false),
+    CONF_BOOL(highlight_search_terms, true),
+    CONF_BOOL(single_click_open, false),
+    CONF_BOOL(launch_desktop_files, true),
+    CONF_BOOL(enable_dark_theme, false),
+    CONF_BOOL(enable_list_tooltips, true),
+    CONF_BOOL(restore_column_config, true),
+    CONF_BOOL(restore_sort_order, true),
+    CONF_BOOL(double_click_path, false),
+    CONF_BOOL(action_after_file_open_keyboard, false),
+    CONF_BOOL(action_after_file_open_mouse, false),
+    CONF_INT(action_after_file_open, ACTION_AFTER_OPEN_NOTHING),
+    CONF_BOOL(exit_on_escape, false),
+    CONF_BOOL(show_indexing_status, true),
+    CONF_BOOL(show_menubar, true),
+    CONF_BOOL(show_statusbar, true),
+    CONF_BOOL(show_filter, true),
+    CONF_BOOL(show_search_button, false),
+    CONF_BOOL(show_listview_icons, true),
+    CONF_BOOL(show_path_column, true),
+    CONF_BOOL(show_type_column, false),
+    CONF_BOOL(show_extension_column, true),
+    CONF_BOOL(show_size_column, true),
+    CONF_BOOL(show_modified_column, true),
+    CONF_BOOL(sort_ascending, true),
+    CONF_STR(sort_by, "Name"),
+    CONF_INT(name_column_width, 250),
+    CONF_INT(path_column_width, 250),
+    CONF_INT(type_column_width, 100),
+    CONF_INT(extension_column_width, 100),
+    CONF_INT(size_column_width, 75),
+    CONF_INT(modified_column_width, 75),
+    CONF_INT(name_column_pos, 0),
+    CONF_INT(path_column_pos, 1),
+    CONF_INT(type_column_pos, 2),
+    CONF_INT(size_column_pos, 3),
+    CONF_INT(modified_column_pos, 4),
+};
+
+static const FsearchKeyData DIALOG_SECTION[] = {
+    CONF_BOOL(show_dialog_failed_opening, true),
+};
+
+typedef struct {
+    char *name;
+    char *query;
+    char *macro;
+    bool match_case;
+    bool search_in_path;
+    bool enable_regex;
+} FsearchConfigFilterKeys;
+
+static const FsearchKeyData FILTER_KEYS[] = {
+    CONF_STR_OF(FsearchConfigFilterKeys, name, NULL),
+    CONF_STR_OF(FsearchConfigFilterKeys, query, NULL),
+    CONF_STR_OF(FsearchConfigFilterKeys, macro, NULL),
+    CONF_BOOL_OF(FsearchConfigFilterKeys, match_case, false),
+    CONF_BOOL_OF(FsearchConfigFilterKeys, search_in_path, false),
+    CONF_BOOL_OF(FsearchConfigFilterKeys, enable_regex, false),
+};
+
+typedef struct {
+    char *path;
+    bool active;
+    bool one_file_system;
+    bool monitor;
+    bool scan_after_launch;
+    int64_t rescan_after;
+} FsearchConfigIncludeKeys;
+
+static const FsearchKeyData INCLUDE_KEYS[] = {
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, active, false),
+    CONF_STR_OF(FsearchConfigIncludeKeys, path, NULL),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, one_file_system, false),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, monitor, false),
+    CONF_BOOL_OF(FsearchConfigIncludeKeys, scan_after_launch, false),
+    CONF_INT64_OF(FsearchConfigIncludeKeys, rescan_after, 0),
+};
+
+typedef struct {
+    char *type;
+    char *pattern;
+    char *match_scope;
+    char *target;
+    bool active;
+} FsearchConfigExcludeKeys;
+
+static const FsearchKeyData EXCLUDE_KEYS[] = {
+    CONF_BOOL_OF(FsearchConfigExcludeKeys, active, false),
+    CONF_STR_OF(FsearchConfigExcludeKeys, type, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, pattern, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, match_scope, NULL),
+    CONF_STR_OF(FsearchConfigExcludeKeys, target, NULL),
+};
+
+static const char *config_file_name = "fsearch.conf";
+static const char *config_folder_name = "fsearch";
 
 void
 config_build_dir(char *path, size_t len) {
@@ -38,7 +208,6 @@ config_build_dir(char *path, size_t len) {
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s", xdg_conf_dir, config_folder_name);
-    return;
 }
 
 static void
@@ -47,7 +216,6 @@ config_build_path(char *path, size_t len) {
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s/%s", xdg_conf_dir, config_folder_name, config_file_name);
-    return;
 }
 
 bool
@@ -58,54 +226,175 @@ config_make_dir(void) {
 }
 
 static void
-config_load_handle_error(GError *error) {
-    g_return_if_fail(error);
-
-    switch (error->code) {
-    case G_KEY_FILE_ERROR_INVALID_VALUE:
-        fprintf(stderr, "load_config: invalid value: %s\n", error->message);
+config_save_key(GKeyFile *key_file,
+                const char *key_section,
+                const char *key_name,
+                const FsearchKeyData *key_data,
+                void *key_obj) {
+    void *ptr = (char *)key_obj + key_data->struct_offset;
+    switch (key_data->type) {
+    case TYPE_INT:
+        g_key_file_set_integer(key_file, key_section, key_name, *(int *)ptr);
         break;
-    case G_KEY_FILE_ERROR_KEY_NOT_FOUND:
-    case G_KEY_FILE_ERROR_GROUP_NOT_FOUND:
-        // new config, use default value and don't report anything
+    case TYPE_INT64:
+        g_key_file_set_int64(key_file, key_section, key_name, *(int *)ptr);
+        break;
+    case TYPE_STRING: {
+        const char *str = *(const char **)ptr;
+        if (str)
+            g_key_file_set_string(key_file, key_section, key_name, str);
+        break;
+    }
+    case TYPE_BOOL:
+        g_key_file_set_boolean(key_file, key_section, key_name, *(bool *)ptr);
         break;
     default:
-        fprintf(stderr, "load_config: unknown error: %s\n", error->message);
+        g_assert_not_reached();
     }
-    g_clear_pointer(&error, g_error_free);
 }
 
-static uint32_t
-config_load_integer(GKeyFile *key_file, const char *group_name, const char *key, uint32_t default_value) {
-    GError *error = NULL;
-    uint32_t result = g_key_file_get_integer(key_file, group_name, key, &error);
-    if (error != NULL) {
-        result = default_value;
-        config_load_handle_error(error);
+static void
+config_load_key(GKeyFile *key_file,
+                const char *key_section,
+                const char *key_name,
+                const FsearchKeyData *key_data,
+                void *key_obj) {
+    void *ptr = (char *)key_obj + key_data->struct_offset;
+    g_autoptr(GError) error = NULL;
+    switch (key_data->type) {
+    case TYPE_INT:
+        *(int *)ptr = g_key_file_get_integer(key_file, key_section, key_name, &error);
+        if (error) {
+            *(int *)ptr = key_data->default_val.i;
+        }
+        break;
+    case TYPE_INT64:
+        *(int *)ptr = g_key_file_get_int64(key_file, key_section, key_name, &error);
+        if (error) {
+            *(int *)ptr = key_data->default_val.i64;
+        }
+        break;
+    case TYPE_STRING: {
+        char **str_ptr = (char **)ptr;
+        g_free(*str_ptr);
+        *str_ptr = g_key_file_get_string(key_file, key_section, key_name, &error);
+        if (error) {
+            *str_ptr = g_strdup(key_data->default_val.s);
+        }
+        break;
     }
-    return result;
+    case TYPE_BOOL:
+        *(bool *)ptr = g_key_file_get_boolean(key_file, key_section, key_name, &error);
+        if (error) {
+            *(bool *)ptr = key_data->default_val.b;
+        }
+        break;
+    default:
+        g_assert_not_reached();
+    }
 }
 
-static bool
-config_load_boolean(GKeyFile *key_file, const char *group_name, const char *key, bool default_value) {
-    GError *error = NULL;
-    bool result = g_key_file_get_boolean(key_file, group_name, key, &error);
-    if (error != NULL) {
-        result = default_value;
-        config_load_handle_error(error);
-    }
-    return result;
+static void
+config_save_object_key(GKeyFile *key_file,
+                       const char *key_section,
+                       const char *key_prefix,
+                       uint32_t key_idx,
+                       const FsearchKeyData *key_data,
+                       void *key_obj) {
+    g_autoptr(GString) key_name = g_string_sized_new(32);
+    g_string_printf(key_name, "%s_%d_%s", key_prefix, key_idx + 1, key_data->key_name);
+
+    config_save_key(key_file, key_section, key_name->str, key_data, key_obj);
 }
 
-static char *
-config_load_string(GKeyFile *key_file, const char *group_name, const char *key, const char *default_value) {
-    GError *error = NULL;
-    char *result = g_key_file_get_string(key_file, group_name, key, &error);
-    if (error != NULL) {
-        result = g_strdup(default_value);
-        config_load_handle_error(error);
+static void
+config_load_object_key(GKeyFile *key_file,
+                       const char *key_section,
+                       const char *key_prefix,
+                       uint32_t key_idx,
+                       const FsearchKeyData *key_data,
+                       void *key_obj) {
+    g_autoptr(GString) key_name = g_string_sized_new(32);
+    g_string_printf(key_name, "%s_%d_%s", key_prefix, key_idx + 1, key_data->key_name);
+
+    config_load_key(key_file, key_section, key_name->str, key_data, key_obj);
+}
+
+static void
+config_save_object(GKeyFile *key_file,
+                   const char *object_section,
+                   const char *object_prefix,
+                   uint32_t object_idx,
+                   const FsearchKeyData *object_keys,
+                   size_t num_object_keys,
+                   void *object) {
+    for (uint32_t i = 0; i < num_object_keys; i++) {
+        config_save_object_key(key_file, object_section, object_prefix, object_idx, &object_keys[i], object);
     }
-    return result;
+}
+
+static void
+config_load_object(GKeyFile *key_file,
+                   const char *object_section,
+                   const char *object_prefix,
+                   uint32_t object_idx,
+                   const FsearchKeyData *object_keys,
+                   size_t num_object_keys,
+                   void *object) {
+    for (uint32_t i = 0; i < num_object_keys; i++) {
+        config_load_object_key(key_file, object_section, object_prefix, object_idx, &object_keys[i], object);
+    }
+}
+
+static void
+config_save_section(GKeyFile *key_file,
+                    const char *key_section,
+                    const FsearchKeyData *keys,
+                    size_t num_keys,
+                    FsearchConfig *config) {
+    for (size_t i = 0; i < num_keys; i++) {
+        config_save_key(key_file, key_section, keys[i].key_name, &keys[i], config);
+    }
+}
+
+static void
+config_load_section(GKeyFile *key_file,
+                    const char *key_section,
+                    const FsearchKeyData *keys,
+                    size_t num_keys,
+                    FsearchConfig *config) {
+    for (size_t i = 0; i < num_keys; i++) {
+        config_load_key(key_file, key_section, keys[i].key_name, &keys[i], config);
+    }
+}
+
+static void
+config_get_section_default(const FsearchKeyData *keys, size_t num_keys, FsearchConfig *config) {
+    for (size_t i = 0; i < num_keys; i++) {
+        void *ptr = (char *)config + keys[i].struct_offset;
+
+        switch (keys[i].type) {
+        case TYPE_INT:
+            *(int *)ptr = keys[i].default_val.i;
+            break;
+        case TYPE_INT64:
+            *(int *)ptr = keys[i].default_val.i64;
+            break;
+        case TYPE_STRING: {
+            char **str_ptr = (char **)ptr;
+            if (*str_ptr) {
+                g_free(*str_ptr);
+            }
+            *str_ptr = g_strdup(keys[i].default_val.s);
+            break;
+        }
+        case TYPE_BOOL:
+            *(bool *)ptr = keys[i].default_val.b;
+            break;
+        default:
+            g_assert_not_reached();
+        }
+    }
 }
 
 static FsearchFilterManager *
@@ -114,92 +403,198 @@ config_load_filters(GKeyFile *key_file) {
         return fsearch_filter_manager_new_with_defaults();
     }
 
-    uint32_t pos = 1;
     FsearchFilterManager *filters = fsearch_filter_manager_new();
-    while (true) {
-        char key[100] = "";
-        snprintf(key, sizeof(key), "filter_%d_name", pos);
-        g_autofree char *name = config_load_string(key_file, "Filters", key, NULL);
-        snprintf(key, sizeof(key), "filter_%d_query", pos);
-        g_autofree char *query = config_load_string(key_file, "Filters", key, NULL);
-        snprintf(key, sizeof(key), "filter_%d_macro", pos);
-        g_autofree char *macro = config_load_string(key_file, "Filters", key, NULL);
-        snprintf(key, sizeof(key), "filter_%d_match_case", pos);
-        bool match_case = config_load_boolean(key_file, "Filters", key, 0);
-        snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
-        bool search_in_path = config_load_boolean(key_file, "Filters", key, true);
-        snprintf(key, sizeof(key), "filter_%d_enable_regex", pos);
-        bool enable_regex = config_load_boolean(key_file, "Filters", key, false);
+
+    for (uint32_t i = 0;; i++) {
+        FsearchConfigFilterKeys filter_keys = {};
+
+        CONFIG_LOAD_OBJECT_KEYS(key_file, "Filters", "filter", i, FILTER_KEYS, &filter_keys);
+
+        if (!filter_keys.name || fsearch_string_is_empty(filter_keys.name)) {
+            break;
+        }
 
         FsearchQueryFlags flags = 0;
-        if (match_case) {
+        if (filter_keys.match_case) {
             flags |= QUERY_FLAG_MATCH_CASE;
         }
-        if (search_in_path) {
+        if (filter_keys.search_in_path) {
             flags |= QUERY_FLAG_SEARCH_IN_PATH;
         }
-        if (enable_regex) {
+        if (filter_keys.enable_regex) {
             flags |= QUERY_FLAG_REGEX;
         }
 
-        if (!name) {
-            break;
-        }
-        FsearchFilter *f = fsearch_filter_new(name, macro, query, flags);
+        FsearchFilter *f = fsearch_filter_new(filter_keys.name, filter_keys.macro, filter_keys.query, flags);
         fsearch_filter_manager_append_filter(filters, f);
         g_clear_pointer(&f, fsearch_filter_unref);
 
-        pos++;
+        g_clear_pointer(&filter_keys.name, g_free);
+        g_clear_pointer(&filter_keys.macro, g_free);
+        g_clear_pointer(&filter_keys.query, g_free);
     }
     return filters;
 }
 
-static GList *
-config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
-    uint32_t pos = 1;
-    while (true) {
-        char key[100] = "";
-        snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_autofree char *path = config_load_string(key_file, "Database", key, NULL);
-        snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        bool enabled = config_load_boolean(key_file, "Database", key, true);
-        snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
-        bool update = config_load_boolean(key_file, "Database", key, true);
-        snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
-        bool one_filesystem = config_load_boolean(key_file, "Database", key, false);
+static FsearchDatabaseIncludeManager *
+config_load_includes(GKeyFile *key_file) {
+    if (!g_key_file_has_group(key_file, "Database")) {
+        return fsearch_database_include_manager_new_with_defaults();
+    }
 
-        pos++;
-        if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
-            indexes = g_list_append(indexes, index);
-        }
-        else {
+    FsearchDatabaseIncludeManager *include_manager = fsearch_database_include_manager_new();
+
+    for (uint32_t i = 0;; i++) {
+        FsearchConfigIncludeKeys include_keys = {};
+
+        CONFIG_LOAD_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
+
+        if (!include_keys.path || fsearch_string_is_empty(include_keys.path)) {
             break;
         }
+
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(include_keys.path,
+                                                                                 include_keys.active,
+                                                                                 include_keys.one_file_system,
+                                                                                 include_keys.monitor,
+                                                                                 include_keys.scan_after_launch,
+                                                                                 include_keys.rescan_after);
+        fsearch_database_include_manager_add(include_manager, include);
+
+        g_clear_pointer(&include_keys.path, g_free);
     }
-    return indexes;
+    return include_manager;
 }
 
-static GList *
-config_load_exclude_locations(GKeyFile *key_file, GList *locations, const char *prefix) {
-    uint32_t pos = 1;
-    while (true) {
-        char key[100] = "";
-        snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_autofree char *path = config_load_string(key_file, "Database", key, NULL);
-        snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        bool enabled = config_load_boolean(key_file, "Database", key, true);
+static FsearchDatabaseExcludeManager *
+config_load_excludes(GKeyFile *key_file) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
+        return fsearch_database_exclude_manager_new_with_defaults();
+    }
 
-        pos++;
-        if (path) {
-            FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, enabled);
-            locations = g_list_append(locations, fs_path);
-        }
-        else {
+    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_exclude_manager_new();
+
+    for (uint32_t i = 0;; i++) {
+        FsearchConfigExcludeKeys exclude_keys = {};
+
+        CONFIG_LOAD_OBJECT_KEYS(key_file, group, "exclude", i, EXCLUDE_KEYS, &exclude_keys);
+
+        if (!exclude_keys.type || fsearch_string_is_empty(exclude_keys.type)) {
             break;
         }
+
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(
+            exclude_keys.pattern,
+            exclude_keys.active,
+            fsearch_database_exclude_get_type_from_string(exclude_keys.type),
+            fsearch_database_exclude_get_match_scope_from_string(exclude_keys.match_scope),
+            fsearch_database_exclude_get_target_from_string(exclude_keys.target));
+        fsearch_database_exclude_manager_add(exclude_manager, exclude);
+
+        g_clear_pointer(&exclude_keys.type, g_free);
+        g_clear_pointer(&exclude_keys.pattern, g_free);
+        g_clear_pointer(&exclude_keys.match_scope, g_free);
+        g_clear_pointer(&exclude_keys.target, g_free);
     }
-    return locations;
+
+    fsearch_database_exclude_manager_set_exclude_hidden(
+        exclude_manager,
+        g_key_file_get_boolean(key_file, group, "exclude_hidden_files_and_folders", NULL));
+
+    return exclude_manager;
+}
+
+// Legacy config handlers to support loading includes and excludes from config files created with 0.2 and earlier
+
+static FsearchDatabaseIncludeManager *
+config_load_legacy_includes(GKeyFile *key_file) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
+        return fsearch_database_include_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseIncludeManager *include_manager = fsearch_database_include_manager_new();
+    g_autoptr(GString) key = g_string_new(NULL);
+    const char *prefix = "location";
+    uint32_t pos = 0;
+    while (true) {
+        pos++;
+        g_string_printf(key, "%s_%d", prefix, pos);
+        g_autofree char *path = g_key_file_get_string(key_file, group, key->str, NULL);
+        if (!path) {
+            break;
+        }
+        g_string_printf(key, "%s_enabled_%d", prefix, pos);
+        const gboolean enabled = g_key_file_get_boolean(key_file, group, key->str, NULL);
+        g_string_printf(key, "%s_one_filesystem_%d", prefix, pos);
+        const gboolean one_filesystem = g_key_file_get_boolean(key_file, group, key->str, NULL);
+
+        fsearch_database_include_manager_add(include_manager,
+                                             fsearch_database_include_new(path, enabled, one_filesystem, FALSE, FALSE, 0));
+    }
+
+    return include_manager;
+}
+
+static FsearchDatabaseExcludeManager *
+config_load_legacy_excludes(GKeyFile *key_file) {
+    const char *group = "Database";
+    if (!g_key_file_has_group(key_file, group)) {
+        return fsearch_database_exclude_manager_new_with_defaults();
+    }
+
+    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_exclude_manager_new();
+    g_autoptr(GString) key = g_string_new(NULL);
+    const char *prefix = "exclude_location";
+    uint32_t pos = 0;
+    while (true) {
+        pos++;
+        g_string_printf(key, "%s_%d", prefix, pos);
+        g_autofree char *path = g_key_file_get_string(key_file, group, key->str, NULL);
+        if (!path) {
+            break;
+        }
+        g_string_printf(key, "%s_enabled_%d", prefix, pos);
+        bool enabled = g_key_file_get_boolean(key_file, group, key->str, NULL);
+
+        fsearch_database_exclude_manager_add(exclude_manager,
+                                             fsearch_database_exclude_new(path,
+                                                                          enabled,
+                                                                          FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                                                                          FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                                                                          FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS));
+    }
+
+    g_autofree char *exclude_files_str = g_key_file_get_string(key_file, group, "exclude_files", NULL);
+    if (exclude_files_str) {
+        g_auto(GStrv) exclude_files = g_strsplit(exclude_files_str, ";", -1);
+        for (gchar **ptr = exclude_files; *ptr != NULL; ptr++) {
+            const gchar *current_file = *ptr;
+            fsearch_database_exclude_manager_add(exclude_manager,
+                                                 fsearch_database_exclude_new(current_file,
+                                                                              TRUE,
+                                                                              FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                                                                              FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME,
+                                                                              FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH));
+        }
+    }
+
+    fsearch_database_exclude_manager_set_exclude_hidden(
+        exclude_manager,
+        g_key_file_get_boolean(key_file, group, "exclude_hidden_files_and_folders", NULL));
+
+    return exclude_manager;
+}
+
+static bool
+config_has_legacy_includes(GKeyFile *key_file) {
+    return g_key_file_has_key(key_file, "Database", "location_1", NULL);
+}
+
+static bool
+config_has_legacy_excludes(GKeyFile *key_file) {
+    return g_key_file_has_key(key_file, "Database", "exclude_location_1", NULL);
 }
 
 bool
@@ -211,7 +606,6 @@ config_load(FsearchConfig *config) {
     g_assert(key_file);
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
@@ -222,49 +616,19 @@ config_load(FsearchConfig *config) {
     if (g_key_file_load_from_file(key_file, config_path, G_KEY_FILE_NONE, &error)) {
         g_debug("[config] loading...");
         // Interface
-        config->highlight_search_terms = config_load_boolean(key_file, "Interface", "highlight_search_terms", true);
-        config->single_click_open = config_load_boolean(key_file, "Interface", "single_click_open", false);
-        config->launch_desktop_files = config_load_boolean(key_file, "Interface", "launch_desktop_files", true);
-        config->restore_sort_order = config_load_boolean(key_file, "Interface", "restore_sort_order", true);
-        config->restore_column_config = config_load_boolean(key_file, "Interface", "restore_column_configuration", true);
-        config->double_click_path = config_load_boolean(key_file, "Interface", "double_click_path", false);
-        config->enable_list_tooltips = config_load_boolean(key_file, "Interface", "enable_list_tooltips", true);
-        config->enable_dark_theme = config_load_boolean(key_file, "Interface", "enable_dark_theme", false);
-        config->show_menubar = config_load_boolean(key_file, "Interface", "show_menubar", true);
-        config->show_statusbar = config_load_boolean(key_file, "Interface", "show_statusbar", true);
-        config->show_filter = config_load_boolean(key_file, "Interface", "show_filter", true);
-        config->show_search_button = config_load_boolean(key_file, "Interface", "show_search_button", false);
-        config->show_base_2_units = config_load_boolean(key_file, "Interface", "show_base_2_units", false);
-        config->action_after_file_open =
-            config_load_integer(key_file, "Interface", "action_after_file_open", ACTION_AFTER_OPEN_NOTHING);
-        config->action_after_file_open_keyboard =
-            config_load_boolean(key_file, "Interface", "action_after_file_open_keyboard", false);
-        config->action_after_file_open_mouse =
-            config_load_boolean(key_file, "Interface", "action_after_file_open_mouse", false);
-        config->exit_on_escape = config_load_boolean(key_file, "Interface", "exit_on_escape", false);
-        config->show_indexing_status = config_load_boolean(key_file, "Interface", "show_indexing_status", true);
+        CONFIG_LOAD_SECTION(key_file, "Interface", INTERFACE_SECTION, config);
 
         // Warning Dialogs
-        config->show_dialog_failed_opening = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
+        CONFIG_LOAD_SECTION(key_file, "Dialogs", DIALOG_SECTION, config);
 
         // Applications
-        config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
+        CONFIG_LOAD_SECTION(key_file, "Applications", APPLICATIONS_SECTION, config);
 
         // Window
-        config->restore_window_size = config_load_boolean(key_file, "Interface", "restore_window_size", false);
-        config->window_width = config_load_integer(key_file, "Interface", "window_width", 850);
-        config->window_height = config_load_integer(key_file, "Interface", "window_height", 600);
+        CONFIG_LOAD_SECTION(key_file, "Interface", WINDOW_SECTION, config);
 
         // Columns
-        if (config->restore_column_config) {
-            config->show_listview_icons = config_load_boolean(key_file, "Interface", "show_listview_icons", true);
-            config->show_path_column = config_load_boolean(key_file, "Interface", "show_path_column", true);
-            config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", false);
-            config->show_extension_column = config_load_boolean(key_file, "Interface", "show_extension_column", true);
-            config->show_size_column = config_load_boolean(key_file, "Interface", "show_size_column", true);
-            config->show_modified_column = config_load_boolean(key_file, "Interface", "show_modified_column", true);
-        }
-        else {
+        if (!config->restore_column_config) {
             config->show_listview_icons = true;
             config->show_path_column = true;
             config->show_type_column = false;
@@ -273,53 +637,25 @@ config_load(FsearchConfig *config) {
             config->show_modified_column = true;
         }
 
-        // Column Sort
-        config->sort_ascending = config_load_boolean(key_file, "Interface", "sort_ascending", true);
-        config->sort_by = config_load_string(key_file, "Interface", "sort_by", "Name");
-
-        // Column Size
-        config->name_column_width = config_load_integer(key_file, "Interface", "name_column_width", 250);
-        config->path_column_width = config_load_integer(key_file, "Interface", "path_column_width", 250);
-        config->extension_column_width = config_load_integer(key_file, "Interface", "extension_column_width", 100);
-        config->type_column_width = config_load_integer(key_file, "Interface", "type_column_width", 100);
-        config->size_column_width = config_load_integer(key_file, "Interface", "size_column_width", 75);
-        config->modified_column_width = config_load_integer(key_file, "Interface", "modified_column_width", 75);
-
-        // Column position
-        config->name_column_pos = config_load_integer(key_file, "Interface", "name_column_pos", 0);
-        config->path_column_pos = config_load_integer(key_file, "Interface", "path_column_pos", 1);
-        config->type_column_pos = config_load_integer(key_file, "Interface", "type_column_pos", 2);
-        config->size_column_pos = config_load_integer(key_file, "Interface", "size_column_pos", 3);
-        config->modified_column_pos = config_load_integer(key_file, "Interface", "modified_column_pos", 4);
-
         // Search
-        config->search_as_you_type = config_load_boolean(key_file, "Search", "search_as_you_type", true);
-        config->auto_match_case = config_load_boolean(key_file, "Search", "auto_match_case", true);
-        config->auto_search_in_path = config_load_boolean(key_file, "Search", "auto_search_in_path", true);
-        config->match_case = config_load_boolean(key_file, "Search", "match_case", false);
-        config->enable_regex = config_load_boolean(key_file, "Search", "enable_regex", false);
-        config->search_in_path = config_load_boolean(key_file, "Search", "search_in_path", false);
-        config->hide_results_on_empty_search =
-            config_load_boolean(key_file, "Search", "hide_results_on_empty_search", false);
+        CONFIG_LOAD_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
-        // Database
-        config->update_database_on_launch = config_load_boolean(key_file, "Database", "update_database_on_launch", true);
-        config->update_database_every = config_load_boolean(key_file, "Database", "update_database_every", false);
-        config->update_database_every_hours = config_load_integer(key_file, "Database", "update_database_every_hours", 0);
-        config->update_database_every_minutes =
-            config_load_integer(key_file, "Database", "update_database_every_minutes", 15);
-        config->exclude_hidden_items =
-            config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
-        config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
-
-        g_autofree char *exclude_files_str = config_load_string(key_file, "Database", "exclude_files", NULL);
-        if (exclude_files_str) {
-            config->exclude_files = g_strsplit(exclude_files_str, ";", -1);
+        // Includes
+        if (config_has_legacy_includes(key_file)) {
+            config->includes = config_load_legacy_includes(key_file);
+        }
+        else {
+            config->includes = config_load_includes(key_file);
+        }
+        // Excludes
+        if (config_has_legacy_excludes(key_file)) {
+            config->excludes = config_load_legacy_excludes(key_file);
+        }
+        else {
+            config->excludes = config_load_excludes(key_file);
         }
 
-        config->indexes = config_load_indexes(key_file, config->indexes, "location");
-        config->exclude_locations = config_load_exclude_locations(key_file, config->exclude_locations, "exclude_location");
-
+        // Filters
         config->filters = config_load_filters(key_file);
 
         result = true;
@@ -340,82 +676,15 @@ bool
 config_load_default(FsearchConfig *config) {
     g_assert(config);
 
-    // Search
-    config->auto_search_in_path = true;
-    config->auto_match_case = true;
-    config->search_as_you_type = true;
-    config->match_case = false;
-    config->enable_regex = false;
-    config->search_in_path = false;
-    config->hide_results_on_empty_search = false;
+    CONFIG_DEFAULT_SECTION(INTERFACE_SECTION, config);
+    CONFIG_DEFAULT_SECTION(WINDOW_SECTION, config);
+    CONFIG_DEFAULT_SECTION(DIALOG_SECTION, config);
+    CONFIG_DEFAULT_SECTION(APPLICATIONS_SECTION, config);
+    CONFIG_DEFAULT_SECTION(SEARCH_SECTION, config);
 
-    // Interface
-    config->single_click_open = false;
-    config->launch_desktop_files = true;
-    config->highlight_search_terms = true;
-    config->enable_dark_theme = false;
-    config->enable_list_tooltips = true;
-    config->restore_column_config = true;
-    config->restore_sort_order = true;
-    config->double_click_path = false;
-    config->show_menubar = true;
-    config->show_statusbar = true;
-    config->show_filter = true;
-    config->show_search_button = false;
-    config->show_base_2_units = false;
-    config->action_after_file_open = ACTION_AFTER_OPEN_NOTHING;
-    config->action_after_file_open_keyboard = false;
-    config->action_after_file_open_mouse = false;
-    config->exit_on_escape = false;
-    config->show_indexing_status = true;
-
-    // Columns
-    config->show_listview_icons = true;
-    config->show_path_column = true;
-    config->show_type_column = false;
-    config->show_extension_column = false;
-    config->show_size_column = true;
-    config->show_modified_column = true;
-
-    config->sort_by = NULL;
-    config->sort_ascending = true;
-
-    config->name_column_pos = 0;
-    config->path_column_pos = 1;
-    config->type_column_pos = 2;
-    config->size_column_pos = 3;
-    config->modified_column_pos = 4;
-
-    config->name_column_width = 250;
-    config->path_column_width = 250;
-    config->extension_column_width = 100;
-    config->type_column_width = 100;
-    config->size_column_width = 75;
-    config->modified_column_width = 125;
-
-    // Warning Dialogs
-    config->show_dialog_failed_opening = true;
-
-    // Window
-    config->restore_window_size = false;
-    config->window_width = 850;
-    config->window_height = 600;
-
-    // Database
-    config->update_database_on_launch = true;
-    config->update_database_every = false;
-    config->update_database_every_hours = 0;
-    config->update_database_every_minutes = 15;
-    config->exclude_hidden_items = false;
-    config->follow_symlinks = false;
-
-    // Locations
-    config->indexes = NULL;
-    FsearchExcludePath *exclude_proc = fsearch_exclude_path_new("/proc", true);
-    FsearchExcludePath *exclude_sys = fsearch_exclude_path_new("/sys", true);
-    config->exclude_locations = g_list_append(config->exclude_locations, exclude_proc);
-    config->exclude_locations = g_list_append(config->exclude_locations, exclude_sys);
     config->filters = fsearch_filter_manager_new_with_defaults();
+    config->includes = fsearch_database_include_manager_new_with_defaults();
+    config->excludes = fsearch_database_exclude_manager_new_with_defaults();
 
     return true;
 }
@@ -432,82 +701,70 @@ config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
             g_assert_not_reached();
         }
 
-        const uint32_t pos = i + 1;
-        char key[100] = "";
-        snprintf(key, sizeof(key), "filter_%d_name", pos);
-        g_key_file_set_string(key_file, "Filters", key, filter->name);
+        FsearchConfigFilterKeys filter_keys = {.name = filter->name,
+                                               .query = filter->query,
+                                               .macro = filter->macro,
+                                               .match_case = filter->flags & QUERY_FLAG_MATCH_CASE ? true : false,
+                                               .search_in_path = filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? true : false,
+                                               .enable_regex = filter->flags & QUERY_FLAG_REGEX ? true : false};
 
-        snprintf(key, sizeof(key), "filter_%d_macro", pos);
-        g_key_file_set_string(key_file, "Filters", key, filter->macro);
-
-        snprintf(key, sizeof(key), "filter_%d_query", pos);
-        g_key_file_set_string(key_file, "Filters", key, filter->query);
-
-        snprintf(key, sizeof(key), "filter_%d_match_case", pos);
-        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_MATCH_CASE ? true : false);
-
-        snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
-        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? true : false);
-
-        snprintf(key, sizeof(key), "filter_%d_enable_regex", pos);
-        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_REGEX ? true : false);
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "Filters", "filter", i, FILTER_KEYS, &filter_keys);
 
         g_clear_pointer(&filter, fsearch_filter_unref);
     }
 }
 
 static void
-config_save_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
-    if (!indexes) {
+config_save_includes(GKeyFile *key_file, FsearchDatabaseIncludeManager *include_manager) {
+    if (!include_manager) {
         return;
     }
 
-    uint32_t pos = 1;
-    for (GList *l = indexes; l != NULL; l = l->next) {
-        FsearchIndex *index = l->data;
-        if (!index) {
-            continue;
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
+    for (uint32_t i = 0; i < includes->len; ++i) {
+        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+        if (!include) {
+            g_assert_not_reached();
         }
 
-        char key[100] = "";
-        snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_key_file_set_string(key_file, "Database", key, index->path);
+        FsearchConfigIncludeKeys include_keys = {.path = (char *)fsearch_database_include_get_path(include),
+                                                 .monitor = fsearch_database_include_get_monitored(include),
+                                                 .active = fsearch_database_include_get_active(include),
+                                                 .one_file_system = fsearch_database_include_get_one_file_system(include),
+                                                 .scan_after_launch = fsearch_database_include_get_scan_after_launch(
+                                                     include),
+                                                 .rescan_after = fsearch_database_include_get_rescan_after(include)};
 
-        snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, index->enabled);
-
-        snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, index->update);
-
-        snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, index->one_filesystem);
-
-        pos++;
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "folder", i, INCLUDE_KEYS, &include_keys);
     }
 }
 
 static void
-config_save_exclude_locations(GKeyFile *key_file, GList *locations, const char *prefix) {
-    if (!locations) {
+config_save_excludes(GKeyFile *key_file, FsearchDatabaseExcludeManager *exclude_manager) {
+    if (!exclude_manager) {
         return;
     }
-
-    uint32_t pos = 1;
-    for (GList *l = locations; l != NULL; l = l->next) {
-        FsearchExcludePath *index = l->data;
-        if (!index) {
-            continue;
+    g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
+    for (uint32_t i = 0; i < excludes->len; ++i) {
+        FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
+        if (!exclude) {
+            g_assert_not_reached();
         }
-
-        char key[100] = "";
-        snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_key_file_set_string(key_file, "Database", key, index->path);
-
-        snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, index->enabled);
-
-        pos++;
+        FsearchConfigExcludeKeys exclude_keys = {
+            .pattern = (char *)fsearch_database_exclude_get_pattern(exclude),
+            .active = fsearch_database_exclude_get_active(exclude),
+            .type = (char *)fsearch_database_exclude_type_to_string(fsearch_database_exclude_get_exclude_type(exclude)),
+            .match_scope = (char *)fsearch_database_exclude_match_scope_to_string(
+                fsearch_database_exclude_get_match_scope(exclude)),
+            .target = (char *)fsearch_database_exclude_target_to_string(fsearch_database_exclude_get_target(exclude)),
+        };
+        CONFIG_SAVE_OBJECT_KEYS(key_file, "Database", "exclude", i, EXCLUDE_KEYS, &exclude_keys);
     }
+
+    g_key_file_set_boolean(key_file,
+                           "Database",
+                           "exclude_hidden_files_and_folders",
+                           fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager));
 }
 
 bool
@@ -519,100 +776,29 @@ config_save(FsearchConfig *config) {
     g_assert(key_file);
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     g_debug("[config] saving...");
 
     // Interface
-    g_key_file_set_boolean(key_file, "Interface", "single_click_open", config->single_click_open);
-    g_key_file_set_boolean(key_file, "Interface", "launch_desktop_files", config->launch_desktop_files);
-    g_key_file_set_boolean(key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
-    g_key_file_set_boolean(key_file, "Interface", "restore_column_configuration", config->restore_column_config);
-    g_key_file_set_boolean(key_file, "Interface", "restore_sort_order", config->restore_sort_order);
-    g_key_file_set_boolean(key_file, "Interface", "double_click_path", config->double_click_path);
-    g_key_file_set_boolean(key_file, "Interface", "enable_list_tooltips", config->enable_list_tooltips);
-    g_key_file_set_boolean(key_file, "Interface", "enable_dark_theme", config->enable_dark_theme);
-    g_key_file_set_boolean(key_file, "Interface", "show_menubar", config->show_menubar);
-    g_key_file_set_boolean(key_file, "Interface", "show_statusbar", config->show_statusbar);
-    g_key_file_set_boolean(key_file, "Interface", "show_filter", config->show_filter);
-    g_key_file_set_boolean(key_file, "Interface", "show_search_button", config->show_search_button);
-    g_key_file_set_boolean(key_file, "Interface", "show_base_2_units", config->show_base_2_units);
-    g_key_file_set_integer(key_file, "Interface", "action_after_file_open", config->action_after_file_open);
-    g_key_file_set_boolean(key_file,
-                           "Interface",
-                           "action_after_file_open_keyboard",
-                           config->action_after_file_open_keyboard);
-    g_key_file_set_boolean(key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
-    g_key_file_set_boolean(key_file, "Interface", "exit_on_escape", config->exit_on_escape);
-    g_key_file_set_boolean(key_file, "Interface", "show_indexing_status", config->show_indexing_status);
-
+    CONFIG_SAVE_SECTION(key_file, "Interface", INTERFACE_SECTION, config);
+    CONFIG_SAVE_SECTION(key_file, "Interface", WINDOW_SECTION, config);
     // Warning Dialogs
-    g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
-
-    // Window
-    g_key_file_set_boolean(key_file, "Interface", "restore_window_size", config->restore_window_size);
-    g_key_file_set_integer(key_file, "Interface", "window_width", config->window_width);
-    g_key_file_set_integer(key_file, "Interface", "window_height", config->window_height);
-
-    // Columns visibility
-    g_key_file_set_boolean(key_file, "Interface", "show_listview_icons", config->show_listview_icons);
-    g_key_file_set_boolean(key_file, "Interface", "show_path_column", config->show_path_column);
-    g_key_file_set_boolean(key_file, "Interface", "show_type_column", config->show_type_column);
-    g_key_file_set_boolean(key_file, "Interface", "show_extension_column", config->show_extension_column);
-    g_key_file_set_boolean(key_file, "Interface", "show_size_column", config->show_size_column);
-    g_key_file_set_boolean(key_file, "Interface", "show_modified_column", config->show_modified_column);
-
-    g_key_file_set_boolean(key_file, "Interface", "sort_ascending", config->sort_ascending);
-    if (config->sort_by) {
-        g_key_file_set_string(key_file, "Interface", "sort_by", config->sort_by);
-    }
-
-    // Column width
-    g_key_file_set_integer(key_file, "Interface", "name_column_width", config->name_column_width);
-    g_key_file_set_integer(key_file, "Interface", "path_column_width", config->path_column_width);
-    g_key_file_set_integer(key_file, "Interface", "extension_column_width", config->extension_column_width);
-    g_key_file_set_integer(key_file, "Interface", "type_column_width", config->type_column_width);
-    g_key_file_set_integer(key_file, "Interface", "size_column_width", config->size_column_width);
-    g_key_file_set_integer(key_file, "Interface", "modified_column_width", config->modified_column_width);
-
-    // Column position
-    g_key_file_set_integer(key_file, "Interface", "name_column_pos", config->name_column_pos);
-    g_key_file_set_integer(key_file, "Interface", "path_column_pos", config->path_column_pos);
-    g_key_file_set_integer(key_file, "Interface", "type_column_pos", config->type_column_pos);
-    g_key_file_set_integer(key_file, "Interface", "size_column_pos", config->size_column_pos);
-    g_key_file_set_integer(key_file, "Interface", "modified_column_pos", config->modified_column_pos);
+    CONFIG_SAVE_SECTION(key_file, "Dialogs", DIALOG_SECTION, config);
 
     // Applications
-    if (config->folder_open_cmd) {
-        g_key_file_set_string(key_file, "Applications", "folder_open_cmd", config->folder_open_cmd);
-    }
+    CONFIG_SAVE_SECTION(key_file, "Applications", APPLICATIONS_SECTION, config);
 
     // Search
-    g_key_file_set_boolean(key_file, "Search", "search_as_you_type", config->search_as_you_type);
-    g_key_file_set_boolean(key_file, "Search", "auto_search_in_path", config->auto_search_in_path);
-    g_key_file_set_boolean(key_file, "Search", "auto_match_case", config->auto_match_case);
-    g_key_file_set_boolean(key_file, "Search", "search_in_path", config->search_in_path);
-    g_key_file_set_boolean(key_file, "Search", "enable_regex", config->enable_regex);
-    g_key_file_set_boolean(key_file, "Search", "match_case", config->match_case);
-    g_key_file_set_boolean(key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
+    CONFIG_SAVE_SECTION(key_file, "Search", SEARCH_SECTION, config);
 
-    // Database
-    g_key_file_set_boolean(key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
-    g_key_file_set_boolean(key_file, "Database", "update_database_every", config->update_database_every);
-    g_key_file_set_integer(key_file, "Database", "update_database_every_hours", config->update_database_every_hours);
-    g_key_file_set_integer(key_file, "Database", "update_database_every_minutes", config->update_database_every_minutes);
-    g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
-    g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
-
+    // Filters
     config_save_filters(key_file, config->filters);
 
-    config_save_indexes(key_file, config->indexes, "location");
-    config_save_exclude_locations(key_file, config->exclude_locations, "exclude_location");
+    // Includes
+    config_save_includes(key_file, config->includes);
 
-    if (config->exclude_files) {
-        g_autofree char *exclude_files_str = g_strjoinv(";", config->exclude_files);
-        g_key_file_set_string(key_file, "Database", "exclude_files", exclude_files_str);
-    }
+    // Excludes
+    config_save_excludes(key_file, config->excludes);
 
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
@@ -635,94 +821,6 @@ config_save(FsearchConfig *config) {
     return result;
 }
 
-static bool
-config_excludes_compare(void *e1, void *e2) {
-    if (!e1 && !e2) {
-        return true;
-    }
-    if (!e1 || !e2) {
-        return false;
-    }
-    FsearchExcludePath *path1 = e1;
-    FsearchExcludePath *path2 = e2;
-
-    if (path1->enabled != path2->enabled) {
-        return false;
-    }
-    if (g_strcmp0(path1->path, path2->path) != 0) {
-        return false;
-    }
-    return true;
-}
-
-static bool
-config_indexes_compare(void *i1, void *i2) {
-    if (!i1 && !i2) {
-        return true;
-    }
-    if (!i1 || !i2) {
-        return false;
-    }
-    FsearchIndex *index1 = i1;
-    FsearchIndex *index2 = i2;
-
-    if (index1->enabled != index2->enabled) {
-        return false;
-    }
-    if (index1->update != index2->update) {
-        return false;
-    }
-    if (index1->one_filesystem != index2->one_filesystem) {
-        return false;
-    }
-    if (g_strcmp0(index1->path, index2->path) != 0) {
-        return false;
-    }
-    return true;
-}
-
-static bool
-config_list_compare(GList *l1, GList *l2, bool (*cmp_func)(void *, void *)) {
-    if (!l1 && !l2) {
-        return true;
-    }
-    if (!l1 || !l2) {
-        return false;
-    }
-    uint32_t len1 = g_list_length(l1);
-    uint32_t len2 = g_list_length(l2);
-    if (len1 != len2) {
-        return false;
-    }
-    for (int i = 0; i < len1; i++) {
-        void *data1 = g_list_nth_data(l1, i);
-        void *data2 = g_list_nth_data(l2, i);
-        if (!data1 || !data2 || !cmp_func(data1, data2)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-#if !GLIB_CHECK_VERSION(2, 60, 0)
-// Copied from glib for backwards compatibility
-static gboolean
-g_strv_equal(const gchar *const *strv1, const gchar *const *strv2) {
-    g_return_val_if_fail(strv1 != NULL, FALSE);
-    g_return_val_if_fail(strv2 != NULL, FALSE);
-
-    if (strv1 == strv2)
-        return TRUE;
-
-    for (; *strv1 != NULL && *strv2 != NULL; strv1++, strv2++) {
-        if (!g_str_equal(*strv1, *strv2))
-            return FALSE;
-    }
-
-    return (*strv1 == NULL && *strv2 == NULL);
-}
-#endif
-
 FsearchConfigCompareResult
 config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     FsearchConfigCompareResult result = {};
@@ -741,21 +839,10 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         result.listview_config_changed = true;
     }
 
-    bool exclude_files_changed = false;
-    if (c1->exclude_files && c2->exclude_files
-        && !g_strv_equal((const gchar *const *)c1->exclude_files, (const gchar *const *)c2->exclude_files)) {
-        exclude_files_changed = true;
-    }
-    else if ((c1->exclude_files && !c2->exclude_files) || (!c1->exclude_files && c2->exclude_files)) {
-        exclude_files_changed = true;
-    }
+    const bool includes_changed = !fsearch_database_include_manager_equal(c1->includes, c2->includes);
+    const bool excludes_changed = !fsearch_database_exclude_manager_equal(c1->excludes, c2->excludes);
 
-    bool indexes_changed = !config_list_compare(c1->indexes, c2->indexes, config_indexes_compare);
-    bool exclude_locations_changed =
-        !config_list_compare(c1->exclude_locations, c2->exclude_locations, config_excludes_compare);
-
-    if (c1->exclude_hidden_items != c2->exclude_hidden_items || exclude_files_changed || exclude_locations_changed
-        || indexes_changed) {
+    if (excludes_changed || includes_changed) {
         result.database_config_changed = true;
     }
 
@@ -775,14 +862,11 @@ config_copy(FsearchConfig *config) {
     if (config->sort_by) {
         copy->sort_by = g_strdup(config->sort_by);
     }
-    if (config->indexes) {
-        copy->indexes = g_list_copy_deep(config->indexes, (GCopyFunc)fsearch_index_copy, NULL);
+    if (config->includes) {
+        copy->includes = fsearch_database_include_manager_copy(config->includes);
     }
-    if (config->exclude_locations) {
-        copy->exclude_locations = g_list_copy_deep(config->exclude_locations, (GCopyFunc)fsearch_exclude_path_copy, NULL);
-    }
-    if (config->exclude_files) {
-        copy->exclude_files = g_strdupv(config->exclude_files);
+    if (config->excludes) {
+        copy->excludes = fsearch_database_exclude_manager_copy(config->excludes);
     }
     if (config->filters) {
         copy->filters = fsearch_filter_manager_copy(config->filters);
@@ -794,15 +878,10 @@ void
 config_free(FsearchConfig *config) {
     g_assert(config);
 
-    g_clear_pointer(&config->folder_open_cmd, free);
-    g_clear_pointer(&config->sort_by, free);
-    g_clear_pointer(&config->filters, fsearch_filter_manager_free);
-    if (config->indexes) {
-        g_list_free_full(g_steal_pointer(&config->indexes), (GDestroyNotify)fsearch_index_free);
-    }
-    if (config->exclude_locations) {
-        g_list_free_full(g_steal_pointer(&config->exclude_locations), (GDestroyNotify)fsearch_exclude_path_free);
-    }
-    g_clear_pointer(&config->exclude_files, g_strfreev);
-    g_clear_pointer(&config, free);
+    g_clear_pointer(&config->folder_open_cmd, g_free);
+    g_clear_pointer(&config->sort_by, g_free);
+    g_clear_pointer(&config->filters, fsearch_filter_manager_unref);
+    g_clear_object(&config->includes);
+    g_clear_object(&config->excludes);
+    g_clear_pointer(&config, g_free);
 }

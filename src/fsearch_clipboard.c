@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
+   Copyright © 2026 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 #include "fsearch_clipboard.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
-#include <string.h>
 
 static GdkDragAction clipboard_action = GDK_ACTION_DEFAULT;
 static GList *clipboard_file_list = NULL;

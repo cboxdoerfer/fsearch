@@ -21,6 +21,7 @@ typedef enum {
     FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
     FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
     FSEARCH_STATUSBAR_REVEALER_REGEX,
+    FSEARCH_STATUSBAR_REVEALER_PARTIAL_RESULTS,
     NUM_FSEARCH_STATUSBAR_REVEALERS,
 } FsearchStatusbarRevealer;
 
@@ -48,12 +49,6 @@ fsearch_statusbar_set_revealer_visibility(FsearchStatusbar *sb, FsearchStatusbar
 
 void
 fsearch_statusbar_set_filter(FsearchStatusbar *sb, const char *filter_name);
-
-void
-fsearch_statusbar_set_database_state(FsearchStatusbar *sb,
-                                     FsearchStatusbarState state,
-                                     uint32_t num_files,
-                                     uint32_t num_folders);
 
 void
 fsearch_statusbar_set_database_index_text(FsearchStatusbar *sb, const char *text);
