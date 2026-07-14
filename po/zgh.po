@@ -1,46 +1,51 @@
-# Language zgh translations for fsearch package.
-# Copyright (C) 2023 THE fsearch'S COPYRIGHT HOLDER
+# Language ber translations for fsearch package.
+# Copyright (C) 2020 Christian Boxdörfer
 # This file is distributed under the same license as the fsearch package.
-# Christian <christian.boxdoerfer@posteo.de>, 2023.
+# Christian <christian.boxdoerfer@posteo.de>, 2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fsearch\n"
+"Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-11 17:26+0200\n"
-"PO-Revision-Date: 2023-01-21 12:25+0100\n"
-"Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Language zgh\n"
-"Language: zgh\n"
+"PO-Revision-Date: 2023-01-24 20:50+0000\n"
+"Last-Translator: ⵣⵓⵀⵉⵔ ⴰⵎⴰⵣⵉⵖ زهير أمازيغ <zouhirdehbi56@gmail.com>\n"
+"Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
+"translations/ber/>\n"
+"Language: ber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
-msgstr ""
+msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 msgid "A file search application focusing on performance and advanced features"
-msgstr ""
+msgstr "ⵢⴰⵜ ⵜⵙⵏⵙⵉ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⵉⵙⴷⴰⵡⵏ ⵏⵏⴰ ⵉⵙⴷⵉⴽⵉⵏ ⵅⴼ ⵜⵕⵡⵉ ⴷ ⵜⴱⵖⵓⵔⵉⵏ ⵉⴱⵓⵖⵍⵓⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:10
 msgid "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "ⴰⵔⵣⵣⵓ;fsearch;ⵉⴼⵓⵢⵍⴰ;ⵉⵙⴷⴰⵡⵏ;ⴰⵥⴰⵡⴰⵏ;ⴰⴼⵉⴷⵢⵓ;ⵜⵉⵏⵜⴰⵎⵉⵏ;ⴰⴼ;ⵉⵎⵉⵙ;ⵎⴰⵕⵕⴰ;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:12
 msgid "File Search Utility"
-msgstr ""
+msgstr "ⵉⵎⵉⵙ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⵉⵙⴷⴰⵡⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "ⵜⵉⵙⵏⵙⵉ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⴽⵔⴰ ⵏ ⵓⵙⴷⴰⵡ ⴰⵡⵏⵖⴰⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"ⴰⵔ ⴰⴽ ⵉⵜⵜⴰⵡⵙ FSearch ⴰⴷ ⵜⴰⴼⴷ ⵉⵙⴷⴰⵡⵏ ⴷ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵙⵀⵡⵏ ⴷ ⵓⵙⵔⵉⵔⵔⵉ. ⵖⴰⵙ ⴰⵔⵉ "
+"ⴽⵔⴰ ⵏ ⵉⵙⴽⴽⵉⵍⵏ ⴷ ⴰⴷ ⴰⴽ ⵍⵍⵡⵓⵏⵜ ⵜⵢⴰⴼⵓⵜⵉⵏ ⴷⵖⵢⴰ."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
 msgid ""
@@ -53,6 +58,8 @@ msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
 msgstr ""
+"ⴱⵏⵏⵣ ⵜⵓⵣⵓⵏⵜ (ⵙ ⵓⵎⴷⵢⴰ. ⴰⵔⵣⵣⵓ ⵏ \"<code>fsearch</code>\" ⴰⴷ ⵉⵎⵙⴰⵙⴰ ⴰⵡⴷ ⴰⴽⴷ "
+"\"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
@@ -89,20 +96,24 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
+#, fuzzy
 msgid "search"
-msgstr ""
+msgstr "ⵔⵣⵓ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
+#, fuzzy
 msgid "fsearch"
-msgstr ""
+msgstr "ⵔⵣⵓ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
+#, fuzzy
 msgid "files"
-msgstr ""
+msgstr "ⵉⴼⴰⵢⵍⵓⵜⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
+#, fuzzy
 msgid "folders"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
@@ -171,8 +182,9 @@ msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#, fuzzy
 msgid "New search engine"
-msgstr ""
+msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Greatly improved highlighting of search terms"
@@ -273,7 +285,7 @@ msgstr ""
 
 #: src/fsearch.c:181
 msgid "translator-credits"
-msgstr ""
+msgstr "ⵣⵓⵀⵉⵔ ⴷⴷⵀⴱⵉ"
 
 #: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
@@ -292,49 +304,55 @@ msgid "Show the application preferences"
 msgstr ""
 
 #: src/fsearch.c:769
+#, fuzzy
 msgid "Set the search pattern"
-msgstr ""
+msgstr "ⵙⵎⴰⵍ ⴰⴱⴰⵡ ⵏ ⵓⵔⵣⵣⵓ"
 
 #: src/fsearch.c:770
+#, fuzzy
 msgid "Update the database and exit"
-msgstr ""
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch.c:771
+#, fuzzy
 msgid "Print version information and exit"
-msgstr ""
+msgstr "ⵙⵎⴰⵍ ⵓⵎⵍⴰⵏ ⵏ ⵜⵍⵇⵇⵉⵎⵜ"
 
 #: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
 msgstr ""
 
 #: src/fsearch_database_file.c:1337
+#, fuzzy
 msgid "Loading folders…"
-msgstr ""
+msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/fsearch_database_file.c:1353
+#, fuzzy
 msgid "Loading files…"
-msgstr ""
+msgstr "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/fsearch_database_index_store.c:920 src/fsearch_statusbar.c:73
 #: src/fsearch_statusbar.ui:90
+#, fuzzy
 msgid "Sorting…"
-msgstr ""
+msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch_database_preferences_widget.c:162
 #: src/fsearch_database_preferences_widget.c:176
 msgid "Select folder"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⴷⴰⵡ"
 
 #: src/fsearch_database_preferences_widget.c:165
 #: src/fsearch_database_preferences_widget.c:180
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:331
 msgid "_Cancel"
-msgstr ""
+msgstr "_ⵙⵔ"
 
 #: src/fsearch_database_preferences_widget.c:167
 #: src/fsearch_database_preferences_widget.c:179
 msgid "_Select"
-msgstr ""
+msgstr "_ⵙⵜⵢ"
 
 #: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
@@ -349,24 +367,26 @@ msgid "Regex"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:414
+#, fuzzy
 msgid "Full Path"
-msgstr ""
+msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:434
+#, fuzzy
 msgid "Files & Folders"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
-msgstr ""
+msgstr "ⵉⴼⴰⵢⵍⵓⵜⵏ"
 
 #: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:113
 msgid "Folders"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_database_preferences_widget.c:635
 #: src/fsearch_database_preferences_widget.c:860
@@ -380,7 +400,7 @@ msgstr ""
 #: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
 msgid "Type"
-msgstr ""
+msgstr "ⴰⵙⵔⵜⵓ"
 
 #: src/fsearch_database_preferences_widget.c:700
 msgid "Match"
@@ -393,7 +413,7 @@ msgstr ""
 #: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
-msgstr ""
+msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch_database_preferences_widget.ui:78
 msgid "Enter path…"
@@ -416,8 +436,9 @@ msgid "Scan after launch"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:206
+#, fuzzy
 msgid "Stay on one file system"
-msgstr ""
+msgstr "ⵕⵥⵎ (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -441,7 +462,7 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:418
 msgid "Include"
-msgstr ""
+msgstr "ⵙⵓⵎⵓ"
 
 #: src/fsearch_database_preferences_widget.ui:477
 msgid ""
@@ -473,8 +494,9 @@ msgid "Error when removing file"
 msgstr ""
 
 #: src/fsearch_file_utils.c:163
+#, fuzzy
 msgid "Failed to get path"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/fsearch_file_utils.c:277
 msgctxt "Will be followed by the file path."
@@ -500,8 +522,9 @@ msgid "Error when opening parent folder"
 msgstr ""
 
 #: src/fsearch_file_utils.c:526
+#, fuzzy
 msgid "Failed to get parent path"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/fsearch_file_utils.c:530
 msgctxt "Will be followed by the path of the folder."
@@ -509,12 +532,14 @@ msgid "Error while opening folder"
 msgstr ""
 
 #: src/fsearch_file_utils.c:533
+#, fuzzy
 msgid "Failed to build open command"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/fsearch_file_utils.c:589
+#, fuzzy
 msgid "Folder"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_file_utils.c:595
 msgid "Unknown Type"
@@ -522,7 +547,7 @@ msgstr ""
 
 #: src/fsearch_filter.c:112
 msgid "All"
-msgstr ""
+msgstr "ⵎⴰⵕⵕⴰ"
 
 #: src/fsearch_filter.c:115
 msgid "Applications"
@@ -554,15 +579,16 @@ msgstr ""
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:332
 msgid "_OK"
-msgstr ""
+msgstr "_ⵡⴰⵅⵅⴰ"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_filter_preferences_widget.c:156
 msgid "Edit filter"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:50
+#, fuzzy
 msgid "Name:"
-msgstr ""
+msgstr "ⵉⵙⵎ"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
@@ -573,8 +599,9 @@ msgid "Unique filter name"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:73
+#, fuzzy
 msgid "Search in path"
-msgstr ""
+msgstr "ⴰⵔⵣⵣⵓ ⴳ ⵓⴱⵔⵉⴷ"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
@@ -600,13 +627,14 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_filter_preferences_widget.c:133
+#, fuzzy
 msgid "Add filter"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
 #: src/menus.ui:215 src/menus.ui:263
 msgid "Name"
-msgstr ""
+msgstr "ⵉⵙⵎ"
 
 #: src/fsearch_filter_preferences_widget.c:316
 msgid "Macro"
@@ -617,16 +645,18 @@ msgid "Query"
 msgstr ""
 
 #: src/fsearch_filter_preferences_widget.ui:77
+#, fuzzy
 msgid "Add new filter"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_filter_preferences_widget.ui:95
 msgid "Remove selected filter"
 msgstr ""
 
 #: src/fsearch_filter_preferences_widget.ui:113
+#, fuzzy
 msgid "Edit selected filter"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
 #: src/fsearch_filter_preferences_widget.ui:129
 msgid "Restore default filters"
@@ -645,20 +675,21 @@ msgid "Empty Database"
 msgstr ""
 
 #: src/fsearch_overlay.ui:60
+#, fuzzy
 msgid "Add folders"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
-msgstr ""
+msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
-msgstr ""
+msgstr "ⴰⵢⴰ ⵓⵔ ⵉⵜⵜⴰⵙⵉ ⴰⵜⵜⴰⵙ."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr ""
+msgstr "ⵓⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -669,8 +700,9 @@ msgid "Empty Query"
 msgstr ""
 
 #: src/fsearch_overlay.ui:256
+#, fuzzy
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
+msgstr "ⴰⴷⵔ ⵅ <b>Ctrl + F</b> ⴷ ⵜⴰⵡⵍⴷ ⵜⵜⴰⵔⵉⴷ"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -678,11 +710,12 @@ msgstr ""
 
 #: src/fsearch_overlay.ui:319
 msgid "Try a different search"
-msgstr ""
+msgstr "ⴰⵔⵎ ⵢⴰⵏ ⵓⵔⵣⵣⵓ ⵢⴰⴹⵏ"
 
 #: src/fsearch_overlay.ui:368
+#, fuzzy
 msgid "Sorting results…"
-msgstr ""
+msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:84
 msgid "Preferences"
@@ -714,7 +747,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:223
 msgid "with double click"
-msgstr ""
+msgstr "ⵙ ⵙⵉⵏ ⵏ ⵡⴰⴷⴷⴰⵔⵏ"
 
 #: src/fsearch_preferences.ui:257
 msgid "Behaviour after successfully opening a file:"
@@ -726,15 +759,15 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:274
 msgid "Minimize"
-msgstr ""
+msgstr "ⵙⵎⵥⵉ"
 
 #: src/fsearch_preferences.ui:275
 msgid "Close"
-msgstr ""
+msgstr "ⵔⴳⵍ"
 
 #: src/fsearch_preferences.ui:309
 msgid "General:"
-msgstr ""
+msgstr "ⴰⵎⴰⵜⴰⵢ:"
 
 #: src/fsearch_preferences.ui:344
 msgid "Show highlighted search terms"
@@ -762,7 +795,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:471
 msgid "Single click to open"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/fsearch_preferences.ui:492
 msgid "Launch desktop files"
@@ -770,7 +803,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:519
 msgid "Results:"
-msgstr ""
+msgstr "ⵜⵉⵢⵓⴼⴰ:"
 
 #: src/fsearch_preferences.ui:560
 msgid "Show database indexing status"
@@ -789,12 +822,13 @@ msgid "file / folder failed to open"
 msgstr ""
 
 #: src/fsearch_preferences.ui:667
+#, fuzzy
 msgid "Dialogs:"
-msgstr ""
+msgstr "ⵉⵎⵙⴰⵡⴰⵍⵏ"
 
 #: src/fsearch_preferences.ui:692
 msgid "Interface"
-msgstr ""
+msgstr "ⴰⵏⴳⵔⵓⴷⵎ"
 
 #: src/fsearch_preferences.ui:711
 msgid "Search in path when query contains path separators"
@@ -802,7 +836,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:730
 msgid "Search as you type"
-msgstr ""
+msgstr "ⵔⵣⵓ ⴰⴷⴷⴰⵢ ⵜⵜⴰⵔⴰⴷ"
 
 #: src/fsearch_preferences.ui:750
 msgid "Hide results when search is empty"
@@ -813,12 +847,13 @@ msgid "Match case when query contains at least one upper case character"
 msgstr ""
 
 #: src/fsearch_preferences.ui:801
+#, fuzzy
 msgid "Filter:"
-msgstr ""
+msgstr "ⵙⴽⵏ ⴰⵙⵜⴰⵢ"
 
 #: src/fsearch_preferences.ui:822 src/fsearch_window.ui:639
 msgid "Search"
-msgstr ""
+msgstr "ⵔⵣⵓ"
 
 #: src/fsearch_preferences.ui:854
 msgid ""
@@ -1227,38 +1262,41 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1617 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
+#, fuzzy
 msgid "Help"
-msgstr ""
+msgstr "_ⵜⵉⵡⵉⵙⵉ"
 
 #: src/fsearch_preferences_dialog.c:238
 msgid "Database"
-msgstr ""
+msgstr "ⵜⴰⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch_result_view.c:381
 msgid "Invalid row data"
 msgstr ""
 
 #: src/fsearch_statusbar.c:58
-#, c-format
+#, fuzzy, c-format
 msgid "%'d Item"
-msgstr ""
+msgstr "%'d ⵉⴼⵔⴷⴰⵙ"
 
 #: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d ⵉⴼⵔⴷⴰⵙ"
 
 #: src/fsearch_statusbar.c:80
 msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_statusbar.c:175
+#, fuzzy
 msgid "Loading…"
-msgstr ""
+msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch_statusbar.c:180
+#, fuzzy
 msgid "Scanning…"
-msgstr ""
+msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
@@ -1266,31 +1304,34 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:53
 msgid "0 Items"
-msgstr ""
+msgstr "0 ⵓⴼⵔⴷⵉⵙ"
 
 #: src/fsearch_statusbar.ui:106
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "_ⵙⵔ"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr ""
 
 #: src/fsearch_statusbar.ui:228
+#, fuzzy
 msgid "Number of selected folders"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⴷⴰⵡ"
 
 #: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:253
+#, fuzzy
 msgid "Number of selected files"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:103
 msgid "Cancel database update"
-msgstr ""
+msgstr "ⵙⵔ ⴰⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
@@ -1298,7 +1339,7 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:370
 msgid "(empty)"
-msgstr ""
+msgstr "(ⵡⴰⵍⵓ)"
 
 #: src/fsearch_statusbar.ui:407
 msgid ""
@@ -1308,7 +1349,7 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
-msgstr ""
+msgstr "ⴰⵎⴷⵢⴰ"
 
 #: src/fsearch_statusbar.ui:514
 msgid ""
@@ -1318,7 +1359,7 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
-msgstr ""
+msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch_statusbar.ui:651
 msgid "REGEX"
@@ -1384,7 +1425,7 @@ msgstr ""
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
-msgstr ""
+msgstr "ⴰⴷⴷⵓⴷ"
 
 #: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
@@ -1392,7 +1433,7 @@ msgstr ""
 
 #: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
-msgstr ""
+msgstr "ⴰⵙⴰⴽⵓⴷ ⵉⵜⵜⵓⵙⵏⴼⵍⵏ"
 
 #: src/fsearch_window.c:801
 msgid ""
@@ -1404,15 +1445,15 @@ msgstr ""
 
 #: src/fsearch_window.ui:68
 msgid "New window"
-msgstr ""
+msgstr "ⵜⴰⵣⵏⵓⵜ ⵜⴰⵎⴰⵢⵏⵓⵜ"
 
 #: src/fsearch_window.ui:89
 msgid "Update database"
-msgstr ""
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch_window.ui:144 src/menus.ui:112
 msgid "Search in Path"
-msgstr ""
+msgstr "ⴰⵔⵣⵣⵓ ⴳ ⵓⴱⵔⵉⴷ"
 
 #: src/fsearch_window.ui:158 src/menus.ui:116
 msgid "Match Case"
@@ -1428,23 +1469,24 @@ msgstr ""
 
 #: src/fsearch_window.ui:211 src/menus.ui:99
 msgid "Show Filter"
-msgstr ""
+msgstr "ⵙⴽⵏ ⴰⵙⵜⴰⵢ"
 
 #: src/fsearch_window.ui:225 src/menus.ui:103
 msgid "Show Search Button"
-msgstr ""
+msgstr "ⵙⵎⴰⵍ ⴰⴱⴰⵡ ⵏ ⵓⵔⵣⵣⵓ"
 
 #: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
+#, fuzzy
 msgid "FSearch Online"
-msgstr ""
+msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
 #: src/fsearch_window.ui:304 src/menus.ui:161
 msgid "About"
-msgstr ""
+msgstr "ⵖⴼ"
 
 #: src/fsearch_window.ui:329 src/menus.ui:47
 msgid "Quit"
-msgstr ""
+msgstr "ⴼⴼⵖ"
 
 #: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:131
 msgid "Donate"
@@ -1468,37 +1510,37 @@ msgstr ""
 
 #: src/fsearch_window.ui:586
 msgid "Search…"
-msgstr ""
+msgstr "ⵔⵣⵓ…"
 
 #: src/fsearch_window.ui:608
 msgid "Select a Filter"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
 #: src/fsearch_window_actions.c:110
-#, c-format
+#, fuzzy, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
 
 #: src/fsearch_window_actions.c:115
 msgid "Opening Files…"
-msgstr ""
+msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/fsearch_window_actions.c:198
-#, c-format
+#, fuzzy, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
 
 #: src/fsearch_window_actions.c:205
 msgid "Deleting files…"
-msgstr ""
+msgstr "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/fsearch_window_actions.c:205
 msgid "Moving files to trash…"
-msgstr ""
+msgstr "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
 
 #: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
 #: src/fsearch_window_actions.c:580
@@ -1506,51 +1548,53 @@ msgid "Something went wrong."
 msgstr ""
 
 #: src/fsearch_window_actions.c:263
-#, c-format
+#, fuzzy, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
 
 #: src/fsearch_window_actions.c:270
+#, fuzzy
 msgid "Opening file properties…"
-msgstr ""
+msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/menus.ui:6
 msgid "_File"
-msgstr ""
+msgstr "_ⴰⴼⴰⵢⵍⵓ"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr ""
+msgstr "ⵜⴰⵣⵏⵓⵜ ⵜⴰⵎⴰⵢⵏⵓⵜ"
 
 #: src/menus.ui:16 src/menus.ui:171
 msgid "_Open"
-msgstr ""
+msgstr "_ⵕⵥⵎ"
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr ""
+msgstr "ⵕⵥⵎ ⴰⵙⴷⴰⵡ"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr ""
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "ⵙⵔ ⴰⵙⴷⵖⵉ"
 
 #: src/menus.ui:42
+#, fuzzy
 msgid "Close Window"
-msgstr ""
+msgstr "ⵜⴰⵣⵏⵓⵜ ⵜⴰⵎⴰⵢⵏⵓⵜ"
 
 #: src/menus.ui:54
 msgid "_Edit"
-msgstr ""
+msgstr "_ⵙⵏⴼⵍ"
 
 #: src/menus.ui:57 src/menus.ui:207
 msgid "_Copy"
-msgstr ""
+msgstr "_ⵙⵙⵏⵖⵍ"
 
 #: src/menus.ui:62 src/menus.ui:228
 msgid "Cu_t"
@@ -1558,7 +1602,7 @@ msgstr ""
 
 #: src/menus.ui:69
 msgid "Select All"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵎⴰⵕⵕⴰ"
 
 #: src/menus.ui:74
 msgid "Deselect All"
@@ -1570,23 +1614,23 @@ msgstr ""
 
 #: src/menus.ui:92
 msgid "_View"
-msgstr ""
+msgstr "_ⵥⵕ"
 
 #: src/menus.ui:109
 msgid "_Search"
-msgstr ""
+msgstr "_ⴰⵔⵣⵣⵓ"
 
 #: src/menus.ui:126
 msgid "_Help"
-msgstr ""
+msgstr "_ⵜⵉⵡⵉⵙⵉ"
 
 #: src/menus.ui:177
 msgid "Open _With"
-msgstr ""
+msgstr "ⵕⵥⵎ_ⵙ"
 
 #: src/menus.ui:191
 msgid "_Open Folder"
-msgstr ""
+msgstr "_ⵕⵥⵎ ⴰⵙⴷⴰⵡ"
 
 #: src/menus.ui:213
 msgid "Copy as Text"
@@ -1598,4 +1642,251 @@ msgstr ""
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr ""
+msgstr "ⵙⵉⵜⵜⵉ ⵙ_ⵓⵚⵏⵏⴰⵊ"
+
+#, fuzzy, c-format
+#~ msgid "Deleted %'d file."
+#~ msgid_plural "Deleted %'d files."
+#~ msgstr[0] "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
+#~ msgstr[1] "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
+
+#, fuzzy, c-format
+#~ msgid "Moved %'d file to the trash."
+#~ msgid_plural "Moved %'d files to the trash."
+#~ msgstr[0] "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
+#~ msgstr[1] "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
+
+#, fuzzy
+#~ msgid "Saving…"
+#~ msgstr "ⴰⴼⵔⴰⵏ..."
+
+#, fuzzy
+#~ msgid "Update every"
+#~ msgstr "ⵙⴷⵖⵉ"
+
+#~ msgid "e.g. \".git;*.tmp\""
+#~ msgstr "ⴰⵎ. \".git;*.tmp\""
+
+#~ msgid "page0"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#~ msgid "page1"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~ msgid "page2"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page30"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page18"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page31"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page32"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page33"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page34"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page35"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#~ msgid "Do you want to keep the window open?"
+#~ msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴰⵊⵊⴷ ⴰⵙⴰⵜⵎ ⵉⵕⵥⵎ?"
+
+#~ msgid "_Copy Filepath"
+#~ msgstr "_ⵙⵙⵏⵖⵍ ⴰⴱⵔⵉⴷ ⵓⴼⴰⵢⵍⵓ"
+
+#~ msgid "Update"
+#~ msgstr "ⵙⴷⵖⵉ"
+
+#, fuzzy
+#~| msgid "%'d Items"
+#~ msgid "≥%'d Items"
+#~ msgstr "%'d ⵉⴼⵔⴷⴰⵙ"
+
+#~ msgid "Last Updated: %Y-%m-%d %H:%M"
+#~ msgstr "ⴰⵙⴷⵖⵉ ⴰⵎⴳⴳⴰⵔⵓ:%Y-%m-%d %H:%M"
+
+#~ msgid "_Delete"
+#~ msgstr "_ⴽⴽⵙ"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page4"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page6"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page7"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page8"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page9"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page10"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page11"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page12"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page13"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page14"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page15"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page16"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page17"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page19"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page20"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page21"
+#~ msgstr "ⵜⴰⵙⵏⴰ1"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page22"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page23"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page24"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page25"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page26"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page27"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page28"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page29"
+#~ msgstr "ⵜⴰⵙⵏⴰ0"
+
+#~ msgid "system-search"
+#~ msgstr "system-search"
+
+#~ msgid "Copy"
+#~ msgstr "ⵙⵙⵏⵖⵍ"
+
+#~ msgid "Add…"
+#~ msgstr "ⵔⵏⵓ…"
+
+#~ msgid "Remove"
+#~ msgstr "ⴽⴽⵙ"
+
+#, fuzzy
+#~| msgid "Enable"
+#~ msgid "Enable menubar"
+#~ msgstr "ⵙⵔⴼⵓ"
+
+#~ msgid "Move to Trash"
+#~ msgstr "ⵙⵉⵜⵜⵉ ⵙ ⵓⵚⵏⵏⴰⵊ"
+
+#~ msgid "Loading Database..."
+#~ msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#, fuzzy
+#~ msgid "Updating Database..."
+#~ msgstr "ⵓⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
+
+#~ msgid "Search..."
+#~ msgstr "ⵔⵣⵓ..."
+
+#~ msgid "Add"
+#~ msgstr "ⵔⵏⵓ"
