@@ -201,7 +201,6 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
             if (has_multiple_create_delete_events(metadata->mask)) {
                 // There's no way to know in which order those events happened, hence we must do a rescan.
-                g_print("multiple create/delete events: %s\n", file_name ? file_name : ".");
                 queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_RESCAN, is_dir);
                 // We can skip other events in the same mask here, since we're going to rescan the file/folder anyway
                 continue;
