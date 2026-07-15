@@ -13,8 +13,6 @@
 #include <stdint.h>
 #include <sys/stat.h>
 
-#define ROW_ENTRY_INFO_FLAGS (FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL & ~FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON)
-
 static int32_t
 get_icon_size_for_height(int32_t height) {
     if (height < 24) {
@@ -86,14 +84,18 @@ try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabase
     if (g_hash_table_lookup_extended(result_view->item_info_cache, key, NULL, (gpointer *)info)) {
         return TRUE;
     }
-    if (fsearch_database_try_get_item_info(result_view->db, result_view->view_id, row, ROW_ENTRY_INFO_FLAGS, info)
+    if (fsearch_database_try_get_item_info(result_view->db,
+                                           result_view->view_id,
+                                           row,
+                                           FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL,
+                                           info)
         == FSEARCH_RESULT_SUCCESS) {
         g_hash_table_insert(result_view->item_info_cache, key, *info);
         return TRUE;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id,
                                                                                   row,
-                                                                                  ROW_ENTRY_INFO_FLAGS);
+                                                                                  FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
     fsearch_database_queue_work(result_view->db, work);
     g_hash_table_insert(result_view->item_info_cache, key, NULL);
     return FALSE;

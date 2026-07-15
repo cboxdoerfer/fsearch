@@ -21,7 +21,6 @@ typedef enum {
     ENTRY_INFO_ID_ACCESS_TIME,
     ENTRY_INFO_ID_CREATION_TIME,
     ENTRY_INFO_ID_STATUS_CHANGE_TIME,
-    ENTRY_INFO_ID_ICON,
     ENTRY_INFO_ID_SELECTED,
     ENTRY_INFO_ID_INDEX,
     ENTRY_INFO_ID_EXTENSION,
@@ -37,7 +36,6 @@ typedef struct {
         FsearchDatabaseEntryType type;
         GHashTable *highlights;
         GString *str;
-        GIcon *icon;
         off_t size;
         time_t time;
         uint32_t uint;
@@ -58,9 +56,6 @@ entry_info_value_clear(FsearchDatabaseEntryInfoValue *value) {
     case ENTRY_INFO_ID_PATH_FULL:
     case ENTRY_INFO_ID_EXTENSION:
         g_string_free(g_steal_pointer(&value->str), TRUE);
-        break;
-    case ENTRY_INFO_ID_ICON:
-        g_clear_object(&value->icon);
         break;
     case ENTRY_INFO_ID_HIGHLIGHTS:
         g_clear_pointer(&value->highlights, g_hash_table_unref);
@@ -106,9 +101,6 @@ num_flags_set(FsearchDatabaseEntryInfoFlags flags) {
         num_flags++;
     }
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_STATUS_CHANGE_TIME) {
-        num_flags++;
-    }
-    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON) {
         num_flags++;
     }
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED) {
@@ -221,13 +213,6 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         val.time = 0;
         g_array_append_val(info->infos, val);
     }
-    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON) {
-        FsearchDatabaseEntryInfoValue val = {0};
-        val.id = ENTRY_INFO_ID_ICON;
-        g_autoptr(GString) path = db_entry_get_path_full(entry);
-        val.icon = fsearch_file_utils_get_icon_for_path(path->str);
-        g_array_append_val(info->infos, val);
-    }
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED) {
         FsearchDatabaseEntryInfoValue val = {0};
         val.id = ENTRY_INFO_ID_SELECTED;
@@ -317,15 +302,6 @@ fsearch_database_entry_info_get_size(FsearchDatabaseEntryInfo *info) {
     FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_SIZE);
     g_return_val_if_fail(val, 0);
     return val->size;
-}
-
-GIcon *
-fsearch_database_entry_info_get_icon(FsearchDatabaseEntryInfo *info) {
-    g_return_val_if_fail(info, NULL);
-    g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON, NULL);
-    FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_ICON);
-    g_return_val_if_fail(val, NULL);
-    return val->icon;
 }
 
 uint32_t
