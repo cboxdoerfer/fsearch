@@ -149,7 +149,7 @@ update_config(FsearchPreferencesDialog *self) {
     self->config->hide_results_on_empty_search = gtk_toggle_button_get_active(self->hide_results_button);
     self->config->show_dialog_failed_opening = gtk_toggle_button_get_active(self->show_dialog_failed_opening);
 
-    self->config_old->action_after_file_open = gtk_combo_box_get_active(self->action_after_file_open);
+    self->config->action_after_file_open = gtk_combo_box_get_active(self->action_after_file_open);
 
     g_clear_pointer(&self->config->filters, fsearch_filter_manager_unref);
     self->config->filters = fsearch_filter_preferences_widget_get_filter_manager(self->filter_pref_widget);
