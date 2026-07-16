@@ -12,4 +12,4 @@ override_dh_auto_configure:
 	-Dchannel=PPA-nightly
 
 override_dh_auto_test:
-    @echo "Tests disabled"
+	 @echo "Tests disabled"
