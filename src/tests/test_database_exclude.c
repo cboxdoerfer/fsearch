@@ -1,3 +1,24 @@
+/*
+   FSearch - A fast file search utility
+   Copyright © 2026 Christian Boxdörfer
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
+
 #include "fsearch_database_exclude_manager.h"
 
 struct exclude_ctx {
@@ -27,7 +48,7 @@ static struct exclude_ctx excludes[] = {
 };
 
 static void
-test_database_exclude() {
+test_database_exclude(void) {
     for (guint i = 0; i < G_N_ELEMENTS(excludes); ++i) {
         g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(excludes[i].pattern,
                                                                                  excludes[i].active,
@@ -60,7 +81,7 @@ test_database_exclude() {
 }
 
 static void
-test_database_exclude_manager() {
+test_database_exclude_manager(void) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
 
     for (guint i = 0; i < G_N_ELEMENTS(excludes); ++i) {
@@ -90,7 +111,7 @@ test_database_exclude_manager() {
 }
 
 static void
-test_database_exclude_matching() {
+test_database_exclude_matching(void) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     fsearch_database_exclude_manager_add(exclude_manager,
                                          fsearch_database_exclude_new("/home/user/build",

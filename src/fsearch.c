@@ -14,7 +14,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.
-   */
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
 
 #define G_LOG_DOMAIN "fsearch-application"
 
@@ -715,7 +718,7 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 }
 
 static int
-database_scan_in_local_instance() {
+database_scan_in_local_instance(void) {
     g_autoptr(GTimer) timer = g_timer_new();
 
     g_autofree FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
@@ -740,7 +743,7 @@ database_scan_in_local_instance() {
 }
 
 static int
-fsearch_application_local_database_scan() {
+fsearch_application_local_database_scan(void) {
     // First detect if the another instance of fsearch is already registered
     // If yes, trigger update there, so the UI is aware of the update and can display its progress
     FsearchApplicationDatabaseWorker worker_ctx = {};
@@ -846,7 +849,7 @@ fsearch_application_get_config(FsearchApplication *self) {
 }
 
 char *
-fsearch_application_get_database_file_path() {
+fsearch_application_get_database_file_path(void) {
     GString *file_path = g_string_new(g_get_user_data_dir());
     g_string_append_c(file_path, G_DIR_SEPARATOR);
     g_string_append(file_path, "fsearch");
@@ -857,7 +860,7 @@ fsearch_application_get_database_file_path() {
 }
 
 char *
-fsearch_application_get_database_dir() {
+fsearch_application_get_database_dir(void) {
     GString *db_dir = g_string_new(g_get_user_data_dir());
     g_string_append_c(db_dir, G_DIR_SEPARATOR);
     g_string_append(db_dir, "fsearch");

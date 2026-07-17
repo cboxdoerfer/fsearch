@@ -14,7 +14,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.
-   */
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
 
 #define G_LOG_DOMAIN "fsearch-utils"
 
@@ -61,7 +64,7 @@ add_error_message(GString *error_messages, const char *error_message) {
 }
 
 gchar *
-fsearch_file_utils_get_app_user_state_dir() {
+fsearch_file_utils_get_app_user_state_dir(void) {
 #if GLIB_CHECK_VERSION(2, 72, 0)
     const gchar *state_dir = g_get_user_state_dir();
     return g_build_filename(state_dir, data_folder_name, NULL);

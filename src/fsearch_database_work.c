@@ -1,3 +1,24 @@
+/*
+   FSearch - A fast file search utility
+   Copyright © 2026 Christian Boxdörfer
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
+
 #include "fsearch_database_work.h"
 
 #include "fsearch_array.h"
@@ -77,7 +98,7 @@ struct FsearchDatabaseWork {
 };
 
 static FsearchDatabaseWork *
-work_new() {
+work_new(void) {
     FsearchDatabaseWork *work = calloc(1, sizeof(FsearchDatabaseWork));
     g_assert(work);
 
@@ -146,14 +167,14 @@ fsearch_database_work_unref(FsearchDatabaseWork *work) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_quit() {
+fsearch_database_work_new_quit(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_QUIT;
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan() {
+fsearch_database_work_new_rescan(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN;
     return work;
@@ -269,7 +290,7 @@ fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_load() {
+fsearch_database_work_new_load(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_LOAD_FROM_FILE;
 
@@ -277,7 +298,7 @@ fsearch_database_work_new_load() {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_save() {
+fsearch_database_work_new_save(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SAVE_TO_FILE;
 

@@ -30,17 +30,18 @@
     <maintainer>
         <foaf:Person>
             <foaf:name>Christian Boxdörfer</foaf:name>
+            <foaf:firstName>Christian</foaf:firstName>
             <foaf:mbox rdf:resource="mailto:christian.boxdoerfer@posteo.de"/>
+            <foaf:surname>Boxdörfer</foaf:surname>
         </foaf:Person>
     </maintainer>
 
     <helper>
         <foaf:Person>
-            <foaf:name>Dawid Duma (pixel96x)</foaf:name>
+            <foaf:name>Dawid Duma</foaf:name>
             <foaf:firstName xml:lang="pl">Dawid</foaf:firstName>
             <foaf:homepage rdf:resource="https://www.pixel96x.com"/>
             <foaf:mbox rdf:resource="mailto:contact@pixel96x.com"/>
-            <foaf:nick xml:lang="en">pixel96x</foaf:nick>
             <foaf:surname xml:lang="pl">Duma</foaf:surname>
         </foaf:Person>
     </helper>

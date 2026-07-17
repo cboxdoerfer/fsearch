@@ -1,3 +1,24 @@
+/*
+   FSearch - A fast file search utility
+   Copyright © 2026 Christian Boxdörfer
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
+
 #include "fsearch_database_include_manager.h"
 
 struct include_ctx {
@@ -15,7 +36,7 @@ static struct include_ctx includes[] = {
 };
 
 static void
-test_database_include() {
+test_database_include(void) {
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,
                                                                                  includes[i].active,
@@ -55,7 +76,7 @@ test_database_include() {
 }
 
 static void
-test_database_include_manager() {
+test_database_include_manager(void) {
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,

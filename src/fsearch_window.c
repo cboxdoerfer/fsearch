@@ -14,7 +14,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.
-   */
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
 
 #define G_LOG_DOMAIN "fsearch-window"
 
@@ -125,7 +128,7 @@ get_active_filter(FsearchApplicationWindow *win) {
 }
 
 static FsearchQueryFlags
-get_query_flags() {
+get_query_flags(void) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     FsearchQueryFlags flags = 0;

@@ -14,7 +14,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.
-   */
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
+*/
 
 #define G_LOG_DOMAIN "fsearch-config"
 
@@ -26,7 +29,6 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_filter.h"
 #include "fsearch_filter_manager.h"
-#include "fsearch_limits.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_string_utils.h"
 
