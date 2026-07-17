@@ -29,8 +29,10 @@
 
     <maintainer>
         <foaf:Person>
-            <foaf:name>Christian </foaf:name>
+            <foaf:name>Christian Boxdörfer</foaf:name>
+            <foaf:firstName>Christian</foaf:firstName>
             <foaf:mbox rdf:resource="mailto:christian.boxdoerfer@posteo.de"/>
+            <foaf:surname>Boxdörfer</foaf:surname>
         </foaf:Person>
     </maintainer>
 
