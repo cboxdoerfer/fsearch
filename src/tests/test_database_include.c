@@ -15,7 +15,7 @@ static struct include_ctx includes[] = {
 };
 
 static void
-test_database_include() {
+test_database_include(void) {
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,
                                                                                  includes[i].active,
@@ -55,7 +55,7 @@ test_database_include() {
 }
 
 static void
-test_database_include_manager() {
+test_database_include_manager(void) {
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,

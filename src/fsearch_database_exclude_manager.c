@@ -49,12 +49,12 @@ fsearch_database_exclude_manager_init(FsearchDatabaseExcludeManager *self) {
 }
 
 FsearchDatabaseExcludeManager *
-fsearch_database_exclude_manager_new() {
+fsearch_database_exclude_manager_new(void) {
     return g_object_new(FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER, NULL);
 }
 
 FsearchDatabaseExcludeManager *
-fsearch_database_exclude_manager_new_with_defaults() {
+fsearch_database_exclude_manager_new_with_defaults(void) {
     FsearchDatabaseExcludeManager *self = fsearch_database_exclude_manager_new();
     g_return_val_if_fail(self, NULL);
 

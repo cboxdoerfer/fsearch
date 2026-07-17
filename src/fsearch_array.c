@@ -612,7 +612,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, gpointer c
 }
 
 static int
-get_ideal_thread_count() {
+get_ideal_thread_count(void) {
     // int num_processors = 1;
     const int num_processors = (int)g_get_num_processors();
 

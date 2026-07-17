@@ -77,7 +77,7 @@ struct FsearchDatabaseWork {
 };
 
 static FsearchDatabaseWork *
-work_new() {
+work_new(void) {
     FsearchDatabaseWork *work = calloc(1, sizeof(FsearchDatabaseWork));
     g_assert(work);
 
@@ -146,14 +146,14 @@ fsearch_database_work_unref(FsearchDatabaseWork *work) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_quit() {
+fsearch_database_work_new_quit(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_QUIT;
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan() {
+fsearch_database_work_new_rescan(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN;
     return work;
@@ -269,7 +269,7 @@ fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_load() {
+fsearch_database_work_new_load(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_LOAD_FROM_FILE;
 
@@ -277,7 +277,7 @@ fsearch_database_work_new_load() {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_save() {
+fsearch_database_work_new_save(void) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SAVE_TO_FILE;
 

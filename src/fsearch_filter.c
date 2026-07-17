@@ -107,7 +107,7 @@ static const char *archive_filter = "ext:7z;ace;arj;bz2;cab;gz;gzip;jar;r00;r01;
     "R29;RAR;TAR;TGZ;Z;ZIP";
 
 GPtrArray *
-fsearch_filter_get_default_filters() {
+fsearch_filter_get_default_filters(void) {
     GPtrArray *filters = g_ptr_array_new_full(9, (GDestroyNotify)fsearch_filter_unref);
     g_ptr_array_add(filters, fsearch_filter_new(_("All"), NULL, NULL, 0));
     g_ptr_array_add(filters, fsearch_filter_new(_("Folders"), NULL, folder_filter, 0));

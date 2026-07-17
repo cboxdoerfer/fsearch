@@ -61,7 +61,7 @@ add_error_message(GString *error_messages, const char *error_message) {
 }
 
 gchar *
-fsearch_file_utils_get_app_user_state_dir() {
+fsearch_file_utils_get_app_user_state_dir(void) {
 #if GLIB_CHECK_VERSION(2, 72, 0)
     const gchar *state_dir = g_get_user_state_dir();
     return g_build_filename(state_dir, data_folder_name, NULL);

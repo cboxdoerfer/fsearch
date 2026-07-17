@@ -27,7 +27,7 @@ static struct exclude_ctx excludes[] = {
 };
 
 static void
-test_database_exclude() {
+test_database_exclude(void) {
     for (guint i = 0; i < G_N_ELEMENTS(excludes); ++i) {
         g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(excludes[i].pattern,
                                                                                  excludes[i].active,
@@ -60,7 +60,7 @@ test_database_exclude() {
 }
 
 static void
-test_database_exclude_manager() {
+test_database_exclude_manager(void) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
 
     for (guint i = 0; i < G_N_ELEMENTS(excludes); ++i) {
@@ -90,7 +90,7 @@ test_database_exclude_manager() {
 }
 
 static void
-test_database_exclude_matching() {
+test_database_exclude_matching(void) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     fsearch_database_exclude_manager_add(exclude_manager,
                                          fsearch_database_exclude_new("/home/user/build",

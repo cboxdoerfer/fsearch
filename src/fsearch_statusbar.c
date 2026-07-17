@@ -364,6 +364,6 @@ fsearch_statusbar_class_init(FsearchStatusbarClass *klass) {
 }
 
 FsearchStatusbar *
-fsearch_statusbar_new() {
+fsearch_statusbar_new(void) {
     return g_object_new(FSEARCH_STATUSBAR_TYPE, NULL, NULL, NULL);
 }

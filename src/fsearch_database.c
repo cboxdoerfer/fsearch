@@ -384,7 +384,7 @@ database_get_info(FsearchDatabase *self) {
 }
 
 static GFile *
-database_get_file_default() {
+database_get_file_default(void) {
     return g_file_new_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
 }
 

@@ -125,7 +125,7 @@ get_active_filter(FsearchApplicationWindow *win) {
 }
 
 static FsearchQueryFlags
-get_query_flags() {
+get_query_flags(void) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     FsearchQueryFlags flags = 0;
