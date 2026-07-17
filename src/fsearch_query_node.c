@@ -14,6 +14,9 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+   SPDX-License-Identifier: GPL-2.0-or-later
+   SPDX-FileCopyrightText: 2026 Christian Boxdörfer
 */
 
 #define G_LOG_DOMAIN "fsearch-query-node"
