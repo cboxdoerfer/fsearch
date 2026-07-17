@@ -1,6 +1,5 @@
 #include <glib.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include <src/fsearch_array.h>
 

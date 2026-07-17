@@ -1,7 +1,6 @@
 #include "fsearch_database_entry.h"
 #include <glib.h>
 #include <locale.h>
-#include <stdlib.h>
 
 #include <src/fsearch_limits.h>
 #include <src/fsearch_query.h>

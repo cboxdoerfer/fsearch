@@ -1,6 +1,5 @@
 #include <glib.h>
 #include <locale.h>
-#include <stdlib.h>
 
 #include <src/fsearch_string_utils.h>
 

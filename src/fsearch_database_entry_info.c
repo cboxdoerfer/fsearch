@@ -1,10 +1,8 @@
 #include "fsearch_database_entry_info.h"
 
 #include "fsearch_database_entry.h"
-#include "fsearch_file_utils.h"
 
 #include <glib.h>
-#include <string.h>
 
 struct _FsearchDatabaseEntryInfo {
     GArray *infos;

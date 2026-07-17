@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "fsearch_database_entry.h"
-#include "fsearch_limits.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
 

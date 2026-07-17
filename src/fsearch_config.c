@@ -26,7 +26,6 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_filter.h"
 #include "fsearch_filter_manager.h"
-#include "fsearch_limits.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_string_utils.h"
 
