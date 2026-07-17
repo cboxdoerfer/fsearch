@@ -1,4 +1,12 @@
 =================
+Version 0.3.1
+=================
+
+* Fix blocking UI when loading icons
+* Fix option 'action after file open' not getting saved
+* Remove duplicate language to fix build on newer gettext versions
+
+=================
 Version 0.3
 =================
 

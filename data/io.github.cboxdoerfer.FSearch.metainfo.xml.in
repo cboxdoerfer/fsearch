@@ -83,6 +83,15 @@
         <value key="Purism::form_factor">workstation</value>
     </custom>
     <releases>
+        <release date="2026-07-17" version="0.3.1">
+            <description>
+                <ul>
+                    <li>Fix blocking UI when loading icons</li>
+                    <li>Fix option 'action after file open' not getting saved</li>
+                    <li>Remove duplicate language to fix build on newer gettext versions</li>
+                </ul>
+            </description>
+        </release>
         <release date="2026-07-11" version="0.3">
             <description>
                 <ul>
