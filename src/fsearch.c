@@ -527,6 +527,27 @@ fsearch_application_init(FsearchApplication *app) {
     g_action_map_add_action_entries(G_ACTION_MAP(app), fsearch_app_entries, G_N_ELEMENTS(fsearch_app_entries), app);
 }
 
+// NOTE: Bump whenever we want to display a new welcome dialog
+// Make sure to also update the content of the welcome dialog
+#define FSEARCH_WELCOME_DIALOG_VERSION "0.3"
+
+static int
+version_compare(const char *a, const char *b) {
+    g_auto(GStrv) version_a = g_strsplit(a ? a : "", ".", -1);
+    g_auto(GStrv) version_b = g_strsplit(b ? b : "", ".", -1);
+    const guint num_version_components_a = g_strv_length(version_a);
+    const guint num_version_components_b = g_strv_length(version_b);
+
+    for (guint i = 0; i < MAX(num_version_components_a, num_version_components_b); i++) {
+        const long c_a = i < num_version_components_a ? strtol(version_a[i], NULL, 10) : 0;
+        const long c_b = i < num_version_components_b ? strtol(version_b[i], NULL, 10) : 0;
+        if (c_a != c_b) {
+            return c_a < c_b ? -1 : 1;
+        }
+    }
+    return 0;
+}
+
 static bool
 should_show_welcome_dialog(void) {
     g_autofree gchar *state_dir = fsearch_file_utils_get_app_user_state_dir();
@@ -543,7 +564,8 @@ should_show_welcome_dialog(void) {
     if (g_key_file_load_from_file(key_file, state_file, G_KEY_FILE_NONE, NULL)) {
         g_autofree gchar *last_version = g_key_file_get_string(key_file, "State", "last_seen_version", NULL);
 
-        if (g_strcmp0(last_version, PACKAGE_VERSION) != 0) {
+        // Only show if the user hasn't yet seen a version with this (or newer) welcome content.
+        if (version_compare(last_version, FSEARCH_WELCOME_DIALOG_VERSION) < 0) {
             should_show = true;
         }
     }
@@ -551,7 +573,6 @@ should_show_welcome_dialog(void) {
         should_show = true;
     }
 
-    // Update the INI file so the dialog isn't shown again for this version
     if (should_show) {
         g_key_file_set_string(key_file, "State", "last_seen_version", PACKAGE_VERSION);
 
