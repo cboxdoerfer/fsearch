@@ -10,7 +10,6 @@
  *   - fsearch_database_chunked_array_find_slow
  *   - fsearch_database_chunked_array_steal_descendants
  *   - fsearch_database_chunked_array_remove_marked_folders
- *   - fsearch_database_chunked_array_steal_marked_folders
  *   - fsearch_database_chunked_array_find
  *   - fsearch_database_chunked_array_get_entry
  *   - fsearch_database_chunked_array_get_num_entries
@@ -908,6 +907,191 @@ test_steal_descendants_known_count_path_full_fast_path(void) {
     g_assert_cmpuint(num_chunks(arr), ==, 1);
 }
 
+// Same fast path, but with the PATH sort order the index now uses after both scan and load.
+// Non-descendants are placed on either side so a mis-aimed start probe or an over-long steal
+// would take the wrong entries rather than silently look correct.
+static void
+test_steal_descendants_known_count_path_fast_path(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *before = make_folder("aaa", root);
+    FsearchDatabaseEntry *sub = make_folder("sub", root);
+    FsearchDatabaseEntry *nested = make_folder("nested", sub);
+    FsearchDatabaseEntry *after = make_folder("zzz", root);
+
+    const uint32_t num_children = 50;
+    g_autoptr(DynamicArray) input = darray_new(num_children + 4);
+    for (uint32_t i = 0; i < num_children; i++) {
+        g_autofree char *name = g_strdup_printf("file_%03u", i);
+        darray_add_item(input, make_file_in(name, i % 2 ? sub : nested));
+    }
+    darray_add_item(input, make_file_in("file_000", before));
+    darray_add_item(input, make_file_in("file_999", before));
+    darray_add_item(input, make_file_in("file_000", after));
+    darray_add_item(input, make_file_in("file_999", after));
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, sub, num_children);
+    g_assert_cmpuint(darray_get_num_items(descendants), ==, num_children);
+    for (uint32_t i = 0; i < darray_get_num_items(descendants); i++) {
+        g_assert_true(db_entry_is_descendant(darray_get_item(descendants, i), sub));
+    }
+    // The four outsiders must survive untouched.
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 4);
+
+    free_stolen(g_steal_pointer(&descendants));
+    db_entry_free(nested);
+    db_entry_free(sub);
+    db_entry_free(before);
+    db_entry_free(after);
+    db_entry_free(root);
+}
+
+// A non-path sort order scatters descendants, so the count must not enable the contiguous steal.
+static void
+test_steal_descendants_known_count_name_order_stays_correct(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *sub = make_folder("sub", root);
+    FsearchDatabaseEntry *other = make_folder("other", root);
+
+    // Interleaved by name: sub's files sort between other's, so a contiguous steal would be wrong.
+    g_autoptr(DynamicArray) input = darray_new(6);
+    darray_add_item(input, make_file_in("a", other));
+    darray_add_item(input, make_file_in("b", sub));
+    darray_add_item(input, make_file_in("c", other));
+    darray_add_item(input, make_file_in("d", sub));
+    darray_add_item(input, make_file_in("e", other));
+    darray_add_item(input, make_file_in("f", sub));
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, sub, 3);
+    g_assert_cmpuint(darray_get_num_items(descendants), ==, 3);
+    for (uint32_t i = 0; i < darray_get_num_items(descendants); i++) {
+        g_assert_true(db_entry_is_descendant(darray_get_item(descendants, i), sub));
+    }
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 3);
+
+    free_stolen(g_steal_pointer(&descendants));
+    db_entry_free(sub);
+    db_entry_free(other);
+    db_entry_free(root);
+}
+
+// With a path sort order the scan stops at the first non-descendant instead of running to the end
+// of the array. Entries are placed after the subtree so an over-long scan would pick them up.
+static void
+test_steal_descendants_unknown_count_stops_at_end_of_run(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *sub = make_folder("sub", root);
+    FsearchDatabaseEntry *nested = make_folder("nested", sub);
+    FsearchDatabaseEntry *after = make_folder("zzz", root);
+
+    g_autoptr(DynamicArray) input = darray_new(30);
+    for (uint32_t i = 0; i < 10; i++) {
+        g_autofree char *name = g_strdup_printf("file_%03u", i);
+        darray_add_item(input, make_file_in(name, i % 2 ? sub : nested));
+    }
+    for (uint32_t i = 0; i < 10; i++) {
+        g_autofree char *name = g_strdup_printf("file_%03u", i);
+        darray_add_item(input, make_file_in(name, after));
+    }
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    // -1: the count is unknown, so termination has to come from the run itself.
+    g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, sub, -1);
+    g_assert_cmpuint(darray_get_num_items(descendants), ==, 10);
+    for (uint32_t i = 0; i < darray_get_num_items(descendants); i++) {
+        g_assert_true(db_entry_is_descendant(darray_get_item(descendants, i), sub));
+    }
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 10);
+
+    free_stolen(g_steal_pointer(&descendants));
+    db_entry_free(nested);
+    db_entry_free(sub);
+    db_entry_free(after);
+    db_entry_free(root);
+}
+
+// Early termination must not fire before the run starts: a folder with no entries at all has to
+// come back empty without disturbing anything.
+static void
+test_steal_descendants_empty_subtree_stops_immediately(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *empty = make_folder("mmm", root);
+    FsearchDatabaseEntry *before = make_folder("aaa", root);
+    FsearchDatabaseEntry *after = make_folder("zzz", root);
+
+    g_autoptr(DynamicArray) input = darray_new(4);
+    darray_add_item(input, make_file_in("a.txt", before));
+    darray_add_item(input, make_file_in("b.txt", before));
+    darray_add_item(input, make_file_in("a.txt", after));
+    darray_add_item(input, make_file_in("b.txt", after));
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, empty, -1);
+    g_assert_cmpuint(darray_get_num_items(descendants), ==, 0);
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 4);
+
+    db_entry_free(empty);
+    db_entry_free(before);
+    db_entry_free(after);
+    db_entry_free(root);
+}
+
+// The store sweeps arrays that are not path sorted, so the count must terminate the scan without
+// relying on marked entries being adjacent.
+static void
+test_remove_marked_exact_count_scattered_entries(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *marked_dir = make_folder("marked", root);
+    FsearchDatabaseEntry *other = make_folder("other", root);
+    db_entry_set_mark(marked_dir, 1);
+
+    // Interleaved under a NAME sort order: every second entry is the one to remove.
+    g_autoptr(DynamicArray) input = darray_new(20);
+    for (uint32_t i = 0; i < 20; i++) {
+        g_autofree char *name = g_strdup_printf("file_%03u", i);
+        darray_add_item(input, make_file_in(name, i % 2 ? marked_dir : other));
+    }
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, 10);
+    g_assert_cmpuint(removed, ==, 10);
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 10);
+    // Everything left must belong to the unmarked folder.
+    for (uint32_t i = 0; i < fsearch_database_chunked_array_get_num_entries(arr); i++) {
+        g_assert_true(db_entry_get_parent(fsearch_database_chunked_array_get_entry(arr, i)) == other);
+    }
+
+    db_entry_free(marked_dir);
+    db_entry_free(other);
+    db_entry_free(root);
+}
+
 static void
 test_steal_descendants_unknown_count_generic_scan(void) {
     FsearchDatabaseEntry *root = make_folder("root", NULL);
@@ -962,7 +1146,7 @@ test_steal_descendants_spanning_multiple_chunks(void) {
 }
 
 /* ------------------------------------------------------------------------ *
- * remove_marked_folders / steal_marked_folders
+ * remove_marked_folders
  * ------------------------------------------------------------------------ */
 
 static void
@@ -973,7 +1157,7 @@ test_remove_marked_none_marked_is_noop(void) {
                                                                     DATABASE_INDEX_PROPERTY_NAME,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
-    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr), ==, 0);
+    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr, -1), ==, 0);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 20);
 }
 
@@ -988,7 +1172,7 @@ test_remove_marked_contiguous_block(void) {
                                                                     DATABASE_INDEX_PROPERTY_NAME,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
-    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr);
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, -1);
     g_assert_cmpuint(removed, ==, 5);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 15);
     g_assert_cmpstr(db_entry_get_name_raw(fsearch_database_chunked_array_get_entry(arr, 4)), ==, "f_000004");
@@ -1007,7 +1191,7 @@ test_remove_marked_non_contiguous_blocks(void) {
                                                                     DATABASE_INDEX_PROPERTY_NAME,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
-    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr);
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, -1);
     g_assert_cmpuint(removed, ==, G_N_ELEMENTS(marked_idx));
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 20 - G_N_ELEMENTS(marked_idx));
 
@@ -1038,7 +1222,7 @@ test_remove_marked_files_inherit_mark_from_parent(void) {
                                                                     DATABASE_INDEX_PROPERTY_NAME,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     NULL);
-    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr);
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, -1);
     g_assert_cmpuint(removed, ==, 2);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 1);
     g_assert_nonnull(fsearch_database_chunked_array_find_slow(arr, f3));
@@ -1063,7 +1247,7 @@ test_remove_marked_spanning_chunk_boundary(void) {
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
     g_assert_cmpuint(num_chunks(arr), >, 1);
 
-    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr);
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, -1);
     g_assert_cmpuint(removed, ==, mark_end - mark_start);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, count - (mark_end - mark_start));
 
@@ -1080,30 +1264,10 @@ test_remove_marked_spanning_chunk_boundary(void) {
 }
 
 static void
-test_steal_marked_returns_removed_entries(void) {
-    g_autoptr(DynamicArray) input = make_sorted_files("f", 20);
-    for (uint32_t i = 5; i < 10; i++) {
-        db_entry_set_mark(darray_get_item(input, i), 1);
-    }
-    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
-                                                                    TRUE,
-                                                                    DATABASE_INDEX_PROPERTY_NAME,
-                                                                    DATABASE_ENTRY_TYPE_FILE,
-                                                                    (GDestroyNotify)db_entry_free_no_unparent);
-    g_autoptr(DynamicArray) stolen = fsearch_database_chunked_array_steal_marked_folders(arr);
-    g_assert_cmpuint(darray_get_num_items(stolen), ==, 5);
-    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 15);
-    for (uint32_t i = 0; i < darray_get_num_items(stolen); i++) {
-        g_assert_cmpuint(db_entry_get_mark(darray_get_item(stolen, i)), ==, 1);
-    }
-    free_stolen(g_steal_pointer(&stolen));
-}
-
-static void
-test_steal_marked_all_marked_keeps_one_chunk(void) {
+test_remove_marked_all_marked_keeps_one_chunk(void) {
     // Mirrors test_steal_all_entries_keeps_one_chunk(): removing every entry via
-    // steal_marked_folders()/remove_marked_folders() must not remove the very last chunk
-    // either, same as fsearch_database_chunked_array_steal()'s balance_chunk() guarantee.
+    // remove_marked_folders() must not remove the very last chunk either, same as
+    // fsearch_database_chunked_array_steal()'s balance_chunk() guarantee.
     g_autoptr(DynamicArray) input = make_sorted_files("f", 5);
     for (uint32_t i = 0; i < 5; i++) {
         db_entry_set_mark(darray_get_item(input, i), 1);
@@ -1113,18 +1277,50 @@ test_steal_marked_all_marked_keeps_one_chunk(void) {
                                                                     DATABASE_INDEX_PROPERTY_NAME,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     (GDestroyNotify)db_entry_free_no_unparent);
-    g_autoptr(DynamicArray) stolen = fsearch_database_chunked_array_steal_marked_folders(arr);
-    g_assert_cmpuint(darray_get_num_items(stolen), ==, 5);
+    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr, -1), ==, 5);
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 0);
     g_assert_cmpuint(num_chunks(arr), ==, 1);
-
-    free_stolen(g_steal_pointer(&stolen));
 
     // The array must still be usable afterwards.
     fsearch_database_chunked_array_insert(arr, make_file("new"));
     g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 1);
     g_assert_cmpuint(num_chunks(arr), ==, 1);
-    g_assert_cmpuint(num_chunks(arr), ==, 1);
+}
+
+static void
+test_remove_marked_exact_count_across_chunks(void) {
+    // Marked entries split across chunk boundaries must all be found before the early exit.
+    g_autoptr(DynamicArray) input = make_sorted_files("f", TEST_TARGET_CHUNK_SIZE * 3);
+    const uint32_t marked[] = {0, 1, TEST_TARGET_CHUNK_SIZE - 1, TEST_TARGET_CHUNK_SIZE, TEST_TARGET_CHUNK_SIZE * 2 + 7};
+    for (uint32_t i = 0; i < G_N_ELEMENTS(marked); i++) {
+        db_entry_set_mark(darray_get_item(input, marked[i]), 1);
+    }
+    const uint32_t total = darray_get_num_items(input);
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+    const uint32_t removed = fsearch_database_chunked_array_remove_marked_folders(arr, G_N_ELEMENTS(marked));
+    g_assert_cmpuint(removed, ==, G_N_ELEMENTS(marked));
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, total - G_N_ELEMENTS(marked));
+    for (uint32_t i = 0; i < fsearch_database_chunked_array_get_num_entries(arr); i++) {
+        g_assert_cmpuint(db_entry_get_mark(fsearch_database_chunked_array_get_entry(arr, i)), ==, 0);
+    }
+}
+
+static void
+test_remove_marked_zero_count_is_noop(void) {
+    g_autoptr(DynamicArray) input = make_sorted_files("f", 10);
+    db_entry_set_mark(darray_get_item(input, 0), 1);
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+    // A count of zero means there is nothing to look for, even though an entry is marked.
+    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr, 0), ==, 0);
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 10);
 }
 
 /* ------------------------------------------------------------------------ *
@@ -1206,12 +1402,22 @@ main(int argc, char **argv) {
                     test_steal_descendants_no_descendants_returns_empty);
     g_test_add_func("/FSearch/database/chunked_array/steal_descendants_known_count_fast_path",
                     test_steal_descendants_known_count_path_full_fast_path);
+    g_test_add_func("/FSearch/database/chunked_array/steal_descendants_known_count_path_fast_path",
+                    test_steal_descendants_known_count_path_fast_path);
+    g_test_add_func("/FSearch/database/chunked_array/steal_descendants_known_count_name_order",
+                    test_steal_descendants_known_count_name_order_stays_correct);
+    g_test_add_func("/FSearch/database/chunked_array/steal_descendants_unknown_count_stops_at_end_of_run",
+                    test_steal_descendants_unknown_count_stops_at_end_of_run);
+    g_test_add_func("/FSearch/database/chunked_array/steal_descendants_empty_subtree_stops_immediately",
+                    test_steal_descendants_empty_subtree_stops_immediately);
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_exact_count_scattered",
+                    test_remove_marked_exact_count_scattered_entries);
     g_test_add_func("/FSearch/database/chunked_array/steal_descendants_unknown_count_generic_scan",
                     test_steal_descendants_unknown_count_generic_scan);
     g_test_add_func("/FSearch/database/chunked_array/steal_descendants_spanning_multiple_chunks",
                     test_steal_descendants_spanning_multiple_chunks);
 
-    // remove_marked_folders / steal_marked_folders
+    // remove_marked_folders
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_none_noop", test_remove_marked_none_marked_is_noop);
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_contiguous_block",
                     test_remove_marked_contiguous_block);
@@ -1221,10 +1427,12 @@ main(int argc, char **argv) {
                     test_remove_marked_files_inherit_mark_from_parent);
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_spans_chunk_boundary",
                     test_remove_marked_spanning_chunk_boundary);
-    g_test_add_func("/FSearch/database/chunked_array/steal_marked_returns_entries",
-                    test_steal_marked_returns_removed_entries);
-    g_test_add_func("/FSearch/database/chunked_array/steal_marked_all_keeps_one_chunk",
-                    test_steal_marked_all_marked_keeps_one_chunk);
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_all_keeps_one_chunk",
+                    test_remove_marked_all_marked_keeps_one_chunk);
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_exact_count_across_chunks",
+                    test_remove_marked_exact_count_across_chunks);
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_zero_count_is_noop",
+                    test_remove_marked_zero_count_is_noop);
 
     return g_test_run();
 }

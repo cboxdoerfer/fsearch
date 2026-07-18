@@ -575,8 +575,6 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, gpointer c
     }
     const uint32_t num_threads = merge_me->len / 2;
 
-    g_debug("[sort] merge with %d thread(s)", num_threads);
-
     g_autoptr(GArray) merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
     GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, (gint)num_threads, FALSE, NULL);
 
