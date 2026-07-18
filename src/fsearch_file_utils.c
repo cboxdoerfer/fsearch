@@ -682,11 +682,17 @@ fsearch_file_utils_get_content_type(const char *path, GError **error) {
                                                   G_FILE_QUERY_INFO_NONE,
                                                   NULL,
                                                   error);
-    if (!info) {
-        return NULL;
+
+    // Check if info has content type attribute before calling getter to avoid glib internal warning
+    if (info && g_file_info_has_attribute(info, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE)) {
+        const char *content_type = g_file_info_get_content_type(info);
+        if (content_type) {
+            return g_strdup(content_type);
+        }
     }
-    const char *content_type = g_file_info_get_content_type(info);
-    return content_type ? g_strdup(content_type) : NULL;
+
+    // Querying content type failed, try guessing
+    return g_content_type_guess(path, NULL, 0, NULL);
 }
 
 GIcon *
