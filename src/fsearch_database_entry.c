@@ -887,6 +887,17 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
 }
 
 FsearchDatabaseEntry *
+db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type) {
+    g_return_val_if_fail(name, NULL);
+
+    FsearchDatabaseEntry *entry = db_entry_new(DATABASE_INDEX_PROPERTY_FLAG_NONE, name, NULL, type);
+
+    // Don't update parent state (we don't want the parent to change its size or child counts)
+    db_entry_set_parent_no_update(entry, parent);
+    return entry;
+}
+
+FsearchDatabaseEntry *
 db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
                              const char *name,
                              FsearchDatabaseEntry *parent,
