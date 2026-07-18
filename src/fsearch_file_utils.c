@@ -37,8 +37,10 @@
 
 const char *data_folder_name = "fsearch";
 
+#if !defined(__MACH__)
 static void
 launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_data);
+#endif
 
 static void
 add_error_message_with_format(GString *error_messages, const char *description, const char *item_name, const char *reason) {
@@ -201,6 +203,10 @@ typedef struct {
     GString *error_messages;
     bool launch_desktop_files;
 
+    // Groups files by resolved app (keyed by app id)
+    GHashTable *app_groups;
+    guint pending_resolves;
+
     FsearchFileUtilsOpenCallback callback;
     gpointer callback_data;
 } FsearchFileUtilsLaunchContext;
@@ -228,6 +234,7 @@ launch_context_new(GAppLaunchContext *app_launch_context,
     launch_ctx->launch_desktop_files = launch_desktop_files;
     launch_ctx->launch_uris_ctx_queue = g_queue_new();
     launch_ctx->path_queue = g_queue_new();
+    launch_ctx->app_groups = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     launch_ctx->error_messages = g_string_new(NULL);
     launch_ctx->callback = callback;
     launch_ctx->callback_data = callback_data;
@@ -243,71 +250,52 @@ launch_context_free(FsearchFileUtilsLaunchContext *ctx) {
     g_string_free(g_steal_pointer(&ctx->error_messages), TRUE);
     g_queue_free_full(g_steal_pointer(&ctx->launch_uris_ctx_queue), (GDestroyNotify)launch_uris_context_free);
     g_queue_free_full(g_steal_pointer(&ctx->path_queue), (GDestroyNotify)g_free);
+    g_clear_pointer(&ctx->app_groups, g_hash_table_destroy);
     g_clear_object(&ctx->app_launch_context);
     g_clear_pointer(&ctx, g_free);
 }
 
+// Adds a desktop file that should be launched as its associated application (no URIs passed),
+// rather than opened with a handler derived from its content type.
 static void
-create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFileUtilsLaunchContext *ctx) {
-    g_return_if_fail(content_type);
-    g_return_if_fail(files);
-    if (ctx->launch_desktop_files && g_strcmp0(content_type, "application/x-desktop") == 0) {
-        // Desktop files which should launch their associated application need to be handled differently
-        // The application information is not derived from the content type of the file, but from the desktop
-        // file itself. So for each desktop file we get its own application information and don't pass any files
-        // to it, because we only want to open the application.
-        for (uint32_t i = 0; i < files->len; ++i) {
-            GFile *file = g_ptr_array_index(files, i);
-            g_autofree char *path = g_file_get_path(file);
-            if (!path) {
-                continue;
-            }
+add_desktop_launch_for_uri_to_launch_context(FsearchFileUtilsLaunchContext *launch_ctx, const char *path) {
 #ifdef __MACH__
-            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open",
-                                                                            NULL,
-                                                                            G_APP_INFO_CREATE_NONE,
-                                                                            NULL);
+    GAppInfo *app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
 #else
-            GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
+    GAppInfo *app_info = G_APP_INFO(g_desktop_app_info_new_from_filename(path));
 #endif
-
-            if (!desktop_app_info) {
-                add_error_message_with_format(ctx->error_messages,
-                                              C_("Will be followed by the file path.",
-                                                 "Error when getting information from file"),
-                                              path,
-                                              _("Failed to get application information"));
-                continue;
-            }
-            FsearchFileUtilsLaunchUrisContext *launch_uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
-            launch_uris_ctx->app_info = G_APP_INFO(desktop_app_info);
-            launch_uris_ctx->uris = NULL;
-            g_queue_push_tail(ctx->launch_uris_ctx_queue, launch_uris_ctx);
-        }
-        return;
-    }
-
-    GAppInfo *app_info = g_app_info_get_default_for_type(content_type, FALSE);
     if (!app_info) {
-        add_error_message_with_format(ctx->error_messages,
-                                      C_("Will be followed by the content type string.",
-                                         "Error when getting information for content type"),
-                                      content_type,
-                                      _("No default application registered"));
+        add_error_message_with_format(launch_ctx->error_messages,
+                                      C_("Will be followed by the file path.", "Error when getting information from file"),
+                                      path,
+                                      _("Failed to get application information"));
+        return;
+    }
+    FsearchFileUtilsLaunchUrisContext *uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
+    uris_ctx->app_info = app_info;
+    g_queue_push_tail(launch_ctx->launch_uris_ctx_queue, uris_ctx);
+}
+
+static void
+add_app_info_for_uri_to_launch_context(FsearchFileUtilsLaunchContext *launch_ctx, GAppInfo *app_info, char *uri) {
+    const char *id = g_app_info_get_id(app_info);
+    FsearchFileUtilsLaunchUrisContext *uris_ctx = id ? g_hash_table_lookup(launch_ctx->app_groups, id) : NULL;
+    if (uris_ctx) {
+        uris_ctx->uris = g_list_append(uris_ctx->uris, uri);
+        g_object_unref(app_info);
         return;
     }
 
-    FsearchFileUtilsLaunchUrisContext *launch_uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
-    launch_uris_ctx->app_info = g_steal_pointer(&app_info);
-
-    for (uint32_t i = 0; i < files->len; ++i) {
-        GFile *file = g_ptr_array_index(files, i);
-        char *uri = g_file_get_uri(file);
-        if (uri) {
-            launch_uris_ctx->uris = g_list_append(launch_uris_ctx->uris, uri);
-        }
+    uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
+    uris_ctx->app_info = app_info;
+    uris_ctx->uris = g_list_append(NULL, uri);
+    if (id) {
+        g_hash_table_insert(launch_ctx->app_groups, g_strdup(id), uris_ctx);
     }
-    g_queue_push_tail(ctx->launch_uris_ctx_queue, launch_uris_ctx);
+    else {
+        // An application without a desktop id can't be grouped, launch it on its own.
+        g_queue_push_tail(launch_ctx->launch_uris_ctx_queue, uris_ctx);
+    }
 }
 
 static void
@@ -326,32 +314,30 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
         // All files were handled, either successfully or with errors
         handle_callback(launch_ctx->callback, launch_ctx->callback_data, launch_ctx->error_messages);
         g_clear_pointer(&launch_ctx, launch_context_free);
+        return;
     }
-    else {
-        FsearchFileUtilsLaunchUrisContext *uris_ctx = g_queue_pop_head(launch_ctx->launch_uris_ctx_queue);
 
-#if GLIB_CHECK_VERSION(2, 60, 0) && !defined(__MACH__)
-        g_app_info_launch_uris_async(uris_ctx->app_info,
-                                     uris_ctx->uris,
-                                     launch_ctx->app_launch_context,
-                                     NULL,
-                                     launch_uris_ready,
-                                     launch_ctx);
-        g_clear_pointer(&uris_ctx, launch_uris_context_free);
+    FsearchFileUtilsLaunchUrisContext *uris_ctx = g_queue_pop_head(launch_ctx->launch_uris_ctx_queue);
+#if !defined(__MACH__)
+    g_app_info_launch_uris_async(uris_ctx->app_info,
+                                 uris_ctx->uris,
+                                 launch_ctx->app_launch_context,
+                                 NULL,
+                                 launch_uris_ready,
+                                 launch_ctx);
+    g_clear_pointer(&uris_ctx, launch_uris_context_free);
 #else
-        g_autoptr(GError) error = NULL;
-        g_app_info_launch_uris(uris_ctx->app_info, uris_ctx->uris, launch_ctx->app_launch_context, &error);
-        if (error) {
-            add_error_message(launch_ctx->error_messages, error->message);
-        }
-        g_clear_pointer(&uris_ctx, launch_uris_context_free);
-
-        handle_queued_uris(launch_ctx);
-#endif
+    g_autoptr(GError) error = NULL;
+    g_app_info_launch_uris(uris_ctx->app_info, uris_ctx->uris, launch_ctx->app_launch_context, &error);
+    if (error) {
+        add_error_message(launch_ctx->error_messages, error->message);
     }
+    g_clear_pointer(&uris_ctx, launch_uris_context_free);
+    handle_queued_uris(launch_ctx);
+#endif
 }
 
-#if GLIB_CHECK_VERSION(2, 60, 0)
+#if !defined(__MACH__)
 static void
 launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_data) {
     FsearchFileUtilsLaunchContext *ctx = user_data;
@@ -367,33 +353,45 @@ launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_da
 #endif
 
 static void
-collect_for_content_type(GHashTable *content_types, const char *path_full, GString *error_messages) {
-    g_return_if_fail(path_full);
-    g_return_if_fail(content_types);
+move_group_to_queue(gpointer key, gpointer value, gpointer user_data) {
+    FsearchFileUtilsLaunchContext *launch_ctx = user_data;
+    g_queue_push_tail(launch_ctx->launch_uris_ctx_queue, value);
+}
+
+// Once every file's handler has been resolved we move the groups into the launch queue and
+// launch them
+static void
+launch_collected_apps_with_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
+    g_hash_table_foreach(launch_ctx->app_groups, move_group_to_queue, launch_ctx);
+    g_hash_table_destroy(g_steal_pointer(&launch_ctx->app_groups));
+    handle_queued_uris(launch_ctx);
+}
+
+#if !defined(__MACH__)
+static void
+resolve_default_handler_ready(GObject *source, GAsyncResult *result, gpointer user_data) {
+    FsearchFileUtilsLaunchContext *launch_ctx = user_data;
+    GFile *file = G_FILE(source);
 
     g_autoptr(GError) error = NULL;
-    g_autofree char *content_type = fsearch_file_utils_get_content_type(path_full, &error);
-    if (!content_type) {
-        add_error_message(error_messages, error->message);
-        return;
-    }
-
-    if (g_hash_table_contains(content_types, content_type)) {
-        // This content type was already added to the hash table.
-        // Add this file to the corresponding array.
-        GPtrArray *uris = g_hash_table_lookup(content_types, content_type);
-        if (uris) {
-            g_ptr_array_add(uris, g_file_new_for_path(path_full));
-        }
+    g_autoptr(GAppInfo) app_info = g_file_query_default_handler_finish(file, result, &error);
+    if (app_info) {
+        add_app_info_for_uri_to_launch_context(launch_ctx, g_steal_pointer(&app_info), g_file_get_uri(file));
     }
     else {
-        // This content type hasn't been handled before.
-        // We create a new array to hold its files and add it to the hash table.
-        GPtrArray *uris = g_ptr_array_new_with_free_func(g_object_unref);
-        g_ptr_array_add(uris, g_file_new_for_path(path_full));
-        g_hash_table_insert(content_types, g_strdup(content_type), uris);
+        g_autofree char *path = g_file_get_path(file);
+        add_error_message_with_format(launch_ctx->error_messages,
+                                      C_("Will be followed by the file path.", "Error when opening file"),
+                                      path ? path : "",
+                                      error ? error->message : _("No default application registered"));
+    }
+    launch_ctx->pending_resolves -= 1;
+
+    if (launch_ctx->pending_resolves == 0) {
+        launch_collected_apps_with_uris(launch_ctx);
     }
 }
+#endif
 
 static bool
 app_is_sandboxed(void) {
@@ -476,37 +474,51 @@ fsearch_file_utils_open_path_list(GList *paths,
         return launch_default_for_path(paths, app_launch_context, callback, callback_data);
     }
 
-    g_autoptr(GHashTable) content_types = g_hash_table_new_full(g_str_hash,
-                                                                g_str_equal,
-                                                                g_free,
-                                                                (GDestroyNotify)g_ptr_array_unref);
-
-    g_autoptr(GString) error_messages = g_string_new(NULL);
-    // Before opening any files, we first group them by their content type
-    for (GList *p = paths; p != NULL; p = p->next) {
-        char *path = p->data;
-        collect_for_content_type(content_types, path, error_messages);
-    }
-
     FsearchFileUtilsLaunchContext *launch_ctx = launch_context_new(app_launch_context,
                                                                    launch_desktop_files,
                                                                    callback,
                                                                    callback_data);
 
-    if (error_messages->len > 0) {
-        g_string_append(launch_ctx->error_messages, error_messages->str);
+#if !defined(__MACH__)
+    // Track how many async default handlers resolves are started
+    launch_ctx->pending_resolves = 0;
+    for (GList *p = paths; p != NULL; p = p->next) {
+        const char *path = p->data;
+        if (launch_desktop_files && fsearch_file_utils_is_desktop_file(path)) {
+            add_desktop_launch_for_uri_to_launch_context(launch_ctx, path);
+            continue;
+        }
+        // Let GIO figure out the default handler for a file
+        launch_ctx->pending_resolves++;
+        g_autoptr(GFile) file = g_file_new_for_path(path);
+        g_file_query_default_handler_async(file, G_PRIORITY_DEFAULT, NULL, resolve_default_handler_ready, launch_ctx);
     }
-
-    g_hash_table_foreach(content_types, (GHFunc)create_uris_launch_context, launch_ctx);
-
-    if (!g_queue_is_empty(launch_ctx->launch_uris_ctx_queue)) {
-        // This opens the uris asynchronously
-        return handle_queued_uris(g_steal_pointer(&launch_ctx));
+    if (launch_ctx->pending_resolves == 0) {
+        launch_collected_apps_with_uris(launch_ctx);
     }
-
-    // We still have to handle the callback in case the queue of uris was empty
-    handle_callback(launch_ctx->callback, launch_ctx->callback_data, launch_ctx->error_messages);
-    g_clear_pointer(&launch_ctx, launch_context_free);
+#else
+    for (GList *p = paths; p != NULL; p = p->next) {
+        const char *path = p->data;
+        if (launch_desktop_files && fsearch_file_utils_is_desktop_file(path)) {
+            add_desktop_launch_for_uri_to_launch_context(launch_ctx, path);
+            continue;
+        }
+        g_autoptr(GFile) file = g_file_new_for_path(path);
+        g_autoptr(GError) error = NULL;
+        g_autoptr(GAppInfo) app_info = g_file_query_default_handler(file, NULL, &error);
+        if (app_info) {
+            add_app_info_for_uri_to_launch_context(launch_ctx, g_steal_pointer(&app_info), g_file_get_uri(file));
+        }
+        else {
+            g_autofree char *epath = g_file_get_path(file);
+            add_error_message_with_format(launch_ctx->error_messages,
+                                          C_("Will be followed by the file path.", "Error when opening file"),
+                                          epath ? epath : "",
+                                          error ? error->message : _("No default application registered"));
+        }
+    }
+    launch_collected_apps_with_uris(launch_ctx);
+#endif
 }
 
 static bool
