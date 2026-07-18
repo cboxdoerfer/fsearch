@@ -112,10 +112,6 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
     const uint32_t num_chunks = ceil(num_items_in_chunk / (double)target_chunk_size);
     const uint32_t num_items_per_chunk = floor(num_items_in_chunk / (double)num_chunks);
 
-    g_debug("[chunk] splitting: %d", num_items_in_chunk);
-    g_debug("[chunk] num_chunks: %d", num_chunks);
-    g_debug("[chunk] num_items_per_chunk: %d", num_items_per_chunk);
-
     DynamicArray *chunks = darray_new_full(num_chunks, (GDestroyNotify)darray_unref);
     for (uint32_t n = 0; n < num_chunks; ++n) {
         DynamicArray *chunk_slice = darray_get_range(chunk,
@@ -137,7 +133,6 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             // Don't remove the last chunk
             return;
         }
-        g_debug("[balance_chunk] remove empty: %d", chunk_idx);
         darray_set_free_func(chunk, NULL);
         darray_remove(self->chunks, chunk_idx, 1);
         chunk = NULL;
@@ -149,11 +144,6 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
     }
 
     g_autoptr(DynamicArray) splitted = split_chunk(chunk, self->target_chunk_size, self->entry_free_func);
-
-    g_debug("[balance_chunk] split idx %d with %d entries into %d chunks",
-            chunk_idx,
-            darray_get_num_items(chunk),
-            darray_get_num_items(splitted));
 
     darray_set_free_func(chunk, NULL);
     darray_remove(self->chunks, chunk_idx, 1);
@@ -436,17 +426,27 @@ is_marked(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
 // Finds and removes every marked entry in `self`. If `destination` is non-NULL, removed
 // entries are stolen into it (ownership transferred, no destructor called); otherwise they
 // are dropped from their chunk and freed via the chunk's entry_free_func (if any is set).
-// Returns the number of entries removed.
 static uint32_t
-remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destination) {
+remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destination, int32_t num_expected_entries) {
     uint32_t chunk_idx = 0;
     uint32_t entry_start_idx = 0;
     uint32_t removed_entries = 0;
 
+    const bool num_entries_known = num_expected_entries >= 0;
+    const uint32_t num_expected = num_entries_known ? (uint32_t)num_expected_entries : 0;
+
     while (chunk_idx < darray_get_num_items(self->chunks)) {
+        if (num_entries_known && removed_entries >= num_expected) {
+            g_assert(num_expected == removed_entries);
+            break;
+        }
         DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
         uint32_t entry_idx = entry_start_idx;
         while (entry_idx < darray_get_num_items(chunk)) {
+            if (num_entries_known && removed_entries >= num_expected) {
+                g_assert(num_expected == removed_entries);
+                break;
+            }
             FsearchDatabaseEntry *maybe_marked = darray_get_item(chunk, entry_idx);
             if (is_marked(maybe_marked, self->entry_type)) {
                 uint32_t n_elements = 1;
@@ -479,24 +479,21 @@ remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destinati
         entry_start_idx = 0;
     }
 
+    // Sanity check
+    if (num_entries_known && removed_entries != num_expected) {
+        g_debug("[chunked_array] expected %u marked entries, found %u", num_expected, removed_entries);
+        g_assert_not_reached();
+    }
+
     self->num_entries -= removed_entries;
     return removed_entries;
 }
 
-DynamicArray *
-fsearch_database_chunked_array_steal_marked_folders(FsearchDatabaseChunkedArray *self) {
-    g_return_val_if_fail(self, NULL);
-
-    DynamicArray *marked_entries = darray_new(128);
-    remove_marked_entries(self, marked_entries);
-    return marked_entries;
-}
-
 uint32_t
-fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self) {
+fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self, int32_t num_expected_entries) {
     g_return_val_if_fail(self, 0);
 
-    return remove_marked_entries(self, NULL);
+    return remove_marked_entries(self, NULL, num_expected_entries);
 }
 
 DynamicArray *

@@ -280,7 +280,7 @@ remove_results(DynamicArray *entries_to_remove,
         }
     }
     else {
-        fsearch_database_chunked_array_remove_marked_folders(chunks_to_remove_from);
+        fsearch_database_chunked_array_remove_marked_folders(chunks_to_remove_from, -1);
         for (uint32_t i = 0; i < num_entries && fsearch_selection_get_num_selected(selection_to_remove_from) > 0; ++i) {
             FsearchDatabaseEntry *entry = darray_get_item(entries_to_remove, i);
             fsearch_selection_unselect(selection_to_remove_from, entry);

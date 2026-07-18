@@ -1055,6 +1055,207 @@ test_compare_by_full_path_orders_by_ancestor_names(void) {
 }
 
 /* ------------------------------------------------------------------------ *
+ * Subtree contiguity
+ * ------------------------------------------------------------------------ */
+
+// Insertion sort, so this test doesn't depend on the DynamicArray sort machinery. The set is
+// tiny and any correct sort yields the same order for a valid comparator.
+static void
+sort_entries_by_chain(FsearchDatabaseEntry **entries, uint32_t num_entries, FsearchDatabaseSortOrderChain chain) {
+    FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(chain);
+    for (uint32_t i = 1; i < num_entries; ++i) {
+        FsearchDatabaseEntry *key = entries[i];
+        uint32_t j = i;
+        while (j > 0 && db_entry_compare_entries_by_chain(&entries[j - 1], &key, ctx) > 0) {
+            entries[j] = entries[j - 1];
+            j--;
+        }
+        entries[j] = key;
+    }
+    db_entry_compare_context_free(ctx);
+}
+
+// Asserts every descendant of `folder` occupies one unbroken run in `entries`.
+static void
+assert_descendants_contiguous(FsearchDatabaseEntry **entries, uint32_t num_entries, FsearchDatabaseEntry *folder) {
+    int32_t first = -1;
+    int32_t last = -1;
+    uint32_t count = 0;
+    for (uint32_t i = 0; i < num_entries; ++i) {
+        if (db_entry_is_descendant(entries[i], folder)) {
+            if (first < 0) {
+                first = (int32_t)i;
+            }
+            last = (int32_t)i;
+            count++;
+        }
+    }
+    if (count == 0) {
+        return;
+    }
+    g_assert_cmpuint((uint32_t)(last - first + 1), ==, count);
+}
+
+// The removal path wants to steal a deleted folder's files as one contiguous range, so this
+// pins the property both path sort orders must keep: a folder's descendant files never have a
+// non-descendant sorted in between. The sibling names here ("b", "b.d", "b2", "bb") are the
+// ones a flat string comparison would get wrong, because '.' and digits sort below '/'.
+static void
+test_path_sort_keeps_descendant_files_contiguous(void) {
+    FsearchDatabaseEntry *root = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a", NULL);
+    FsearchDatabaseEntry *b = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b", root);
+    FsearchDatabaseEntry *b_a = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a", b);
+    FsearchDatabaseEntry *b_a_deep = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "deep", b_a);
+    FsearchDatabaseEntry *b_b = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b", b);
+    FsearchDatabaseEntry *bd = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b.d", root);
+    FsearchDatabaseEntry *b2 = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b2", root);
+    FsearchDatabaseEntry *bb = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "bb", root);
+
+    FsearchDatabaseEntry *folders[] = {root, b, b_a, b_a_deep, b_b, bd, b2, bb};
+
+    // Two files per colliding sibling, with names that would interleave if two distinct folder
+    // names ever compared equal. A single file per folder would hide such a collision, because
+    // a one-element run is contiguous no matter where it lands.
+    FsearchDatabaseEntry *files[] = {
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "root.txt", root),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "z.txt", b),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a.txt", b),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "deep.txt", b_a),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "deeper.txt", b_a_deep),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "x.txt", b_b),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a.txt", bd),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "z.txt", bd),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "b.txt", b2),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "y.txt", b2),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "c.txt", bb),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "x.txt", bb),
+    };
+    const uint32_t num_files = G_N_ELEMENTS(files);
+
+    const FsearchDatabaseSortOrderChain chains[] = {
+        {.properties = {DATABASE_INDEX_PROPERTY_PATH_FULL}, .length = 1},
+        {.properties = {DATABASE_INDEX_PROPERTY_PATH, DATABASE_INDEX_PROPERTY_NAME}, .length = 2},
+    };
+
+    for (uint32_t c = 0; c < G_N_ELEMENTS(chains); ++c) {
+        FsearchDatabaseEntry *sorted[G_N_ELEMENTS(files)];
+        memcpy(sorted, files, sizeof(files));
+        sort_entries_by_chain(sorted, num_files, chains[c]);
+        for (uint32_t f = 0; f < G_N_ELEMENTS(folders); ++f) {
+            assert_descendants_contiguous(sorted, num_files, folders[f]);
+        }
+    }
+
+    for (uint32_t i = 0; i < num_files; ++i) {
+        db_entry_free(files[i]);
+    }
+    db_entry_free(b_a_deep);
+    db_entry_free(b_a);
+    db_entry_free(b_b);
+    db_entry_free(b);
+    db_entry_free(bd);
+    db_entry_free(b2);
+    db_entry_free(bb);
+    db_entry_free(root);
+}
+
+// Contiguity relies on distinct names never comparing equal. The natural-order comparison makes
+// the leading-zero cases the ones worth pinning.
+static void
+test_path_compare_has_no_name_collisions(void) {
+    FsearchDatabaseEntry *root = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "root", NULL);
+    const char *distinct[] = {"01", "1", "2", "02", "10", "010", "b", "b.d", "b2", "bb"};
+
+    for (uint32_t i = 0; i < G_N_ELEMENTS(distinct); ++i) {
+        for (uint32_t j = 0; j < G_N_ELEMENTS(distinct); ++j) {
+            if (i == j) {
+                continue;
+            }
+            FsearchDatabaseEntry *a = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, distinct[i], root);
+            FsearchDatabaseEntry *b = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, distinct[j], root);
+            g_assert_cmpint(db_entry_compare_entries_by_full_path(&a, &b), !=, 0);
+            db_entry_free(a);
+            db_entry_free(b);
+        }
+    }
+    db_entry_free(root);
+}
+
+static void
+test_dummy_does_not_change_parent_child_counts(void) {
+    FsearchDatabaseEntry *dir = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "dir", NULL);
+    FsearchDatabaseEntry *real = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "real.txt", dir);
+
+    g_assert_cmpuint(db_entry_folder_get_num_files(dir), ==, 1);
+    g_assert_cmpuint(db_entry_folder_get_num_folders(dir), ==, 0);
+
+    FsearchDatabaseEntry *dummy = db_entry_get_dummy_for_name_and_parent(dir, "", DATABASE_ENTRY_TYPE_FILE);
+    g_assert_nonnull(dummy);
+    g_assert_true(db_entry_get_parent(dummy) == dir);
+    // A dummy is not a real child, so the counts must be untouched while it exists...
+    g_assert_cmpuint(db_entry_folder_get_num_files(dir), ==, 1);
+
+    db_entry_free_no_unparent(dummy);
+    // ...and after it is released.
+    g_assert_cmpuint(db_entry_folder_get_num_files(dir), ==, 1);
+
+    db_entry_free(real);
+    db_entry_free(dir);
+}
+
+// The removal path binary-searches with a dummy to find where a folder's entries begin, so the
+// dummy has to sort after the folder but before every one of its children, under both orders.
+static void
+test_dummy_sorts_before_every_child(void) {
+    FsearchDatabaseEntry *root = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "root", NULL);
+    FsearchDatabaseEntry *dir = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "dir", root);
+    FsearchDatabaseEntry *sub = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "sub", dir);
+    FsearchDatabaseEntry *earlier_sibling = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "aaa", root);
+    FsearchDatabaseEntry *later_sibling = new_folder(DATABASE_INDEX_PROPERTY_FLAG_NONE, "dir2", root);
+
+    FsearchDatabaseEntry *children[] = {
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "!first.txt", dir),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "0.txt", dir),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "a.txt", dir),
+        new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "deep.txt", sub),
+    };
+    // Names chosen to sort before anything in `dir`, so only the folder's position separates them.
+    FsearchDatabaseEntry *earlier_outsider = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "!x.txt", earlier_sibling);
+    FsearchDatabaseEntry *later_outsider = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "!x.txt", later_sibling);
+
+    FsearchDatabaseEntry *dummy = db_entry_get_dummy_for_name_and_parent(dir, "", DATABASE_ENTRY_TYPE_FILE);
+
+    const FsearchDatabaseSortOrderChain chains[] = {
+        {.properties = {DATABASE_INDEX_PROPERTY_PATH_FULL}, .length = 1},
+        {.properties = {DATABASE_INDEX_PROPERTY_PATH, DATABASE_INDEX_PROPERTY_NAME}, .length = 2},
+    };
+
+    for (uint32_t c = 0; c < G_N_ELEMENTS(chains); ++c) {
+        FsearchDatabaseEntryCompareContext *ctx = db_entry_compare_context_new(chains[c]);
+        for (uint32_t i = 0; i < G_N_ELEMENTS(children); ++i) {
+            g_assert_cmpint(db_entry_compare_entries_by_chain(&dummy, &children[i], ctx), <, 0);
+        }
+        // The probe must land inside the folder's own run: after an earlier sibling's entries,
+        // before a later sibling's, even though both outsiders have names that sort first.
+        g_assert_cmpint(db_entry_compare_entries_by_chain(&dummy, &earlier_outsider, ctx), >, 0);
+        g_assert_cmpint(db_entry_compare_entries_by_chain(&dummy, &later_outsider, ctx), <, 0);
+        db_entry_compare_context_free(ctx);
+    }
+
+    db_entry_free_no_unparent(dummy);
+    for (uint32_t i = 0; i < G_N_ELEMENTS(children); ++i) {
+        db_entry_free(children[i]);
+    }
+    db_entry_free(earlier_outsider);
+    db_entry_free(later_outsider);
+    db_entry_free(sub);
+    db_entry_free(dir);
+    db_entry_free(earlier_sibling);
+    db_entry_free(later_sibling);
+    db_entry_free(root);
+}
+
+/* ------------------------------------------------------------------------ *
  * Deep copy
  * ------------------------------------------------------------------------ */
 
@@ -1368,6 +1569,13 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/entry/compare_by_path_different_depth", test_compare_by_path_different_depth);
     g_test_add_func("/FSearch/database/entry/compare_by_full_path_ancestor_order",
                     test_compare_by_full_path_orders_by_ancestor_names);
+    g_test_add_func("/FSearch/database/entry/path_sort_keeps_descendant_files_contiguous",
+                    test_path_sort_keeps_descendant_files_contiguous);
+    g_test_add_func("/FSearch/database/entry/path_compare_has_no_name_collisions",
+                    test_path_compare_has_no_name_collisions);
+    g_test_add_func("/FSearch/database/entry/dummy_does_not_change_parent_child_counts",
+                    test_dummy_does_not_change_parent_child_counts);
+    g_test_add_func("/FSearch/database/entry/dummy_sorts_before_every_child", test_dummy_sorts_before_every_child);
 
     // Deep copy
     g_test_add_func("/FSearch/database/entry/deep_copy_root", test_deep_copy_root_entry);
