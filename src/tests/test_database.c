@@ -133,7 +133,7 @@ test_get_item_info_for_stale_index_still_signals(void) {
     g_autoptr(FsearchDatabaseWork) search_work = fsearch_database_work_new_search(view_id,
                                                                                   query,
                                                                                   DATABASE_INDEX_PROPERTY_NAME,
-                                                                                  GTK_SORT_ASCENDING);
+                                                                                  FSEARCH_SORT_DIRECTION_ASCENDING);
     fsearch_database_queue_work(db, search_work);
     wait_for_signal(&ctx);
     g_signal_handler_disconnect(db, search_finished_handler);

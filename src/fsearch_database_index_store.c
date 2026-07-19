@@ -23,7 +23,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gobject/gobject.h>
-#include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -1301,7 +1300,7 @@ void
 fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
                                           uint32_t id,
                                           FsearchDatabaseIndexProperty sort_order,
-                                          GtkSortType sort_type,
+                                          FsearchSortDirection sort_direction,
                                           GCancellable *cancellable) {
     g_return_if_fail(store);
     g_return_if_fail(store->search_results);
@@ -1322,7 +1321,7 @@ fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
         files_fast_sorted = fsearch_database_chunked_array_get_joined(files_fast_sort_index);
         folders_fast_sorted = fsearch_database_chunked_array_get_joined(folders_fast_sort_index);
     }
-    fsearch_database_search_view_sort(view, files_fast_sorted, folders_fast_sorted, sort_order, sort_type, cancellable);
+    fsearch_database_search_view_sort(view, files_fast_sorted, folders_fast_sorted, sort_order, sort_direction, cancellable);
 }
 
 static DynamicArray *
@@ -1403,7 +1402,7 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                     uint32_t id,
                                     FsearchQuery *query,
                                     FsearchDatabaseIndexProperty sort_order,
-                                    GtkSortType sort_type,
+                                    FsearchSortDirection sort_direction,
                                     GCancellable *cancellable) {
     g_return_val_if_fail(store, false);
     g_return_val_if_fail(store->search_results, false);
@@ -1481,7 +1480,7 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                                                            NULL,
                                                                            fsearch_database_sort_order_chain_for_property(
                                                                                sort_order),
-                                                                           sort_type,
+                                                                           sort_direction,
                                                                            is_complete);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
 

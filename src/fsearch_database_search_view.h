@@ -5,10 +5,10 @@
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_query.h"
+#include "fsearch_sort_direction.h"
 
 #include <gio/gio.h>
 #include <glib.h>
-#include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -23,7 +23,7 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
                                  FsearchDatabaseSortOrderChain chain,
-                                 GtkSortType sort_type,
+                                 FsearchSortDirection sort_direction,
                                  bool is_complete);
 
 void
@@ -48,7 +48,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                   DynamicArray *files_fast_sorted,
                                   DynamicArray *folders_fast_sorted,
                                   FsearchDatabaseIndexProperty sort_order,
-                                  GtkSortType sort_type,
+                                  FsearchSortDirection sort_direction,
                                   GCancellable *cancellable);
 
 // Selection handling

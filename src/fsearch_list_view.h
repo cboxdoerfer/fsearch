@@ -1,5 +1,7 @@
 #pragma once
 
+#include "fsearch_sort_direction.h"
+
 #include <gtk/gtk.h>
 #include <stdint.h>
 
@@ -55,7 +57,7 @@ typedef void
                               gpointer user_data);
 
 typedef void
-(*FsearchListViewSortFunc)(int sort_order, GtkSortType sort_type, gpointer user_data);
+(*FsearchListViewSortFunc)(int sort_order, FsearchSortDirection sort_direction, gpointer user_data);
 
 // selection handlers
 typedef gboolean
@@ -119,10 +121,10 @@ FsearchListViewColumn *
 fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type);
 
 void
-fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
+fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction);
 
 void
-fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
+fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction);
 
 gint
 fsearch_list_view_get_cursor(FsearchListView *view);
@@ -136,8 +138,8 @@ fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean valu
 int
 fsearch_list_view_get_sort_order(FsearchListView *view);
 
-GtkSortType
-fsearch_list_view_get_sort_type(FsearchListView *view);
+FsearchSortDirection
+fsearch_list_view_get_sort_direction(FsearchListView *view);
 
 uint32_t
 fsearch_list_view_get_num_rows(FsearchListView *view);

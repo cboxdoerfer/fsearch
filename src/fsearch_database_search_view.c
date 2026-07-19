@@ -13,7 +13,6 @@
 #include "fsearch_selection.h"
 
 #include <glib.h>
-#include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -24,7 +23,7 @@ struct FsearchDatabaseSearchView {
     FsearchDatabaseChunkedArray *file_chunks;
     FsearchDatabaseChunkedArray *folder_chunks;
     uint32_t id;
-    GtkSortType sort_type;
+    FsearchSortDirection sort_direction;
     FsearchDatabaseSortOrderChain chain;
     GHashTable *file_selection;
     GHashTable *folder_selection;
@@ -49,7 +48,7 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
                                  FsearchDatabaseSortOrderChain chain,
-                                 GtkSortType sort_type,
+                                 FsearchSortDirection sort_direction,
                                  bool is_complete) {
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
@@ -58,7 +57,7 @@ fsearch_database_search_view_new(uint32_t id,
     view->folder_chunks = fsearch_database_chunked_array_new(folders, TRUE, chain, DATABASE_ENTRY_TYPE_FOLDER, NULL, NULL);
     view->file_chunks = fsearch_database_chunked_array_new(files, TRUE, chain, DATABASE_ENTRY_TYPE_FILE, NULL, NULL);
     view->chain = chain;
-    view->sort_type = sort_type;
+    view->sort_direction = sort_direction;
     view->is_complete = is_complete;
     view->file_selection = fsearch_selection_new();
     view->folder_selection = fsearch_selection_new();
@@ -86,8 +85,8 @@ search_view_get_num_folder_results(FsearchDatabaseSearchView *view) {
 }
 
 static uint32_t
-get_idx_for_sort_type(uint32_t idx, uint32_t num_files, uint32_t num_folders, GtkSortType sort_type) {
-    if (sort_type == GTK_SORT_DESCENDING) {
+get_idx_for_sort_direction(uint32_t idx, uint32_t num_files, uint32_t num_folders, FsearchSortDirection sort_direction) {
+    if (sort_direction == FSEARCH_SORT_DIRECTION_DESCENDING) {
         return num_folders + num_files - (idx + 1);
     }
     return idx;
@@ -104,7 +103,7 @@ fsearch_database_search_view_get_entry_for_idx(FsearchDatabaseSearchView *view, 
     const uint32_t num_folders = search_view_get_num_folder_results(view);
     const uint32_t num_files = search_view_get_num_file_results(view);
 
-    idx = get_idx_for_sort_type(idx, num_files, num_folders, view->sort_type);
+    idx = get_idx_for_sort_direction(idx, num_files, num_folders, view->sort_direction);
 
     if (idx < num_folders) {
         return fsearch_database_chunked_array_get_entry(view->folder_chunks, idx);
@@ -217,7 +216,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                   DynamicArray *files_fast_sorted,
                                   DynamicArray *folders_fast_sorted,
                                   FsearchDatabaseIndexProperty sort_order,
-                                  GtkSortType sort_type,
+                                  FsearchSortDirection sort_direction,
                                   GCancellable *cancellable) {
     g_return_if_fail(view);
 
@@ -245,7 +244,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                                                DATABASE_ENTRY_TYPE_FILE,
                                                                NULL,
                                                                NULL);
-        view->sort_type = sort_type;
+        view->sort_direction = sort_direction;
     }
     if (folders_new) {
         g_clear_pointer(&view->folder_chunks, fsearch_database_chunked_array_unref);
@@ -255,7 +254,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                                                  DATABASE_ENTRY_TYPE_FOLDER,
                                                                  NULL,
                                                                  NULL);
-        view->sort_type = sort_type;
+        view->sort_direction = sort_direction;
     }
 }
 
@@ -374,7 +373,7 @@ fsearch_database_search_view_get_info(FsearchDatabaseSearchView *view) {
                                             fsearch_selection_get_num_selected(view->file_selection),
                                             fsearch_selection_get_num_selected(view->folder_selection),
                                             view->chain.properties[0],
-                                            view->sort_type,
+                                            view->sort_direction,
                                             view->is_complete);
 }
 

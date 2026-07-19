@@ -27,7 +27,6 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -420,7 +419,7 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
     const FsearchDatabaseIndexProperty sort_order = fsearch_database_work_sort_get_sort_order(work);
-    const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
+    const FsearchSortDirection sort_direction = fsearch_database_work_sort_get_sort_direction(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
     signal_emit(self, SIGNAL_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
@@ -428,7 +427,7 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
-    fsearch_database_index_store_sort_results(self->store, id, sort_order, sort_type, cancellable);
+    fsearch_database_index_store_sort_results(self->store, id, sort_order, sort_direction, cancellable);
 
     signal_emit_sort_finished(self, id, fsearch_database_index_store_get_search_info(self->store, id));
 }
@@ -443,7 +442,7 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
     FsearchDatabaseIndexProperty sort_order = fsearch_database_work_search_get_sort_order(work);
-    const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
+    const FsearchSortDirection sort_direction = fsearch_database_work_search_get_sort_direction(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
     signal_emit(self, SIGNAL_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
@@ -451,7 +450,7 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
-    const bool result = fsearch_database_index_store_search(self->store, id, query, sort_order, sort_type, cancellable);
+    const bool result = fsearch_database_index_store_search(self->store, id, query, sort_order, sort_direction, cancellable);
 
     signal_emit_search_finished(self, id, fsearch_database_index_store_get_search_info(self->store, id));
 

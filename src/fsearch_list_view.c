@@ -83,7 +83,7 @@ struct _FsearchListView {
     gint min_list_width;
     gint list_height;
 
-    GtkSortType sort_type;
+    FsearchSortDirection sort_direction;
     gint sort_order;
 
     FsearchListViewSortFunc sort_func;
@@ -149,11 +149,11 @@ get_last_row_idx(FsearchListView *view) {
 }
 
 static inline int
-get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
+get_row_idx_for_sort_direction(FsearchListView *view, int row_idx) {
     return row_idx;
     //}
 
-    // if (view->sort_type == GTK_SORT_ASCENDING) {
+    // if (view->sort_direction == FSEARCH_SORT_DIRECTION_ASCENDING) {
     //     return row_idx;
     // }
     // else {
@@ -473,7 +473,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
                                 context,
                                 columns,
                                 &row_rect,
-                                get_row_idx_for_sort_type(view, row_idx),
+                                get_row_idx_for_sort_direction(view, row_idx),
                                 fsearch_list_view_is_selected(view, row_idx),
                                 view->cursor_idx == row_idx ? TRUE : FALSE,
                                 view->hovered_idx == row_idx ? TRUE : FALSE,
@@ -648,7 +648,7 @@ fsearch_list_view_selection_clear_silent(FsearchListView *view) {
 static void
 fsearch_list_view_selection_add(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        view->select_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
         fsearch_list_view_redraw_row(view, row);
     }
 }
@@ -656,14 +656,14 @@ fsearch_list_view_selection_add(FsearchListView *view, int row) {
 static void
 fsearch_list_view_selection_toggle_silent(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_toggle_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        view->select_toggle_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
     }
 }
 
 static gboolean
 fsearch_list_view_is_selected(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        return view->is_selected_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        return view->is_selected_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
     }
     return FALSE;
 }
@@ -697,8 +697,8 @@ fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, 
     start_idx = fit_row_idx_in_view(view, start_idx);
     end_idx = fit_row_idx_in_view(view, end_idx);
 
-    start_idx = get_row_idx_for_sort_type(view, (gint)start_idx);
-    end_idx = get_row_idx_for_sort_type(view, (gint)end_idx);
+    start_idx = get_row_idx_for_sort_direction(view, (gint)start_idx);
+    end_idx = get_row_idx_for_sort_direction(view, (gint)end_idx);
     const int32_t temp_idx = start_idx;
 
     if (start_idx > end_idx) {
@@ -813,7 +813,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                                       signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
                                       0,
                                       col->type,
-                                      get_row_idx_for_sort_type(view, row_idx));
+                                      get_row_idx_for_sort_direction(view, row_idx));
                     }
                 }
             }
@@ -828,7 +828,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                               signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
                               0,
                               col->type,
-                              get_row_idx_for_sort_type(view, row_idx));
+                              get_row_idx_for_sort_direction(view, row_idx));
             }
         }
     }
@@ -1328,7 +1328,7 @@ fsearch_list_view_query_tooltip(GtkWidget *widget,
 
     g_autofree char *tooltip_text = view->query_tooltip_func(layout,
                                                              view->row_height,
-                                                             get_row_idx_for_sort_type(view, row_idx),
+                                                             get_row_idx_for_sort_direction(view, row_idx),
                                                              col,
                                                              view->query_tooltip_func_data);
     g_clear_object(&layout);
@@ -2129,7 +2129,7 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
     fsearch_list_view_reset_sort_indicator(view);
 
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow),
-                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
+                                 view->sort_direction == FSEARCH_SORT_DIRECTION_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
                                  GTK_ICON_SIZE_BUTTON);
     gtk_widget_show(col->arrow);
 }
@@ -2137,15 +2137,15 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
 static void
 on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchListViewColumn *col = user_data;
-    GtkSortType current_sort_type = col->view->sort_type;
+    FsearchSortDirection current_sort_direction = col->view->sort_direction;
     int current_sort_order = col->view->sort_order;
 
     if (col->view->sort_func) {
         if (current_sort_order == col->type) {
-            col->view->sort_func(col->type, !current_sort_type, col->view->sort_func_data);
+            col->view->sort_func(col->type, !current_sort_direction, col->view->sort_func_data);
         }
         else {
-            col->view->sort_func(col->type, GTK_SORT_ASCENDING, col->view->sort_func_data);
+            col->view->sort_func(col->type, FSEARCH_SORT_DIRECTION_ASCENDING, col->view->sort_func_data);
         }
     }
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "content-loading-symbolic", GTK_ICON_SIZE_BUTTON);
@@ -2223,7 +2223,7 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
-fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction) {
     if (!view) {
         return;
     }
@@ -2233,14 +2233,14 @@ fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_orde
                              CLAMP(gtk_adjustment_get_value(view->vadjustment), 0, view->list_height));
 
     view->sort_order = sort_order;
-    view->sort_type = sort_type;
+    view->sort_direction = sort_direction;
     fsearch_list_view_update_sort_indicator(view);
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
 
 void
-fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction) {
     if (!view) {
         return;
     }
@@ -2253,7 +2253,7 @@ fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_
     gtk_adjustment_set_value(view->vadjustment, 0);
 
     view->sort_order = sort_order;
-    view->sort_type = sort_type;
+    view->sort_direction = sort_direction;
     fsearch_list_view_update_sort_indicator(view);
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
@@ -2349,9 +2349,9 @@ fsearch_list_view_get_sort_order(FsearchListView *view) {
     return view->sort_order;
 }
 
-GtkSortType
-fsearch_list_view_get_sort_type(FsearchListView *view) {
-    return view->sort_type;
+FsearchSortDirection
+fsearch_list_view_get_sort_direction(FsearchListView *view) {
+    return view->sort_direction;
 }
 
 uint32_t

@@ -12,7 +12,6 @@
 #include <gio/gio.h>
 #include <glib-object.h>
 #include <glib.h>
-#include <gtk/gtk.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -38,7 +37,7 @@ struct FsearchDatabaseWork {
         struct {
             FsearchQuery *query;
             FsearchDatabaseIndexProperty sort_order;
-            GtkSortType sort_type;
+            FsearchSortDirection sort_direction;
         };
 
         // FSEARCH_DATABASE_WORK_GET_ITEM_INFO
@@ -224,26 +223,26 @@ FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexProperty sort_order,
-                                 GtkSortType sort_type) {
+                                 FsearchSortDirection sort_direction) {
     g_return_val_if_fail(query, NULL);
 
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SEARCH;
     work->view_id = view_id;
     work->sort_order = sort_order;
-    work->sort_type = sort_type;
+    work->sort_direction = sort_direction;
     work->query = fsearch_query_ref(query);
 
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, GtkSortType sort_type) {
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, FsearchSortDirection sort_direction) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SORT;
     work->view_id = view_id;
     work->sort_order = sort_order;
-    work->sort_type = sort_type;
+    work->sort_direction = sort_direction;
 
     return work;
 }
@@ -326,11 +325,11 @@ fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work) {
     return work->sort_order;
 }
 
-GtkSortType
-fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, GTK_SORT_ASCENDING);
-    return work->sort_type;
+FsearchSortDirection
+fsearch_database_work_search_get_sort_direction(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, FSEARCH_SORT_DIRECTION_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, FSEARCH_SORT_DIRECTION_ASCENDING);
+    return work->sort_direction;
 }
 
 FsearchDatabaseIndexProperty
@@ -340,11 +339,11 @@ fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work) {
     return work->sort_order;
 }
 
-GtkSortType
-fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, GTK_SORT_ASCENDING);
-    return work->sort_type;
+FsearchSortDirection
+fsearch_database_work_sort_get_sort_direction(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, FSEARCH_SORT_DIRECTION_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, FSEARCH_SORT_DIRECTION_ASCENDING);
+    return work->sort_direction;
 }
 
 void *

@@ -91,7 +91,7 @@ test_cancelled_search_keeps_partial_results_marked_incomplete(void) {
                                                       view_id,
                                                       query_1,
                                                       DATABASE_INDEX_PROPERTY_NAME,
-                                                      GTK_SORT_ASCENDING,
+                                                      FSEARCH_SORT_DIRECTION_ASCENDING,
                                                       cancellable_1));
 
     g_autoptr(FsearchDatabaseSearchInfo) info_1 = fsearch_database_index_store_get_search_info(store, view_id);
@@ -109,7 +109,7 @@ test_cancelled_search_keeps_partial_results_marked_incomplete(void) {
                                                             view_id,
                                                             query_2,
                                                             DATABASE_INDEX_PROPERTY_NAME,
-                                                            GTK_SORT_ASCENDING,
+                                                            FSEARCH_SORT_DIRECTION_ASCENDING,
                                                             cancellable_2);
     // The search function itself should report that it did not complete.
     g_assert_false(result);

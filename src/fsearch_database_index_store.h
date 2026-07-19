@@ -11,10 +11,10 @@
 #include "fsearch_database_search_info.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
+#include "fsearch_sort_direction.h"
 
 #include <gio/gio.h>
 #include <glib.h>
-#include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -142,14 +142,14 @@ void
 fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
                                           uint32_t id,
                                           FsearchDatabaseIndexProperty sort_order,
-                                          GtkSortType sort_type,
+                                          FsearchSortDirection sort_direction,
                                           GCancellable *cancellable);
 bool
 fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                     uint32_t id,
                                     FsearchQuery *query,
                                     FsearchDatabaseIndexProperty sort_order,
-                                    GtkSortType sort_type,
+                                    FsearchSortDirection sort_direction,
                                     GCancellable *cancellable);
 
 void
