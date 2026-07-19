@@ -28,12 +28,6 @@ get_icon_size_for_height(int32_t height) {
     return 48;
 }
 
-static void
-reset_icon_caches(FsearchResultView *result_view) {
-    g_hash_table_remove_all(result_view->pixbuf_cache);
-    g_hash_table_remove_all(result_view->app_gicon_cache);
-}
-
 static GdkPixbuf *
 get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_size, int32_t scale_factor) {
     GdkPixbuf *pixbuf = g_hash_table_lookup(result_view->pixbuf_cache, icon);
@@ -330,10 +324,10 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     const int32_t scale_factor = gdk_window_get_scale_factor(bin_window);
 
     if (result_view->row_height != rect->height || result_view->scale_factor != scale_factor) {
-        reset_icon_caches(result_view);
+        g_hash_table_remove_all(result_view->pixbuf_cache);
+        result_view->row_height = rect->height;
+        result_view->scale_factor = scale_factor;
     }
-    result_view->row_height = rect->height;
-    result_view->scale_factor = scale_factor;
 
     gboolean pending = FALSE;
     FsearchDatabaseEntryInfo *info = NULL;
@@ -419,8 +413,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                                                                                        bin_window,
                                                                                        icon,
                                                                                        icon_size,
-                                                                                       gdk_window_get_scale_factor(
-                                                                                           bin_window))
+                                                                                       scale_factor)
                                                          : NULL;
                     if (icon_surface) {
                         int32_t x_icon = x;
