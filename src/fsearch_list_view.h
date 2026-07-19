@@ -32,6 +32,8 @@ typedef struct {
 
     GdkWindow *window;
 
+    GtkGesture *popup_gesture;
+
     volatile gint ref_count;
 } FsearchListViewColumn;
 

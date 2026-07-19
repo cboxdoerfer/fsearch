@@ -2019,6 +2019,7 @@ fsearch_list_view_column_free(FsearchListViewColumn *col) {
     }
 
     g_clear_pointer(&col->name, g_free);
+    g_clear_object(&col->popup_gesture);
     g_clear_object(&col->button);
     g_clear_pointer(&col, free);
 }
@@ -2144,28 +2145,22 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
     gtk_widget_set_sensitive(col->button, FALSE);
 }
 
-static gboolean
-on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    if (gdk_event_triggers_context_menu(event)) {
-        g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
-        GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
+static void
+on_fsearch_list_view_header_button_pressed(GtkGestureMultiPress *gesture,
+                                           gint n_press,
+                                           gdouble x,
+                                           gdouble y,
+                                           gpointer user_data) {
+    FsearchListViewColumn *col = user_data;
 
-        FsearchListViewColumn *col = user_data;
-        GtkWidget *list = GTK_WIDGET(col->view);
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
+    GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
 
-        GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
-        gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
-#if !GTK_CHECK_VERSION(3, 22, 0)
-        guint button;
-        guint32 time = gdk_event_get_time(event);
-        gdk_event_get_button(event, &button);
-        gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, button, time);
-#else
-        gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
-#endif
-        return GDK_EVENT_STOP;
-    }
-    return GDK_EVENT_PROPAGATE;
+    GtkWidget *menu_widget = gtk_menu_new_from_model(menu_model);
+    gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(col->view), NULL);
+    gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
+
+    gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 }
 
 FsearchListViewColumn *
@@ -2198,10 +2193,10 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
     }
 
     g_signal_connect(G_OBJECT(col->button), "clicked", G_CALLBACK(on_fsearch_list_view_header_button_clicked), col);
-    g_signal_connect(G_OBJECT(col->button),
-                     "button-press-event",
-                     G_CALLBACK(on_fsearch_list_view_header_button_pressed),
-                     col);
+
+    col->popup_gesture = gtk_gesture_multi_press_new(col->button);
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(col->popup_gesture), GDK_BUTTON_SECONDARY);
+    g_signal_connect(col->popup_gesture, "pressed", G_CALLBACK(on_fsearch_list_view_header_button_pressed), col);
 
     gtk_widget_set_parent(col->button, GTK_WIDGET(view));
     gtk_widget_set_parent_window(col->button, view->header_window);
