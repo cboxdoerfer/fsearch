@@ -18,6 +18,7 @@ typedef struct {
     // when it changes we need to reset the icon cache
     int32_t row_height;
     int32_t scale_factor;
+    gulong icon_theme_change_handler_id;
 
     guint view_id;
     FsearchDatabaseIndexProperty sort_order;
