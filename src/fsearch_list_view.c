@@ -1363,19 +1363,11 @@ fsearch_list_view_get_property(GObject *object, guint prop_id, GValue *value, GP
 
 static void
 update_hovered_idx_for_current_cursor_position(FsearchListView *view) {
-#if GTK_CHECK_VERSION(3, 20, 0)
     GdkSeat *seat = gdk_display_get_default_seat(gdk_display_get_default());
     if (!seat) {
         return;
     }
     GdkDevice *pointer_device = gdk_seat_get_pointer(seat);
-#else
-    GdkDeviceManager *device_manager = gdk_display_get_device_manager(gdk_display_get_default());
-    if (!device_manager) {
-        return;
-    }
-    GdkDevice *pointer_device = gdk_device_manager_get_client_pointer(device_manager);
-#endif
     if (!pointer_device) {
         return;
     }
@@ -1922,9 +1914,7 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
                                                                    G_TYPE_INT,
                                                                    G_TYPE_INT);
 
-#if GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_class_set_css_name(widget_class, "treeview");
-#endif
 }
 
 static void

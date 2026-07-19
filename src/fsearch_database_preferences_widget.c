@@ -108,14 +108,8 @@ select_first_row(GtkTreeView *view, GtkTreeSelection *selection, GtkTreeModel *m
     }
 }
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-static void
-on_file_chooser_dialog_response(GtkFileChooserDialog *dialog, GtkResponseType response, gpointer user_data) {
-
-#else
 static void
 on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType response, gpointer user_data) {
-#endif
     FsearchPreferencesFileChooserContext *ctx = user_data;
     g_assert(ctx);
     g_assert(ctx->row_add_func);
@@ -143,11 +137,7 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
         }
     }
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-#else
     g_clear_object(&dialog);
-#endif
 
     g_free(g_steal_pointer(&ctx));
 }
@@ -158,21 +148,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
 
     GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select folder"),
-                                                    GTK_WINDOW(window),
-                                                    action,
-                                                    _("_Cancel"),
-                                                    GTK_RESPONSE_CANCEL,
-                                                    _("_Select"),
-                                                    GTK_RESPONSE_ACCEPT,
-                                                    NULL);
-
-    g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_dialog_response), ctx);
-    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
-    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-    gtk_widget_show(dialog);
-#else
     GtkFileChooserNative *dialog = gtk_file_chooser_native_new(_("Select folder"),
                                                                GTK_WINDOW(window),
                                                                action,
@@ -183,7 +158,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_native_dialog_set_transient_for(GTK_NATIVE_DIALOG(dialog), GTK_WINDOW(window));
     gtk_native_dialog_set_modal(GTK_NATIVE_DIALOG(dialog), true);
     gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
-#endif
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
@@ -1031,9 +1005,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_add_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_remove_button);
-    gtk_widget_class_bind_template_child(widget_class,
-                                         FsearchDatabasePreferencesWidget,
-                                         exclude_reset_to_defaults_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_reset_to_defaults_button);
 
     gtk_widget_class_bind_template_child(widget_class, FsearchDatabasePreferencesWidget, exclude_hidden_items_button);
 
