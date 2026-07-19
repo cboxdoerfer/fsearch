@@ -68,6 +68,42 @@ typedef struct FsearchDatabaseSortOrderChain {
     uint32_t length;
 } FsearchDatabaseSortOrderChain;
 
+// not for display in the UI (not translated)
+static inline const char *
+fsearch_database_index_property_to_string(FsearchDatabaseIndexProperty property) {
+    switch (property) {
+    case DATABASE_INDEX_PROPERTY_NONE:
+        return "none";
+    case DATABASE_INDEX_PROPERTY_NAME:
+        return "name";
+    case DATABASE_INDEX_PROPERTY_PATH:
+        return "path";
+    case DATABASE_INDEX_PROPERTY_PATH_FULL:
+        return "full path";
+    case DATABASE_INDEX_PROPERTY_SIZE:
+        return "size";
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
+        return "mtime";
+    case DATABASE_INDEX_PROPERTY_ACCESS_TIME:
+        return "atime";
+    case DATABASE_INDEX_PROPERTY_CREATION_TIME:
+        return "ctime";
+    case DATABASE_INDEX_PROPERTY_STATUS_CHANGE_TIME:
+        return "status change time";
+    case DATABASE_INDEX_PROPERTY_NUM_FILES:
+        return "number of files";
+    case DATABASE_INDEX_PROPERTY_NUM_FOLDERS:
+        return "number of folders";
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
+        return "type";
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
+        return "extension";
+    case NUM_DATABASE_INDEX_PROPERTIES:
+        break;
+    }
+    return "unknown";
+}
+
 static inline bool
 fsearch_database_index_property_is_set(FsearchDatabaseIndexPropertyFlags flags, FsearchDatabaseIndexProperty property) {
     static const FsearchDatabaseIndexPropertyFlags prop_to_flag[NUM_DATABASE_INDEX_PROPERTIES] = {

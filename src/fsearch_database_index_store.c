@@ -1414,7 +1414,8 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
 
     if (!file_chunks && !folder_chunks) {
-        g_debug("[index_store] no fast sort index for sort order %d, falling back to name", sort_order);
+        g_debug("[index_store] no fast sort index for sort order %s, falling back to name",
+                fsearch_database_index_property_to_string(sort_order));
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
         file_chunks = fsearch_database_index_store_get_files(store, sort_order);
         folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
