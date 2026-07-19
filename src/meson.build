@@ -86,7 +86,7 @@ fsearch_core_deps = [
 ]
 
 fsearch_deps = fsearch_core_deps + [
-    dependency('gtk+-3.0', version: '>= 3.22'),
+    dependency('gtk+-3.0', version: '>= 3.24'),
 ]
 
 fsearch_enums_headers = [
