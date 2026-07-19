@@ -733,7 +733,6 @@ fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *
 
     struct stat st;
     if (lstat(path, &st)) {
-        g_debug("[get_info] can't stat: %s", path);
         return false;
     }
     if (mtime) {
