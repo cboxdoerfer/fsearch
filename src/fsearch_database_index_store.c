@@ -1414,12 +1414,14 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
 
     if (!file_chunks && !folder_chunks) {
+        g_debug("[index_store] no fast sort index for sort order %d, falling back to name", sort_order);
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
         file_chunks = fsearch_database_index_store_get_files(store, sort_order);
         folder_chunks = fsearch_database_index_store_get_folders(store, sort_order);
     }
 
     if (!file_chunks && !folder_chunks) {
+        g_debug("[index_store] search skipped: store has no entries to search");
         return false;
     }
 
@@ -1428,6 +1430,9 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
     // We just need to make sure that the search threads get a roughly equally sized range to search in.
     g_autoptr(DynamicArray) files = file_chunks ? fsearch_database_chunked_array_get_joined(file_chunks) : NULL;
     g_autoptr(DynamicArray) folders = folder_chunks ? fsearch_database_chunked_array_get_joined(folder_chunks) : NULL;
+
+    const uint32_t num_searched = (files ? darray_get_num_items(files) : 0)
+                                + (folders ? darray_get_num_items(folders) : 0);
 
     const bool matches_everything = fsearch_query_matches_everything(query);
     g_autoptr(DynamicArray) found_files = NULL;
@@ -1442,6 +1447,22 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                           ? g_steal_pointer(&folders)
                           : search_entries(query, folders, store->worker_pool, store->worker_pool_collect_queue, cancellable);
     }
+
+    const uint32_t num_found_files = found_files ? darray_get_num_items(found_files) : 0;
+    const uint32_t num_found_folders = found_folders ? darray_get_num_items(found_folders) : 0;
+    const double search_time = g_timer_elapsed(timer, NULL);
+
+    g_debug("[index_store] search \"%s\": %u of %u matched (%u folder%s, %u file%s) in %.3f ms%s%s",
+            query->search_term ? query->search_term : "",
+            num_found_folders + num_found_files,
+            num_searched,
+            num_found_folders,
+            num_found_folders == 1 ? "" : "s",
+            num_found_files,
+            num_found_files == 1 ? "" : "s",
+            search_time * 1000.0,
+            matches_everything ? ", match-all" : "",
+            g_cancellable_is_cancelled(cancellable) ? ", cancelled" : "");
 
     if (found_files || found_folders) {
         // If the search got cancelled partway through, found_files/found_folders only reflect
@@ -1462,7 +1483,6 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                                                            sort_type,
                                                                            is_complete);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
-        g_debug("[index_store] search duration: %f", g_timer_elapsed(timer, NULL));
 
         return is_complete;
     }
