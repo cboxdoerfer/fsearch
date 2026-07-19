@@ -428,18 +428,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEventBox">
+                      <object class="GtkLabel" id="smart_case_label">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkLabel" id="smart_case_label">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="can-focus">False</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="label" translatable="yes">CASE</property>
-                          </object>
-                        </child>
+                        <property name="label" translatable="yes">CASE</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -535,18 +528,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEventBox">
+                      <object class="GtkLabel" id="smart_path_label">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkLabel" id="smart_path_label">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="can-focus">False</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="label" translatable="yes">PATH</property>
-                          </object>
-                        </child>
+                        <property name="label" translatable="yes">PATH</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -747,20 +733,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEventBox">
+                      <object class="GtkLabel" id="partial_results_label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkLabel" id="partial_results_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="label" translatable="yes">PARTIAL</property>
-                            <style>
-                              <class name="fsearch-statusbar-partial-results-label"/>
-                            </style>
-                          </object>
-                        </child>
+                        <property name="label" translatable="yes">PARTIAL</property>
+                        <style>
+                          <class name="fsearch-statusbar-partial-results-label"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
