@@ -1,3 +1,4 @@
+#include "gdk/gdk.h"
 #define G_LOG_DOMAIN "fsearch-result-view"
 
 #include "fsearch_result_view.h"
@@ -326,11 +327,13 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+    const int32_t scale_factor = gdk_window_get_scale_factor(bin_window);
 
-    if (result_view->row_height != rect->height) {
+    if (result_view->row_height != rect->height || result_view->scale_factor != scale_factor) {
         reset_icon_caches(result_view);
     }
     result_view->row_height = rect->height;
+    result_view->scale_factor = scale_factor;
 
     gboolean pending = FALSE;
     FsearchDatabaseEntryInfo *info = NULL;
@@ -544,6 +547,8 @@ fsearch_result_view_new(guint view_id) {
                                                          NULL,
                                                          (GDestroyNotify)entry_info_free);
     result_view->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
+
+    result_view->scale_factor = 1;
     result_view->pixbuf_cache = g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
     result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     result_view->icon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
