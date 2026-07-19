@@ -534,7 +534,6 @@ on_icon_theme_changed(GtkIconTheme *icon_theme, gpointer user_data) {
     FsearchResultView *result_view = user_data;
     g_hash_table_remove_all(result_view->pixbuf_cache);
     g_hash_table_remove_all(result_view->icon_cache);
-    g_hash_table_remove_all(result_view->app_gicon_cache);
     if (result_view->list_view) {
         gtk_widget_queue_draw(GTK_WIDGET(result_view->list_view));
     }
@@ -554,7 +553,6 @@ fsearch_result_view_new(guint view_id) {
 
     result_view->scale_factor = 1;
     result_view->pixbuf_cache = g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
-    result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     result_view->icon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     result_view->icon_loads = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
@@ -572,7 +570,6 @@ fsearch_result_view_free(FsearchResultView *result_view) {
     g_clear_signal_handler(&result_view->icon_theme_change_handler_id, gtk_icon_theme_get_default());
     g_clear_pointer(&result_view->item_info_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->pixbuf_cache, g_hash_table_unref);
-    g_clear_pointer(&result_view->app_gicon_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->icon_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->icon_loads, g_hash_table_unref);
     g_clear_object(&result_view->db);

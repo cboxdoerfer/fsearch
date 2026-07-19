@@ -9,7 +9,6 @@ typedef struct {
 
     GHashTable *item_info_cache;
     GHashTable *pixbuf_cache;
-    GHashTable *app_gicon_cache;
 
     GHashTable *icon_cache;
     GHashTable *icon_loads;
