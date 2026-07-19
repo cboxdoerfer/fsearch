@@ -2,16 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">process-stop-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">process-stop-symbolic</property>
-  </object>
   <template class="FsearchStatusbar" parent="GtkRevealer">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -105,11 +95,17 @@
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Cancel</property>
                     <property name="action-name">win.cancel_task</property>
-                    <property name="image">image1</property>
                     <property name="relief">none</property>
                     <style>
                       <class name="fsearch-statusbar-cancel-update-button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="image1">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">process-stop-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -327,11 +323,17 @@
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Cancel database update</property>
                         <property name="action-name">app.cancel_update_database</property>
-                        <property name="image">image9</property>
                         <property name="relief">none</property>
                         <style>
                           <class name="fsearch-statusbar-cancel-update-button"/>
                         </style>
+                        <child>
+                          <object class="GtkImage" id="image9">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">process-stop-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
