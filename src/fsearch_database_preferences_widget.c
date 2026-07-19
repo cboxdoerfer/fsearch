@@ -78,11 +78,7 @@ enum { PROP_0, PROP_INCLUDE_MANAGER, PROP_EXCLUDE_MANAGER, NUM_PROPERTIES };
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
-#if GLIB_CHECK_VERSION(2, 70, 0)
 G_DEFINE_FINAL_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferences_widget, GTK_TYPE_BOX)
-#else
-G_DEFINE_TYPE(FsearchDatabasePreferencesWidget, fsearch_database_preferences_widget, GTK_TYPE_BOX)
-#endif
 
 typedef gboolean (*RowAddFunc)(GtkListStore *, const char *, GtkTreeIter *out_iter);
 

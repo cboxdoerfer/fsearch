@@ -79,7 +79,7 @@ endif
 
 fsearch_core_deps = [
     cc.find_library('m', required: true),
-    dependency('gio-unix-2.0', version: '>= 2.60'),
+    dependency('gio-unix-2.0', version: '>= 2.72'),
     dependency('pango', version: '>= 1.0'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 4.4'),

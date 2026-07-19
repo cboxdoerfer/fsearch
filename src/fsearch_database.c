@@ -1299,24 +1299,10 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                    G_TYPE_UINT,
                                                    G_TYPE_UINT,
                                                    FSEARCH_TYPE_DATABASE_ENTRY_INFO);
-    signals[SIGNAL_APPLY_STARTED] = g_signal_new("apply-started",
-                                                 G_TYPE_FROM_CLASS(klass),
-                                                 G_SIGNAL_RUN_LAST,
-                                                 0,
-                                                 NULL,
-                                                 NULL,
-                                                 NULL,
-                                                 G_TYPE_NONE,
-                                                 0);
-    signals[SIGNAL_APPLY_FINISHED] = g_signal_new("apply-finished",
-                                                  G_TYPE_FROM_CLASS(klass),
-                                                  G_SIGNAL_RUN_LAST,
-                                                  0,
-                                                  NULL,
-                                                  NULL,
-                                                  NULL,
-                                                  G_TYPE_NONE,
-                                                  0);
+    signals[SIGNAL_APPLY_STARTED] =
+        g_signal_new("apply-started", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
+    signals[SIGNAL_APPLY_FINISHED] =
+        g_signal_new("apply-finished", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
 }
 
 static void
@@ -1324,11 +1310,7 @@ fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init(&self->mutex);
     g_mutex_init(&self->scan_mutex);
     self->cancellable = g_cancellable_new();
-#if GLIB_CHECK_VERSION(2, 70, 0)
     self->io_pool = g_thread_pool_new_full(io_thread_cb, self, (GDestroyNotify)fsearch_database_work_unref, 1, TRUE, NULL);
-#else
-    self->io_pool = g_thread_pool_new(io_thread_cb, self, 1, TRUE, NULL);
-#endif
     self->worker_ctx = g_main_context_new();
     self->worker_loop = g_main_loop_new(self->worker_ctx, FALSE);
     self->worker_thread = g_thread_new("FsearchDatabaseWorker", database_worker_thread, self);
@@ -1479,10 +1461,7 @@ fsearch_database_rescan_blocking(FsearchDatabase *self) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
-    database_rescan_sync(self,
-                         self->include_manager,
-                         self->exclude_manager,
-                         DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+    database_rescan_sync(self, self->include_manager, self->exclude_manager, DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
 
     return FSEARCH_RESULT_SUCCESS;
 }
