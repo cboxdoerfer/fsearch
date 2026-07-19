@@ -232,6 +232,8 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
 
         set_accels_for_escape(G_APPLICATION(self));
     }
+
+    gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 static void
@@ -249,8 +251,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config));
     fsearch_preferences_dialog_set_page(FSEARCH_PREFERENCES_DIALOG(pref), page);
     g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
-    gtk_dialog_run(GTK_DIALOG(pref));
-    g_clear_pointer(&pref, gtk_widget_destroy);
+    gtk_widget_show(pref);
 }
 
 static void
@@ -602,8 +603,8 @@ fsearch_welcome_dialog_show(GtkWindow *parent) {
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
     gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
+    g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_destroy), dialog);
+    gtk_widget_show(dialog);
 }
 
 static void
