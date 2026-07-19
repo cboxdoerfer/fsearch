@@ -91,28 +91,78 @@ action_set_enabled(GActionGroup *group, const gchar *action_name, bool value) {
     }
 }
 
-static bool
-confirm_action(GtkWidget *parent, const char *title, const char *question, int limit, int value) {
-    if (value < limit) {
-        return true;
-    }
+typedef void (*FsearchConfirmedFunc)(gpointer user_data);
 
-    const gint response = ui_utils_run_gtk_dialog(parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, title, question);
-    if (response == GTK_RESPONSE_YES) {
-        return true;
+typedef struct {
+    FsearchConfirmedFunc confirmed;
+    gpointer data;
+    GDestroyNotify data_free;
+} FsearchConfirmContext;
+
+static void
+confirm_context_free(FsearchConfirmContext *ctx) {
+    if (ctx->data_free) {
+        ctx->data_free(ctx->data);
     }
-    return false;
+    g_free(ctx);
 }
 
-static bool
-confirm_file_open_action(GtkWidget *parent, int num_files) {
-    char question[1024] = "";
-    const char *format = ngettext("Do you really want to open %'d file?",
-                                  "Do you really want to open %'d files?",
-                                  num_files);
-    snprintf(question, sizeof(question), format, num_files);
+static void
+on_confirm_response(GtkDialog *dialog, gint response, gpointer user_data) {
+    FsearchConfirmContext *ctx = user_data;
 
-    return confirm_action(parent, _("Opening Files…"), question, 10, num_files);
+    if (response == GTK_RESPONSE_OK || response == GTK_RESPONSE_YES) {
+        ctx->confirmed(ctx->data);
+    }
+    // Destroying the dialog releases ctx, so it must happen after confirmed ran.
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+static void
+confirm_action_async(GtkWidget *parent,
+                     GtkButtonsType buttons,
+                     const char *title,
+                     const char *question,
+                     bool needs_confirmation,
+                     FsearchConfirmedFunc confirmed,
+                     gpointer data,
+                     GDestroyNotify data_free) {
+    if (!needs_confirmation) {
+        confirmed(data);
+        if (data_free) {
+            data_free(data);
+        }
+        return;
+    }
+
+    FsearchConfirmContext *ctx = g_new0(FsearchConfirmContext, 1);
+    ctx->confirmed = confirmed;
+    ctx->data = data;
+    ctx->data_free = data_free;
+
+    // The dialog takes ownership of ctx and releases it when it's finalized.
+    ui_utils_run_gtk_dialog_async(parent,
+                                  GTK_MESSAGE_WARNING,
+                                  buttons,
+                                  title,
+                                  question,
+                                  G_CALLBACK(on_confirm_response),
+                                  ctx,
+                                  (GDestroyNotify)confirm_context_free);
+}
+
+static void
+confirm_file_open_action(GtkWidget *parent,
+                         int num_files,
+                         FsearchConfirmedFunc confirmed,
+                         gpointer data,
+                         GDestroyNotify data_free) {
+    g_autofree char *question = g_strdup_printf(ngettext("Do you really want to open %'d file?",
+                                                         "Do you really want to open %'d files?",
+                                                         num_files),
+                                                num_files);
+
+    confirm_action_async(parent, GTK_BUTTONS_YES_NO, _("Opening Files…"), question, num_files >= 10, confirmed, data, data_free);
 }
 
 static void
@@ -183,35 +233,30 @@ append_name_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
     append_line_to_string(user_data, entry, db_entry_get_name_for_display);
 }
 
+typedef struct {
+    FsearchApplicationWindow *self;
+    GList *file_list;
+    guint num_selected_rows;
+    bool delete;
+} FsearchDeleteContext;
+
 static void
-fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
-    FsearchApplicationWindow *self = user_data;
+delete_context_free(gpointer data) {
+    FsearchDeleteContext *ctx = data;
+    g_list_free_full(g_steal_pointer(&ctx->file_list), (GDestroyNotify)g_free);
+    g_clear_object(&ctx->self);
+    g_free(ctx);
+}
+
+static void
+delete_selection_confirmed(gpointer data) {
+    FsearchDeleteContext *ctx = data;
+    FsearchApplicationWindow *self = ctx->self;
+    GList *file_list = ctx->file_list;
+    const guint num_selected_rows = ctx->num_selected_rows;
+    const bool delete = ctx->delete;
 
     g_autoptr(GString) error_message = g_string_new(NULL);
-
-    const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
-    GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
-
-    if (delete || num_selected_rows > 20) {
-        g_autoptr(GString) warning_message = g_string_new(NULL);
-        const char *format = ngettext("Do you really want to remove %'d file?",
-                                      "Do you really want to remove %'d files?",
-                                      num_selected_rows);
-        g_string_printf(warning_message, format, num_selected_rows);
-        gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
-                                                GTK_MESSAGE_WARNING,
-                                                GTK_BUTTONS_OK_CANCEL,
-                                                delete ? _("Deleting files…") : _("Moving files to trash…"),
-                                                warning_message->str);
-
-        if (response != GTK_RESPONSE_OK) {
-            if (file_list) {
-                g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
-            }
-            return;
-        }
-    }
 
     g_autoptr(DynamicArray) items = darray_new_full(num_selected_rows, g_free);
     for (GList *f = file_list; f != NULL; f = f->next) {
@@ -238,42 +283,55 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       _("Something went wrong."),
                                       error_message->str,
                                       G_CALLBACK(gtk_widget_destroy),
+                                      NULL,
                                       NULL);
     }
-
-    if (file_list) {
-        g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
-    }
+    // ctx (and file_list) is released by delete_context_free()
 }
 
 static void
-fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
-    if (!connection) {
-        g_debug("[file_properties] failed to get bus connection");
-    }
 
-    const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
-    g_autoptr(GPtrArray) file_array = g_ptr_array_new_full(num_selected_rows, g_free);
-    fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &file_array);
+    FsearchDeleteContext *ctx = g_new0(FsearchDeleteContext, 1);
+    ctx->self = g_object_ref(self);
+    ctx->delete = delete;
+    ctx->num_selected_rows = fsearch_application_window_get_num_selected(self);
+    fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &ctx->file_list);
 
-    if (num_selected_rows > 20) {
-        g_autoptr(GString) warning_message = g_string_new(NULL);
-        const char *format = ngettext("Do you really want to open %'d file property window?",
-                                      "Do you really want to open %'d file property windows?",
-                                      num_selected_rows);
-        g_string_printf(warning_message, format, num_selected_rows);
-        gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
-                                                GTK_MESSAGE_WARNING,
-                                                GTK_BUTTONS_OK_CANCEL,
-                                                _("Opening file properties…"),
-                                                warning_message->str);
+    g_autofree char *question = g_strdup_printf(ngettext("Do you really want to remove %'d file?",
+                                                         "Do you really want to remove %'d files?",
+                                                         ctx->num_selected_rows),
+                                                ctx->num_selected_rows);
 
-        if (response != GTK_RESPONSE_OK) {
-            return;
-        }
-    }
+    confirm_action_async(GTK_WIDGET(self),
+                         GTK_BUTTONS_OK_CANCEL,
+                         delete ? _("Deleting files…") : _("Moving files to trash…"),
+                         question,
+                         delete || ctx->num_selected_rows > 20,
+                         delete_selection_confirmed,
+                         ctx,
+                         delete_context_free);
+}
+
+typedef struct {
+    GDBusConnection *connection;
+    GPtrArray *file_array;
+} FsearchFilePropertiesContext;
+
+static void
+file_properties_context_free(gpointer data) {
+    FsearchFilePropertiesContext *ctx = data;
+    g_clear_pointer(&ctx->file_array, g_ptr_array_unref);
+    g_clear_object(&ctx->connection);
+    g_free(ctx);
+}
+
+static void
+file_properties_confirmed(gpointer data) {
+    FsearchFilePropertiesContext *ctx = data;
+    GDBusConnection *connection = ctx->connection;
+    g_autoptr(GPtrArray) file_array = g_steal_pointer(&ctx->file_array);
 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
@@ -297,6 +355,36 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     if (error) {
         g_debug("[file_properties] %s", error->message);
     }
+}
+
+static void
+fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
+    if (!connection) {
+        g_debug("[file_properties] failed to get bus connection");
+    }
+
+    const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
+
+    FsearchFilePropertiesContext *ctx = g_new0(FsearchFilePropertiesContext, 1);
+    ctx->connection = connection ? g_object_ref(connection) : NULL;
+    ctx->file_array = g_ptr_array_new_full(num_selected_rows, g_free);
+    fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &ctx->file_array);
+
+    g_autofree char *question = g_strdup_printf(ngettext("Do you really want to open %'d file property window?",
+                                                         "Do you really want to open %'d file property windows?",
+                                                         num_selected_rows),
+                                                num_selected_rows);
+
+    confirm_action_async(GTK_WIDGET(self),
+                         GTK_BUTTONS_OK_CANCEL,
+                         _("Opening file properties…"),
+                         question,
+                         num_selected_rows > 20,
+                         file_properties_confirmed,
+                         ctx,
+                         file_properties_context_free);
 }
 
 static void
@@ -465,15 +553,24 @@ action_after_open(bool action_mouse) {
     }
 }
 
-static void
-launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info) {
-    g_return_if_fail(win);
-    g_return_if_fail(app_info);
+typedef struct {
+    FsearchApplicationWindow *win;
+    GAppInfo *app_info;
+} FsearchLaunchContext;
 
-    const guint selected_rows = fsearch_application_window_get_num_selected(win);
-    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
-        return;
-    }
+static void
+launch_context_free(gpointer data) {
+    FsearchLaunchContext *ctx = data;
+    g_clear_object(&ctx->app_info);
+    g_clear_object(&ctx->win);
+    g_free(ctx);
+}
+
+static void
+launch_selection_confirmed(gpointer data) {
+    FsearchLaunchContext *ctx = data;
+    FsearchApplicationWindow *win = ctx->win;
+    GAppInfo *app_info = ctx->app_info;
 
     GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
     g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
@@ -487,6 +584,19 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
         g_app_info_launch(app_info, file_list, G_APP_LAUNCH_CONTEXT(launch_context), NULL);
         g_list_free_full(g_steal_pointer(&file_list), g_object_unref);
     }
+}
+
+static void
+launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info) {
+    g_return_if_fail(win);
+    g_return_if_fail(app_info);
+
+    FsearchLaunchContext *ctx = g_new0(FsearchLaunchContext, 1);
+    ctx->win = g_object_ref(win);
+    ctx->app_info = g_object_ref(app_info);
+
+    const guint selected_rows = fsearch_application_window_get_num_selected(win);
+    confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows, launch_selection_confirmed, ctx, launch_context_free);
 }
 
 static void
@@ -533,6 +643,7 @@ open_path_list_callback(gboolean result, const char *error_message, gpointer use
                                               _("Something went wrong."),
                                               error_message,
                                               G_CALLBACK(gtk_widget_destroy),
+                                              NULL,
                                               NULL);
             }
         }
@@ -544,12 +655,26 @@ has_folder_open_cmd(FsearchConfig *config) {
     return config->folder_open_cmd && !fsearch_string_is_empty(config->folder_open_cmd);
 }
 
-void
-fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
-    const guint selected_rows = fsearch_application_window_get_num_selected(win);
-    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
-        return;
-    }
+typedef struct {
+    FsearchApplicationWindow *win;
+    bool open_parent_folder;
+    bool triggered_with_mouse;
+} FsearchOpenGenericContext;
+
+static void
+open_generic_context_free(gpointer data) {
+    FsearchOpenGenericContext *ctx = data;
+    g_clear_object(&ctx->win);
+    g_free(ctx);
+}
+
+static void
+open_generic_confirmed(gpointer data) {
+    FsearchOpenGenericContext *ctx = data;
+    FsearchApplicationWindow *win = ctx->win;
+    const bool open_parent_folder = ctx->open_parent_folder;
+    const bool triggered_with_mouse = ctx->triggered_with_mouse;
+
     const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
 
     g_autoptr(GString) error_message = g_string_sized_new(8192);
@@ -580,6 +705,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
                                               _("Something went wrong."),
                                               error_message->str,
                                               G_CALLBACK(gtk_widget_destroy),
+                                              NULL,
                                               NULL);
             }
         }
@@ -604,6 +730,17 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
     }
 
     g_list_free_full(paths, g_free);
+}
+
+void
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
+    FsearchOpenGenericContext *ctx = g_new0(FsearchOpenGenericContext, 1);
+    ctx->win = g_object_ref(win);
+    ctx->open_parent_folder = open_parent_folder;
+    ctx->triggered_with_mouse = triggered_with_mouse;
+
+    const guint selected_rows = fsearch_application_window_get_num_selected(win);
+    confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows, open_generic_confirmed, ctx, open_generic_context_free);
 }
 
 static void
