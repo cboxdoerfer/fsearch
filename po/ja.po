@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-11 17:26+0200\n"
-"PO-Revision-Date: 2026-05-12 09:11+0000\n"
+"PO-Revision-Date: 2026-07-20 00:37+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.5-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -169,10 +169,12 @@ msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"DB: 配下のフォルダーを個別にスケジュール設定したり起動後にスキャンしたりする"
+"機能を追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "DB: 再スキャンを高効率化"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
@@ -438,16 +440,15 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "監視対象にする"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "起動後にスキャン"
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "単一のファイルシステム"
+msgstr "別ファイルシステムは対象外にする"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -455,12 +456,11 @@ msgstr "次の頻度で再スキャン"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "時間:"
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "分"
+msgstr "分:"
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
@@ -491,10 +491,8 @@ msgstr ""
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
-#, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
-msgstr "デフォルトのフィルターを復元"
+msgstr "デフォルトの除外リストを復元"
 
 #: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
@@ -1201,6 +1199,10 @@ msgid ""
 "include that folder in the database. This is useful for adding a path "
 "directly without browsing for it."
 msgstr ""
+"<b>特定のパスを追加:</b>\n"
+"\n"
+"フォルダーをデータベースに含めるには、ここにフルパスを入力して隣のボタンを"
+"クリックしてください。これはパスを開かずに直接追加する場合に便利です。"
 
 #: src/fsearch_preferences.ui:1257
 msgid ""
@@ -1223,6 +1225,16 @@ msgid ""
 "system resources per watched folder. For large directory trees with many "
 "files the system may run out of resources to watch them all."
 msgstr ""
+"<b> 監視対象にする:</b>\n"
+"\n"
+"有効にすると、FSearch はこのフォルダーでの変更を監視し、データベースを自動的"
+"に最新の状態に維持します。これにより、手動で再スキャンする必要がなくなります"
+"。\n"
+"\n"
+"監視機能はすべてのファイルシステムには対応しておらず、また監視対象となる"
+"フォルダーごとにシステムのリソースを若干消費します。ファイル数が多い大規模な"
+"ディレクトリツリーの場合、そのすべてを監視するとシステムがリソースを使い切っ"
+"てしまう可能性があります。"
 
 #: src/fsearch_preferences.ui:1293
 msgid ""
@@ -1231,6 +1243,11 @@ msgid ""
 "If enabled, this folder is rescanned every time FSearch starts, so the "
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
+"<b> 起動後にスキャン:</b>\n"
+"\n"
+"有効にすると、FSearch が起動する度にこのフォルダーが再スキャンされるため、"
+"FSearch が起動していない間のすべての変更がデータベースに反映されるようになり"
+"ます。"
 
 #: src/fsearch_preferences.ui:1310
 msgid ""
@@ -1240,6 +1257,11 @@ msgid ""
 "folder. Mounted file systems below it (e.g. external drives or network "
 "shares) are skipped."
 msgstr ""
+"<b>別ファイルシステムは対象外にする</b>\n"
+"\n"
+"有効にすると、FSearch はこのフォルダーをスキャンする際にファイルシステムの境"
+"界を越えません。配下にマウントされたファイルシステム (例: 外部デバイスや"
+"ネットワーク共有) はスキップされます。"
 
 #: src/fsearch_preferences.ui:1327
 msgid ""
@@ -1251,6 +1273,13 @@ msgid ""
 "This is useful for folders on file systems that can't be monitored for "
 "changes."
 msgstr ""
+"<b>次の頻度で再スキャン:</b> \n"
+"\n"
+"有効にすると、このフォルダーは指定された間隔で自動的に再スキャンされます。再"
+"スキャンが実行される頻度を設定するには、時間と分の入力欄を使用してください"
+"。\n"
+"\n"
+"これは変更を監視できないファイルシステム上のフォルダーの場合に便利です。"
 
 #: src/fsearch_preferences.ui:1346
 msgid ""
@@ -1271,6 +1300,21 @@ msgid ""
 "\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
 "or both."
 msgstr ""
+"<b>除外ルール:</b>\n"
+"\n"
+"このリストにはデータベースから除外したいファイルとフォルダーのルールが含まれ"
+"ています。\n"
+"\n"
+"\t• <b>有効:</b> 有効にすると、このルールが適用されるようになり、一致する項目"
+"が除外されます。\n"
+"\t• <b>パターン:</b> 各項目に対して一致するテキスト。\"タイプ\"の設定値に応じ"
+"て解釈されます。\n"
+"\t• <b>タイプ:</b> パターンの解釈方法 — <i>文字列</i> (完全一致)、<i>"
+"ワイルドカード</i> (* と ? を使う)、<i>正規表現</i>から選択できます。\n"
+"\t• <b>一致:</b> パターンを項目の<i>フルパス</i>に対して一致させるか、<i>"
+"ファイル/フォルダー名</i> (パスを含まない名前) のみに対して一致させるか。\n"
+"\t• <b>適用先:</b> ルールが<i>ファイル</i>、<i>フォルダー</i>、あるいはその両"
+"方のいずれに影響するか。"
 
 #: src/fsearch_preferences.ui:1369
 msgid ""
@@ -1279,13 +1323,12 @@ msgid ""
 "This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
+"<b>除外ルールを追加:</b>\n"
+"\n"
+"新しい、空のルールをリストに追加します。パターン、タイプ、一致、適用先の列を"
+"編集し、データベースから除外される項目を管理してください。"
 
 #: src/fsearch_preferences.ui:1386
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1293,16 +1336,9 @@ msgid ""
 msgstr ""
 "<b>選択した行を削除:</b>\n"
 "\n"
-"除外されるフォルダーのリストから選択したフォルダーを削除します。"
+"除外ルールのリストから選択したルールを削除します。"
 
 #: src/fsearch_preferences.ui:1403
-#, fuzzy
-#| msgid ""
-#| "<b>Restore default filters:</b>\n"
-#| "\n"
-#| "This button restores the default filter configuration.\n"
-#| "\n"
-#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgid ""
 "<b>Restore default exclude rules:</b>\n"
 "\n"
@@ -1310,11 +1346,11 @@ msgid ""
 "\n"
 "⚠ All rules which were created or edited by the user will be lost! ⚠"
 msgstr ""
-"<b>デフォルトのフィルターを復元:</b>\n"
+"<b>デフォルトの除外リストを復元:</b>\n"
 "\n"
-"このボタンは、デフォルトのフィルター設定を復元します。\n"
+"このボタンは、デフォルトの除外ルールを復元します。\n"
 "\n"
-"⚠ ユーザーが作成/編集したすべてのフィルターを破棄します! ⚠"
+"⚠ ユーザーが作成/編集したすべてのルールを破棄します! ⚠"
 
 #: src/fsearch_preferences.ui:1422
 msgid ""
@@ -1574,23 +1610,25 @@ msgid ""
 "The search was cancelled before it finished.\n"
 "<b>These results are incomplete.</b>"
 msgstr ""
+"検索が完了する前にキャンセルされました。\n"
+"<b>これらの結果は不完全です。</b>"
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "不完全"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "FSearch の新機能"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\">FSearch 0.3 の新機能</span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>ファイルシステムの監視</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
 msgid ""
@@ -1604,20 +1642,32 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"個々のフォルダーを能動的に監視することで、頻繁に再スキャンする必要をなくすこ"
+"とができます。これにより、ファイルの変更が瞬時に検索結果に表示されるようにな"
+"ります。\n"
+"\n"
+"この機能を有効にするには、設定ダイアログのデータベースのセクションを開いてく"
+"ださい。\n"
+"\n"
+"詳細はオンラインドキュメンテーションをご確認ください:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>フォルダー単位の再スキャンのスケジュール設定</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"各フォルダーの自動更新間隔をそれぞれの場所に合わせて個別に設定できるようにな"
+"りました。"
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>除外ルールの改善</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
@@ -1626,6 +1676,10 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"ワイルドカードや正規表現を使ったより強力な除外ルールを定義できるようになりま"
+"した。\n"
+"ルールはファイルのみ、フォルダーのみ、あるいはその両方を対象にでき、ファイル/"
+"フォルダー名または絶対パスのいずれかに一致するように設定できます。"
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
