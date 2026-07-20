@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 17:26+0200\n"
+"POT-Creation-Date: 2026-07-18 13:55+0200\n"
 "PO-Revision-Date: 2026-03-08 17:09+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -188,62 +188,77 @@ msgstr ""
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Reduce memory usage"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Add contextual help for all preferences"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#, fuzzy
+#| msgid "and tons of bug fixes, translation updates and smaller improvements"
+msgid "Numerous bug fixes and stability and performance improvements"
+msgstr ""
+"ir daugybė klaidų pataisymų, vertimų atnaujinimų ir mažesnių patobulinimų"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
 msgstr "Nauja paieškos sistema"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Greatly improved highlighting of search terms"
 msgstr "Žymiai pagerintas paieškos terminų paryškinimas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Custom filters"
 msgstr "Tinkinti filtrai"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Improved sort performance"
 msgstr "Pagerintas rikiavimo našumas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Improved scroll performance"
 msgstr "Pagerintas slinkimo našumas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Remember file selection after a database update"
 msgstr "Prisiminti failo pasirinkimą po duomenų bazės atnaujinimo"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Focus search entry when the main window gets activated"
 msgstr "Fokusuoti paieškos įrašą, kai aktyvuojamas pagrindinis langas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 #, fuzzy
 msgid "Show application icons for .desktop files"
 msgstr "Rodyti programos nuostatas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Add .odp and .ods files to document filter"
 msgstr "Pridėti į dokumentų filtrą .odp ir .ods failus"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -251,26 +266,26 @@ msgstr ""
 "Dabar meniu „Atverti naudojant“ rodo tik programas, kurios gali apdoroti "
 "pasirinktus failus"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "Better support for opening files in sandboxed mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Improve support for non-Linux systems"
 msgstr "Pagerintas ne „Linux“ sistemų palaikymas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -278,21 +293,21 @@ msgstr ""
 "Pridėta parinktis išjungti FSearch, kai paspaudžiamas atšaukimo („Escape“) "
 "klavišas, užuot suskleidžiant programą"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Atverti kontekstinį meniu, kai paspaudžiami „Meniu“ ar „Lyg2 + F10“ klavišai"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "ir daugybė klaidų pataisymų, vertimų atnaujinimų ir mažesnių patobulinimų"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:130
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
 msgid "Initial release."
 msgstr "Pirminis leidimas."
 
@@ -305,28 +320,34 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
 
-#: src/fsearch.c:766
+#: src/fsearch.c:330
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Saving database and config…"
+msgstr "Įkeliama duomenų bazė…"
+
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "Atverti naują programos langą"
 
-#: src/fsearch.c:767
+#: src/fsearch.c:808
 #, fuzzy
 msgid "Minimize the application window"
 msgstr "Atverti naują programos langą"
 
-#: src/fsearch.c:768
+#: src/fsearch.c:809
 msgid "Show the application preferences"
 msgstr "Rodyti programos nuostatas"
 
-#: src/fsearch.c:769
+#: src/fsearch.c:810
 msgid "Set the search pattern"
 msgstr "Paieškos šablono nustatymas"
 
-#: src/fsearch.c:770
+#: src/fsearch.c:811
 msgid "Update the database and exit"
 msgstr "Atnaujinti duomenų bazę ir išeiti"
 
-#: src/fsearch.c:771
+#: src/fsearch.c:812
 msgid "Print version information and exit"
 msgstr "Rodyti spausdinimo versijos informaciją ir išeiti"
 
@@ -515,56 +536,59 @@ msgstr "Išbraukti paslėptus failus ir aplankus"
 msgid "Exclude"
 msgstr "Išbraukti"
 
-#: src/fsearch_file_utils.c:161
+#: src/fsearch_file_utils.c:163
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Klaida šalinant failą"
 
-#: src/fsearch_file_utils.c:163
+#: src/fsearch_file_utils.c:165
 msgid "Failed to get path"
 msgstr "Nepavyko gauti kelio"
 
-#: src/fsearch_file_utils.c:277
+#: src/fsearch_file_utils.c:269
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
 msgstr "Klaida gaunant informaciją iš failo"
 
-#: src/fsearch_file_utils.c:279
+#: src/fsearch_file_utils.c:271
 msgid "Failed to get application information"
 msgstr "Nepavyko gauti informacijos apie programą"
 
-#: src/fsearch_file_utils.c:294
-msgctxt "Will be followed by the content type string."
-msgid "Error when getting information for content type"
-msgstr "Klaida gaunant informaciją apie turinio tipą"
+#: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
+#, fuzzy
+#| msgctxt "Will be followed by the path of the folder."
+#| msgid "Error while opening folder"
+msgctxt "Will be followed by the file path."
+msgid "Error when opening file"
+msgstr "Klaida atveriant aplanką"
 
-#: src/fsearch_file_utils.c:296
+#: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
 msgstr "Numatytoji programa neužregistruota"
 
-#: src/fsearch_file_utils.c:524
+#: src/fsearch_file_utils.c:536
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Klaida atidarant pirminį aplanką"
 
-#: src/fsearch_file_utils.c:526
+#: src/fsearch_file_utils.c:538
 msgid "Failed to get parent path"
 msgstr "Nepavyko gauti pirminio kelio"
 
-#: src/fsearch_file_utils.c:530
+#: src/fsearch_file_utils.c:542
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Klaida atveriant aplanką"
 
-#: src/fsearch_file_utils.c:533
+#: src/fsearch_file_utils.c:545
 msgid "Failed to build open command"
 msgstr "Nepavyko sukurti atidarymo komandos"
 
-#: src/fsearch_file_utils.c:589
+#: src/fsearch_file_utils.c:601
 msgid "Folder"
 msgstr "Aplankas"
 
-#: src/fsearch_file_utils.c:595
+#: src/fsearch_file_utils.c:607
 msgid "Unknown Type"
 msgstr "Nežinomas tipas"
 
@@ -873,7 +897,7 @@ msgstr "Filtras:"
 msgid "Search"
 msgstr "Ieškoti"
 
-#: src/fsearch_preferences.ui:854
+#: src/fsearch_preferences.ui:855
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -891,7 +915,7 @@ msgstr ""
 "Atminkite, kad ne visose sistemos temose pateikiamas toks tamsesnis "
 "variantas, todėl šio nustatymo įgalinimas gali neturėti jokio poveikio."
 
-#: src/fsearch_preferences.ui:872
+#: src/fsearch_preferences.ui:873
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -913,7 +937,7 @@ msgstr ""
 "Tai primena labiau tradicinį naudotojo sąsajos išdėstymą ir užima šiek tiek "
 "daugiau vietos."
 
-#: src/fsearch_preferences.ui:892
+#: src/fsearch_preferences.ui:893
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -933,7 +957,7 @@ msgstr ""
 "• <b> Dešimtainiai vienetai: </b> Tai reiškia dešimtainius SI priešdėlius "
 "<i> (pvz., 1 kB = 1000 baitų) </i>"
 
-#: src/fsearch_preferences.ui:912
+#: src/fsearch_preferences.ui:913
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -951,7 +975,7 @@ msgstr ""
 "Atminkite, kad kai kurie langų tvarkytuvai nepaiso šios užklausos ir "
 "priverčia langą būti kitokio dydžio."
 
-#: src/fsearch_preferences.ui:931
+#: src/fsearch_preferences.ui:932
 #, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
@@ -982,7 +1006,7 @@ msgstr ""
 "• <b> spartieji klavišai arba meniu įrašai </b> ir (arba)\n"
 "• <b> pelės paspaudimas </b>"
 
-#: src/fsearch_preferences.ui:955
+#: src/fsearch_preferences.ui:956
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -1008,7 +1032,7 @@ msgstr ""
 "Tai taip pat tinka įprastoms ir „wildcard“ išraiškoms, prasidedančioms arba "
 "besibaigiančioms žvaigždute. "
 
-#: src/fsearch_preferences.ui:977
+#: src/fsearch_preferences.ui:978
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -1020,7 +1044,7 @@ msgstr ""
 "Jei įgalinta, rezultatų rodinyje bus rodomas visas pasirinkto failo / "
 "aplanko kelias mažame patarimo lange."
 
-#: src/fsearch_preferences.ui:994
+#: src/fsearch_preferences.ui:995
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -1030,7 +1054,7 @@ msgstr ""
 "\n"
 "Jei įgalinta, failo / aplanko piktogramos bus rodomos pavadinimo stulpelyje."
 
-#: src/fsearch_preferences.ui:1011
+#: src/fsearch_preferences.ui:1012
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -1044,7 +1068,7 @@ msgstr ""
 "bus atkurta, kai atidarysite FSearch langą. Tai apima visų stulpelių dydį ir "
 "matomumą."
 
-#: src/fsearch_preferences.ui:1028
+#: src/fsearch_preferences.ui:1029
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -1056,7 +1080,7 @@ msgstr ""
 "Jei įgalinta, ankstesnio seanso rezultatų rodinio rūšiavimo tvarka bus "
 "atkurta, kai atidarysite FSearch langą."
 
-#: src/fsearch_preferences.ui:1045
+#: src/fsearch_preferences.ui:1046
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -1067,7 +1091,7 @@ msgstr ""
 "Jei įjungta, dukart spustelėjus kelio stulpelyje bus atvertas pasirinktas "
 "kelias."
 
-#: src/fsearch_preferences.ui:1062
+#: src/fsearch_preferences.ui:1063
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -1082,7 +1106,7 @@ msgstr ""
 "spusteldami ant failo/aplanko, turėsite tuo pačiu metu laikyti nuspaustą "
 "<i>Vald</i> klavišą."
 
-#: src/fsearch_preferences.ui:1079
+#: src/fsearch_preferences.ui:1080
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -1093,7 +1117,7 @@ msgstr ""
 "\n"
 "Jei įjungta, būsenos juostoje rodomas kelias, kuris šiuo metu indeksuojamas."
 
-#: src/fsearch_preferences.ui:1096
+#: src/fsearch_preferences.ui:1097
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -1105,7 +1129,7 @@ msgstr ""
 "Jei įgalinta, perspėjimo dialogas yra rodomas, kai failo ar aplanko nepavyko "
 "atidaryti."
 
-#: src/fsearch_preferences.ui:1113
+#: src/fsearch_preferences.ui:1114
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -1117,7 +1141,7 @@ msgstr ""
 "Jei įgalinta, paieškos terminai, kuriuose yra kelio skyrikliai (t. y. „/“), "
 "bus automatiškai suderinti (matched) su visu failo ar aplanko keliu."
 
-#: src/fsearch_preferences.ui:1130
+#: src/fsearch_preferences.ui:1131
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -1133,7 +1157,7 @@ msgstr ""
 "reiškia, kad toks paieškos terminas kaip <i>Foo</i> atitiks <i> FooBar.txt </"
 "i>, bet ne <i>foobar.txt</i>."
 
-#: src/fsearch_preferences.ui:1147
+#: src/fsearch_preferences.ui:1148
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -1150,7 +1174,7 @@ msgstr ""
 "Jei išjungta, visi failai ir aplankai bus rodomi, kai paieškos įrašas bus "
 "tuščias."
 
-#: src/fsearch_preferences.ui:1166
+#: src/fsearch_preferences.ui:1167
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -1167,7 +1191,7 @@ msgstr ""
 "Jei ji išjungta, paieška atnaujinama tik paspaudus <i>Enter</i> arba "
 "paspaudus paieškos mygtuką. "
 
-#: src/fsearch_preferences.ui:1185
+#: src/fsearch_preferences.ui:1186
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -1179,7 +1203,7 @@ msgstr ""
 "Jei įgalinta, duomenų bazė bus automatiškai atnaujinta fone, kai „FSearch“ "
 "bus paleistas."
 
-#: src/fsearch_preferences.ui:1202
+#: src/fsearch_preferences.ui:1203
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1201,7 +1225,7 @@ msgstr ""
 "• <b>Viena failų sistema:</b> Jei įjungta, „FSearch“ neperžengs šio aplanko "
 "failų sistemos ribų"
 
-#: src/fsearch_preferences.ui:1223
+#: src/fsearch_preferences.ui:1224
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1213,7 +1237,7 @@ msgstr ""
 "Šis mygtukas atidaro dialogo langą, kuriame galite pasirinkti aplanką, kurį "
 "norite įtraukti į duomenų bazę paieškai."
 
-#: src/fsearch_preferences.ui:1240
+#: src/fsearch_preferences.ui:1241
 msgid ""
 "<b>Add a specific path:</b>\n"
 "\n"
@@ -1222,7 +1246,7 @@ msgid ""
 "directly without browsing for it."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1258
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1232,7 +1256,7 @@ msgstr ""
 "\n"
 "Taip pasirinktas aplankas pašalinamas iš įtrauktų aplankų sąrašo."
 
-#: src/fsearch_preferences.ui:1274
+#: src/fsearch_preferences.ui:1275
 msgid ""
 "<b>Attempt to monitor:</b>\n"
 "\n"
@@ -1244,7 +1268,7 @@ msgid ""
 "files the system may run out of resources to watch them all."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1293
+#: src/fsearch_preferences.ui:1294
 msgid ""
 "<b>Scan after launch:</b>\n"
 "\n"
@@ -1252,7 +1276,7 @@ msgid ""
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1310
+#: src/fsearch_preferences.ui:1311
 msgid ""
 "<b>Stay on one file system:</b>\n"
 "\n"
@@ -1261,7 +1285,7 @@ msgid ""
 "shares) are skipped."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1327
+#: src/fsearch_preferences.ui:1328
 msgid ""
 "<b>Rescan every:</b>\n"
 "\n"
@@ -1272,7 +1296,7 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1346
+#: src/fsearch_preferences.ui:1347
 msgid ""
 "<b>Exclude rules:</b>\n"
 "\n"
@@ -1292,7 +1316,7 @@ msgid ""
 "or both."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1369
+#: src/fsearch_preferences.ui:1370
 msgid ""
 "<b>Add exclude rule:</b>\n"
 "\n"
@@ -1300,7 +1324,7 @@ msgid ""
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1386
+#: src/fsearch_preferences.ui:1387
 #, fuzzy
 #| msgid ""
 #| "<b>Remove selected row:</b>\n"
@@ -1316,7 +1340,7 @@ msgstr ""
 "Tai pašalina pasirinktą aplanką iš aplankų, kurie neturi būti traukiami, "
 "sąrašo."
 
-#: src/fsearch_preferences.ui:1403
+#: src/fsearch_preferences.ui:1404
 #, fuzzy
 #| msgid ""
 #| "<b>Restore default filters:</b>\n"
@@ -1337,7 +1361,7 @@ msgstr ""
 "\n"
 "⚠ Visi naudotojo sukurti ar redaguoti filtrai bus prarasti! ⚠"
 
-#: src/fsearch_preferences.ui:1422
+#: src/fsearch_preferences.ui:1423
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1354,7 +1378,7 @@ msgstr ""
 "failų ar aplankų, kurie vadinami <i>.git</i> arba <i>.cache</i> arba "
 "baigiasi <i>.swp</i>."
 
-#: src/fsearch_preferences.ui:1439
+#: src/fsearch_preferences.ui:1440
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1366,11 +1390,11 @@ msgstr ""
 "Jei bus įjungta, paslėpti failai ir aplankai nebus įtraukti į duomenų bazę "
 "<i>(t. y. Visi failai ar aplankai, prasidedantys taškiniu simboliu)</i>."
 
-#: src/fsearch_preferences.ui:1456
+#: src/fsearch_preferences.ui:1457
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr "Pasirinkite nustatymą, kad gautumėte išsamų jo veikimo aprašymą."
 
-#: src/fsearch_preferences.ui:1469
+#: src/fsearch_preferences.ui:1470
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1394,7 +1418,7 @@ msgstr ""
 "\n"
 "<i> <tt> fsearch --update-database </tt> </i>"
 
-#: src/fsearch_preferences.ui:1490
+#: src/fsearch_preferences.ui:1491
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1410,7 +1434,7 @@ msgstr ""
 "programa. Priešingu atveju <i>.desktop</i> failas bus atidarytas naudojant "
 "numatytąją tokio tipo failų tvarkyklę, kuri paprastai yra teksto redaktorius."
 
-#: src/fsearch_preferences.ui:1507
+#: src/fsearch_preferences.ui:1508
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1431,7 +1455,7 @@ msgstr ""
 "\t- <b>Užklausa:</b> Paieškos žodis, pagal kurį turėtų būti filtruojama "
 "duomenų bazė"
 
-#: src/fsearch_preferences.ui:1528
+#: src/fsearch_preferences.ui:1529
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1441,7 +1465,7 @@ msgstr ""
 "\n"
 "Šis mygtukas atveria dialogo langą, kuriame galite redaguoti naują filtrą."
 
-#: src/fsearch_preferences.ui:1545
+#: src/fsearch_preferences.ui:1546
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1451,7 +1475,7 @@ msgstr ""
 "\n"
 "Šis mygtukas pašalina šiuo metu pasirinktą filtrą."
 
-#: src/fsearch_preferences.ui:1562
+#: src/fsearch_preferences.ui:1563
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1462,7 +1486,7 @@ msgstr ""
 "Šis mygtukas atveria dialogo langą, kuriame galite redaguoti pasirinktą "
 "filtrą."
 
-#: src/fsearch_preferences.ui:1579
+#: src/fsearch_preferences.ui:1580
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1476,7 +1500,7 @@ msgstr ""
 "\n"
 "⚠ Visi naudotojo sukurti ar redaguoti filtrai bus prarasti! ⚠"
 
-#: src/fsearch_preferences.ui:1598
+#: src/fsearch_preferences.ui:1599
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1488,7 +1512,7 @@ msgstr ""
 "Jei įjungta, „FSearch“ išeina, kai paspaudžiamas „Escape“ klavišas, o ne "
 "minimizuojamas langas."
 
-#: src/fsearch_preferences.ui:1617 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "Žinynas"
@@ -1497,7 +1521,7 @@ msgstr "Žinynas"
 msgid "Database"
 msgstr "Duomenų bazė"
 
-#: src/fsearch_result_view.c:381
+#: src/fsearch_result_view.c:487
 msgid "Invalid row data"
 msgstr ""
 
@@ -1878,6 +1902,10 @@ msgstr "Kelias + pavadinimas"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Perkelti į _šiukšlinę"
+
+#~ msgctxt "Will be followed by the content type string."
+#~ msgid "Error when getting information for content type"
+#~ msgstr "Klaida gaunant informaciją apie turinio tipą"
 
 #~ msgid ""
 #~ "<b>Excluded folders:</b>\n"
