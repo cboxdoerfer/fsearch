@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-14 11:01+0000\n"
+"PO-Revision-Date: 2026-07-20 11:02+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -194,18 +194,17 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "Снижено использование памяти"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "Добавлена контекстная справка для всех настроек"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
-#, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
 msgstr ""
-"и множество исправлений ошибок, обновлений переводов и небольших улучшений"
+"Многочисленные исправления ошибок, а также улучшения стабильности и "
+"производительности"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
@@ -334,10 +333,8 @@ msgstr ""
 "Инструмент поиска, нацеленный на быстродействие и продвинутые возможности"
 
 #: src/fsearch.c:330
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
-msgstr "Загрузка базы данных…"
+msgstr "Сохранение базы данных и конфигурации…"
 
 #: src/fsearch.c:807
 msgid "Open a new application window"
@@ -553,12 +550,9 @@ msgid "Failed to get application information"
 msgstr "Не удалось получить информацию о приложении"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
-#, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
-msgstr "Ошибка при открытии папки"
+msgstr "Ошибка при открытии файла"
 
 #: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
