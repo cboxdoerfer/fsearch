@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-06-15 16:01+0000\n"
+"PO-Revision-Date: 2026-07-21 15:01+0000\n"
 "Last-Translator: Libre <6n0n1m0s@proton.me>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -194,19 +194,15 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "Reduzca el empleo de memoria"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "Añadir ayuda contextual para todas las preferencias"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
-#, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
-msgstr ""
-"y toneladas de correcciones de errores, actualizaciones en la traducción y "
-"pequeñas mejoras"
+msgstr "Numerosas correcciones de fallos y mejoras de estabilidad y rendimiento"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
@@ -339,10 +335,8 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Una herramienta de búsqueda rápida con prestaciones avanzadas"
 
 #: src/fsearch.c:330
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
-msgstr "Cargando la base de datos…"
+msgstr "Guardando la base de datos y config…"
 
 #: src/fsearch.c:807
 msgid "Open a new application window"
@@ -558,12 +552,9 @@ msgid "Failed to get application information"
 msgstr "No se pudo obtener la información sobre la aplicación"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
-#, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
-msgstr "Error al abrir la carpeta"
+msgstr "Error al abrir archivo"
 
 #: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
@@ -1254,6 +1245,11 @@ msgid ""
 "include that folder in the database. This is useful for adding a path "
 "directly without browsing for it."
 msgstr ""
+"<b>Añada una ruta específica:</b>\n"
+"\n"
+"Teclee la ruta completa de una carpeta aquí y pulse el botón siguiente para "
+"incluirlo esa carpeta en la base de datos. Esto es útil para añadir una ruta "
+"directamente sin explorarla."
 
 #: src/fsearch_preferences.ui:1258
 msgid ""
@@ -1276,6 +1272,15 @@ msgid ""
 "system resources per watched folder. For large directory trees with many "
 "files the system may run out of resources to watch them all."
 msgstr ""
+"<b>Atención al monitor.</b>\n"
+"\n"
+"Si habilitado, FSearch vigila esta carpeta por cambios y mantiene la base de "
+"datos al día automáticamente, tal que no tenga que re‐analizar manualmente.\n"
+"\n"
+"La monitorización no es compatible con todos los sistemas de archivos y "
+"consume una pequeña cantidad de recursos del sistema por cada carpeta "
+"monitorizada. En el caso de directorios extensos con muchos archivos, el "
+"sistema podría quedarse sin recursos para monitorizarlos todos."
 
 #: src/fsearch_preferences.ui:1294
 msgid ""
@@ -1284,6 +1289,11 @@ msgid ""
 "If enabled, this folder is rescanned every time FSearch starts, so the "
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
+"<b>Análisis tras el inicio:</b>\n"
+"\n"
+"Si está habilitada, esta carpeta se vuelve a analizar cada vez que se inicia "
+"FSearch, de modo que la base de datos refleja cualquier cambio realizado "
+"mientras FSearch no estaba en ejecución."
 
 #: src/fsearch_preferences.ui:1311
 msgid ""
@@ -1293,6 +1303,12 @@ msgid ""
 "folder. Mounted file systems below it (e.g. external drives or network "
 "shares) are skipped."
 msgstr ""
+"<b>Mantenerse en un solo sistema de archivos:</b>\n"
+"\n"
+"Si está habilitada, FSearch no cruzará los límites de los sistemas de "
+"archivos al escanear esta carpeta. Los sistemas de archivos montados debajo "
+"de ella (por ejemplo, unidades externas o recursos compartidos de red) se "
+"omitirán."
 
 #: src/fsearch_preferences.ui:1328
 msgid ""
@@ -1304,6 +1320,14 @@ msgid ""
 "This is useful for folders on file systems that can't be monitored for "
 "changes."
 msgstr ""
+"<b>Reescanear cada:</b>\n"
+"\n"
+"Si está habilitada, esta carpeta se escaneará automáticamente en el "
+"intervalo especificado. Utilice los campos de horas y minutos para "
+"configurar la frecuencia del escaneo.\n"
+"\n"
+"Esto resulta útil para carpetas en sistemas de archivos que no se pueden "
+"supervisar para detectar cambios."
 
 #: src/fsearch_preferences.ui:1347
 msgid ""
@@ -1332,30 +1356,23 @@ msgid ""
 "This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
+"<b>Agregar regla de exclusión:</b>\n"
+"\n"
+"Esto agrega una regla nueva y vacía a la lista. Edite las columnas Patrón, "
+"Tipo, Coincidencia y Se aplica a para controlar qué se excluye de la base de "
+"datos."
 
 #: src/fsearch_preferences.ui:1387
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected rule from the list of exclude rules."
 msgstr ""
-"<b>Eliminar la fila seleccionada:</b>\n"
+"<b>Eliminar fila seleccionada:</b>\n"
 "\n"
-"Esto elimina la carpeta seleccionada de la lista de carpetas excluidas."
+"Esto elimina la regla seleccionada del listado de reglas excluidas."
 
 #: src/fsearch_preferences.ui:1404
-#, fuzzy
-#| msgid ""
-#| "<b>Restore default filters:</b>\n"
-#| "\n"
-#| "This button restores the default filter configuration.\n"
-#| "\n"
-#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgid ""
 "<b>Restore default exclude rules:</b>\n"
 "\n"
@@ -1363,11 +1380,11 @@ msgid ""
 "\n"
 "⚠ All rules which were created or edited by the user will be lost! ⚠"
 msgstr ""
-"<b>Restaurar filtros predeterminados:</b>\n"
+"<b>Restaurar reglas de exclusión predeterminadas:</b>\n"
 "\n"
-"Este botón restaura la configuración del filtro por defecto.\n"
+"Este botón restaura el conjunto predeterminado de reglas de exclusión.\n"
 "\n"
-"⚠ ¡Todos los filtros creados o editados por el usuario se perderán! ⚠"
+"⚠ ¡Se perderán todas las reglas creadas o editadas por el usuario! ⚠"
 
 #: src/fsearch_preferences.ui:1423
 msgid ""
@@ -1633,25 +1650,28 @@ msgid ""
 "The search was cancelled before it finished.\n"
 "<b>These results are incomplete.</b>"
 msgstr ""
+"La búsqueda se canceló antes de finalizar.\n"
+"<b>Estos resultados están incompletos.</b>"
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "PARCIAL"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "Novedades en FSearch"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\">Novedades de FSearch 0.3</span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>Monitoreo del sistema de archivos</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
+#, fuzzy
 msgid ""
 "You can now actively watch individual folders to eliminate frequent rescans. "
 "File changes then appear in your search results immediately.\n"
@@ -1663,20 +1683,34 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"Ahora puedes supervisar carpetas individuales para evitar análisis de forma "
+"frecuentes. Los cambios en los archivos aparecerán inmediatamente en los "
+"resultados de búsqueda.\n"
+"\n"
+"Para activar esta función, ve a la sección Base de datos del cuadro de "
+"diálogo Preferencias.\n"
+"\n"
+"Consulta la documentación en línea para obtener más información:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:232
+#, fuzzy
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
 msgstr ""
+"<big><b>Planificaciones de re‐análisis específicos de carpetas</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"Ahora puede configurar intervalos de actualización automática para carpetas "
+"individuales de forma independiente y adaptada a cada lugar específico."
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>Reglas de exclusión mejoradas</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
@@ -1685,6 +1719,11 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"Ahora puedes usar comodines y expresiones regulares para definir reglas de "
+"exclusión más potentes.\n"
+"Las reglas pueden dirigirse específicamente a archivos, carpetas o ambos, y "
+"pueden configurarse para coincidir con el nombre base o la ruta absoluta "
+"completa."
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
