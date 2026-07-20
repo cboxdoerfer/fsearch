@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-13 05:01+0000\n"
+"PO-Revision-Date: 2026-07-20 11:02+0000\n"
 "Last-Translator: Masowick <Demian@gmx.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.7.1.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -196,19 +196,17 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "Speicherverbrauch verringern"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "Kontextbezogene Hilfe für alle Einstellungen hinzufügen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
-#, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
 msgstr ""
-"und eine Unmenge an Fehlerbereinigungen, Übersetzungsaktualisierungen und "
-"kleinerer Verbesserungen"
+"Zahlreiche Fehlerbehebungen sowie Verbesserungen hinsichtlich Stabilität und "
+"Leistung"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
