@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-20 11:02+0000\n"
+"PO-Revision-Date: 2026-07-21 15:01+0000\n"
 "Last-Translator: Masowick <Demian@gmx.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -333,10 +333,8 @@ msgstr ""
 "Eine Dateisuche mit Schwerpunkt Leistung und erweitertem Funktionsumfang"
 
 #: src/fsearch.c:330
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
-msgstr "Datenbank wird geladen …"
+msgstr "Datenbank und Konfiguration wird geladen …"
 
 #: src/fsearch.c:807
 msgid "Open a new application window"
@@ -540,7 +538,7 @@ msgstr "Fehler beim Entfernen der Datei"
 
 #: src/fsearch_file_utils.c:165
 msgid "Failed to get path"
-msgstr "Fehler beim Erstellen des Pfads"
+msgstr "Fehler beim Abrufen des Pfades"
 
 #: src/fsearch_file_utils.c:269
 msgctxt "Will be followed by the file path."
@@ -552,12 +550,9 @@ msgid "Failed to get application information"
 msgstr "Anwendungsinformationen sind nicht verfügbar"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
-#, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
-msgstr "Fehler beim Öffnen des Ordners"
+msgstr "Fehler beim Öffnen der Datei"
 
 #: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
