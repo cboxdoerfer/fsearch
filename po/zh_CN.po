@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2023-11-08 01:35+0000\n"
-"Last-Translator: aerowolf <aerowolf@tom.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
-"fsearch/translations/zh_Hans/>\n"
+"PO-Revision-Date: 2026-07-21 15:01+0000\n"
+"Last-Translator: Hosted Weblate user 54392 "
+"<hamburger2048@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
+"projects/fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -50,7 +51,7 @@ msgstr ""
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
-msgstr "FSearch有很多功能使搜索尽可能高效和强大。比如："
+msgstr "FSearch 有很多功能使搜索尽可能高效和强大。比如："
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
@@ -183,10 +184,8 @@ msgid "Add contextual help for all preferences"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
-#, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
-msgstr "以及大量的错误修复、翻译更新和小小改进"
+msgstr "大量的错误修复以及稳定性和性能改进"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
@@ -303,19 +302,16 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
 #: src/fsearch.c:330
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
-msgstr "加载数据库……"
+msgstr "正在保存数据库和配置…"
 
 #: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "打开新的应用程序窗口"
 
 #: src/fsearch.c:808
-#, fuzzy
 msgid "Minimize the application window"
-msgstr "打开新的应用程序窗口"
+msgstr "最小化应用程序窗口"
 
 #: src/fsearch.c:809
 msgid "Show the application preferences"
@@ -371,27 +367,24 @@ msgid "Literal"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:391
-#, fuzzy
 msgid "Wildcard"
-msgstr "支持通配符"
+msgstr "通配符"
 
 #: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:414
-#, fuzzy
 msgid "Full Path"
-msgstr "路径"
+msgstr "完整路径"
 
 #: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:434
-#, fuzzy
 msgid "Files & Folders"
-msgstr "文件夹"
+msgstr "文件和文件夹"
 
 #: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
@@ -416,9 +409,8 @@ msgid "Type"
 msgstr "类型"
 
 #: src/fsearch_database_preferences_widget.c:700
-#, fuzzy
 msgid "Match"
-msgstr "匹配大小写"
+msgstr "匹配"
 
 #: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
@@ -435,15 +427,14 @@ msgstr "输入路径…"
 
 #: src/fsearch_database_preferences_widget.ui:97
 #: src/fsearch_database_preferences_widget.ui:372
-#, fuzzy
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"取消数据库\n"
-"                                                    更新\n"
-"                                                "
+"添加要包含在数据库中的\n"
+"                                            路径\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
@@ -454,9 +445,8 @@ msgid "Scan after launch"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:206
-#, fuzzy
 msgid "Stay on one file system"
-msgstr "一个文件系统"
+msgstr "保持在一个文件系统上"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
@@ -467,9 +457,8 @@ msgid "Hours:"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:298
-#, fuzzy
 msgid "Minutes:"
-msgstr "分钟"
+msgstr "分钟："
 
 #: src/fsearch_database_preferences_widget.ui:310
 msgid "30"
@@ -484,28 +473,24 @@ msgid "Include"
 msgstr "包含"
 
 #: src/fsearch_database_preferences_widget.ui:477
-#, fuzzy
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"选择筛选器\n"
+"添加排除项目\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:495
-#, fuzzy
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"选择筛选器\n"
+"删除所选路径\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
-#, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
-msgstr "还原默认筛选器"
+msgstr "恢复默认排除列表"
 
 #: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
@@ -534,12 +519,9 @@ msgid "Failed to get application information"
 msgstr "获取应用程序信息失败"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
-#, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
-msgstr "打开文件夹时出错"
+msgstr "打开文件时出错"
 
 #: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
@@ -945,7 +927,6 @@ msgstr ""
 "请注意，某些窗口管理器会忽略此请求并强制窗口具有不同的大小。"
 
 #: src/fsearch_preferences.ui:932
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -964,13 +945,13 @@ msgstr ""
 "<b>成功打开文件后的行为：</b>\n"
 "\n"
 "成功打开文件/文件夹后，可以执行以下操作之一：\n"
-"• <b>什么都没有：</b>什么都没有发生。\n"
+"• <b>无操作：</b>什么都不做。\n"
 "• <b>最小化：</b> 当前选定的 FSearch 窗口最小化。\n"
 "• <b>关闭：</b> 退出 FSearch。\n"
 "\n"
-"您可以配置在打开文件时是否应触发这些操作\n"
+"您可以配置文件经\n"
 "• <b>键盘快捷键或菜单项</b>和/或\n"
-"• <b>鼠标点击</b>"
+"• <b>鼠标单击</b> 打开时是否触发这些操作"
 
 #: src/fsearch_preferences.ui:956
 msgid ""
@@ -1061,8 +1042,8 @@ msgid ""
 msgstr ""
 "<b>单击打开：</b>\n"
 "\n"
-"如果启用，单击将打开选定的文件/文件夹。此后要想选择文件/文件夹，则需按住 "
-"<i>Ctrl</i>键再单击。"
+"如果启用，单击将打开选定的文件/文件夹。如果此设置生效时你只想选择一个文件/文"
+"件夹，你需要在单击要选择的文件/文件夹时按住 <i>Ctrl</i> 键。"
 
 #: src/fsearch_preferences.ui:1080
 msgid ""
@@ -1270,11 +1251,6 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1387
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1282,16 +1258,9 @@ msgid ""
 msgstr ""
 "<b>删除选定的行：</b>\n"
 "\n"
-"这将从排除的文件夹列表中删除选定的文件夹。"
+"这将从排除的文件夹列表中删除选定的规则。"
 
 #: src/fsearch_preferences.ui:1404
-#, fuzzy
-#| msgid ""
-#| "<b>Restore default filters:</b>\n"
-#| "\n"
-#| "This button restores the default filter configuration.\n"
-#| "\n"
-#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgid ""
 "<b>Restore default exclude rules:</b>\n"
 "\n"
@@ -1299,11 +1268,11 @@ msgid ""
 "\n"
 "⚠ All rules which were created or edited by the user will be lost! ⚠"
 msgstr ""
-"<b>还原默认筛选器：</b>\n"
+"<b>还原默认排除规则：</b>\n"
 "\n"
-"这个按钮还原默认的筛选器配置。\n"
+"这个按钮还原默认的排除规则集。\n"
 "\n"
-"⚠ 该用户编辑或创建的所有筛选器都将丢失！⚠"
+"⚠ 该用户编辑或创建的所有规则都将丢失！⚠"
 
 #: src/fsearch_preferences.ui:1423
 msgid ""
@@ -1627,9 +1596,9 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"按<b>类型</b>排序需要几秒钟，出现许多结果。\n"
+"由于结果很多，按<b>类型</b>排序需要几秒钟时间。\n"
 "\n"
-"此排序顺序不是持久的，它会在搜索词更改时重置。"
+"此排序顺序不持久，会在搜索词更改时重置。"
 
 #: src/fsearch_window.ui:68
 msgid "New window"
@@ -1704,20 +1673,20 @@ msgid "Select a Filter"
 msgstr "选择筛选器"
 
 #: src/fsearch_window_actions.c:110
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] "确认要打开%d吗？"
+msgstr[0] "确认要打开 %'d 个文件吗？"
 
 #: src/fsearch_window_actions.c:115
 msgid "Opening Files…"
 msgstr "打开文件中…"
 
 #: src/fsearch_window_actions.c:198
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] "确认要删除%d吗？"
+msgstr[0] "真要删除 %'d 个文件吗？"
 
 #: src/fsearch_window_actions.c:205
 msgid "Deleting files…"
@@ -1733,10 +1702,10 @@ msgid "Something went wrong."
 msgstr "出问题了。"
 
 #: src/fsearch_window_actions.c:263
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] "确认要打开%d属性窗口吗？"
+msgstr[0] "确认要打开 %'d 个文件属性窗口吗？"
 
 #: src/fsearch_window_actions.c:270
 msgid "Opening file properties…"
