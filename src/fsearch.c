@@ -58,6 +58,7 @@ struct _FsearchApplication {
     char *option_search_term;
     bool new_window;
     bool minimized;
+    bool daemon;
 
     guint file_manager_watch_id;
     bool has_file_manager_on_bus;
@@ -508,9 +509,6 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "win.close_window", "<control>w");
     set_accel_for_action(app, "app.help", "F1");
     set_accels_for_escape(app);
-
-    // Register D-Bus query interface so CLI --query can use the in-memory database
-    fsearch_query_cli_dbus_register();
 }
 
 static GActionEntry fsearch_app_entries[] = {
@@ -617,6 +615,14 @@ fsearch_application_activate(GApplication *app) {
 
     FsearchApplication *self = FSEARCH_APPLICATION(app);
 
+    // Register D-Bus query interface so CLI --query can use the in-memory database
+    fsearch_query_cli_dbus_register();
+
+    // Daemon mode: no window, just keep running for D-Bus queries
+    if (self->daemon) {
+        return;
+    }
+
     if (!self->new_window) {
         // If there's already a window make it visible
         FsearchApplicationWindow *window = get_first_application_window(FSEARCH_APPLICATION(app));
@@ -650,6 +656,15 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
 
     if (g_variant_dict_contains(dict, "minimized")) {
         self->minimized = true;
+    }
+
+    if (g_variant_dict_contains(dict, "daemon")) {
+        self->daemon = true;
+        // Hold the application so it stays alive without any window
+        g_application_hold(G_APPLICATION(self));
+        // Register D-Bus and wait — no window, no parent command_line processing
+        fsearch_query_cli_dbus_register();
+        return 0;
     }
 
     if (g_variant_dict_contains(dict, "preferences")) {
@@ -857,6 +872,7 @@ fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
         {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
         {"minimized", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Minimize the application window")},
+        {"daemon", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, NULL, N_("Run without window (D-Bus query backend)")},
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
         {"search", 's', 0, G_OPTION_ARG_STRING, NULL, N_("Set the search pattern"), "PATTERN"},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},
