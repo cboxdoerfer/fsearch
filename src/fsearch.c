@@ -620,7 +620,10 @@ fsearch_application_activate(GApplication *app) {
 
     // Daemon mode: no window, just keep running for D-Bus queries
     if (self->daemon) {
-        return;
+        // First activation: daemon startup, no window
+        // Subsequent activation (user clicked icon): show window
+        self->daemon = false;
+        g_application_release(G_APPLICATION(self));
     }
 
     if (!self->new_window) {
