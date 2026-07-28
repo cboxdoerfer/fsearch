@@ -1524,4 +1524,10 @@ fsearch_database_selection_foreach(FsearchDatabase *self,
     fsearch_database_index_store_selection_foreach(self->store, view_id, selection_foreach_cb, &ctx);
 }
 
+FsearchDatabaseIndexStore *
+fsearch_database_get_store(FsearchDatabase *self) {
+    g_return_val_if_fail(FSEARCH_IS_DATABASE(self), NULL);
+    return self->store;
+}
+
 // endregion

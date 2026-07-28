@@ -29,6 +29,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_preferences_dialog.h"
 #include "fsearch_preview.h"
+#include "fsearch_query_cli.h"
 #include "fsearch_window.h"
 
 #ifdef HAVE_CONFIG_H
@@ -797,6 +798,52 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
         g_print("FSearch %s\n", version->str);
         return 0;
     }
+    if (g_variant_dict_contains(options, "query")) {
+        const char *query_term = NULL;
+        int limit = 100;
+        bool use_regex = false;
+        bool match_case = false;
+        bool search_in_path = false;
+        bool files_only = false;
+        bool folders_only = false;
+        bool pretty = false;
+        bool sort_desc = false;
+        FsearchQueryCliSortProperty sort_prop = FSEARCH_QUERY_CLI_SORT_NAME;
+
+        g_variant_dict_lookup(options, "query", "&s", &query_term);
+        g_variant_dict_lookup(options, "limit", "i", &limit);
+        use_regex = g_variant_dict_contains(options, "regex");
+        match_case = g_variant_dict_contains(options, "match-case");
+        search_in_path = g_variant_dict_contains(options, "search-in-path");
+        files_only = g_variant_dict_contains(options, "files-only");
+        folders_only = g_variant_dict_contains(options, "folders-only");
+        pretty = g_variant_dict_contains(options, "pretty");
+        sort_desc = g_variant_dict_contains(options, "desc");
+
+        if (g_variant_dict_contains(options, "sort")) {
+            const char *sort_val = NULL;
+            g_variant_dict_lookup(options, "sort", "&s", &sort_val);
+            if (g_strcmp0(sort_val, "path") == 0)
+                sort_prop = FSEARCH_QUERY_CLI_SORT_PATH;
+            else if (g_strcmp0(sort_val, "size") == 0)
+                sort_prop = FSEARCH_QUERY_CLI_SORT_SIZE;
+            else if (g_strcmp0(sort_val, "mtime") == 0)
+                sort_prop = FSEARCH_QUERY_CLI_SORT_MTIME;
+            else if (g_strcmp0(sort_val, "extension") == 0)
+                sort_prop = FSEARCH_QUERY_CLI_SORT_EXTENSION;
+        }
+
+        return fsearch_query_cli_run(query_term,
+                                     limit,
+                                     use_regex,
+                                     match_case,
+                                     search_in_path,
+                                     files_only,
+                                     folders_only,
+                                     sort_prop,
+                                     sort_desc,
+                                     pretty ? FSEARCH_QUERY_CLI_OUTPUT_PRETTY : FSEARCH_QUERY_CLI_OUTPUT_JSON);
+    }
 
     return -1;
 }
@@ -810,6 +857,17 @@ fsearch_application_add_option_entries(FsearchApplication *self) {
         {"search", 's', 0, G_OPTION_ARG_STRING, NULL, N_("Set the search pattern"), "PATTERN"},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},
         {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
+        {"query", 'q', 0, G_OPTION_ARG_STRING, NULL, N_("Search the database and print results"), "PATTERN"},
+        {"limit", 0, 0, G_OPTION_ARG_INT, NULL, N_("Maximum number of results (default: 100, 0=unlimited)"), "N"},
+        {"regex", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Enable regex search mode")},
+        {"match-case", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Case sensitive search")},
+        {"search-in-path", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Search in full path")},
+        {"files-only", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Search files only")},
+        {"folders-only", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Search folders only")},
+        {"pretty", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Pretty printed table output (default: JSON)")},
+        {"sort", 0, 0, G_OPTION_ARG_STRING, NULL, N_("Sort by: name|path|size|mtime|extension"), "PROP"},
+        {"asc", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Sort ascending (default)")},
+        {"desc", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Sort descending")},
         {NULL}};
 
     g_assert(FSEARCH_IS_APPLICATION(self));
