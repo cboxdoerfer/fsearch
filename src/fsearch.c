@@ -30,6 +30,7 @@
 #include "fsearch_preferences_dialog.h"
 #include "fsearch_preview.h"
 #include "fsearch_query_cli.h"
+#include "fsearch_query_cli_dbus.h"
 #include "fsearch_window.h"
 
 #ifdef HAVE_CONFIG_H
@@ -507,6 +508,9 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "win.close_window", "<control>w");
     set_accel_for_action(app, "app.help", "F1");
     set_accels_for_escape(app);
+
+    // Register D-Bus query interface so CLI --query can use the in-memory database
+    fsearch_query_cli_dbus_register();
 }
 
 static GActionEntry fsearch_app_entries[] = {

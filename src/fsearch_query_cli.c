@@ -23,6 +23,7 @@
 #endif
 
 #include "fsearch_query_cli.h"
+#include "fsearch_query_cli_dbus.h"
 #include "fsearch_config.h"
 #include "fsearch_query.h"
 #include "fsearch_query_flags.h"
@@ -271,6 +272,28 @@ fsearch_query_cli_run(const char *search_term,
     if (!search_term || strlen(search_term) == 0) {
         fprintf(stderr, "{\"error\": \"empty search term\"}\n");
         return FSEARCH_QUERY_CLI_ERROR_EMPTY_QUERY;
+    }
+
+    // Try D-Bus first — if a GUI instance is running, its in-memory DB is faster
+    {
+        const char *sort_str = "name";
+        switch (sort_prop) {
+        case FSEARCH_QUERY_CLI_SORT_PATH:      sort_str = "path"; break;
+        case FSEARCH_QUERY_CLI_SORT_SIZE:      sort_str = "size"; break;
+        case FSEARCH_QUERY_CLI_SORT_MTIME:     sort_str = "mtime"; break;
+        case FSEARCH_QUERY_CLI_SORT_EXTENSION: sort_str = "extension"; break;
+        default: break;
+        }
+        int dbus_ret = fsearch_query_cli_run_via_dbus(
+            search_term, limit,
+            use_regex, match_case, search_in_path,
+            files_only, folders_only,
+            sort_str, sort_desc,
+            output_format == FSEARCH_QUERY_CLI_OUTPUT_PRETTY);
+        if (dbus_ret == 0) {
+            return FSEARCH_QUERY_CLI_SUCCESS;
+        }
+        g_debug("[query-cli] D-Bus not available, falling back to standalone mode");
     }
 
     // Load config
