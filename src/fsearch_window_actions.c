@@ -118,10 +118,10 @@ confirm_file_open_action(GtkWidget *parent, int num_files) {
 static void
 prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
     GPtrArray **file_array = (GPtrArray **)user_data;
-    GString *path_full = db_entry_get_path_full(entry);
+    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
-    char *file_uri = g_filename_to_uri(g_string_free(g_steal_pointer(&path_full), FALSE), NULL, NULL);
+    char *file_uri = g_filename_to_uri(path_full->str, NULL, NULL);
     if (file_uri) {
         g_ptr_array_add(*file_array, file_uri);
     }
