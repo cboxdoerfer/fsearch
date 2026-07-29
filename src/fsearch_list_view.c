@@ -737,6 +737,17 @@ fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modif
 }
 
 static void
+fsearch_list_view_emit_row_activated(FsearchListView *view, gdouble x_view, int row_idx) {
+    // Clicks right of the last column don't hit any column, but must still activate the row
+    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, (int)x_view);
+    g_signal_emit(view,
+                  signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
+                  0,
+                  col ? col->type : -1,
+                  get_row_idx_for_sort_type(view, row_idx));
+}
+
+static void
 on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                                                  gint n_press,
                                                  gdouble x_view,
@@ -807,14 +818,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 fsearch_list_view_selection_clear_silent(view);
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
                 if (view->single_click_activate) {
-                    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
-                    if (col) {
-                        g_signal_emit(view,
-                                      signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
-                                      0,
-                                      col->type,
-                                      get_row_idx_for_sort_type(view, row_idx));
-                    }
+                    fsearch_list_view_emit_row_activated(view, x_view, row_idx);
                 }
             }
             fsearch_list_view_selection_changed(view);
@@ -822,14 +826,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         }
 
         if (n_press == 2 && !view->single_click_activate) {
-            FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
-            if (col) {
-                g_signal_emit(view,
-                              signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
-                              0,
-                              col->type,
-                              get_row_idx_for_sort_type(view, row_idx));
-            }
+            fsearch_list_view_emit_row_activated(view, x_view, row_idx);
         }
     }
 
