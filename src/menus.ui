@@ -8,6 +8,7 @@
                 <item>
                     <attribute name="label" translatable="yes">New Window</attribute>
                     <attribute name="action">app.new_window</attribute>
+                    <attribute name="target" type="b">false</attribute>
                     <attribute name="icon">window-new</attribute>
                 </item>
             </section>

@@ -496,7 +496,7 @@ fsearch_application_startup(GApplication *app) {
     }
     set_accel_for_action(app, "win.toggle_focus", "Tab");
     set_accel_for_action(app, "win.focus_search", "<control>f");
-    set_accel_for_action(app, "app.new_window", "<control>n");
+    set_accel_for_action(app, "app.new_window(false)", "<control>n");
     set_accel_for_action(app, "win.select_all", "<control>a");
     set_accel_for_action(app, "win.match_case", "<control>i");
     set_accel_for_action(app, "win.search_mode", "<control>r");
