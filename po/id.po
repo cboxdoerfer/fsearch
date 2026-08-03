@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-04-20 06:13+0000\n"
+"PO-Revision-Date: 2026-08-04 04:01+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -168,10 +168,12 @@ msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"DB: Izinkan folder yang disertakan untuk dijadwalkan dan dipindai setelah "
+"diluncurkan secara independen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "DB: Buat pemindaian ulang lebih efisien"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
@@ -188,11 +190,11 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "Kurangi penggunaan memori"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "Tambahkan bantuan kontekstual untuk semua preferensi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 #, fuzzy
@@ -319,7 +321,7 @@ msgstr ""
 
 #: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Utilitas pencarian yang berfokus pada performa dan fitur canggih"
+msgstr "Utilitas pencarian yang berfokus pada performa dan fitur lanjutan"
 
 #: src/fsearch.c:330
 #, fuzzy
@@ -353,7 +355,7 @@ msgstr "Cetak informasi versi dan keluar"
 
 #: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Pemindaian ulang indeks: menerapkan perubahan…"
 
 #: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
@@ -460,11 +462,11 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "Coba pantau"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Pindai setelah diluncurkan"
 
 #: src/fsearch_database_preferences_widget.ui:206
 #, fuzzy
@@ -477,7 +479,7 @@ msgstr "Pindai ulang setiap"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Jam:"
 
 #: src/fsearch_database_preferences_widget.ui:298
 #, fuzzy
@@ -509,7 +511,7 @@ msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Hapus jalur yang dipilih\n"
+"Hapus path yang dipilih\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
@@ -1232,6 +1234,11 @@ msgid ""
 "include that folder in the database. This is useful for adding a path "
 "directly without browsing for it."
 msgstr ""
+"<b>Tambahkan path tertentu:</b>\n"
+"\n"
+"Masukkan path lengkap suatu folder di sini dan klik tombol di sebelahnya "
+"untuk menyertakan folder tersebut ke dalam database. Ini berguna untuk "
+"menambahkan path secara langsung tanpa menelusurinya."
 
 #: src/fsearch_preferences.ui:1258
 msgid ""
@@ -1254,6 +1261,16 @@ msgid ""
 "system resources per watched folder. For large directory trees with many "
 "files the system may run out of resources to watch them all."
 msgstr ""
+"<b>Coba pantau:</b>\n"
+"\n"
+"Jika diaktifkan, FSearch akan memantau folder ini terhadap perubahan dan "
+"menjaga database tetap mutakhir secara otomatis, sehingga Anda tidak perlu "
+"melakukan pemindaian ulang secara manual.\n"
+"\n"
+"Pemantauan tidak didukung di semua file system dan menggunakan sejumlah "
+"kecil sumber daya sistem untuk setiap folder yang dipantau. Pada struktur "
+"direktori besar dengan banyak file, sistem mungkin kehabisan sumber daya "
+"untuk memantaunya semua."
 
 #: src/fsearch_preferences.ui:1294
 msgid ""
@@ -1262,6 +1279,11 @@ msgid ""
 "If enabled, this folder is rescanned every time FSearch starts, so the "
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
+"<b>Pindai setelah diluncurkan:</b>\n"
+"\n"
+"Jika diaktifkan, folder ini akan dipindai ulang setiap kali FSearch dimulai, "
+"sehingga database mencerminkan setiap perubahan yang dibuat saat FSearch "
+"tidak berjalan."
 
 #: src/fsearch_preferences.ui:1311
 msgid ""
@@ -1271,6 +1293,11 @@ msgid ""
 "folder. Mounted file systems below it (e.g. external drives or network "
 "shares) are skipped."
 msgstr ""
+"<b>Tetap pada satu file system:</b>\n"
+"\n"
+"Jika diaktifkan, FSearch tidak akan melintasi batas file system saat "
+"memindai folder ini. File system yang terpasang di bawahnya (mis. drive "
+"eksternal atau shared network) akan dilewati."
 
 #: src/fsearch_preferences.ui:1328
 msgid ""
@@ -1282,6 +1309,14 @@ msgid ""
 "This is useful for folders on file systems that can't be monitored for "
 "changes."
 msgstr ""
+"<b>Pindai ulang setiap:</b>\n"
+"\n"
+"Jika diaktifkan, folder ini akan dipindai ulang secara otomatis pada "
+"interval yang ditentukan. Gunakan bidang jam dan menit untuk menentukan "
+"seberapa sering pemindaian ulang dilakukan.\n"
+"\n"
+"Ini berguna untuk folder pada file system yang tidak dapat dipantau "
+"perubahannya."
 
 #: src/fsearch_preferences.ui:1347
 msgid ""
@@ -1302,6 +1337,21 @@ msgid ""
 "\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
 "or both."
 msgstr ""
+"<b>Aturan pengecualian:</b>\n"
+"\n"
+"Daftar ini berisi aturan untuk file dan folder yang ingin Anda kecualikan "
+"dari database.\n"
+"\n"
+"-  <b>Aktif:</b> Jika diaktifkan, aturan diterapkan dan item yang cocok "
+"dikecualikan.\n"
+"-  <b>Pola:</b> Teks yang dicocokkan dengan setiap item, ditafsirkan sesuai "
+"Type.\n"
+"-  <b>Type:</b> Cara pola ditafsirkan — <i>Literal</i> (teks persis), <i>"
+"Wildcard</i> (menggunakan * dan ?) atau <i>Regex</i> (ekspresi reguler).\n"
+"-  <b>Match:</b> Apakah pola dicocokkan terhadap <i>Full Path</i> item atau "
+"hanya <i>Basename</i> (nama tanpa path).\n"
+"-  <b>Berlaku untuk:</b> Apakah aturan memengaruhi <i>Files</i>, <i>Folders</"
+"i> atau keduanya."
 
 #: src/fsearch_preferences.ui:1370
 msgid ""
@@ -1310,13 +1360,12 @@ msgid ""
 "This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
+"<b>Tambahkan aturan pengecualian:</b>\n"
+"\n"
+"Ini menambahkan aturan baru yang kosong ke daftar. Edit kolom Pattern, Type, "
+"Match, dan Applies To untuk mengontrol apa yang dikecualikan dari database."
 
 #: src/fsearch_preferences.ui:1387
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1324,7 +1373,7 @@ msgid ""
 msgstr ""
 "<b>Hapus baris yang dipilih:</b>\n"
 "\n"
-"Ini menghapus folder yang dipilih dari daftar folder yang dikecualikan."
+"Ini menghapus aturan yang dipilih dari daftar aturan pengecualian."
 
 #: src/fsearch_preferences.ui:1404
 #, fuzzy
@@ -1609,23 +1658,25 @@ msgid ""
 "The search was cancelled before it finished.\n"
 "<b>These results are incomplete.</b>"
 msgstr ""
+"Pencarian dibatalkan sebelum selesai.\n"
+"<b>Hasil ini tidak lengkap.</b>"
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "SEBAGIAN"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "Yang Baru di FSearch"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\">Yang Baru di FSearch 0.3</span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>Pemantauan File System</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
 msgid ""
@@ -1639,20 +1690,32 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"Kini Anda dapat memantau folder individual secara aktif untuk menghilangkan "
+"pemindaian ulang yang sering. Perubahan file kemudian akan langsung muncul "
+"di hasil pencarian Anda.\n"
+"\n"
+"Untuk mengaktifkan fitur ini, buka bagian Database pada dialog Preferences.\n"
+"\n"
+"Lihat dokumentasi online untuk informasi lebih lanjut:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>Jadwal Pemindaian Ulang Khusus Folder</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"Anda kini dapat mengonfigurasi interval pembaruan otomatis untuk folder "
+"individual secara independen dan disesuaikan dengan setiap lokasi yang "
+"berbeda."
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>Aturan Pengecualian yang Ditingkatkan</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
@@ -1661,6 +1724,10 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"Anda kini dapat menggunakan wildcard dan regular expressions untuk "
+"mendefinisikan aturan pengecualian yang lebih kuat. \n"
+"Aturan dapat ditujukan khusus untuk file, folder, atau keduanya, dan dapat "
+"dikonfigurasi agar cocok terhadap basename atau full absolute path."
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
@@ -1880,7 +1947,7 @@ msgstr "Jalur + Nama"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr "Pindahkan ke Sampah"
+msgstr "Pindahkan ke _Trash"
 
 #~ msgctxt "Will be followed by the content type string."
 #~ msgid "Error when getting information for content type"
