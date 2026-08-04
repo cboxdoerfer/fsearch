@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2025-05-22 16:01+0000\n"
-"Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
+"PO-Revision-Date: 2026-08-05 16:01+0000\n"
+"Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -472,7 +472,7 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Сканувати після запуску"
 
 #: src/fsearch_database_preferences_widget.ui:206
 #, fuzzy
@@ -485,7 +485,7 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Години:"
 
 #: src/fsearch_database_preferences_widget.ui:298
 #, fuzzy
@@ -1508,7 +1508,7 @@ msgstr "База даних"
 
 #: src/fsearch_result_view.c:487
 msgid "Invalid row data"
-msgstr ""
+msgstr "Неправильний рядок даних"
 
 #: src/fsearch_statusbar.c:58
 #, c-format
@@ -1648,7 +1648,7 @@ msgstr ""
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>Покращені правила виключення</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
