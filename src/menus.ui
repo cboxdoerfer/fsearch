@@ -209,6 +209,11 @@
                 <attribute name="accel">&lt;control&gt;c</attribute>
                 <attribute name="icon">edit-copy</attribute>
             </item>
+            <item>
+                <attribute name="label" translatable="yes">Copy Path</attribute>
+                <attribute name="action">win.copy_as_text_path_clipboard</attribute>
+                <attribute name="icon">edit-copy</attribute>
+            </item>
             <submenu id="fsearch_listview_menu_copy_as_text">
                 <attribute name="label" translatable="yes">Copy as Text</attribute>
                 <item>
