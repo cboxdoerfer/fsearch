@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-21 15:01+0000\n"
-"Last-Translator: Hosted Weblate user 54392 "
-"<hamburger2048@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-08-14 01:51+0000\n"
+"Last-Translator: phoenies <syfln@126.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -141,47 +140,47 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
-msgstr ""
+msgstr "数据库重写"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "数据库：新增支持文件系统监听"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
-msgstr ""
+msgstr "数据库：允许基于固定模式、通配符或正则表达式排除文件和文件夹"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
-msgstr ""
+msgstr "数据库：允许已纳入的文件夹在启动后独立计划扫描"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "数据库：重扫描更加高效"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "数据库：在数据库文件中保存数据库配置"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "数据库：新增数据库文件校验和"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
-msgstr ""
+msgstr "图标和文件信息获取异步化（避免用户界面卡顿）"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "减少内存占用"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "为所有设置项添加上下文帮助"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Numerous bug fixes and stability and performance improvements"
@@ -331,7 +330,7 @@ msgstr "显示版本信息并退出"
 
 #: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "索引重扫描：正在应用变更……"
 
 #: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
@@ -364,7 +363,7 @@ msgstr "选择（_S）"
 
 #: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
-msgstr ""
+msgstr "字面值"
 
 #: src/fsearch_database_preferences_widget.c:391
 msgid "Wildcard"
@@ -372,7 +371,7 @@ msgstr "通配符"
 
 #: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
-msgstr ""
+msgstr "正则"
 
 #: src/fsearch_database_preferences_widget.c:414
 msgid "Full Path"
@@ -380,7 +379,7 @@ msgstr "完整路径"
 
 #: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
-msgstr ""
+msgstr "基本名"
 
 #: src/fsearch_database_preferences_widget.c:434
 msgid "Files & Folders"
@@ -401,7 +400,7 @@ msgstr "激活"
 
 #: src/fsearch_database_preferences_widget.c:640
 msgid "Pattern"
-msgstr ""
+msgstr "模式"
 
 #: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
@@ -414,7 +413,7 @@ msgstr "匹配"
 
 #: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
-msgstr ""
+msgstr "应用于"
 
 #: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
@@ -438,23 +437,23 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "尝试监听"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "启动后立即扫描"
 
 #: src/fsearch_database_preferences_widget.ui:206
 msgid "Stay on one file system"
-msgstr "保持在一个文件系统上"
+msgstr "停留在单一文件系统中（不进入其他分区）"
 
 #: src/fsearch_database_preferences_widget.ui:221
 msgid "Rescan every"
-msgstr ""
+msgstr "重扫描间隔"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "小时："
 
 #: src/fsearch_database_preferences_widget.ui:298
 msgid "Minutes:"
@@ -1427,7 +1426,7 @@ msgstr "数据库"
 
 #: src/fsearch_result_view.c:487
 msgid "Invalid row data"
-msgstr ""
+msgstr "无效行数据"
 
 #: src/fsearch_statusbar.c:58
 #, c-format
@@ -1527,20 +1526,20 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "未完成"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "FSearch 更新说明"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\"> FSearch 0.3 更新说明 </span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>文件系统监听</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
 msgid ""
@@ -1557,17 +1556,17 @@ msgstr ""
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>‌ 指定文件夹的计划扫描 </b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
-msgstr ""
+msgstr "现可为每个文件夹单独设置自动更新间隔，以适应不同位置的需求。"
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>改进排除规则</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
