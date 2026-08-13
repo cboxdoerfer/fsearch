@@ -978,10 +978,27 @@ on_database_scan_started(FsearchDatabase *db2, gpointer user_data) {
 }
 
 static void
+on_window_active_changed(GObject *object, GParamSpec *pspec, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+
+    if (!gtk_window_is_active(GTK_WINDOW(win))) {
+        return;
+    }
+
+    gtk_widget_grab_focus(win->search_entry);
+    gtk_editable_select_region(GTK_EDITABLE(win->search_entry), 0, -1);
+}
+
+static void
 fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
+
+    g_signal_connect(self,
+                     "notify::is-active",
+                     G_CALLBACK(on_window_active_changed),
+                     self);
 
     guint id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     self->result_view = fsearch_result_view_new(id);
