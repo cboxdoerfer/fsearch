@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-08-14 01:51+0000\n"
-"Last-Translator: phoenies <syfln@126.com>\n"
+"PO-Revision-Date: 2026-08-15 05:51+0000\n"
+"Last-Translator: Hosted Weblate user 54392 "
+"<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -1556,7 +1557,7 @@ msgstr ""
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr "<big><b>‌ 指定文件夹的计划扫描 </b></big>"
+msgstr "<big><b>文件夹重扫计划</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
