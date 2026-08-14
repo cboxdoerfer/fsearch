@@ -33,6 +33,7 @@
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
@@ -54,6 +55,11 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_box;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
+    GtkWidget *search_history_button;
+    GtkWidget *search_history_popover;
+    GtkWidget *search_history_list;
+    GtkWidget *search_history_scrolled;
+    GtkWidget *search_history_clear_button;
     GtkWidget *main_stack;
     GtkWidget *main_database_overlay_stack;
     GtkWidget *main_result_overlay;
@@ -75,6 +81,8 @@ struct _FsearchApplicationWindow {
     uint32_t num_folders_selected;
 
     FsearchResultView *result_view;
+    GPtrArray *search_history;
+    guint search_history_timeout_id;
 };
 
 typedef enum {
@@ -150,6 +158,486 @@ get_query_flags() {
 static const char *
 get_query_text(FsearchApplicationWindow *win) {
     return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+}
+
+#define SEARCH_HISTORY_MAX_ITEMS 30
+#define SEARCH_HISTORY_RECORD_DELAY_MS 1200
+
+static char *
+search_history_get_file_path(void) {
+    return g_build_filename(g_get_user_config_dir(),
+                            "fsearch",
+                            "search-history.ini",
+                            NULL);
+}
+
+static char *
+search_history_get_dir_path(void) {
+    return g_build_filename(g_get_user_config_dir(),
+                            "fsearch",
+                            NULL);
+}
+
+static gint
+search_history_find(FsearchApplicationWindow *win,
+                    const char *query) {
+    if (!win->search_history || !query) {
+        return -1;
+    }
+
+    for (guint i = 0; i < win->search_history->len; i++) {
+        const char *item =
+            g_ptr_array_index(win->search_history, i);
+
+        if (g_strcmp0(item, query) == 0) {
+            return (gint)i;
+        }
+    }
+
+    return -1;
+}
+
+static void
+search_history_save(FsearchApplicationWindow *win) {
+    if (!win->search_history) {
+        return;
+    }
+
+    g_autofree char *dir_path =
+        search_history_get_dir_path();
+
+    if (g_mkdir_with_parents(dir_path, 0700) != 0) {
+        g_warning("[search-history] failed to create config directory: %s",
+                  dir_path);
+        return;
+    }
+
+    g_autofree char *file_path =
+        search_history_get_file_path();
+
+    /*
+     * No history -> remove the file completely.
+     */
+    if (win->search_history->len == 0) {
+        g_remove(file_path);
+        return;
+    }
+
+    GKeyFile *key_file = g_key_file_new();
+
+    g_key_file_set_string_list(
+        key_file,
+        "SearchHistory",
+        "items",
+        (const gchar *const *)win->search_history->pdata,
+        win->search_history->len);
+
+    gsize data_len = 0;
+
+    g_autofree char *data =
+        g_key_file_to_data(key_file,
+                           &data_len,
+                           NULL);
+
+    GError *error = NULL;
+
+    if (!g_file_set_contents(file_path,
+                             data,
+                             data_len,
+                             &error)) {
+        g_warning("[search-history] failed to save history: %s",
+                  error ? error->message : "unknown error");
+
+        g_clear_error(&error);
+    }
+
+    g_key_file_unref(key_file);
+}
+
+static void
+search_history_load(FsearchApplicationWindow *win) {
+    win->search_history =
+        g_ptr_array_new_with_free_func(g_free);
+
+    g_autofree char *file_path =
+        search_history_get_file_path();
+
+    GKeyFile *key_file = g_key_file_new();
+
+    GError *error = NULL;
+
+    if (!g_key_file_load_from_file(key_file,
+                                   file_path,
+                                   G_KEY_FILE_NONE,
+                                   &error)) {
+        /*
+         * Missing file is normal on first launch.
+         */
+        g_clear_error(&error);
+        g_key_file_unref(key_file);
+        return;
+    }
+
+    gsize length = 0;
+
+    gchar **items =
+        g_key_file_get_string_list(key_file,
+                                   "SearchHistory",
+                                   "items",
+                                   &length,
+                                   &error);
+
+    if (!items) {
+        g_clear_error(&error);
+        g_key_file_unref(key_file);
+        return;
+    }
+
+    for (gsize i = 0;
+         i < length &&
+         win->search_history->len < SEARCH_HISTORY_MAX_ITEMS;
+         i++) {
+
+        if (!items[i] || items[i][0] == '\0') {
+            continue;
+        }
+
+        /*
+         * Avoid duplicates even if the history file was edited manually.
+         */
+        if (search_history_find(win, items[i]) >= 0) {
+            continue;
+        }
+
+        g_ptr_array_add(win->search_history,
+                        g_strdup(items[i]));
+    }
+
+    g_strfreev(items);
+    g_key_file_unref(key_file);
+}
+
+static void
+search_history_refresh(FsearchApplicationWindow *win) {
+    if (!win->search_history_list) {
+        return;
+    }
+
+    GList *children =
+        gtk_container_get_children(
+            GTK_CONTAINER(win->search_history_list));
+
+    for (GList *item = children;
+         item != NULL;
+         item = item->next) {
+        gtk_widget_destroy(GTK_WIDGET(item->data));
+    }
+
+    g_list_free(children);
+
+    if (!win->search_history ||
+        win->search_history->len == 0) {
+
+        GtkWidget *label =
+            gtk_label_new(_("No search history"));
+
+        gtk_widget_set_sensitive(label, FALSE);
+
+        gtk_widget_set_margin_start(label, 12);
+        gtk_widget_set_margin_end(label, 12);
+        gtk_widget_set_margin_top(label, 10);
+        gtk_widget_set_margin_bottom(label, 10);
+
+        gtk_container_add(
+            GTK_CONTAINER(win->search_history_list),
+            label);
+
+        gtk_widget_set_sensitive(
+            win->search_history_clear_button,
+            FALSE);
+
+        gtk_widget_set_size_request(
+            win->search_history_scrolled,
+            420,
+            48);
+    }
+    else {
+        for (guint i = 0;
+             i < win->search_history->len;
+             i++) {
+
+            const char *query =
+                g_ptr_array_index(win->search_history, i);
+
+            GtkWidget *row =
+                gtk_list_box_row_new();
+
+            GtkWidget *label =
+                gtk_label_new(query);
+
+            gtk_label_set_xalign(GTK_LABEL(label), 0.0f);
+
+            gtk_label_set_ellipsize(
+                GTK_LABEL(label),
+                PANGO_ELLIPSIZE_END);
+
+            gtk_widget_set_margin_start(label, 10);
+            gtk_widget_set_margin_end(label, 10);
+            gtk_widget_set_margin_top(label, 6);
+            gtk_widget_set_margin_bottom(label, 6);
+
+            g_object_set_data_full(
+                G_OBJECT(row),
+                "fsearch-search-history-query",
+                g_strdup(query),
+                g_free);
+
+            gtk_container_add(GTK_CONTAINER(row),
+                              label);
+
+            gtk_container_add(
+                GTK_CONTAINER(win->search_history_list),
+                row);
+        }
+
+        gtk_widget_set_sensitive(
+            win->search_history_clear_button,
+            TRUE);
+
+        /*
+         * Grow naturally for a few entries, then become scrollable.
+         */
+        const gint visible_rows =
+            MIN((gint)win->search_history->len, 8);
+
+        gtk_widget_set_size_request(
+            win->search_history_scrolled,
+            420,
+            MAX(visible_rows * 34, 48));
+    }
+
+    gtk_widget_show_all(win->search_history_list);
+}
+
+static void
+search_history_add(FsearchApplicationWindow *win,
+                   const char *query) {
+    if (!win->search_history ||
+        !query ||
+        query[0] == '\0') {
+        return;
+    }
+
+    /*
+     * Existing query -> remove old occurrence,
+     * then put it at the top.
+     */
+    const gint existing =
+        search_history_find(win, query);
+
+    if (existing >= 0) {
+        g_ptr_array_remove_index(win->search_history,
+                                 (guint)existing);
+    }
+
+    g_ptr_array_insert(win->search_history,
+                       0,
+                       g_strdup(query));
+
+    while (win->search_history->len >
+           SEARCH_HISTORY_MAX_ITEMS) {
+
+        g_ptr_array_remove_index(
+            win->search_history,
+            win->search_history->len - 1);
+    }
+
+    search_history_save(win);
+    search_history_refresh(win);
+}
+
+static gboolean
+search_history_record_timeout_cb(gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+
+    win->search_history_timeout_id = 0;
+
+    const char *query =
+        gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+
+    search_history_add(win, query);
+
+    return G_SOURCE_REMOVE;
+}
+
+static void
+search_history_schedule_record(FsearchApplicationWindow *win) {
+    if (win->search_history_timeout_id) {
+        g_source_remove(win->search_history_timeout_id);
+        win->search_history_timeout_id = 0;
+    }
+
+    const char *query =
+        gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+
+    if (!query || query[0] == '\0') {
+        return;
+    }
+
+    /*
+     * Don't save "a", "ab", "abc"... while Search As You Type
+     * is active. Wait until typing has stopped for a moment.
+     */
+    win->search_history_timeout_id =
+        g_timeout_add(SEARCH_HISTORY_RECORD_DELAY_MS,
+                      search_history_record_timeout_cb,
+                      win);
+}
+
+static void
+on_search_history_row_activated(GtkListBox *box,
+                                GtkListBoxRow *row,
+                                gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+
+    const char *query =
+        g_object_get_data(
+            G_OBJECT(row),
+            "fsearch-search-history-query");
+
+    if (!query) {
+        return;
+    }
+
+    /*
+     * Copy first because changing the entry can eventually rebuild
+     * the history list.
+     */
+    g_autofree char *query_copy =
+        g_strdup(query);
+
+    gtk_widget_hide(win->search_history_popover);
+
+    gtk_entry_set_text(
+        GTK_ENTRY(win->search_entry),
+        query_copy);
+
+    gtk_editable_set_position(
+        GTK_EDITABLE(win->search_entry),
+        -1);
+
+    gtk_widget_grab_focus(win->search_entry);
+
+    FsearchConfig *config =
+        fsearch_application_get_config(
+            FSEARCH_APPLICATION_DEFAULT);
+
+    /*
+     * changed() already searches when Search As You Type is enabled.
+     * Otherwise we need to explicitly start the search.
+     */
+    if (!config->search_as_you_type) {
+        perform_search(win);
+    }
+}
+
+static void
+on_search_history_clear_clicked(GtkButton *button,
+                                gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+
+    if (win->search_history_timeout_id) {
+        g_source_remove(win->search_history_timeout_id);
+        win->search_history_timeout_id = 0;
+    }
+
+    g_ptr_array_set_size(win->search_history, 0);
+
+    search_history_save(win);
+    search_history_refresh(win);
+}
+
+static void
+search_history_init(FsearchApplicationWindow *win) {
+    search_history_load(win);
+
+    win->search_history_popover =
+        gtk_popover_new(win->search_history_button);
+
+    GtkWidget *box =
+        gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
+    win->search_history_scrolled =
+        gtk_scrolled_window_new(NULL, NULL);
+
+    gtk_scrolled_window_set_policy(
+        GTK_SCROLLED_WINDOW(win->search_history_scrolled),
+        GTK_POLICY_NEVER,
+        GTK_POLICY_AUTOMATIC);
+
+    win->search_history_list =
+        gtk_list_box_new();
+
+    gtk_list_box_set_selection_mode(
+        GTK_LIST_BOX(win->search_history_list),
+        GTK_SELECTION_NONE);
+
+    gtk_container_add(
+        GTK_CONTAINER(win->search_history_scrolled),
+        win->search_history_list);
+
+    gtk_box_pack_start(GTK_BOX(box),
+                       win->search_history_scrolled,
+                       TRUE,
+                       TRUE,
+                       0);
+
+    GtkWidget *separator =
+        gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+
+    gtk_box_pack_start(GTK_BOX(box),
+                       separator,
+                       FALSE,
+                       FALSE,
+                       0);
+
+    win->search_history_clear_button =
+        gtk_button_new_with_label(
+            _("Clear Search History"));
+
+    gtk_box_pack_start(
+        GTK_BOX(box),
+        win->search_history_clear_button,
+        FALSE,
+        FALSE,
+        0);
+
+    gtk_container_add(
+        GTK_CONTAINER(win->search_history_popover),
+        box);
+
+    gtk_menu_button_set_popover(
+        GTK_MENU_BUTTON(win->search_history_button),
+        win->search_history_popover);
+
+    g_signal_connect(
+        win->search_history_list,
+        "row-activated",
+        G_CALLBACK(on_search_history_row_activated),
+        win);
+
+    g_signal_connect(
+        win->search_history_clear_button,
+        "clicked",
+        G_CALLBACK(on_search_history_clear_clicked),
+        win);
+
+    search_history_refresh(win);
+
+    /*
+     * Show contents, but don't open the popover.
+     */
+    gtk_widget_show_all(box);
 }
 
 static FsearchApplicationWindow *
@@ -376,6 +864,14 @@ static void
 fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    
+    if (self->search_history_timeout_id) {
+        g_source_remove(self->search_history_timeout_id);
+        self->search_history_timeout_id = 0;
+    }
+
+    g_clear_pointer(&self->search_history,
+                    g_ptr_array_unref);
 
     if (self->apply_overlay_timeout_id) {
         g_source_remove(self->apply_overlay_timeout_id);
@@ -686,6 +1182,8 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
     if (config->search_as_you_type) {
         perform_search(win);
     }
+    
+    search_history_schedule_record(win);
 }
 
 static char *
@@ -994,6 +1492,8 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
+    
+    search_history_init(self);
 
     g_signal_connect(self,
                      "notify::is-active",
@@ -1104,6 +1604,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
+    gtk_widget_class_bind_template_child(widget_class,  FsearchApplicationWindow, search_history_button);
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
@@ -1147,12 +1648,26 @@ fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow
     else {
         gtk_style_context_remove_class(filter_style, "filter_centered");
     }
-    GtkStyleContext *entry_style = gtk_widget_get_style_context(win->search_entry);
-    if (config->show_search_button || config->show_filter) {
-        gtk_style_context_add_class(entry_style, "search_entry_has_neighbours");
+    GtkStyleContext *entry_style =
+        gtk_widget_get_style_context(win->search_entry);
+
+    gtk_style_context_add_class(entry_style, "search_entry_has_neighbours");
+    
+    GtkStyleContext *history_style =
+        gtk_widget_get_style_context(
+            win->search_history_button);
+
+    if (config->show_search_button ||
+        config->show_filter) {
+
+        gtk_style_context_add_class(
+            history_style,
+            "search_history_button_has_neighbours");
     }
     else {
-        gtk_style_context_remove_class(entry_style, "search_entry_has_neighbours");
+        gtk_style_context_remove_class(
+            history_style,
+            "search_history_button_has_neighbours");
     }
 
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->filter_revealer), config->show_filter);

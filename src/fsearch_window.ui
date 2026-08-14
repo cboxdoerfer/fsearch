@@ -595,6 +595,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkMenuButton" id="search_history_button">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="focus-on-click">False</property>
+                    <property name="receives-default">False</property>
+                    <property name="tooltip-text" translatable="yes">Search History</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">pan-down-symbolic</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="search_history_button"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkRevealer" id="filter_revealer">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -617,7 +641,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -650,7 +674,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>

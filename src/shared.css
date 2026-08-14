@@ -100,3 +100,33 @@
 .include_settings_frame border {
     border-left-width: 0;
 }
+
+.search_history_button {
+    min-width: 26px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+/* 紧贴搜索框 */
+.search_history_button:dir(ltr) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-width: 0;
+}
+
+.search_history_button:dir(rtl) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-width: 0;
+}
+
+/* 后面还有 Filter / Search Button 时，中间也不要圆角 */
+.search_history_button_has_neighbours:dir(ltr) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.search_history_button_has_neighbours:dir(rtl) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
