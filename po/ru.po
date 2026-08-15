@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-20 11:02+0000\n"
+"PO-Revision-Date: 2026-08-16 05:44+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -411,7 +411,7 @@ msgstr "Полный путь"
 
 #: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
-msgstr "Название базы"
+msgstr "Базовое имя"
 
 #: src/fsearch_database_preferences_widget.c:434
 msgid "Files & Folders"
@@ -445,7 +445,7 @@ msgstr "Совпадение"
 
 #: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
-msgstr "Распространяется на"
+msgstr "Применить к"
 
 #: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
@@ -1347,15 +1347,15 @@ msgstr ""
 "Этот список содержит правила для файлов и папок, которые вы хотите исключить "
 "из базы данных..\n"
 "\n"
-"\t• <b>Архив:</b> Если включено, то соответствующее правило будет применено "
-"и соответствующие элементы будут исключены из поиска.\n"
+"\t• <b>Активно:</b> Если включено, то соответствующее правило будет "
+"применено и соответствующие элементы будут исключены из поиска.\n"
 "\t• <b>Шаблон:</b> Текст сопоставляется с каждым элементом, а результат "
 "интерпретируется в соответствии с типом.\n"
-"\t• <b>Тип:</b> Способ интерпретации шаблона — <i>Literal</i> (точный "
-"текст), <i>Wildcard</i> (используются «*» и «?») или <i>Regex</i> "
-"(регулярные выражения).\n"
-"\t• <b>Совпадение:</b> Соответствуют ли шаблон правил элементу <i>Полный "
-"путь</i> или только <i>Базовое_имя</i> (имя без указания пути).\n"
+"\t• <b>Тип:</b> Способ интерпретации шаблона — <i>Literal</i> (точный текст)"
+", <i>Wildcard</i> (используются «*» и «?») или <i>Regex</i> (регулярные "
+"выражения).\n"
+"\t• <b>Совпадение:</b> Соответствует ли шаблон правил элементу <i>Полный "
+"путь</i> или только <i>Базовое имя</i> (имя без указания пути).\n"
 "\t• <b>Применить к:</b> Применяются ли правила к <i>файлам</i>, <i>папкам</"
 "i> или к тому и другому."
 
