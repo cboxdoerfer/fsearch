@@ -24,6 +24,7 @@
 
 #include "fsearch_config.h"
 #include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_list_view.h"
@@ -1356,6 +1357,49 @@ on_listview_row_is_selected(int row, gpointer user_data) {
 }
 
 static void
+collect_drag_uri(FsearchDatabaseEntry *entry, gpointer user_data) {
+    GPtrArray *uris = user_data;
+    if (!entry || !uris) {
+        return;
+    }
+
+    g_autoptr(GString) full_path = db_entry_get_path_full(entry);
+    if (!full_path || !full_path->str || !g_path_is_absolute(full_path->str)) {
+        return;
+    }
+
+    g_autofree char *uri = g_filename_to_uri(full_path->str, NULL, NULL);
+    if (uri) {
+        g_ptr_array_add(uris, g_steal_pointer(&uri));
+    }
+}
+
+static void
+on_listview_drag_data_get(GtkWidget *widget,
+                          GdkDragContext *context,
+                          GtkSelectionData *selection_data,
+                          guint info,
+                          guint time,
+                          gpointer user_data) {
+    (void)widget;
+    (void)context;
+    (void)info;
+    (void)time;
+
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+    g_autoptr(GPtrArray) uris = g_ptr_array_new_with_free_func(g_free);
+
+    fsearch_application_window_selection_for_each(win, collect_drag_uri, uris);
+    if (uris->len == 0) {
+        return;
+    }
+
+    // gtk_selection_data_set_uris() requires a NULL-terminated URI array.
+    g_ptr_array_add(uris, NULL);
+    gtk_selection_data_set_uris(selection_data, (gchar **)uris->pdata);
+}
+
+static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -1424,6 +1468,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
     g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
+    g_signal_connect(list_view, "drag-data-get", G_CALLBACK(on_listview_drag_data_get), win);
 
     win->result_view->list_view = list_view;
 }

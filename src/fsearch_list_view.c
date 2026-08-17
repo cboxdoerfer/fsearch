@@ -44,6 +44,12 @@ struct _FsearchListView {
     GtkGesture *rubberband_drag_gesture;
     GtkGesture *col_resize_drag_gesture;
 
+    // Dragging from a result row exports the current selection as file URIs.
+    // Dragging from empty list space keeps the existing rubber-band selection behaviour.
+    gboolean file_drag_mode;
+    gint file_drag_start_idx;
+    gint pending_single_select_idx;
+
     gboolean rubberband_drag_mode;
     gboolean col_resize_drag_mode;
 
@@ -803,9 +809,19 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
             }
             else {
+                // Keep an existing multi-selection intact while the mouse is held on one of its rows.
+                // If this turns into a drag, all selected files are exported. If it remains a plain
+                // click, the release handler collapses the selection to the clicked row as before.
+                const gboolean keep_selection_for_possible_drag =
+                    !view->single_click_activate && fsearch_list_view_is_selected(view, row_idx)
+                    && fsearch_list_view_selection_num_selected(view) > 1;
+
                 view->cursor_idx = row_idx;
-                fsearch_list_view_selection_clear_silent(view);
-                fsearch_list_view_selection_toggle_silent(view, row_idx);
+                view->pending_single_select_idx = keep_selection_for_possible_drag ? row_idx : UNSET_ROW;
+                if (!keep_selection_for_possible_drag) {
+                    fsearch_list_view_selection_clear_silent(view);
+                    fsearch_list_view_selection_toggle_silent(view, row_idx);
+                }
                 if (view->single_click_activate) {
                     FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
                     if (col) {
@@ -858,6 +874,7 @@ on_fsearch_list_view_multi_press_gesture_released(GtkGestureMultiPress *gesture,
                                                   gdouble x,
                                                   gdouble y,
                                                   FsearchListView *view) {
+    (void)x;
     guint button_pressed = gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
 
     if (button_pressed > 3) {
@@ -866,8 +883,20 @@ on_fsearch_list_view_multi_press_gesture_released(GtkGestureMultiPress *gesture,
 
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
     if (row_idx < 0) {
+        view->pending_single_select_idx = UNSET_ROW;
         return;
     }
+
+    if (button_pressed == GDK_BUTTON_PRIMARY && n_press == 1 && !view->file_drag_mode
+        && view->pending_single_select_idx != UNSET_ROW && row_idx == view->pending_single_select_idx) {
+        // No drag happened: restore the normal single-click behaviour.
+        fsearch_list_view_selection_clear_silent(view);
+        fsearch_list_view_selection_toggle_silent(view, row_idx);
+        view->cursor_idx = row_idx;
+        fsearch_list_view_selection_changed(view);
+    }
+
+    view->pending_single_select_idx = UNSET_ROW;
 }
 
 static void
@@ -875,7 +904,13 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
                                           gdouble offset_x,
                                           gdouble offset_y,
                                           FsearchListView *view) {
-    //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
+    (void)gesture;
+    (void)offset_x;
+    (void)offset_y;
+
+    view->file_drag_mode = FALSE;
+    view->file_drag_start_idx = UNSET_ROW;
+
     if (view->rubberband_drag_mode) {
         view->rubberband_drag_mode = FALSE;
         view->rubberband_state = RUBBERBAND_SELECT_INACTIVE;
@@ -1093,11 +1128,51 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
                                              gdouble offset_x,
                                              gdouble offset_y,
                                              FsearchListView *view) {
-    // GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
+    if (is_row_idx_valid(view, view->file_drag_start_idx)) {
+        if (view->file_drag_mode) {
+            return;
+        }
 
-    // if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
-    //     return;
-    // }
+        gdouble start_x = 0;
+        gdouble start_y = 0;
+        if (!gtk_gesture_drag_get_start_point(gesture, &start_x, &start_y)) {
+            return;
+        }
+
+        GtkWidget *widget = GTK_WIDGET(view);
+        if (!gtk_drag_check_threshold(widget,
+                                      (gint)start_x,
+                                      (gint)start_y,
+                                      (gint)(start_x + offset_x),
+                                      (gint)(start_y + offset_y))) {
+            return;
+        }
+
+        if (fsearch_list_view_selection_num_selected(view) == 0) {
+            return;
+        }
+
+        GtkTargetList *targets = gtk_target_list_new(NULL, 0);
+        gtk_target_list_add_uri_targets(targets, 0);
+
+        GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
+        const GdkEvent *event = gtk_gesture_get_last_event(GTK_GESTURE(gesture), sequence);
+        GdkDragContext *context = gtk_drag_begin_with_coordinates(widget,
+                                                                  targets,
+                                                                  GDK_ACTION_COPY | GDK_ACTION_MOVE,
+                                                                  GDK_BUTTON_PRIMARY,
+                                                                  (GdkEvent *)event,
+                                                                  -1,
+                                                                  -1);
+        gtk_target_list_unref(targets);
+
+        if (context) {
+            view->file_drag_mode = TRUE;
+            view->pending_single_select_idx = UNSET_ROW;
+            gtk_drag_set_icon_default(context);
+        }
+        return;
+    }
 
     if (view->rubberband_drag_mode == FALSE) {
         return;
@@ -1112,11 +1187,24 @@ on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
                                             gdouble start_x_view,
                                             gdouble start_y_view,
                                             FsearchListView *view) {
+    view->file_drag_mode = FALSE;
+    view->file_drag_start_idx = UNSET_ROW;
+
     if (start_y_view > view->header_height && !view->single_click_activate) {
         if (!gtk_widget_has_focus(GTK_WIDGET(view))) {
             gtk_widget_grab_focus(GTK_WIDGET(view));
         }
 
+        const gint row_idx = fsearch_list_view_get_row_idx_for_y_view(view, (gint)start_y_view);
+        if (is_row_idx_valid(view, row_idx)) {
+            // A drag starting on a result row is a file drag. The window supplies
+            // the selected paths through the standard GtkWidget::drag-data-get signal.
+            view->file_drag_start_idx = row_idx;
+            gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+            return;
+        }
+
+        // Empty list space keeps the original rubber-band selection behaviour.
         view->rubberband_start_x_canvas = start_x_view + get_hscroll_pos(view);
         view->rubberband_start_y_canvas = start_y_view + get_vscroll_pos(view) - view->header_height;
         view->rubberband_drag_mode = TRUE;
@@ -1960,6 +2048,10 @@ fsearch_list_view_init(FsearchListView *view) {
 
     view->extend_started_idx = UNSET_ROW;
 
+    view->file_drag_mode = FALSE;
+    view->file_drag_start_idx = UNSET_ROW;
+    view->pending_single_select_idx = UNSET_ROW;
+
     view->scroll_timeout = 0;
 
     view->min_list_width = 0;
@@ -1980,6 +2072,7 @@ fsearch_list_view_init(FsearchListView *view) {
                      view);
 
     view->rubberband_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(view->rubberband_drag_gesture), GDK_BUTTON_PRIMARY);
     g_signal_connect(view->rubberband_drag_gesture,
                      "drag-begin",
                      G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_begin),
