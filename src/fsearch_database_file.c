@@ -106,6 +106,8 @@ file_open_locked(const char *file_path, const char *mode) {
         g_debug("[db_file] database file is already locked by a different process: %s", file_path);
 
         g_clear_pointer(&file_pointer, fclose);
+        // Don't return the now-closed file pointer (dangling) -- report failure instead.
+        return NULL;
     }
 
     return file_pointer;
@@ -1263,6 +1265,23 @@ fsearch_database_file_load(const char *file_path,
     uint64_t index_flags = 0;
     if (!database_file_read_element(&index_flags, sizeof(index_flags), fp, checksum)) {
         g_debug("[db_load] failed to read index flags");
+        goto load_fail;
+    }
+
+    // Consistency guard: a database file must store its per-entry data properties (size,
+    // mtime) -- the app's default property set always indexes them. If index_flags is missing
+    // them the file is corrupt (e.g. written with a zero flag set) and loading it would surface
+    // all-zero sizes/mtime. Fail so the caller triggers a full rescan from disk to repair it.
+    // NAME and PATH/EXTENSION are derived from the entry name and are always available, so only
+    // the stored int64 properties (size, mtime) are required here.
+    const FsearchDatabaseIndexPropertyFlags required_data_flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                                 | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME;
+    if ((index_flags & required_data_flags) != required_data_flags) {
+        g_warning("[db_load] database index flags 0x%" PRIx64
+                  " are missing required data properties (size/mtime). "
+                  "The database file is corrupt and cannot be loaded; a full rescan is required "
+                  "to repair it.",
+                  index_flags);
         goto load_fail;
     }
 
