@@ -16,9 +16,17 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "fsearch_query.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_filter.h"
+#include "fsearch_filter_manager.h"
+#include "fsearch_query.h"
+#include "fsearch_query_flags.h"
+#include "fsearch_query_match_data.h"
+#include "fsearch_query_node.h"
+#include "fsearch_query_tree.h"
 #include "fsearch_string_utils.h"
+
+#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -57,6 +65,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->query_tree, fsearch_query_node_tree_free);
+    g_clear_pointer(&query->filter_tree, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
 }
 

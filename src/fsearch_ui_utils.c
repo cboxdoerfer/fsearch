@@ -28,8 +28,12 @@ ui_utils_run_gtk_dialog_async(GtkWidget *parent,
                               gpointer response_cb_data) {
     g_return_if_fail(primary_text);
 
-    GtkWidget *dialog =
-        gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);
+    GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(parent),
+                                               GTK_DIALOG_DESTROY_WITH_PARENT,
+                                               type,
+                                               buttons,
+                                               primary_text,
+                                               NULL);
 
     if (sec_text) {
         gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);
@@ -52,8 +56,12 @@ ui_utils_run_gtk_dialog(GtkWidget *parent,
         return GTK_RESPONSE_CANCEL;
     }
 
-    GtkWidget *dialog =
-        gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);
+    GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(parent),
+                                               GTK_DIALOG_DESTROY_WITH_PARENT,
+                                               type,
+                                               buttons,
+                                               primary_text,
+                                               NULL);
 
     if (sec_text) {
         gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);

@@ -17,7 +17,7 @@ libfsearch_sources = [
     'fsearch_clipboard.c',
     'fsearch_config.c',
     'fsearch_database.c',
-    'fsearch_database_entries_container.c',
+    'fsearch_database_chunked_array.c',
     'fsearch_database_entry.c',
     'fsearch_database_entry_info.c',
     'fsearch_database_exclude.c',
@@ -30,6 +30,7 @@ libfsearch_sources = [
     'fsearch_database_index_store.c',
     'fsearch_database_info.c',
     'fsearch_database_preferences_widget.c',
+    'fsearch_database_rescan_manager.c',
     'fsearch_database_scan.c',
     'fsearch_database_search_info.c',
     'fsearch_database_search_view.c',
@@ -43,6 +44,7 @@ libfsearch_sources = [
     'fsearch_folder_monitor_event.c',
     'fsearch_list_view.c',
     'fsearch_listview_popup.c',
+    'fsearch_main_context_utils.c',
     'fsearch_preferences_dialog.c',
     'fsearch_query.c',
     'fsearch_query_match_data.c',
@@ -72,16 +74,12 @@ if have_fanotify
     libfsearch_sources += 'fsearch_folder_monitor_fanotify.c'
 endif
 
-if build_machine.system()=='darwin'
-    libfsearch_sources+=['strverscmp.c']
-endif
-
 fsearch_deps = [
     cc.find_library('m', required: true),
-    dependency('gio-unix-2.0', version: '>= 2.50'),
-    dependency('gtk+-3.0', version: '>= 3.18'),
+    dependency('gio-unix-2.0', version: '>= 2.60'),
+    dependency('gtk+-3.0', version: '>= 3.22'),
     dependency('libpcre2-8', version: '>= 10.21'),
-    dependency('icu-uc', version: '>= 3.8'),
+    dependency('icu-uc', version: '>= 4.4'),
 ]
 
 fsearch_enums_headers = [

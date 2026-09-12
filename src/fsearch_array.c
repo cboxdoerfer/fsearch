@@ -26,6 +26,7 @@
 #include <sys/param.h>
 
 #define MAX_SORT_THREADS 8
+#define MERGE_SORT_THRESHOLD 16
 
 struct DynamicArray {
     // number of items in array
@@ -40,7 +41,18 @@ struct DynamicArray {
     volatile int ref_count;
 };
 
-static int items_freed = 0;
+static void
+darray_free_items(DynamicArray *array, uint32_t start_idx, uint32_t num_items) {
+    if (array->item_free_func && start_idx < array->num_items) {
+        const uint32_t items_left = array->num_items - start_idx;
+        const uint32_t items_to_free = MIN(num_items, items_left);
+        const uint32_t end = start_idx + items_to_free;
+
+        for (uint32_t i = start_idx; i < end; ++i) {
+            array->item_free_func(array->data[i]);
+        }
+    }
+}
 
 static void
 darray_free(DynamicArray *array) {
@@ -48,13 +60,8 @@ darray_free(DynamicArray *array) {
         return;
     }
 
-    //g_debug("[darray_free] freed");
-    if (array->item_free_func) {
-        items_freed += array->num_items;
-        for (uint32_t i = 0; i < array->num_items; ++i) {
-            array->item_free_func(array->data[i]);
-        }
-    }
+    // g_debug("[darray_free] freed");
+    darray_free_items(array, 0, array->num_items);
 
     g_clear_pointer(&array->data, free);
     g_clear_pointer(&array, free);
@@ -90,16 +97,25 @@ typedef struct {
 } DynamicArraySortContext;
 
 static void
-insertion_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
-    for (uint32_t i = 0; i < array->num_items; ++i) {
+insertion_sort_range(DynamicArray *array,
+                     uint32_t start_idx,
+                     uint32_t end_idx,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data) {
+    for (uint32_t i = start_idx + 1; i < end_idx; ++i) {
         void *val_a = array->data[i];
         uint32_t j = i;
-        while (j > 0 && comp_func(&array->data[j - 1], &val_a, data) > 0) {
+        while (j > start_idx && comp_func(&array->data[j - 1], &val_a, data) > 0) {
             array->data[j] = array->data[j - 1];
             j--;
         }
         array->data[j] = val_a;
     }
+}
+
+static void
+insertion_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
+    insertion_sort_range(array, 0, array->num_items, comp_func, data);
 }
 
 static void
@@ -141,28 +157,34 @@ split_merge(DynamicArray *src,
     if (end_idx - 1 <= start_idx) {
         return;
     }
+
+    const uint32_t len = end_idx - start_idx;
+    if (len <= MERGE_SORT_THRESHOLD) {
+        insertion_sort_range(dest, start_idx, end_idx, comp_func, comp_data);
+        memcpy(src->data + start_idx, dest->data + start_idx, (end_idx - start_idx) * sizeof(void *));
+        return;
+    }
+
     if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
 
-    const uint32_t center_idx = (end_idx + start_idx) / 2;
+    const uint32_t center_idx = start_idx + len / 2;
     split_merge(dest, src, start_idx, center_idx, cancellable, comp_func, comp_data);
     split_merge(dest, src, center_idx, end_idx, cancellable, comp_func, comp_data);
     merge(src, dest, start_idx, center_idx, end_idx, cancellable, comp_func, comp_data);
 }
 
 static void
-merge_sort(DynamicArray *to_sort,
-           GCancellable *cancellable,
-           DynamicArrayCompareDataFunc comp_func,
-           gpointer comp_data) {
+merge_sort(DynamicArray *to_sort, GCancellable *cancellable, DynamicArrayCompareDataFunc comp_func, gpointer comp_data) {
     g_assert(to_sort);
     g_assert(comp_func);
     if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
 
-    g_autoptr(DynamicArray) tmp = darray_copy(to_sort);
+    g_autoptr(DynamicArray) tmp = darray_copy_borrowed(to_sort);
+    tmp->item_free_func = NULL;
     split_merge(tmp, to_sort, 0, to_sort->num_items, cancellable, comp_func, comp_data);
 }
 
@@ -327,7 +349,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
         void *item = array->data[i];
         if (item && func(item, data)) {
             darray_add_item(stolen_entries, item);
-            darray_remove(array, i, 1);
+            darray_drop(array, i, 1);
             continue;
         }
         i++;
@@ -337,7 +359,7 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
 }
 
 static uint32_t
-darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
+darray_steal_or_drop(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
     g_assert(array);
     g_assert(array->data);
 
@@ -371,45 +393,87 @@ darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements,
     return n_elements;
 }
 
+void *
+darray_steal_item(DynamicArray *array, uint32_t idx) {
+    g_assert(array);
+    g_assert(array->data);
+
+    if (idx >= array->num_items) {
+        return NULL;
+    }
+
+    void *item = array->data[idx];
+    darray_drop(array, idx, 1);
+    return item;
+}
+
 uint32_t
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);
     g_assert(array->data);
 
-    return darray_steal_or_remove(array, index, n_elements, NULL);
+    if (n_elements == 0) {
+        // No need to remove anything
+        return 0;
+    }
+
+    if (index >= array->num_items) {
+        return 0;
+    }
+    if (n_elements >= array->num_items - index) {
+        // The end of the items to be removed is also the end of the array.
+        // No need to memmove, just to decrement the number of array items.
+        n_elements = array->num_items - index;
+
+        darray_free_items(array, index, n_elements);
+
+        array->num_items -= n_elements;
+
+        return n_elements;
+    }
+
+    darray_free_items(array, index, n_elements);
+
+    memmove(array->data + index,
+            array->data + index + n_elements,
+            (array->num_items - index - n_elements) * sizeof(void *));
+    array->num_items -= n_elements;
+
+    return n_elements;
+}
+
+uint32_t
+darray_drop(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+    g_assert(array);
+    g_assert(array->data);
+
+    return darray_steal_or_drop(array, index, n_elements, NULL);
 }
 
 uint32_t
 darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination) {
     g_assert(destination);
 
-    return darray_steal_or_remove(array, index, n_elements, destination);
+    return darray_steal_or_drop(array, index, n_elements, destination);
 }
 
 void
-darray_remove_items_sorted(DynamicArray *array,
-                           DynamicArray *items,
-                           DynamicArrayCompareDataFunc compare_func,
-                           void *data) {
+darray_remove_items_sorted(DynamicArray *array, DynamicArray *items, DynamicArrayCompareDataFunc compare_func, void *data) {
     g_assert(array);
     g_assert(items);
     g_assert(compare_func);
 
     for (uint32_t i = 0; i < items->num_items; ++i) {
         void *item = darray_get_item(items, i);
-        int32_t idx = 0;
-        if (darray_binary_search_with_data(array, item, compare_func, data, (uint32_t *)&idx)) {
+        uint32_t idx = 0;
+        if (darray_binary_search_with_data(array, item, compare_func, data, &idx)) {
             darray_remove(array, idx, 1);
         }
     }
 }
 
 bool
-darray_get_item_idx(DynamicArray *array,
-                    void *item,
-                    DynamicArrayCompareDataFunc compare_func,
-                    void *data,
-                    uint32_t *index) {
+darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     g_assert(array);
     g_assert(index);
 
@@ -435,6 +499,9 @@ darray_get_item_next(DynamicArray *array,
                      void *data,
                      uint32_t *next_idx) {
     g_assert(array);
+    if (array->num_items == 0) {
+        return NULL;
+    }
     uint32_t index = 0;
     if (!darray_get_item_idx(array, item, compare_func, data, &index)) {
         return NULL;
@@ -499,7 +566,7 @@ new_array_from_data(void **data, uint32_t num_items) {
 }
 
 static GArray *
-merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellable *cancellable) {
+merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, gpointer comp_data, GCancellable *cancellable) {
     if (merge_me->len == 1) {
         return merge_me;
     }
@@ -507,8 +574,6 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
         return merge_me;
     }
     const uint32_t num_threads = merge_me->len / 2;
-
-    g_debug("[sort] merge with %d thread(s)", num_threads);
 
     g_autoptr(GArray) merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
     GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, (gint)num_threads, FALSE, NULL);
@@ -523,6 +588,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
         merge_ctx.m1 = i1;
         merge_ctx.m2 = i2;
         merge_ctx.comp_func = comp_func;
+        merge_ctx.user_data = comp_data;
         merge_ctx.dest = darray_new(i1->num_items + i2->num_items);
 
         g_array_insert_val(merged_data, i, merge_ctx);
@@ -540,7 +606,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
     }
     g_clear_pointer(&merge_me, g_array_unref);
 
-    return merge_sorted(g_steal_pointer(&merged_data), comp_func, cancellable);
+    return merge_sorted(g_steal_pointer(&merged_data), comp_func, comp_data, cancellable);
 }
 
 static int
@@ -560,7 +626,7 @@ darray_sort_multi_threaded(DynamicArray *array,
                            void *data) {
     const int num_threads = get_ideal_thread_count();
     if (num_threads < 2 || num_threads > array->num_items) {
-        return darray_sort(array, comp_func, NULL, data);
+        return darray_sort(array, comp_func, cancellable, data);
     }
 
     g_debug("[sort] sorting with %d threads", num_threads);
@@ -583,7 +649,7 @@ darray_sort_multi_threaded(DynamicArray *array,
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    g_autoptr(GArray) result = merge_sorted(g_steal_pointer(&sort_ctx_array), comp_func, cancellable);
+    g_autoptr(GArray) result = merge_sorted(g_steal_pointer(&sort_ctx_array), comp_func, data, cancellable);
 
     if (result) {
         // Apply results if sorting wasn't canceled
@@ -612,11 +678,11 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
     g_assert(comp_func);
 
     if (array->num_items < 64) {
-        g_debug("[sort] insertion sort: %d\n", array->num_items);
+        g_debug("[sort] insertion sort: %d", array->num_items);
         insertion_sort(array, comp_func, data);
     }
     else {
-        g_debug("[sort] merge sort: %d\n", array->num_items);
+        g_debug("[sort] merge sort: %d", array->num_items);
         merge_sort(array, cancellable, comp_func, data);
     }
 }
@@ -685,6 +751,40 @@ darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data) {
 }
 
 DynamicArray *
+darray_copy_borrowed(DynamicArray *array) {
+    if (!array) {
+        return NULL;
+    }
+    DynamicArray *new = calloc(1, sizeof(DynamicArray));
+    g_assert(new);
+
+    new->max_items = array->max_items;
+    new->num_items = array->num_items;
+
+    new->data = calloc(new->max_items, sizeof(void *));
+    g_assert(new->data);
+
+    new->item_free_func = NULL;
+
+    new->ref_count = 1;
+
+    memcpy(new->data, array->data, new->num_items * sizeof(void *));
+
+    return new;
+}
+
+DynamicArray *
+darray_take(DynamicArray *array) {
+    DynamicArray *new = darray_copy_borrowed(array);
+    g_assert(new);
+
+    new->item_free_func = array->item_free_func;
+    array->item_free_func = NULL;
+
+    return new;
+}
+
+DynamicArray *
 darray_copy(DynamicArray *array) {
     if (!array) {
         return NULL;
@@ -692,15 +792,15 @@ darray_copy(DynamicArray *array) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
     g_assert(new);
 
-    new -> max_items = array->max_items;
-    new -> num_items = array->num_items;
+    new->max_items = array->max_items;
+    new->num_items = array->num_items;
 
-    new -> data = calloc(new->max_items, sizeof(void *));
+    new->data = calloc(new->max_items, sizeof(void *));
     g_assert(new->data);
 
     new->item_free_func = array->item_free_func;
 
-    new -> ref_count = 1;
+    new->ref_count = 1;
 
     memcpy(new->data, array->data, new->num_items * sizeof(void *));
 

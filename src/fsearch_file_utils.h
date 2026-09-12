@@ -27,6 +27,9 @@ typedef void
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len);
 
+gchar *
+fsearch_file_utils_get_app_user_state_dir(void);
+
 bool
 fsearch_file_utils_create_dir(const char *path);
 
@@ -75,3 +78,6 @@ fsearch_file_utils_get_thumbnail_icon(const char *path);
 
 bool
 fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir);
+
+int
+fsearch_file_utils_cmp_paths(const char *a, const char *b);

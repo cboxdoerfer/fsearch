@@ -1,3 +1,4 @@
+#include "gdk/gdk.h"
 #define G_LOG_DOMAIN "fsearch-result-view"
 
 #include "fsearch_result_view.h"
@@ -6,7 +7,6 @@
 #include "fsearch_config.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_file_utils.h"
-#include "fsearch_query.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -28,12 +28,6 @@ get_icon_size_for_height(int32_t height) {
     return 48;
 }
 
-static void
-reset_icon_caches(FsearchResultView *result_view) {
-    g_hash_table_remove_all(result_view->pixbuf_cache);
-    g_hash_table_remove_all(result_view->app_gicon_cache);
-}
-
 static GdkPixbuf *
 get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_size, int32_t scale_factor) {
     GdkPixbuf *pixbuf = g_hash_table_lookup(result_view->pixbuf_cache, icon);
@@ -51,10 +45,10 @@ get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_
         }
 
         g_autoptr(GtkIconInfo) icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
-            (const char **)names,
-            icon_size,
-            scale_factor,
-            GTK_ICON_LOOKUP_FORCE_SIZE);
+                                                                                (const char **)names,
+                                                                                icon_size,
+                                                                                scale_factor,
+                                                                                GTK_ICON_LOOKUP_FORCE_SIZE);
         if (!icon_info) {
             return NULL;
         }
@@ -94,7 +88,9 @@ try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabase
         g_hash_table_insert(result_view->item_info_cache, key, *info);
         return TRUE;
     }
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id,
+                                                                                  row,
+                                                                                  FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
     fsearch_database_queue_work(result_view->db, work);
     g_hash_table_insert(result_view->item_info_cache, key, NULL);
     return FALSE;
@@ -210,6 +206,103 @@ get_cairo_surface_for_gicon(FsearchResultView *result_view,
     return gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
 }
 
+typedef struct {
+    FsearchResultView *view;
+    char *path;
+    GCancellable *cancellable;
+    uint32_t idx;
+} ResultViewIconLoadCtx;
+
+static void
+icon_load_free(ResultViewIconLoadCtx *icon_load_ctx) {
+    icon_load_ctx->view = NULL;
+    g_clear_object(&icon_load_ctx->cancellable);
+    g_clear_pointer(&icon_load_ctx->path, g_free);
+    g_free(icon_load_ctx);
+}
+
+static GIcon *
+get_placeholder_icon(const char *name, gboolean is_dir) {
+    if (is_dir) {
+        return g_themed_icon_new("folder");
+    }
+    // Try to guess an icon from the name only first
+    g_autofree char *content_type = g_content_type_guess(name, NULL, 0, NULL);
+    if (!content_type) {
+        // Use a blank file icon
+        return g_themed_icon_new("application-octet-stream");
+    }
+    GIcon *icon = g_content_type_get_icon(content_type);
+    return icon ? icon : g_themed_icon_new("application-octet-stream");
+}
+
+static void
+on_icon_ready(GObject *source, GAsyncResult *res, gpointer user_data) {
+    ResultViewIconLoadCtx *icon_load_ctx = user_data;
+
+    if (!icon_load_ctx->view) {
+        // Request was cancelled, free icon load context
+        g_clear_pointer(&icon_load_ctx, icon_load_free);
+        return;
+    }
+
+    g_autoptr(GError) error = NULL;
+    g_autoptr(GFileInfo) file_info = g_file_query_info_finish(G_FILE(source), res, &error);
+
+    FsearchResultView *view = icon_load_ctx->view;
+    g_hash_table_remove(view->icon_loads, icon_load_ctx->path);
+
+    // If the async call failed to load an icon we can probably assume that the entry doesn't exist anymore,
+    // hence we cache an edit-delete icon instead
+    GIcon *icon = file_info ? g_file_info_get_icon(file_info) : NULL;
+    g_hash_table_insert(view->icon_cache,
+                        g_strdup(icon_load_ctx->path),
+                        icon ? g_object_ref(icon) : g_themed_icon_new("edit-delete"));
+    fsearch_list_view_redraw_row(view->list_view, icon_load_ctx->idx);
+
+    g_clear_pointer(&icon_load_ctx, icon_load_free);
+}
+
+static void
+queue_icon_load(FsearchResultView *view, const char *path, uint32_t idx) {
+    if (g_hash_table_contains(view->icon_loads, path)) {
+        // Icon is already cached, no need to load again
+        return;
+    }
+
+    ResultViewIconLoadCtx *icon_load_ctx = g_new0(ResultViewIconLoadCtx, 1);
+    icon_load_ctx->view = view;
+    icon_load_ctx->path = g_strdup(path);
+    icon_load_ctx->idx = idx;
+    icon_load_ctx->cancellable = g_cancellable_new();
+
+    // Add IconLoadCtx to the hash table of loading icons
+    g_hash_table_insert(view->icon_loads, g_strdup(path), icon_load_ctx);
+
+    // Fire of async request to fetch the icon
+    g_autoptr(GFile) file = g_file_new_for_path(path);
+    g_file_query_info_async(file,
+                            "standard::icon",
+                            G_FILE_QUERY_INFO_NONE,
+                            G_PRIORITY_DEFAULT,
+                            icon_load_ctx->cancellable,
+                            on_icon_ready,
+                            icon_load_ctx);
+}
+
+static void
+cancel_icon_loads(FsearchResultView *view) {
+    GHashTableIter iter;
+    gpointer value;
+    g_hash_table_iter_init(&iter, view->icon_loads);
+    while (g_hash_table_iter_next(&iter, NULL, &value)) {
+        ResultViewIconLoadCtx *icon_load_ctx = value;
+        icon_load_ctx->view = NULL;
+        g_cancellable_cancel(icon_load_ctx->cancellable);
+    }
+    g_hash_table_remove_all(view->icon_loads);
+}
+
 void
 fsearch_result_view_draw_row(FsearchResultView *result_view,
                              cairo_t *cr,
@@ -228,11 +321,13 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+    const int32_t scale_factor = gdk_window_get_scale_factor(bin_window);
 
-    if (result_view->row_height != rect->height) {
-        reset_icon_caches(result_view);
+    if (result_view->row_height != rect->height || result_view->scale_factor != scale_factor) {
+        g_hash_table_remove_all(result_view->pixbuf_cache);
+        result_view->row_height = rect->height;
+        result_view->scale_factor = scale_factor;
     }
-    result_view->row_height = rect->height;
 
     gboolean pending = FALSE;
     FsearchDatabaseEntryInfo *info = NULL;
@@ -246,7 +341,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
-    if (!pending) {
+    if (!pending && info) {
         row_selected = fsearch_database_entry_info_get_selected(info);
     }
     if (row_selected) {
@@ -304,14 +399,22 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                 text = fsearch_database_entry_info_get_name(info)->str;
 
                 if (config->show_listview_icons) {
-                    cairo_surface_t *icon_surface = config->show_listview_icons
-                                                        ? get_cairo_surface_for_gicon(
-                                                            result_view,
-                                                            bin_window,
-                                                            fsearch_database_entry_info_get_icon(info),
-                                                            icon_size,
-                                                            gdk_window_get_scale_factor(bin_window))
-                                                        : NULL;
+                    GString *path_full = fsearch_database_entry_info_get_path_full(info);
+                    GIcon *icon = g_hash_table_lookup(result_view->icon_cache, path_full->str);
+                    g_autoptr(GIcon) placeholder = NULL;
+                    if (!icon) {
+                        queue_icon_load(result_view, path_full->str, row);
+                        placeholder = get_placeholder_icon(fsearch_database_entry_info_get_name(info)->str,
+                                                           fsearch_database_entry_info_get_entry_type(info)
+                                                               == DATABASE_ENTRY_TYPE_FOLDER);
+                        icon = placeholder;
+                    }
+                    cairo_surface_t *icon_surface = icon ? get_cairo_surface_for_gicon(result_view,
+                                                                                       bin_window,
+                                                                                       icon,
+                                                                                       icon_size,
+                                                                                       scale_factor)
+                                                         : NULL;
                     if (icon_surface) {
                         int32_t x_icon = x;
                         if (right_to_left_text) {
@@ -400,21 +503,28 @@ void
 fsearch_result_view_row_cache_reset(FsearchResultView *result_view) {
     g_return_if_fail(result_view);
     g_hash_table_remove_all(result_view->item_info_cache);
+    cancel_icon_loads(result_view);
 }
 
 static void
-on_item_info_ready(FsearchDatabase *db, guint view_id, FsearchDatabaseEntryInfo *info, FsearchResultView *view) {
-    if (!info) {
-        return;
-    }
+on_item_info_ready(FsearchDatabase *db, guint view_id, guint idx, FsearchDatabaseEntryInfo *info, FsearchResultView *view) {
     if (view_id != view->view_id) {
         return;
     }
-    const uint32_t row = fsearch_database_entry_info_get_index(info);
-    gpointer key = get_key_from_row_idx(row);
+    gpointer key = get_key_from_row_idx(idx);
+    if (!info) {
+        // The row no longer exists in the current search view (e.g. a newer or cancelled search
+        // replaced it while this request was in flight). Drop any placeholder cached for it so
+        // the next time it's rendered we ask again, instead of leaving it stuck blank until the
+        // whole cache happens to get reset.
+        if (g_hash_table_remove(view->item_info_cache, key)) {
+            fsearch_list_view_redraw_row(view->list_view, idx);
+        }
+        return;
+    }
     if (!g_hash_table_lookup(view->item_info_cache, key)) {
         g_hash_table_insert(view->item_info_cache, key, fsearch_database_entry_info_ref(info));
-        fsearch_list_view_redraw_row(view->list_view, row);
+        fsearch_list_view_redraw_row(view->list_view, idx);
     }
 }
 
@@ -426,28 +536,49 @@ entry_info_free(FsearchDatabaseEntryInfo *info) {
     g_clear_pointer(&info, fsearch_database_entry_info_unref);
 }
 
+static void
+on_icon_theme_changed(GtkIconTheme *icon_theme, gpointer user_data) {
+    FsearchResultView *result_view = user_data;
+    g_hash_table_remove_all(result_view->pixbuf_cache);
+    g_hash_table_remove_all(result_view->icon_cache);
+    if (result_view->list_view) {
+        gtk_widget_queue_draw(GTK_WIDGET(result_view->list_view));
+    }
+}
+
 FsearchResultView *
 fsearch_result_view_new(guint view_id) {
     FsearchResultView *result_view = calloc(1, sizeof(FsearchResultView));
     g_assert(result_view);
 
     result_view->view_id = view_id;
-    result_view->item_info_cache =
-        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)entry_info_free);
+    result_view->item_info_cache = g_hash_table_new_full(g_direct_hash,
+                                                         g_direct_equal,
+                                                         NULL,
+                                                         (GDestroyNotify)entry_info_free);
     result_view->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    result_view->pixbuf_cache =
-        g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
-    result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
 
+    result_view->scale_factor = 1;
+    result_view->pixbuf_cache = g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
+    result_view->icon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
+    result_view->icon_loads = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
+    result_view->icon_theme_change_handler_id = g_signal_connect(gtk_icon_theme_get_default(),
+                                                                 "changed",
+                                                                 G_CALLBACK(on_icon_theme_changed),
+                                                                 result_view);
     g_signal_connect(result_view->db, "item-info-ready", G_CALLBACK(on_item_info_ready), result_view);
     return result_view;
 }
 
 void
 fsearch_result_view_free(FsearchResultView *result_view) {
+    cancel_icon_loads(result_view);
+    g_clear_signal_handler(&result_view->icon_theme_change_handler_id, gtk_icon_theme_get_default());
     g_clear_pointer(&result_view->item_info_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->pixbuf_cache, g_hash_table_unref);
-    g_clear_pointer(&result_view->app_gicon_cache, g_hash_table_unref);
+    g_clear_pointer(&result_view->icon_cache, g_hash_table_unref);
+    g_clear_pointer(&result_view->icon_loads, g_hash_table_unref);
     g_clear_object(&result_view->db);
     g_clear_pointer(&result_view, free);
 }

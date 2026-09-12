@@ -190,8 +190,8 @@ fsearch_query_matcher_utf_strcasestr(FsearchQueryNode *node, FsearchQueryMatchDa
                               haystack_builder->string_normalized_folded_len,
                               needle_builder->string_normalized_folded,
                               needle_builder->string_normalized_folded_len)
-                   ? 1
-                   : 0;
+                 ? 1
+                 : 0;
     }
     return 0;
 }
@@ -206,8 +206,8 @@ fsearch_query_matcher_utf_strcasecmp(FsearchQueryNode *node, FsearchQueryMatchDa
                              needle_builder->string_normalized_folded,
                              needle_builder->string_normalized_folded_len,
                              false)
-                   ? 1
-                   : 0;
+                 ? 1
+                 : 0;
     }
     return 0;
 }
@@ -312,9 +312,7 @@ fsearch_query_matcher_highlight_ascii(FsearchQueryNode *node, FsearchQueryMatchD
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
     const char *haystack = node->haystack_func(match_data);
     if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        if (node->flags & QUERY_FLAG_MATCH_CASE
-                ? !strcmp(haystack, node->needle)
-                : !strcasecmp(haystack, node->needle)) {
+        if (node->flags & QUERY_FLAG_MATCH_CASE ? !strcmp(haystack, node->needle) : !strcasecmp(haystack, node->needle)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_NAME);
             if (search_in_path) {
@@ -325,9 +323,8 @@ fsearch_query_matcher_highlight_ascii(FsearchQueryNode *node, FsearchQueryMatchD
         }
         return 0;
     }
-    char *dest = node->flags & QUERY_FLAG_MATCH_CASE
-                     ? strstr(haystack, node->needle)
-                     : strcasestr(haystack, node->needle);
+    const char *dest = node->flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, node->needle)
+                                                           : strcasestr(haystack, node->needle);
     if (!dest) {
         return 0;
     }

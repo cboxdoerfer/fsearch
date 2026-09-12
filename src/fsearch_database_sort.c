@@ -4,11 +4,21 @@
 
 #include "fsearch_database_entry.h"
 
-static void
-clear_fast_sorted_array(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty property) {
-    if (sorted_entries && sorted_entries[property]) {
-        g_clear_pointer(&sorted_entries[property], darray_unref);
+#include <glib.h>
+
+static char *
+chain_to_string(FsearchDatabaseSortOrderChain chain) {
+    if (chain.length == 0) {
+        return g_strdup("none");
     }
+    g_autoptr(GString) str = g_string_new(NULL);
+    for (uint32_t i = 0; i < chain.length; ++i) {
+        if (i > 0) {
+            g_string_append(str, " > ");
+        }
+        g_string_append(str, fsearch_database_index_property_to_string(chain.properties[i]));
+    }
+    return g_string_free(g_steal_pointer(&str), FALSE);
 }
 
 static bool
@@ -21,35 +31,59 @@ sort_order_affects_folders(FsearchDatabaseIndexProperty sort_order) {
     return true;
 }
 
-static DynamicArrayCompareDataFunc
-get_sort_func(FsearchDatabaseIndexProperty sort_order) {
-    DynamicArrayCompareDataFunc func = NULL;
-    switch (sort_order) {
+FsearchDatabaseSortOrderChain
+fsearch_database_sort_order_chain_for_property(FsearchDatabaseIndexProperty property) {
+    FsearchDatabaseSortOrderChain chain = {};
+    switch (property) {
     case DATABASE_INDEX_PROPERTY_NAME:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_NAME;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH;
         break;
     case DATABASE_INDEX_PROPERTY_PATH:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_NAME;
         break;
     case DATABASE_INDEX_PROPERTY_PATH_FULL:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH_FULL;
         break;
     case DATABASE_INDEX_PROPERTY_SIZE:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size;
-        break;
-    case DATABASE_INDEX_PROPERTY_EXTENSION:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension;
-        break;
-    case DATABASE_INDEX_PROPERTY_FILETYPE:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_type;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_SIZE;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_NAME;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH;
         break;
     case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_MODIFICATION_TIME;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_NAME;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH;
+        break;
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_EXTENSION;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_NAME;
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_PATH;
+        break;
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
+        // No fast index exists for FILETYPE, so it has no natural continuation of its own;
+        // callers doing a manual sort must extend this with the array's previous chain via
+        // fsearch_database_sort_order_chain_prepend().
+        chain.properties[chain.length++] = DATABASE_INDEX_PROPERTY_FILETYPE;
         break;
     default:
-        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_position;
+        break;
     }
-    return func;
+    return chain;
+}
+
+FsearchDatabaseSortOrderChain
+fsearch_database_sort_order_chain_prepend(FsearchDatabaseSortOrderChain chain, FsearchDatabaseIndexProperty property) {
+    FsearchDatabaseSortOrderChain result = {};
+    result.properties[result.length++] = property;
+    for (uint32_t i = 0; i < chain.length && result.length < G_N_ELEMENTS(result.properties); ++i) {
+        if (chain.properties[i] == property) {
+            continue;
+        }
+        result.properties[result.length++] = chain.properties[i];
+    }
+    return result;
 }
 
 static DynamicArray *
@@ -74,38 +108,39 @@ get_entries_sorted_from_reference_list(DynamicArray *old_list, DynamicArray *sor
 }
 
 static DynamicArray *
-sort_entries(DynamicArray *entries_in,
-             DynamicArrayCompareDataFunc sort_func,
-             GCancellable *cancellable,
-             bool parallel_sort,
-             void *data) {
+sort_entries(DynamicArray *entries_in, FsearchDatabaseSortOrderChain chain, GCancellable *cancellable, bool parallel_sort) {
     DynamicArray *entries = darray_copy(entries_in);
+    g_autoptr(FsearchDatabaseEntryCompareContext) ctx = db_entry_compare_context_new(chain);
     if (parallel_sort) {
-        darray_sort_multi_threaded(entries, sort_func, cancellable, data);
+        darray_sort_multi_threaded(entries,
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_chain,
+                                   cancellable,
+                                   ctx);
     }
     else {
-        darray_sort(entries, sort_func, cancellable, data);
+        darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_chain, cancellable, ctx);
     }
     return entries;
 }
 
 static DynamicArray *
-fast_sort(FsearchDatabaseIndexProperty new_sort_order, DynamicArray *entries_in, DynamicArray *fast_sort_index) {
+fast_sort(DynamicArray *entries_in, DynamicArray *fast_sort_index, bool *whole_index_out) {
     if (darray_get_num_items(entries_in) == darray_get_num_items(fast_sort_index)) {
         // We're matching everything, and we have the entries already sorted in our index.
         // So we can just return references to the sorted indices.
+        *whole_index_out = true;
         return darray_ref(fast_sort_index);
     }
     else {
         // Another fast path. First we mark all entries we have currently in the view, then we walk the sorted
         // index in order and add all marked entries to a new array.
+        *whole_index_out = false;
         return get_entries_sorted_from_reference_list(entries_in, fast_sort_index);
     }
 }
 
 void
-fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
-                              FsearchDatabaseIndexProperty old_secondary_sort_order,
+fsearch_database_sort_results(FsearchDatabaseSortOrderChain old_chain,
                               FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
@@ -113,38 +148,67 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               DynamicArray *folders_fast_sort_index,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
-                              FsearchDatabaseIndexProperty *sort_order_out,
-                              FsearchDatabaseIndexProperty *secondary_sort_order_out,
+                              FsearchDatabaseSortOrderChain *chain_out,
                               GCancellable *cancellable) {
     g_return_if_fail(files_in);
     g_return_if_fail(folders_in);
     g_return_if_fail(files_out);
     g_return_if_fail(folders_out);
-    g_return_if_fail(sort_order_out);
+    g_return_if_fail(chain_out);
+
+    const FsearchDatabaseIndexProperty old_sort_order = old_chain.length > 0 ? old_chain.properties[0]
+                                                                             : DATABASE_INDEX_PROPERTY_NONE;
+
+    g_autoptr(GTimer) timer = g_timer_new();
+    const uint32_t num_files = darray_get_num_items(files_in);
+    const uint32_t num_folders = darray_get_num_items(folders_in);
 
     if (old_sort_order == new_sort_order) {
         // Sort order didn't change, use the old results
         *files_out = darray_ref(files_in);
         *folders_out = darray_ref(folders_in);
-        *sort_order_out = new_sort_order;
-        *secondary_sort_order_out = old_secondary_sort_order;
+        *chain_out = old_chain;
+
+        g_debug("[db_sort] skipped: %u file%s, %u folder%s already sorted by %s",
+                num_files,
+                num_files == 1 ? "" : "s",
+                num_folders,
+                num_folders == 1 ? "" : "s",
+                fsearch_database_index_property_to_string(new_sort_order));
         return;
     }
 
     if (files_fast_sort_index && folders_fast_sort_index) {
-        // Use the fast-sort indices
-        *files_out = fast_sort(new_sort_order, files_in, files_fast_sort_index);
-        *folders_out = fast_sort(new_sort_order, folders_in, folders_fast_sort_index);
-        *sort_order_out = new_sort_order;
-        // Fast sorted indexes don't have a secondary sort order
-        *secondary_sort_order_out = DATABASE_INDEX_PROPERTY_NONE;
+        // Use the fast-sort indices; they're authoritative on their own and always fully ordered
+        // (each fast-indexed property's comparator already chains down to NAME/PATH).
+        bool files_whole_index = false;
+        bool folders_whole_index = false;
+        *files_out = fast_sort(files_in, files_fast_sort_index, &files_whole_index);
+        *folders_out = fast_sort(folders_in, folders_fast_sort_index, &folders_whole_index);
+        *chain_out = fsearch_database_sort_order_chain_for_property(new_sort_order);
+
+        g_autofree char *chain_str = chain_to_string(*chain_out);
+        g_debug("[db_sort] fast index by %s: %u file%s (%s), %u folder%s (%s) in %.3f ms [%s]",
+                fsearch_database_index_property_to_string(new_sort_order),
+                num_files,
+                num_files == 1 ? "" : "s",
+                files_whole_index ? "whole index" : "filtered",
+                num_folders,
+                num_folders == 1 ? "" : "s",
+                folders_whole_index ? "whole index" : "filtered",
+                g_timer_elapsed(timer, NULL) * 1000.0,
+                chain_str);
         return;
     }
 
-    DynamicArrayCompareDataFunc func = get_sort_func(new_sort_order);
-    bool parallel_sort = true;
+    // No fast index for `new_sort_order`: sort explicitly by the full chain [new_sort_order, ...
+    // old_chain] instead of relying on sort stability to (only partially) preserve the previous
+    // order. This keeps the array's actual order and the comparator used for later binary
+    // searches (insert/steal/find) always in sync, however many manual sorts get layered on top
+    // of each other.
+    const FsearchDatabaseSortOrderChain new_chain = fsearch_database_sort_order_chain_prepend(old_chain, new_sort_order);
 
-    FsearchDatabaseEntryCompareContext *comp_ctx = db_entry_compare_context_new(NULL, NULL, NULL);
+    bool parallel_sort = true;
     if (new_sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // Sorting by type can be really slow, because it accesses the filesystem to determine the type of files
         // To mitigate that issue to a certain degree we cache the filetype for each file
@@ -154,196 +218,40 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         parallel_sort = false;
     }
 
-    if (sort_order_affects_folders(new_sort_order)) {
-        *folders_out = sort_entries(folders_in, func, cancellable, parallel_sort, comp_ctx);
+    const bool folders_sorted = sort_order_affects_folders(new_sort_order);
+    if (folders_sorted) {
+        *folders_out = sort_entries(folders_in, new_chain, cancellable, parallel_sort);
     }
     else {
         *folders_out = darray_copy(folders_in);
     }
-    *files_out = sort_entries(files_in, func, cancellable, parallel_sort, comp_ctx);
-    *sort_order_out = new_sort_order;
-    *secondary_sort_order_out = old_sort_order;
+    *files_out = sort_entries(files_in, new_chain, cancellable, parallel_sort);
+    *chain_out = new_chain;
 
-    g_clear_pointer(&comp_ctx, db_entry_compare_context_free);
+    const double sort_time = g_timer_elapsed(timer, NULL) * 1000.0;
 
     if (g_cancellable_is_cancelled(cancellable)) {
         g_clear_pointer(folders_out, darray_unref);
         g_clear_pointer(files_out, darray_unref);
-        *sort_order_out = old_sort_order;
-        *secondary_sort_order_out = old_secondary_sort_order;
-    }
-}
+        *chain_out = old_chain;
 
-static void
-sort_store_entries(DynamicArray *entries,
-                   DynamicArray **sorted_entries,
-                   FsearchDatabaseIndexPropertyFlags flags,
-                   GCancellable *cancellable) {
-    // first sort by path
-    darray_sort_multi_threaded(entries,
-                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
-                               cancellable,
-                               NULL);
-    if (g_cancellable_is_cancelled(cancellable)) {
-        return;
-    }
-    clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_PATH);
-    sorted_entries[DATABASE_INDEX_PROPERTY_PATH] = darray_copy(entries);
-
-    // then by name
-    darray_sort_multi_threaded(entries,
-                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name,
-                               cancellable,
-                               NULL);
-    if (g_cancellable_is_cancelled(cancellable)) {
+        g_autofree char *old_chain_str = chain_to_string(old_chain);
+        g_debug("[db_sort] manual sort by %s cancelled after %.3f ms, keeping previous order [%s]",
+                fsearch_database_index_property_to_string(new_sort_order),
+                sort_time,
+                old_chain_str);
         return;
     }
 
-    // now build individual lists sorted by all the indexed metadata
-    if ((flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
-        clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_SIZE);
-        sorted_entries[DATABASE_INDEX_PROPERTY_SIZE] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_SIZE],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
-                                   cancellable,
-                                   NULL);
-        if (g_cancellable_is_cancelled(cancellable)) {
-            return;
-        }
-    }
-
-    if ((flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
-        clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME);
-        sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
-                                   cancellable,
-                                   NULL);
-        if (g_cancellable_is_cancelled(cancellable)) {
-            return;
-        }
-    }
-}
-
-bool
-fsearch_database_sort(DynamicArray **files_store,
-                      DynamicArray **folders_store,
-                      FsearchDatabaseIndexPropertyFlags flags,
-                      GCancellable *cancellable) {
-    g_return_val_if_fail(files_store, false);
-    g_return_val_if_fail(folders_store, false);
-
-    g_autoptr(GTimer) timer = g_timer_new();
-
-    // first we sort all the files
-    DynamicArray *files = files_store[DATABASE_INDEX_PROPERTY_NAME];
-    if (files) {
-        sort_store_entries(files, files_store, flags, cancellable);
-        if (g_cancellable_is_cancelled(cancellable)) {
-            return false;
-        }
-
-        // now build extension sort array
-        clear_fast_sorted_array(files_store, DATABASE_INDEX_PROPERTY_EXTENSION);
-        files_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(files);
-        darray_sort_multi_threaded(files_store[DATABASE_INDEX_PROPERTY_EXTENSION],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
-                                   cancellable,
-                                   NULL);
-        if (g_cancellable_is_cancelled(cancellable)) {
-            return false;
-        }
-
-        const double seconds = g_timer_elapsed(timer, NULL);
-        g_timer_reset(timer);
-        g_debug("[db_sort] sorted files: %f s", seconds);
-    }
-
-    // then we sort all the folders
-    DynamicArray *folders = folders_store[DATABASE_INDEX_PROPERTY_NAME];
-    if (folders) {
-        sort_store_entries(folders, folders_store, flags, cancellable);
-        if (g_cancellable_is_cancelled(cancellable)) {
-            return false;
-        }
-
-        // Folders don't have a file extension -> use the name array instead
-        clear_fast_sorted_array(folders_store, DATABASE_INDEX_PROPERTY_EXTENSION);
-        folders_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(folders);
-
-        const double seconds = g_timer_elapsed(timer, NULL);
-        g_debug("[db_sort] sorted folders: %f s", seconds);
-    }
-
-    return true;
-}
-
-static int
-compare_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const int res = db_entry_compare_entries_by_name(a, b);
-    if (G_LIKELY(res != 0)) {
-        return res;
-    }
-    else {
-        return db_entry_compare_entries_by_path(a, b);
-    }
-}
-
-static int
-compare_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const int res = db_entry_compare_entries_by_size(a, b);
-    if (G_LIKELY(res != 0)) {
-        return res;
-    }
-    return compare_by_name(a, b);
-}
-
-static int
-compare_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const int res = db_entry_compare_entries_by_modification_time(a, b);
-    if (G_LIKELY(res != 0)) {
-        return res;
-    }
-    else {
-        return compare_by_name(a, b);
-    }
-}
-
-static int
-compare_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const int res = db_entry_compare_entries_by_extension(a, b);
-    if (G_LIKELY(res != 0)) {
-        return res;
-    }
-    else {
-        return compare_by_name(a, b);
-    }
-}
-
-DynamicArrayCompareDataFunc
-fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property, bool is_dir) {
-    switch (property) {
-    case DATABASE_INDEX_PROPERTY_NAME:
-        return (DynamicArrayCompareDataFunc)compare_by_name;
-    case DATABASE_INDEX_PROPERTY_PATH:
-        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
-    case DATABASE_INDEX_PROPERTY_PATH_FULL:
-        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path;
-    case DATABASE_INDEX_PROPERTY_SIZE:
-        return (DynamicArrayCompareDataFunc)compare_by_size;
-    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
-        return (DynamicArrayCompareDataFunc)compare_by_modification_time;
-    case DATABASE_INDEX_PROPERTY_EXTENSION:
-        // Folders don't have extensions and hence are simply sorted by name
-        if (!is_dir) {
-            return (DynamicArrayCompareDataFunc)compare_by_extension;
-        }
-        else {
-            return (DynamicArrayCompareDataFunc)compare_by_name;
-        }
-    case DATABASE_INDEX_PROPERTY_FILETYPE:
-        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_type;
-    default:
-        return NULL;
-    }
+    g_autofree char *chain_str = chain_to_string(new_chain);
+    g_debug("[db_sort] manual sort by %s: %u file%s, %u folder%s in %.3f ms (%s%s) [%s]",
+            fsearch_database_index_property_to_string(new_sort_order),
+            num_files,
+            num_files == 1 ? "" : "s",
+            num_folders,
+            num_folders == 1 ? "" : "s",
+            sort_time,
+            parallel_sort ? "parallel" : "single-threaded",
+            folders_sorted ? "" : ", folders unsorted",
+            chain_str);
 }

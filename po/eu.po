@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2026-03-18 19:09+0000\n"
+"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"PO-Revision-Date: 2026-08-06 20:53+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -17,10 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -51,7 +50,15 @@ msgstr ""
 "aurkitzen laguntzen dizu. Idatzi letra batzuk eta bilaketa-emaitzak berehala "
 "agertuko dira."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+"Ezaugarri asko daude bilaketa ahalik eta eraginkorrena eta indartsuena "
+"egiten dutenak. Hala nola:"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -59,23 +66,23 @@ msgstr ""
 "Ezikusi letra larriak eta xeheak (adibidez, \"<code>fsearch</code>\" "
 "bilatuta \"FSearch\" ere topatuko luke)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Adierazpen erregularrak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Onartu komodin karaktereak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Onartu iragazkiak (adib. bilatu soilik audio fitxategiak)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Baztertu hainbat fitxategi eta karpetak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Ordenazio azkarra izena, bidea, tamaina, aldatze-data eta luzapenean "
@@ -137,78 +144,107 @@ msgstr "tresna"
 msgid "everything"
 msgstr "dena"
 
+#. Kept for appstreamcli < 1.0 (e.g. Ubuntu 20.04/22.04 PPA builds), which doesn't know <developer>.
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:77
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
-msgstr ""
+msgstr "Datu basea berridaztea"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "DB: Gehitu fitxategi-sistemaren jarraipena egiteko aukera"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"DB: Baimendu fitxategiak eta karpetak baztertzea eredu finkoetan, "
+"komodinetan edo adierazpen erregularretan oinarrituta"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
-msgid "DB: Store database config in DB file"
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+msgid ""
+"DB: Allow included folders to be scheduled and scanned after launch "
+"independently"
 msgstr ""
+"DB: Baimendu sartutako karpetak modu independentean abiarazi ondoren "
+"programatu eta eskaneatu daitezen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
-msgid "DB: Add checksum to DB file"
-msgstr ""
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
-msgid "Make icon and file info gathering asynchronous (no UI blocking)"
-msgstr ""
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+msgid "DB: Make rescanning more efficient"
+msgstr "DB: Egin berriro eskaneatzea eraginkorragoa"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+msgid "DB: Store database config in DB file"
+msgstr "DB: Gorde datu-basearen konfigurazioa DB fitxategian"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+msgid "DB: Add checksum to DB file"
+msgstr "DB: Gehitu checksum bat DB fitxategira"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+msgid "Make icon and file info gathering asynchronous (no UI blocking)"
+msgstr ""
+"Gorde ikonoa eta fitxategien informazioa era asinkronoan (interfazea "
+"blokeatu gabe)"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Reduce memory usage"
+msgstr "Murriztu memoriaren erabilera"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Add contextual help for all preferences"
+msgstr "Gehitu testuinguruko laguntza hobespen guztietarako"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+msgid "Numerous bug fixes and stability and performance improvements"
+msgstr "Akats konponketa ugari eta egonkortasuna eta errendimendua hobetu"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
 msgstr "Bilatzaile berria"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Greatly improved highlighting of search terms"
 msgstr "Asko hobetu da bilaketa-terminoak nabarmentzea"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Custom filters"
 msgstr "Iragazki pertsonalizatuak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Improved sort performance"
 msgstr "Sailkapenaren errendimendua hobetu da"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Improved scroll performance"
 msgstr "Korritzeko errendimendua hobetu da"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Remember file selection after a database update"
 msgstr "Gogoratu datu-basea eguneratu ondoren fitxategiak hautatzea"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "Joan automatikoki emaitzen zerrenda goma hautatze moduan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Alderantzikatu hautapena gomarekin \"Ctrl\" sakatzen denean"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Focus search entry when the main window gets activated"
 msgstr "Fokuratu bilaketa-sarrera leiho nagusia aktibatzen denean"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Gehitu iragazkia aplikazioetarako (hau da, .desktop fitxategiak)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -216,15 +252,15 @@ msgstr ""
 "Gehitu aukera aplikazioak zuzenean abiarazteko .desktop fitxategiak ireki "
 "beharrean"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Show application icons for .desktop files"
 msgstr "Erakutsi .desktop fitxategietarako aplikazioen ikonoak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Add .odp and .ods files to document filter"
 msgstr "Gehitu .odp eta .ods fitxategiak dokumentu-iragazkiari"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -232,7 +268,7 @@ msgstr ""
 "'Ireki honekin' menuak aukeratutako fitxategiak kudeatu ditzaketen "
 "aplikazioak soilik erakusten ditu orain"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -240,22 +276,22 @@ msgstr ""
 "Mota bereko hainbat fitxategiren irekiera hobetu da (orain aplikazioetara "
 "zerrenda gisa pasatzen dira, banan-banan ordez)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Fitxategiak sandbox moduan irekitzeko laguntza hobetu da"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Gehitu da menuko elementuak arazoen jarraipena, foroa eta dohaintza "
 "orrietara estekak dituztenak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Improve support for non-Linux systems"
 msgstr "Hobetu Linux ez diren sistemetarako laguntza"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -263,323 +299,280 @@ msgstr ""
 "Gehitu da aukera FSearch-etik irteteko Ihes sakatzen denean leihoa txikitu "
 "beharrean"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Baztertu '/proc' eta '/sys' lehenespenez"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "Ireki laster-menua 'Menu' tekla edo 'Shift + F10' sakatzen direnean"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "eta akatsen konponketa ugari, itzulpen eguneraketak eta hobekuntza txikiak"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
 msgid "Initial release."
 msgstr "Hasierako bertsioa."
 
-#: src/fsearch.c:204
+#: src/fsearch.c:181
 msgid "translator-credits"
 msgstr "Alexander Gabilondo"
 
-#: src/fsearch.c:206
+#: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Errendimenduan eta funtzio aurreratuetan zentratzen den bilatze-tresna"
 
-#: src/fsearch.c:721
+#: src/fsearch.c:330
+msgid "Saving database and config…"
+msgstr "Datu-basea eta konfigurazioa gordetzen…"
+
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "Ireki aplikazioaren leiho berri bat"
 
-#: src/fsearch.c:722
-#, fuzzy
-#| msgid "Open a new application window"
+#: src/fsearch.c:808
 msgid "Minimize the application window"
-msgstr "Ireki aplikazioaren leiho berri bat"
+msgstr "Minimizatu aplikazioaren leihoa"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:809
 msgid "Show the application preferences"
 msgstr "Erakutsi aplikazioaren hobespenak"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:810
 msgid "Set the search pattern"
 msgstr "Ezarri bilaketa-eredua"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:811
 msgid "Update the database and exit"
 msgstr "Eguneratu datu-basea eta irten"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:812
 msgid "Print version information and exit"
 msgstr "Erakutsi bertsioaren informazioa eta irten"
 
-#: src/fsearch_database_file.c:1250
+#: src/fsearch_database.c:794
+msgid "Index rescan: applying changes…"
+msgstr "Indizea berriro aztertzea: aldaketak aplikatzen…"
+
+#: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
 msgstr "Karpetak kargatzen…"
 
-#: src/fsearch_database_file.c:1264
+#: src/fsearch_database_file.c:1353
 msgid "Loading files…"
 msgstr "Fitxategiak kargatzen…"
 
-#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:920 src/fsearch_statusbar.c:73
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Ordenatzen…"
 
-#: src/fsearch_database_preferences_widget.c:129
-#: src/fsearch_database_preferences_widget.c:144
+#: src/fsearch_database_preferences_widget.c:162
+#: src/fsearch_database_preferences_widget.c:176
 msgid "Select folder"
 msgstr "Hautatu karpeta"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:144
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:314
+#: src/fsearch_database_preferences_widget.c:165
+#: src/fsearch_database_preferences_widget.c:180
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:331
 msgid "_Cancel"
 msgstr "_Utzi"
 
-#: src/fsearch_database_preferences_widget.c:134
-#: src/fsearch_database_preferences_widget.c:144
+#: src/fsearch_database_preferences_widget.c:167
+#: src/fsearch_database_preferences_widget.c:179
 msgid "_Select"
 msgstr "Hautatu"
 
-#: src/fsearch_database_preferences_widget.c:356
+#: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
-msgstr ""
+msgstr "Literala"
 
-#: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
-#| msgid "Wildcard support"
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Wildcard"
-msgstr "Onartu komodin karaktereak"
+msgstr "Komodina"
 
-#: src/fsearch_database_preferences_widget.c:360
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
-msgstr ""
+msgstr "Adierazpen erregularrak"
 
-#: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
-#| msgid "Path"
+#: src/fsearch_database_preferences_widget.c:414
 msgid "Full Path"
-msgstr "Bidea"
+msgstr "Bide osoa"
 
-#: src/fsearch_database_preferences_widget.c:383
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
-msgstr ""
+msgstr "Oinarrizko izena"
 
-#: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
-#| msgid "Folders"
+#: src/fsearch_database_preferences_widget.c:434
 msgid "Files & Folders"
-msgstr "Karpetak"
+msgstr "Fitxategiak eta karpetak"
 
-#: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "Fitxategiak"
 
-#: src/fsearch_database_preferences_widget.c:405 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Karpetak"
 
-#: src/fsearch_database_preferences_widget.c:622
-#: src/fsearch_database_preferences_widget.c:724
+#: src/fsearch_database_preferences_widget.c:635
+#: src/fsearch_database_preferences_widget.c:860
 msgid "Active"
 msgstr "Aktibatu"
 
-#: src/fsearch_database_preferences_widget.c:627
+#: src/fsearch_database_preferences_widget.c:640
 msgid "Pattern"
-msgstr ""
+msgstr "Txantiloia"
 
-#: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Mota"
 
-#: src/fsearch_database_preferences_widget.c:695
-#, fuzzy
-#| msgid "Match case"
+#: src/fsearch_database_preferences_widget.c:700
 msgid "Match"
-msgstr "Bereizi maiuskulak eta minuskulak"
+msgstr "Parekatu"
 
-#: src/fsearch_database_preferences_widget.c:701
+#: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
-msgstr ""
+msgstr "Honi aplikatu"
 
-#: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Bidea"
 
-#: src/fsearch_database_preferences_widget.c:731
-msgid "One Filesystem"
-msgstr "Fitxategi-sistema bat"
-
-#: src/fsearch_database_preferences_widget.c:738
-msgid "Monitor"
-msgstr ""
-
-#: src/fsearch_database_preferences_widget.ui:56
-#, fuzzy
-#| msgid "Update database on start"
-msgid "Rescan database on startup"
-msgstr "Eguneratu datu-basea abiatzean"
-
-#: src/fsearch_database_preferences_widget.ui:76
-msgid "Rescan every"
-msgstr ""
-
-#: src/fsearch_database_preferences_widget.ui:115
-msgid "hour(s) and"
-msgstr "ordu eta"
-
-#: src/fsearch_database_preferences_widget.ui:127
-msgid "30"
-msgstr "30"
-
-#: src/fsearch_database_preferences_widget.ui:145
-msgid "minute(s)"
-msgstr "minutuero"
-
-#: src/fsearch_database_preferences_widget.ui:191
+#: src/fsearch_database_preferences_widget.ui:78
 msgid "Enter path…"
 msgstr "Sartu bidea…"
 
-#: src/fsearch_database_preferences_widget.ui:211
-#: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
+#: src/fsearch_database_preferences_widget.ui:97
+#: src/fsearch_database_preferences_widget.ui:372
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Gehitu karpeta datu-basean:</b>\n"
-"\n"
-"                      Botoi honek elkarrizketa-koadro bat irekitzen du, non "
-"datu-basean sartu nahi duzun karpeta bat hauta dezakezun\n"
-"                      bilatzeko.\n"
-"                    "
+"Gehitu bidea\n"
+"                                            datubaseari\n"
+"                                        "
 
-#: src/fsearch_database_preferences_widget.ui:294
+#: src/fsearch_database_preferences_widget.ui:176
+msgid "Attempt to monitor"
+msgstr "Jarraipena egiten saiatu"
+
+#: src/fsearch_database_preferences_widget.ui:191
+msgid "Scan after launch"
+msgstr "Eskaneatu abiarazi ondoren"
+
+#: src/fsearch_database_preferences_widget.ui:206
+msgid "Stay on one file system"
+msgstr "Mantendu fitxategi-sistema batean"
+
+#: src/fsearch_database_preferences_widget.ui:221
+msgid "Rescan every"
+msgstr "Berraztertu aldiro"
+
+#: src/fsearch_database_preferences_widget.ui:254
+msgid "Hours:"
+msgstr "Orduak:"
+
+#: src/fsearch_database_preferences_widget.ui:298
+msgid "Minutes:"
+msgstr "Minutuak:"
+
+#: src/fsearch_database_preferences_widget.ui:310
+msgid "30"
+msgstr "30"
+
+#: src/fsearch_database_preferences_widget.ui:391
 msgid "Remove selected path"
 msgstr "Kendu hautatutako bidea"
 
-#: src/fsearch_database_preferences_widget.ui:322
+#: src/fsearch_database_preferences_widget.ui:418
 msgid "Include"
 msgstr "Barne du"
 
-#: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Gehitu datu-basean sartzeko bidea\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:374
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Gehitu datu-basean sartzeko bidea\n"
-"                                "
-
-#: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
+#: src/fsearch_database_preferences_widget.ui:477
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Gehitu datu-basean sartzeko bidea\n"
-"                                "
+"Gehitu baztertzeko araua\n"
+"                                                "
 
-#: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
+#: src/fsearch_database_preferences_widget.ui:495
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Gehitu datu-basean sartzeko bidea\n"
-"                                "
+"Kendu hautatutako bidea\n"
+"                                                "
 
-#: src/fsearch_database_preferences_widget.ui:487
+#: src/fsearch_database_preferences_widget.ui:512
+msgid "Restore default exclude list"
+msgstr "Leheneratu baztertze-zerrenda lehenetsia"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Baztertu ezkutuko fitxategiak eta karpetak"
 
-#: src/fsearch_database_preferences_widget.ui:509
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Baztertu"
 
-#: src/fsearch_file_utils.c:143
+#: src/fsearch_file_utils.c:163
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Errore bat gertatu da fitxategia kentzean"
 
-#: src/fsearch_file_utils.c:145
+#: src/fsearch_file_utils.c:165
 msgid "Failed to get path"
 msgstr "Ezin izan da bidea lortu"
 
-#: src/fsearch_file_utils.c:260
+#: src/fsearch_file_utils.c:269
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
 msgstr "Errore bat gertatu da fitxategitik informazioa jasotzean"
 
-#: src/fsearch_file_utils.c:262
+#: src/fsearch_file_utils.c:271
 msgid "Failed to get application information"
 msgstr "Ezin izan da lortu aplikazioaren informazioa"
 
-#: src/fsearch_file_utils.c:277
-msgctxt "Will be followed by the content type string."
-msgid "Error when getting information for content type"
-msgstr "Errore bat gertatu da eduki motari buruzko informazioa eskuratzean"
+#: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
+msgctxt "Will be followed by the file path."
+msgid "Error when opening file"
+msgstr "Errorea fitxategia irekitzean"
 
-#: src/fsearch_file_utils.c:279
+#: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
 msgstr "Ez dago aplikazio lehenetsirik erregistratuta"
 
-#: src/fsearch_file_utils.c:504
+#: src/fsearch_file_utils.c:536
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Errore bat gertatu da karpeta nagusia irekitzean"
 
-#: src/fsearch_file_utils.c:506
+#: src/fsearch_file_utils.c:538
 msgid "Failed to get parent path"
 msgstr "Ezin izan da lortu gurasoen bidea"
 
-#: src/fsearch_file_utils.c:510
+#: src/fsearch_file_utils.c:542
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Errorea karpeta irekitzean"
 
-#: src/fsearch_file_utils.c:513
+#: src/fsearch_file_utils.c:545
 msgid "Failed to build open command"
 msgstr "Ezin izan da ireki komandoa eraiki"
 
-#: src/fsearch_file_utils.c:569
+#: src/fsearch_file_utils.c:601
 msgid "Folder"
 msgstr "Karpeta"
 
-#: src/fsearch_file_utils.c:575
+#: src/fsearch_file_utils.c:607
 msgid "Unknown Type"
 msgstr "Mota ezezaguna"
 
@@ -615,11 +608,11 @@ msgstr "Bideoak"
 msgid "Macro names must not contain `:` characters."
 msgstr "Makro-izenek ez dute `:` karaktererik izan behar."
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:315
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:332
 msgid "_OK"
 msgstr "Ados"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_filter_preferences_widget.c:157
+#: src/fsearch_filter_editor.ui:10 src/fsearch_filter_preferences_widget.c:156
 msgid "Edit filter"
 msgstr "Editatu iragazkia"
 
@@ -665,20 +658,20 @@ msgstr ""
 "hau bilaketa-sarreratik bere testua idatzita eta ondoren ':'\n"
 "                "
 
-#: src/fsearch_filter_preferences_widget.c:134
+#: src/fsearch_filter_preferences_widget.c:133
 msgid "Add filter"
 msgstr "Gehitu iragazkia"
 
-#: src/fsearch_filter_preferences_widget.c:316 src/fsearch_window.c:656
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
 #: src/menus.ui:215 src/menus.ui:263
 msgid "Name"
 msgstr "Izena"
 
-#: src/fsearch_filter_preferences_widget.c:317
+#: src/fsearch_filter_preferences_widget.c:316
 msgid "Macro"
 msgstr "Makroa"
 
-#: src/fsearch_filter_preferences_widget.c:318
+#: src/fsearch_filter_preferences_widget.c:317
 msgid "Query"
 msgstr "Kontsulta"
 
@@ -888,7 +881,7 @@ msgstr "Iragazkia:"
 msgid "Search"
 msgstr "Bilatu"
 
-#: src/fsearch_preferences.ui:854
+#: src/fsearch_preferences.ui:855
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -906,7 +899,7 @@ msgstr ""
 "Kontuan izan sistemako gai guztiek ez dutela aldaera ilunagoa, beraz ezarpen "
 "hau gaituz gero, baliteke eraginik ez izatea."
 
-#: src/fsearch_preferences.ui:872
+#: src/fsearch_preferences.ui:873
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -928,7 +921,7 @@ msgstr ""
 "Honek UI diseinu tradizional baten antza du eta leku apur bat gehiago "
 "hartzen du."
 
-#: src/fsearch_preferences.ui:892
+#: src/fsearch_preferences.ui:893
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -948,7 +941,7 @@ msgstr ""
 "\t• <b>Unitate hamartarrak:</b> Honek SI aurrizki bitarrei egiten die "
 "erreferentzia <i>(e.b. 1 kB = 1000 bytes)</i>"
 
-#: src/fsearch_preferences.ui:912
+#: src/fsearch_preferences.ui:913
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -966,22 +959,7 @@ msgstr ""
 "Kontuan izan leiho-kudeatzaile batzuek eskaera hau baztertzen dutela eta "
 "leihoa beste tamaina bat behartzen dutela."
 
-#: src/fsearch_preferences.ui:931
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
+#: src/fsearch_preferences.ui:932
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1011,7 +989,7 @@ msgstr ""
 "\t• <b>laster tekla edo menuko sarreren bidez</b> edota\n"
 "\t• <b>saguan klik eginez</b>"
 
-#: src/fsearch_preferences.ui:955
+#: src/fsearch_preferences.ui:956
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -1037,7 +1015,7 @@ msgstr ""
 "Honek izartxo batekin hasten edo amaitzen diren adierazpen erregular eta "
 "komodinetarako ere balio du. "
 
-#: src/fsearch_preferences.ui:977
+#: src/fsearch_preferences.ui:978
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -1049,7 +1027,7 @@ msgstr ""
 "Gaituta badago, emaitzen ikuspegiak fokatutako fitxategi/karpetaren bide "
 "osoa erakutsiko du leiho txiki batean."
 
-#: src/fsearch_preferences.ui:994
+#: src/fsearch_preferences.ui:995
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -1059,7 +1037,7 @@ msgstr ""
 "\n"
 "Gaituta badago, fitxategi/karpeta ikonoak agertuko dira izenaren zutabean."
 
-#: src/fsearch_preferences.ui:1011
+#: src/fsearch_preferences.ui:1012
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -1073,7 +1051,7 @@ msgstr ""
 "berrezarriko da FSearch leiho bat irekitzean. Honek zutabe guztien tamaina "
 "eta ikusgarritasuna barne hartzen ditu."
 
-#: src/fsearch_preferences.ui:1028
+#: src/fsearch_preferences.ui:1029
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -1085,7 +1063,7 @@ msgstr ""
 "Gaituta badago, aurreko saioko emaitzen ikuspegiaren ordena berrezarriko da "
 "FSearch leiho bat irekitzean."
 
-#: src/fsearch_preferences.ui:1045
+#: src/fsearch_preferences.ui:1046
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -1096,7 +1074,7 @@ msgstr ""
 "Gaituta badago, bidea zutabean klik bikoitza eginez gero, hautatutako bidea "
 "irekiko da."
 
-#: src/fsearch_preferences.ui:1062
+#: src/fsearch_preferences.ui:1063
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -1111,7 +1089,7 @@ msgstr ""
 "bakarrik nahi baduzu, aldi berean sakatuta eduki behar duzu <i>Ktrl</i> "
 "fitxategia/karpeta sakatzen duzun bitartean."
 
-#: src/fsearch_preferences.ui:1079
+#: src/fsearch_preferences.ui:1080
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -1123,7 +1101,7 @@ msgstr ""
 "Gaituta badago, une honetan indexatzen ari den bidea bistaratzen da egoera-"
 "barran."
 
-#: src/fsearch_preferences.ui:1096
+#: src/fsearch_preferences.ui:1097
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -1135,7 +1113,7 @@ msgstr ""
 "Gaituta badago, abisu bat bistaratuko da baldin eta fitxategi edo karpeta "
 "baten irekitzeak huts egiten badu."
 
-#: src/fsearch_preferences.ui:1113
+#: src/fsearch_preferences.ui:1114
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -1147,7 +1125,7 @@ msgstr ""
 "Gaituta badago, bide-bereizleak dituzten bilaketa-terminoak (hau da, \"/\") "
 "automatikoki konparatuko dira fitxategi edo karpeta baten bide osoarekin."
 
-#: src/fsearch_preferences.ui:1130
+#: src/fsearch_preferences.ui:1131
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -1163,7 +1141,7 @@ msgstr ""
 "esan nahi du <i>Fe</i> bezalako bilaketa-terminoak <i>Fereka.txt</i> "
 "topatuko duela baina ez <i>fereka.txt</i>."
 
-#: src/fsearch_preferences.ui:1147
+#: src/fsearch_preferences.ui:1148
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -1180,7 +1158,7 @@ msgstr ""
 "Desgaituta badago, fitxategi eta karpeta guztiak bistaratuko dira bilaketa-"
 "sarrera hutsik dagoenean."
 
-#: src/fsearch_preferences.ui:1166
+#: src/fsearch_preferences.ui:1167
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -1197,7 +1175,7 @@ msgstr ""
 "Desgaituta badago, bilaketa <i>Sartu</i> sakatzen duzunean edo bilaketa-"
 "botoia sakatzen duzunean soilik eguneratuko da. "
 
-#: src/fsearch_preferences.ui:1185
+#: src/fsearch_preferences.ui:1186
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -1209,7 +1187,7 @@ msgstr ""
 "Gaituta badago, datu-basea automatikoki eguneratuko da atzeko planoan "
 "FSearch abiaraztean."
 
-#: src/fsearch_preferences.ui:1202
+#: src/fsearch_preferences.ui:1203
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1231,7 +1209,7 @@ msgstr ""
 "\t• <b>Fitxategi-sistema bakarra:</b> Gaituta badago, FSearch-ek ez ditu "
 "karpeta honen fitxategi-sistemaren mugak zeharkatuko"
 
-#: src/fsearch_preferences.ui:1223
+#: src/fsearch_preferences.ui:1224
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1243,7 +1221,21 @@ msgstr ""
 "Botoi honek elkarrizketa-koadro bat irekitzen du, non datu-basean sartu nahi "
 "duzun karpeta bat hauta dezakezun."
 
-#: src/fsearch_preferences.ui:1240
+#: src/fsearch_preferences.ui:1241
+msgid ""
+"<b>Add a specific path:</b>\n"
+"\n"
+"Type the full path of a folder here and click the button next to it to "
+"include that folder in the database. This is useful for adding a path "
+"directly without browsing for it."
+msgstr ""
+"<b>Gehitu bide zehatz bat:</b>\n"
+"\n"
+"Idatzi karpeta baten bide osoa hemen eta egin klik ondoko botoian karpeta "
+"hori datu-basean sartzeko. Hau erabilgarria da bide bat zuzenean gehitzeko "
+"berau arakatu gabe."
+
+#: src/fsearch_preferences.ui:1258
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1253,47 +1245,149 @@ msgstr ""
 "\n"
 "Honek aukeratutako karpeta sartuen zerrendatik kentzen du."
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1275
 msgid ""
-"<b>Excluded folders:</b>\n"
+"<b>Attempt to monitor:</b>\n"
 "\n"
-"This list contains all folders you want to exclude from the database.\n"
+"If enabled, FSearch watches this folder for changes and keeps the database "
+"up to date automatically, so you don't have to rescan manually.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database and "
-"can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
+"Monitoring isn't supported on every file system and uses a small amount of "
+"system resources per watched folder. For large directory trees with many "
+"files the system may run out of resources to watch them all."
 msgstr ""
-"<b>Baztertutako karpetak:</b>\n"
+"<b>Monitorizatzeko saiakera:</b>\n"
 "\n"
-"Zerrenda honek datu-basetik baztertu nahi dituzun karpeta guztiak ditu.\n"
+"Gaituta badago, FSearch-ek karpeta hau begiratzen du aldaketak ikusteko eta "
+"datu-basea automatikoki eguneratuta mantentzen du, beraz, ez duzu eskuz "
+"berriro eskaneatu beharrik.\n"
 "\n"
-"\t• <b>Aktiboa:</b> Gaituta badago, bide hau datu-basetik kanpo geratuko da "
-"eta ez du bertan bilatuko.\n"
-"\t• <b>Bidea:</b> Baztertu beharreko bide osoa."
-
-#: src/fsearch_preferences.ui:1277
-msgid ""
-"<b>Exclude folder from database:</b>\n"
-"\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
-msgstr ""
-"<b>Baztertu karpeta datu-basetik:</b>\n"
-"\n"
-"Botoi honek elkarrizketa-koadro bat irekitzen du, non datu-basetik baztertu "
-"nahi duzun karpeta bat hauta dezakezun."
+"Monitorizazioa ez da onartzen fitxategi-sistema guztietan eta sistemaren "
+"baliabide kopuru txiki bat erabiltzen du ikusitako karpeta bakoitzeko. "
+"Fitxategi asko dituzten direktorio-zuhaitz handietarako, baliteke sistemak "
+"baliabiderik gabe gelditzea horiek guztiak ikusteko."
 
 #: src/fsearch_preferences.ui:1294
 msgid ""
+"<b>Scan after launch:</b>\n"
+"\n"
+"If enabled, this folder is rescanned every time FSearch starts, so the "
+"database reflects any changes made while FSearch wasn't running."
+msgstr ""
+"<b>Abian jarri ondoren eskaneatu:</b>\n"
+"\n"
+"Gaituta badago, karpeta hau berriro aztertzen da FSearch abiarazten den "
+"bakoitzean, beraz, datu-baseak FSearch exekutatzen ez zen bitartean egindako "
+"aldaketak islatzen ditu."
+
+#: src/fsearch_preferences.ui:1311
+msgid ""
+"<b>Stay on one file system:</b>\n"
+"\n"
+"If enabled, FSearch won't cross file system boundaries while scanning this "
+"folder. Mounted file systems below it (e.g. external drives or network "
+"shares) are skipped."
+msgstr ""
+"<b>Mantendu fitxategi-sistema batean:</b>\n"
+"\n"
+"Gaituta badago, FSearch-ek ez ditu fitxategi-sistemaren mugak zeharkatuko "
+"karpeta hau eskaneatzen ari den bitartean. Haren azpian muntatutako "
+"fitxategi-sistemak (adibidez, kanpoko unitateak edo sare-partekatzeak) "
+"saltatzen dira."
+
+#: src/fsearch_preferences.ui:1328
+msgid ""
+"<b>Rescan every:</b>\n"
+"\n"
+"If enabled, this folder is rescanned automatically at the given interval. "
+"Use the hours and minutes fields to set how often the rescan happens.\n"
+"\n"
+"This is useful for folders on file systems that can't be monitored for "
+"changes."
+msgstr ""
+"<b>Eskaneatu berriro:</b>\n"
+"\n"
+"Gaituta badago, karpeta hau automatikoki berriro aztertzen da emandako "
+"tartean. Erabili orduak eta minutuak eremuak berriro eskaneatuko den "
+"maiztasuna zehazteko.\n"
+"\n"
+"Hau erabilgarria da aldaketak kontrolatu ezin diren fitxategi-sistemetako "
+"karpetetarako."
+
+#: src/fsearch_preferences.ui:1347
+msgid ""
+"<b>Exclude rules:</b>\n"
+"\n"
+"This list contains rules for the files and folders you want to exclude from "
+"the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the rule is applied and matching items are "
+"excluded.\n"
+"\t• <b>Pattern:</b> The text matched against each item, interpreted "
+"according to the Type.\n"
+"\t• <b>Type:</b> How the pattern is interpreted — <i>Literal</i> (exact "
+"text), <i>Wildcard</i> (using * and ?) or <i>Regex</i> (a regular "
+"expression).\n"
+"\t• <b>Match:</b> Whether the pattern is matched against the item's <i>Full "
+"Path</i> or only its <i>Basename</i> (the name without the path).\n"
+"\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
+"or both."
+msgstr ""
+"<b>Baztertu arauak:</b>\n"
+"\n"
+"Zerrenda honek datu-basetik baztertu nahi dituzun fitxategi eta karpeten "
+"arauak ditu.\n"
+"\n"
+"\t• <b>Aktiboa:</b> gaituta badago, araua aplikatuko da eta bat datozen "
+"elementuak baztertzen dira.\n"
+"\t• <b>Eredua:</b> Elementu bakoitzarekin bat datorren testua, Motaren "
+"arabera interpretatuta.\n"
+"\t• <b>Mota:</b> nola interpretatzen den eredua — <i>Literal</i> (testu "
+"zehatza), <i>Komodina</i> (* eta ? erabiliz) edo <i>Regex</i> (esamolde "
+"erregularra).\n"
+"\t• <b>Lotu:</b> Eredua elementuaren <i>Bide osoa</i>rekin bat datorren ala "
+"bere <i>Basename</i> soilik (biderik gabeko izena).\n"
+"\t• <b>Hori aplikatzen zaio:</b> Arauak <i>Fitxategietan</i>, <i>Karpetetan</"
+"i> edo bietan eragiten duen ala ez."
+
+#: src/fsearch_preferences.ui:1370
+msgid ""
+"<b>Add exclude rule:</b>\n"
+"\n"
+"This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
+"Applies To columns to control what gets excluded from the database."
+msgstr ""
+"<b>Gehitu baztertzeko araua:</b>\n"
+"\n"
+"Honek arau berri eta huts bat gehitzen dio zerrendari. Editatu bere eredua, "
+"mota, bat etortzea eta aplikatzen zaion zutabeei datu-basetik kanpo geratzen "
+"dena kontrolatzeko."
+
+#: src/fsearch_preferences.ui:1387
+msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of excluded folders."
+"This removes the selected rule from the list of exclude rules."
 msgstr ""
 "<b>Kendu hautatutako lerroa:</b>\n"
 "\n"
-"Honek aukeratutako karpeta baztertuen zerrendatik kentzen du."
+"Honek aukeratutako araua arau baztertuen zerrendatik kentzen du."
 
-#: src/fsearch_preferences.ui:1311
+#: src/fsearch_preferences.ui:1404
+msgid ""
+"<b>Restore default exclude rules:</b>\n"
+"\n"
+"This button restores the default set of exclude rules.\n"
+"\n"
+"⚠ All rules which were created or edited by the user will be lost! ⚠"
+msgstr ""
+"<b>Berrezarri baztertze-arau lehenetsiak:</b>\n"
+"\n"
+"Botoi honek baztertzeko arauen multzo lehenetsia berrezartzen du.\n"
+"\n"
+"⚠Erabiltzaileak sortu edo editatu dituen arau guztiak galduko dira!"
+
+#: src/fsearch_preferences.ui:1423
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1309,7 +1403,7 @@ msgstr ""
 "i> <i>.git</i> edo <i>.cache</i> deitzen diren fitxategi edo karpeta guztiak "
 "baztertuko ditu edo <i>.swp</i>-z amaitzen direnak."
 
-#: src/fsearch_preferences.ui:1328
+#: src/fsearch_preferences.ui:1440
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1322,11 +1416,11 @@ msgstr ""
 "geratuko dira <i>(hau da, puntu karaktere batekin hasten diren fitxategi edo "
 "karpeta guztiak)</i>."
 
-#: src/fsearch_preferences.ui:1345
+#: src/fsearch_preferences.ui:1457
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr "Fokuratu ezarpen bat egiten duenaren deskribapen zehatza lortzeko."
 
-#: src/fsearch_preferences.ui:1358
+#: src/fsearch_preferences.ui:1470
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1350,7 +1444,7 @@ msgstr ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
-#: src/fsearch_preferences.ui:1379
+#: src/fsearch_preferences.ui:1491
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1367,7 +1461,7 @@ msgstr ""
 "fitxategia mota honetako fitxategien kudeatzaile lehenetsiarekin irekiko da, "
 "normalean testu-editorea."
 
-#: src/fsearch_preferences.ui:1396
+#: src/fsearch_preferences.ui:1508
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1388,7 +1482,7 @@ msgstr ""
 "gaitu dezakezu.\n"
 "• <b>Kontsulta:</b> datu-basean iragazi behar den bilaketa-terminoa"
 
-#: src/fsearch_preferences.ui:1417
+#: src/fsearch_preferences.ui:1529
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1399,7 +1493,7 @@ msgstr ""
 "Botoi honek elkarrizketa-koadro bat irekitzen du, non iragazki berri bat "
 "editatu dezakezu."
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1546
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1409,7 +1503,7 @@ msgstr ""
 "\n"
 "Botoi honek une honetan hautatutako iragazkia kentzen du."
 
-#: src/fsearch_preferences.ui:1451
+#: src/fsearch_preferences.ui:1563
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1420,7 +1514,7 @@ msgstr ""
 "Botoi honek elkarrizketa-koadro bat irekitzen du, non editatu dezakezun "
 "hautatutako iragazkia."
 
-#: src/fsearch_preferences.ui:1468
+#: src/fsearch_preferences.ui:1580
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1434,7 +1528,7 @@ msgstr ""
 "\n"
 "⚠ Erabiltzaileak sortu edo editatu dituen iragazki guztiak galduko dira! ⚠"
 
-#: src/fsearch_preferences.ui:1487
+#: src/fsearch_preferences.ui:1599
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1446,38 +1540,38 @@ msgstr ""
 "Gaituta badago, FSearch irtengo da Esc tekla sakatzen denean leihoa "
 "minimizatu beharrean."
 
-#: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "Laguntza"
 
-#: src/fsearch_preferences_dialog.c:214
+#: src/fsearch_preferences_dialog.c:238
 msgid "Database"
 msgstr "Datu-basea"
 
-#: src/fsearch_result_view.c:380
+#: src/fsearch_result_view.c:487
 msgid "Invalid row data"
-msgstr ""
+msgstr "Errenkadako datu baliogabeak"
 
-#: src/fsearch_statusbar.c:57
+#: src/fsearch_statusbar.c:58
 #, c-format
 msgid "%'d Item"
 msgstr "%'d elementu"
 
-#: src/fsearch_statusbar.c:57 src/fsearch_statusbar.c:182
+#: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elementu"
 
-#: src/fsearch_statusbar.c:79
+#: src/fsearch_statusbar.c:80
 msgid "Querying…"
 msgstr "Kontsulta egiten…"
 
-#: src/fsearch_statusbar.c:171
+#: src/fsearch_statusbar.c:175
 msgid "Loading…"
 msgstr "Kargatzen…"
 
-#: src/fsearch_statusbar.c:176
+#: src/fsearch_statusbar.c:180
 msgid "Scanning…"
 msgstr "Eskaneatzen…"
 
@@ -1549,19 +1643,96 @@ msgstr "BIDEA"
 msgid "REGEX"
 msgstr "ADIERAZPEN ERREGULARRAK"
 
-#: src/fsearch_window.c:670 src/menus.ui:279
+#: src/fsearch_statusbar.ui:726
+msgid ""
+"The search was cancelled before it finished.\n"
+"<b>These results are incomplete.</b>"
+msgstr ""
+"Bilaketa amaitu baino lehen bertan behera gelditu zen.\n"
+"<b>Emaitza hauek osatu gabe daude.</b>"
+
+#: src/fsearch_statusbar.ui:756
+msgid "PARTIAL"
+msgstr "PARTZIALA"
+
+#: src/fsearch_welcome_dialog.ui:26
+msgid "What's New in FSearch"
+msgstr "Zer berri FSearch-en"
+
+#: src/fsearch_welcome_dialog.ui:79
+msgid ""
+"<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
+msgstr "<span size=\"xx-large\" weight=\"bold\">Zer berri FSearch 0.3n</span>"
+
+#: src/fsearch_welcome_dialog.ui:149
+msgid "<big><b>File System Monitoring</b></big>"
+msgstr "<big><b>Fitxategi-sistemaren monitorizazioa</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:163
+msgid ""
+"You can now actively watch individual folders to eliminate frequent rescans. "
+"File changes then appear in your search results immediately.\n"
+"\n"
+"To enable this feature go to the Database section of the Preferences "
+"dialog.\n"
+"\n"
+"See the online documentation for more information:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
+msgstr ""
+"Karpeta indibidualak modu aktiboan ikusi ahal izango dituzu orain, maiz "
+"egindako eskaneatzeak ezabatzeko. Fitxategien aldaketak bilaketa-emaitzetan "
+"berehala agertzen dira.\n"
+"\n"
+"Ezaugarri hau gaitzeko, joan Hobespenak elkarrizketa-koadroko Datu-basea "
+"atalera.\n"
+"\n"
+"Ikusi online dokumentazioa informazio gehiago lortzeko:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
+
+#: src/fsearch_welcome_dialog.ui:232
+msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
+msgstr "<big><b>Karpetaren berariazko eskaneatzeen programazioak</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:246
+msgid ""
+"You can now configure automatic update intervals for individual folders "
+"independently and tailored to each distinct location."
+msgstr ""
+"Orain, eguneratze automatikoko tarteak konfigura ditzakezu karpeta "
+"indibidualentzat modu independentean eta kokapen bakoitzean egokituta."
+
+#: src/fsearch_welcome_dialog.ui:309
+msgid "<big><b>Improved Exclude Rules</b></big>"
+msgstr "<big><b>Baztertzeko arau hobetuak</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:323
+msgid ""
+"You can now use wildcards and regular expressions to define more powerful "
+"exclude rules. \n"
+"Rules can be targeted specifically at files, folders, or both, and can be "
+"configured to match against either the basename or the full absolute path."
+msgstr ""
+"Orain komodinak eta adierazpen erregularrak erabil ditzakezu bazterketa-arau "
+"indartsuagoak definitzeko. \n"
+"Arauak fitxategietara, karpetetara edo bietara bideratu daitezke bereziki, "
+"eta oinarrizko izenarekin edo bide absolutu osoarekin bat egiteko konfigura "
+"daitezke."
+
+#: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
 msgstr "Tamaina"
 
-#: src/fsearch_window.c:684 src/menus.ui:271
+#: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
 msgstr "Luzapena"
 
-#: src/fsearch_window.c:691 src/menus.ui:283
+#: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
 msgstr "Aldatze-data"
 
-#: src/fsearch_window.c:705
+#: src/fsearch_window.c:801
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1645,62 +1816,45 @@ msgstr "Bilatu…"
 msgid "Select a Filter"
 msgstr "Hautatu iragazki bat"
 
-#: src/fsearch_window_actions.c:97
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
-msgid "Do you really want to open %'d file(s)?"
-msgstr "Benetan %d fitxategi(ak) ireki nahi dituzu?"
+#: src/fsearch_window_actions.c:110
+#, c-format
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "Benetan fitxategi %d ireki nahi duzu?"
+msgstr[1] "Benetan %d fitxategi ireki nahi dituzu?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:115
 msgid "Opening Files…"
 msgstr "Fitxategiak irekitzen…"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "Benetan %d fitxategi(ak) ezabatu nahi dituzu?"
+#: src/fsearch_window_actions.c:198
+#, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "Benetan fitxategi %d ezabatu nahi duzu?"
+msgstr[1] "Benetan %d fitxategi ezabatu nahi dituzu?"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:205
 msgid "Deleting files…"
 msgstr "Fitxategiak ezabatzen…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:205
 msgid "Moving files to trash…"
 msgstr "Fitxategiak zakarrontzira bidaltzen…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
+#: src/fsearch_window_actions.c:580
 msgid "Something went wrong."
 msgstr "Zerbait gaizki joan da."
 
-#: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
-msgid "Deleted %'d file(s)."
-msgstr "%d fitxategi ezabatuta."
+#: src/fsearch_window_actions.c:263
+#, c-format
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "Benetan nahi al duzu fitxategi %d-en propietateen leihoak ireki?"
+msgstr[1] "Benetan nahi al duzu %d fitxategien propietateen leihoak ireki?"
 
-#: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
-msgid "Moved %'d file(s) to the trash."
-msgstr "%d fitxategi zaborrontzira eraman dira."
-
-#: src/fsearch_window_actions.c:229
-msgid ""
-"The database needs to be updated before it becomes aware of those changes! "
-"This will be fixed with future updates."
-msgstr ""
-"Datu-basea eguneratu egin behar da aldaketa horien berri izan aurretik! Hau "
-"etorkizuneko eguneraketekin konponduko da."
-
-#: src/fsearch_window_actions.c:255
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
-msgid "Do you really want to open %'d file property windows?"
-msgstr "Benetan nahi al duzu %d fitxategien propietateen leihoak ireki?"
-
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:270
 msgid "Opening file properties…"
 msgstr "Fitxategien propietateak irekitzen…"
 
@@ -1788,6 +1942,80 @@ msgstr "Bidea + Izena"
 msgid "Move to _Trash"
 msgstr "Eraman _zakarrontzira"
 
+#~ msgctxt "Will be followed by the content type string."
+#~ msgid "Error when getting information for content type"
+#~ msgstr "Errore bat gertatu da eduki motari buruzko informazioa eskuratzean"
+
+#~ msgid ""
+#~ "<b>Excluded folders:</b>\n"
+#~ "\n"
+#~ "This list contains all folders you want to exclude from the database.\n"
+#~ "\n"
+#~ "\t• <b>Active:</b> If enabled, the path will excluded from the database "
+#~ "and can't be searched in.\n"
+#~ "\t• <b>Path:</b> The full path to be excluded."
+#~ msgstr ""
+#~ "<b>Baztertutako karpetak:</b>\n"
+#~ "\n"
+#~ "Zerrenda honek datu-basetik baztertu nahi dituzun karpeta guztiak ditu.\n"
+#~ "\n"
+#~ "\t• <b>Aktiboa:</b> Gaituta badago, bide hau datu-basetik kanpo geratuko "
+#~ "da eta ez du bertan bilatuko.\n"
+#~ "\t• <b>Bidea:</b> Baztertu beharreko bide osoa."
+
+#~ msgid ""
+#~ "<b>Exclude folder from database:</b>\n"
+#~ "\n"
+#~ "This button opens a dialog where you can select a folder you want to "
+#~ "exclude from the database."
+#~ msgstr ""
+#~ "<b>Baztertu karpeta datu-basetik:</b>\n"
+#~ "\n"
+#~ "Botoi honek elkarrizketa-koadro bat irekitzen du, non datu-basetik "
+#~ "baztertu nahi duzun karpeta bat hauta dezakezun."
+
+#, fuzzy, c-format
+#~ msgid "Deleted %'d file."
+#~ msgid_plural "Deleted %'d files."
+#~ msgstr[0] "%d fitxategi ezabatuta."
+#~ msgstr[1] "%d fitxategi ezabatuta."
+
+#, fuzzy, c-format
+#~ msgid "Moved %'d file to the trash."
+#~ msgid_plural "Moved %'d files to the trash."
+#~ msgstr[0] "%d fitxategi zaborrontzira eraman dira."
+#~ msgstr[1] "%d fitxategi zaborrontzira eraman dira."
+
+#~ msgid ""
+#~ "The database needs to be updated before it becomes aware of those "
+#~ "changes! This will be fixed with future updates."
+#~ msgstr ""
+#~ "Datu-basea eguneratu egin behar da aldaketa horien berri izan aurretik! "
+#~ "Hau etorkizuneko eguneraketekin konponduko da."
+
+#, fuzzy
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Gehitu datu-basean sartzeko bidea\n"
+#~ "                                "
+
+#, fuzzy
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Gehitu datu-basean sartzeko bidea\n"
+#~ "                                "
+
+#, fuzzy
+#~ msgid "Rescan database on startup"
+#~ msgstr "Eguneratu datu-basea abiatzean"
+
+#~ msgid "hour(s) and"
+#~ msgstr "ordu eta"
+
 #~ msgid "Saving…"
 #~ msgstr "Gordetzen…"
 
@@ -1812,13 +2040,6 @@ msgstr "Eraman _zakarrontzira"
 
 #~ msgid "e.g. \".git;*.tmp\""
 #~ msgstr "adib. \".git;*.tmp\""
-
-#~ msgid ""
-#~ "There are a lot of features which make searching as efficient and "
-#~ "powerful as possible. Such as:"
-#~ msgstr ""
-#~ "Ezaugarri asko daude bilaketa ahalik eta eraginkorrena eta indartsuena "
-#~ "egiten dutenak. Hala nola:"
 
 #~ msgctxt "Will be followed by the path of the desktop file."
 #~ msgid "Error when launching desktop file"

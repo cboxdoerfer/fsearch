@@ -22,19 +22,14 @@
 #include <config.h>
 #endif
 
-#include "fsearch_array.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
-#include "fsearch_database_entry.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
-#include "fsearch_file_utils.h"
 #include "fsearch_list_view.h"
 #include "fsearch_listview_popup.h"
 #include "fsearch_result_view.h"
 #include "fsearch_statusbar.h"
-#include "fsearch_string_utils.h"
-#include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
 #include <glib/gi18n.h>
@@ -72,6 +67,10 @@ struct _FsearchApplicationWindow {
     FsearchDatabaseWork *work_search;
     FsearchDatabaseWork *work_sort;
 
+    guint apply_overlay_timeout_id;
+    int32_t apply_depth;
+    bool applying_overlay_shown;
+
     uint32_t num_files_selected;
     uint32_t num_folders_selected;
 
@@ -97,6 +96,9 @@ perform_search(FsearchApplicationWindow *win);
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
+
+static void
+fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win, uint32_t num_items);
 
 static void
 on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
@@ -181,12 +183,73 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
 }
 
 static void
+apply_overlay_reset(FsearchApplicationWindow *win) {
+    if (win->apply_overlay_timeout_id) {
+        g_source_remove(win->apply_overlay_timeout_id);
+        win->apply_overlay_timeout_id = 0;
+    }
+    win->apply_depth = 0;
+    win->applying_overlay_shown = false;
+}
+
+static gboolean
+on_apply_overlay_timeout(gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    win->apply_overlay_timeout_id = 0;
+    win->applying_overlay_shown = true;
+    // Bring the database overlay stack to the front (over the results), then show the updating page.
+    show_overlay(win, OVERLAY_DATABASE);
+    show_overlay(win, OVERLAY_DATABASE_UPDATING);
+    return G_SOURCE_REMOVE;
+}
+
+static void
+on_database_apply_started(FsearchDatabase *db, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    win->apply_depth++;
+    if (win->apply_depth == 1 && !win->apply_overlay_timeout_id && !win->applying_overlay_shown) {
+        win->apply_overlay_timeout_id = g_timeout_add(500, on_apply_overlay_timeout, win);
+    }
+}
+
+static void
+on_database_apply_finished(FsearchDatabase *db, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    if (win->apply_depth > 0) {
+        win->apply_depth--;
+    }
+    if (win->apply_depth > 0) {
+        // Probably won't ever be reached in practice, since no two index updates will be applied simultanously
+        // But still we should correctly handle this case and still keep the overlay up
+        return;
+    }
+
+    if (win->apply_overlay_timeout_id) {
+        g_source_remove(win->apply_overlay_timeout_id);
+        win->apply_overlay_timeout_id = 0;
+    }
+    if (win->applying_overlay_shown) {
+        win->applying_overlay_shown = false;
+        // No need to perform a new search here, the results will be updated inplace and we receive a content changed
+        // signal
+        FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+        fsearch_window_set_overlay_for_database_state(win, fsearch_application_get_num_db_entries(app));
+    }
+}
+
+static void
 database_load_started(FsearchApplicationWindow *win) {
+    apply_overlay_reset(win);
     show_overlay(win, OVERLAY_DATABASE_LOADING);
 }
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
+    apply_overlay_reset(win);
     show_overlay(win, OVERLAY_DATABASE_UPDATING);
 
     GtkWidget *cancel_update_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
@@ -314,6 +377,10 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
+    if (self->apply_overlay_timeout_id) {
+        g_source_remove(self->apply_overlay_timeout_id);
+        self->apply_overlay_timeout_id = 0;
+    }
     g_clear_pointer(&self->active_filter_name, free);
     g_clear_pointer(&self->result_view, fsearch_result_view_free);
     g_clear_pointer(&self->work_search, fsearch_database_work_unref);
@@ -370,6 +437,9 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                                   FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
                                                   query->triggers_auto_match_path);
     }
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                              FSEARCH_STATUSBAR_REVEALER_PARTIAL_RESULTS,
+                                              !fsearch_database_search_info_get_is_complete(info));
 
     win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
     win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);
@@ -389,21 +459,23 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                     num_folders);
 
     fsearch_result_view_row_cache_reset(win->result_view);
+
+    const bool empty_search = is_empty_search(win);
     if (reset_view) {
         fsearch_list_view_set_config(win->result_view->list_view,
-                                     num_rows,
+                                     empty_search ? 0 : num_rows,
                                      win->result_view->sort_order,
                                      win->result_view->sort_type);
     }
     else {
         fsearch_list_view_update(win->result_view->list_view,
-                                 num_rows,
+                                 empty_search ? 0 : num_rows,
                                  win->result_view->sort_order,
                                  win->result_view->sort_type);
     }
     fsearch_window_actions_update(win);
 
-    if (is_empty_search(win)) {
+    if (empty_search) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
         gtk_widget_show(win->main_search_overlay_stack);
     }
@@ -416,11 +488,24 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
     }
 }
 
+// Detects a finished signal from a sort that was already superseded by a newer one.
+static bool
+sort_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+    if (!win->work_sort) {
+        return false;
+    }
+    return fsearch_database_work_sort_get_sort_order(win->work_sort) == fsearch_database_search_info_get_sort_order(info)
+        && fsearch_database_work_sort_get_sort_type(win->work_sort) == fsearch_database_search_info_get_sort_type(info);
+}
+
 static void
 on_sort_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer user_data) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!sort_info_matches_tracked_work(win, info)) {
+            return;
+        }
         apply_search_info(win, info, true);
 
         g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
@@ -445,11 +530,25 @@ on_selection_changed(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *i
     }
 }
 
+// Detects a finished signal from a search that was already superseded by a newer one.
+static bool
+search_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+    if (!win->work_search) {
+        return false;
+    }
+    g_autoptr(FsearchQuery) tracked_query = fsearch_database_work_search_get_query(win->work_search);
+    g_autoptr(FsearchQuery) info_query = fsearch_database_search_info_get_query(info);
+    return tracked_query == info_query;
+}
+
 static void
 on_search_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!search_info_matches_tracked_work(win, info)) {
+            return;
+        }
         apply_search_info(win, info, true);
         g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
@@ -476,7 +575,7 @@ perform_search(FsearchApplicationWindow *win) {
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
     FsearchFilter *filter = get_active_filter(win);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    FsearchQuery *query = fsearch_query_new(text, filter, config->filters, get_query_flags(), "test");
+    g_autoptr(FsearchQuery) query = fsearch_query_new(text, filter, config->filters, get_query_flags(), "test");
     if (win->work_search) {
         fsearch_database_work_cancel(win->work_search);
     }
@@ -564,10 +663,7 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 }
 
 static void
-on_fsearch_list_view_row_activated(FsearchListView *view,
-                                   FsearchDatabaseIndexProperty col,
-                                   int row_idx,
-                                   gpointer user_data) {
+on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexProperty col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -703,8 +799,8 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
     fsearch_list_view_column_set_tooltip(type_col,
                                          _("Sorting by <b>Type</b> can take a few seconds with many results.\n\n"
-                                             "This sort order is not persistent, it will be reset when the search term "
-                                             "changes."));
+                                           "This sort order is not persistent, it will be reset when the search term "
+                                           "changes."));
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
@@ -756,7 +852,7 @@ on_listview_row_is_selected(int row, gpointer user_data) {
                                            FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
                                            &info)
         == FSEARCH_RESULT_SUCCESS) {
-        return fsearch_database_entry_info_get_selected(info);
+        return info ? fsearch_database_entry_info_get_selected(info) : FALSE;
     }
     return FALSE;
 }
@@ -798,7 +894,8 @@ static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
-    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/" "fsearch_overlay.ui");
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                  "fsearch_overlay.ui");
 
     win->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
     win->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
@@ -860,11 +957,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     add_columns(list_view, config);
 
     g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
-    g_signal_connect_object(list_view,
-                            "row-activated",
-                            G_CALLBACK(on_fsearch_list_view_row_activated),
-                            win,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
     g_signal_connect(list_view, "on-drag", G_CALLBACK(on_drag), win);
     g_signal_connect(list_view, "drag-data-get", G_CALLBACK(on_drag_data_get), win);
@@ -947,6 +1040,8 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "selection-changed", G_CALLBACK(on_selection_changed), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "apply-started", G_CALLBACK(on_database_apply_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "apply-finished", G_CALLBACK(on_database_apply_finished), self, G_CONNECT_AFTER);
 }
 
 static void
@@ -1201,17 +1296,16 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order
-                                                  ? get_sort_order_for_name(config->sort_by)
-                                                  : DATABASE_INDEX_PROPERTY_NAME;
+    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order ? get_sort_order_for_name(config->sort_by)
+                                                                         : DATABASE_INDEX_PROPERTY_NAME;
     if (sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
     }
     const GtkSortType sort_type = config->restore_sort_order
-                                      ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
-                                      : GTK_SORT_ASCENDING;
+                                    ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
+                                    : GTK_SORT_ASCENDING;
 
     fsearch_window_apply_config(win);
     fsearch_list_view_set_config(win->result_view->list_view, 0, sort_order, sort_type);

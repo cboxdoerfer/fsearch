@@ -1,10 +1,13 @@
 #include "fsearch_database_index_event.h"
+#include "fsearch_database_index_properties.h"
 
 FsearchDatabaseIndexEvent *
 fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind,
                                  DynamicArray *folders,
                                  DynamicArray *files,
-                                 const char *path) {
+                                 const char *path,
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                 bool marked) {
     FsearchDatabaseIndexEvent *event = calloc(1, sizeof(FsearchDatabaseIndexEvent));
     g_assert(event);
 
@@ -14,13 +17,13 @@ fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind,
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_STARTED:
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
-    case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
-    case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         event->entries.folders = darray_ref(folders);
         event->entries.files = darray_ref(files);
+        event->entries.affected_sort_orders = affected_sort_orders;
+        event->entries.marked = marked;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCANNING:
         event->path = path ? g_strdup(path) : NULL;
@@ -40,8 +43,6 @@ fsearch_database_index_event_free(FsearchDatabaseIndexEvent *event) {
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_STARTED:
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
-    case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
-    case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:

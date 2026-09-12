@@ -9,11 +9,15 @@ typedef struct {
 
     GHashTable *item_info_cache;
     GHashTable *pixbuf_cache;
-    GHashTable *app_gicon_cache;
 
-    // remember the row height from the last draw call
+    GHashTable *icon_cache;
+    GHashTable *icon_loads;
+
+    // remember the row height and scale factor from the last draw call
     // when it changes we need to reset the icon cache
     int32_t row_height;
+    int32_t scale_factor;
+    gulong icon_theme_change_handler_id;
 
     guint view_id;
     FsearchDatabaseIndexProperty sort_order;

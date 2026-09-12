@@ -18,29 +18,35 @@
 
 #define G_LOG_DOMAIN "fsearch-application"
 
+#include "fsearch.h"
+#include "fsearch_config.h"
+#include "fsearch_database.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_database_index_properties.h"
+#include "fsearch_database_info.h"
+#include "fsearch_database_work.h"
+#include "fsearch_file_utils.h"
+#include "fsearch_preferences_dialog.h"
+#include "fsearch_preview.h"
+#include "fsearch_window.h"
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include "fsearch.h"
-#include "fsearch_clipboard.h"
-#include "fsearch_config.h"
-#include "fsearch_database.h"
-#include "fsearch_database_info.h"
-#include "fsearch_file_utils.h"
-#include "fsearch_limits.h"
-#include "fsearch_preferences_dialog.h"
-#include "fsearch_ui_utils.h"
-#include "fsearch_window.h"
-#include "icon_resources.h"
-#include "ui_resources.h"
-#include "fsearch_preview.h"
+#include <gdk/gdk.h>
+#include <gio/gio.h>
+#include <gio/gmenumodel.h>
+#include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <limits.h>
+#include <gtk/gtk.h>
+#include <gtk/gtkcssprovider.h>
+#include <linux/limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 struct _FsearchApplication {
     GtkApplication parent;
@@ -55,12 +61,9 @@ struct _FsearchApplication {
     bool has_file_manager_on_bus;
 
     FsearchDatabaseState db_state;
-    guint db_timeout_id;
 
     uint32_t num_files;
     uint32_t num_folders;
-
-    FsearchDatabaseWork *work_scan;
 };
 
 static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
@@ -71,32 +74,6 @@ G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
 static void
 set_accels_for_escape(GApplication *app);
-
-static gboolean
-on_database_auto_update(gpointer user_data) {
-    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    g_debug("[app] scheduled database update started");
-    g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
-    return G_SOURCE_CONTINUE;
-}
-
-static void
-database_auto_update_init(FsearchApplication *self) {
-    if (self->db_timeout_id != 0) {
-        g_source_remove(self->db_timeout_id);
-        self->db_timeout_id = 0;
-    }
-    if (self->config->update_database_every) {
-        guint seconds = self->config->update_database_every_hours * 3600
-                        + self->config->update_database_every_minutes * 60;
-        if (seconds < 60) {
-            seconds = 60;
-        }
-
-        g_debug("[app] update database every %d seconds", seconds);
-        self->db_timeout_id = g_timeout_add_seconds(seconds, on_database_auto_update, self);
-    }
-}
 
 static void
 move_search_term_to_window(FsearchApplication *self, FsearchApplicationWindow *win) {
@@ -209,8 +186,12 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
 
 static void
 action_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
-    // TODO: windows need to be cleaned up manually here
-    g_application_quit(G_APPLICATION(app));
+    // Close all open windows. This ensures that all refernces to the database will be dropped and the database
+    // is properly finalized.
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+    for (GList *l = windows; l != NULL; l = l->next) {
+        gtk_window_close(GTK_WINDOW(l->data));
+    }
 }
 
 static void
@@ -218,21 +199,6 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     FsearchPreferencesDialog *pref_dialog = FSEARCH_PREFERENCES_DIALOG(dialog);
     if (response_id == GTK_RESPONSE_OK) {
-        g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_preferences_dialog_get_include_manager(pref_dialog);
-        g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_preferences_dialog_get_exclude_manager(pref_dialog);
-
-        if (self->work_scan) {
-            fsearch_database_work_cancel(self->work_scan);
-            g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-        }
-        self->work_scan = fsearch_database_work_new_scan(include_manager,
-                                                         exclude_manager,
-                                                         DATABASE_INDEX_PROPERTY_FLAG_NAME
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_PATH
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_SIZE
-                                                         | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
-        fsearch_database_queue_work(self->db, self->work_scan);
-
         FsearchConfigCompareResult config_diff = {.listview_config_changed = true, .search_config_changed = true};
 
         FsearchConfig *new_config = fsearch_preferences_dialog_get_config(pref_dialog);
@@ -243,11 +209,15 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         self->config = new_config;
         config_save(self->config);
 
-        g_object_set(gtk_settings_get_default(),
-                     "gtk-application-prefer-dark-theme",
-                     new_config->enable_dark_theme,
-                     NULL);
-        database_auto_update_init(self);
+        if (config_diff.database_config_changed) {
+            fsearch_database_cancel_scan(self->db);
+            g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(self->config->includes,
+                                                                                 self->config->excludes,
+                                                                                 DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+            fsearch_database_queue_work(self->db, work);
+        }
+
+        g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
 
         GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
         for (GList *w = windows; w; w = w->next) {
@@ -276,7 +246,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
         return;
     }
 
-    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db));
+    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config));
     fsearch_preferences_dialog_set_page(FSEARCH_PREFERENCES_DIALOG(pref), page);
     g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
     gtk_dialog_run(GTK_DIALOG(pref));
@@ -286,23 +256,17 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
 static void
 action_cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-    if (self->work_scan) {
-        fsearch_database_work_cancel(self->work_scan);
-        g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    }
+    fsearch_database_cancel_scan(self->db);
 }
 
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
 
-    if (self->work_scan) {
-        fsearch_database_work_cancel(self->work_scan);
-        g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    }
-    self->work_scan = fsearch_database_work_new_rescan();
+    fsearch_database_cancel_scan(self->db);
 
-    fsearch_database_queue_work(self->db, self->work_scan);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_rescan();
+    fsearch_database_queue_work(self->db, work);
 }
 
 static void
@@ -351,12 +315,31 @@ fsearch_application_shutdown(GApplication *app) {
     // close the preview
     fsearch_preview_call_close();
 
-    g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    g_clear_object(&self->db);
+    // All windows have been closed by now, now we need to notify the windowing system about that
+    // otherwise the windows would be stuck unresponsive during the rest of the shutdown process
+    GdkDisplay *display = gdk_display_get_default();
+    if (display) {
+        gdk_display_sync(display);
+    }
+
+    // Notify the session manager that the database and config are saved, in order to prevent the system from getting
+    // shut down.
+    const guint inhibit_cookie = gtk_application_inhibit(GTK_APPLICATION(self),
+                                                         NULL,
+                                                         GTK_APPLICATION_INHIBIT_LOGOUT | GTK_APPLICATION_INHIBIT_SUSPEND,
+                                                         _("Saving database and config…"));
+
+    g_clear_object(&self->db); // blocks until the database is saved
 
     g_clear_pointer(&self->option_search_term, g_free);
 
     config_save(self->config);
+
+    // database and config have been written at this point.
+    if (inhibit_cookie != 0) {
+        gtk_application_uninhibit(GTK_APPLICATION(self), inhibit_cookie);
+    }
+
     g_clear_pointer(&self->config, config_free);
 
     G_APPLICATION_CLASS(fsearch_application_parent_class)->shutdown(app);
@@ -368,10 +351,7 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
-on_file_manager_name_appeared(GDBusConnection *connection,
-                              const gchar *name,
-                              const gchar *name_owner,
-                              gpointer user_data) {
+on_file_manager_name_appeared(GDBusConnection *connection, const gchar *name, const gchar *name_owner, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_return_if_fail(self);
     self->has_file_manager_on_bus = true;
@@ -432,6 +412,29 @@ on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoi
 }
 
 static void
+on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchApplication *self = (FsearchApplication *)user_data;
+    g_assert(FSEARCH_IS_APPLICATION(self));
+
+    on_database_update_finished(db, info, user_data);
+
+    g_autoptr(FsearchDatabaseIncludeManager) db_includes = fsearch_database_info_get_include_manager(info);
+    g_autoptr(FsearchDatabaseExcludeManager) db_excludes = fsearch_database_info_get_exclude_manager(info);
+
+    const bool includes_changed = !fsearch_database_include_manager_equal(db_includes, self->config->includes);
+    const bool excludes_changed = !fsearch_database_exclude_manager_equal(db_excludes, self->config->excludes);
+
+    if (includes_changed || excludes_changed) {
+        g_debug("[app] database config differs from config file, triggering rescan");
+        fsearch_database_cancel_scan(self->db);
+        g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan(self->config->includes,
+                                                                             self->config->excludes,
+                                                                             DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+        fsearch_database_queue_work(self->db, work);
+    }
+}
+
+static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     G_APPLICATION_CLASS(fsearch_application_parent_class)->startup(app);
@@ -452,15 +455,15 @@ fsearch_application_startup(GApplication *app) {
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    self->db = fsearch_database_new(g_steal_pointer(&db_file));
+    self->db = fsearch_database_new(g_steal_pointer(&db_file), self->config->includes, self->config->excludes);
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_load_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
 
-    g_autoptr (FsearchDatabaseWork) work_load = fsearch_database_work_new_load();
+    g_autoptr(FsearchDatabaseWork) work_load = fsearch_database_work_new_load();
     fsearch_database_queue_work(self->db, work_load);
 
     self->file_manager_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
@@ -477,14 +480,11 @@ fsearch_application_startup(GApplication *app) {
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    g_object_set(gtk_settings_get_default(),
-                 "gtk-application-prefer-dark-theme",
-                 self->config->enable_dark_theme,
-                 NULL);
+    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", self->config->enable_dark_theme, NULL);
 
     if (self->config->show_menubar) {
         g_autoptr(GtkBuilder) menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
-            "menus.ui");
+                                                                           "menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
     }
@@ -527,6 +527,85 @@ fsearch_application_init(FsearchApplication *app) {
     g_action_map_add_action_entries(G_ACTION_MAP(app), fsearch_app_entries, G_N_ELEMENTS(fsearch_app_entries), app);
 }
 
+// NOTE: Bump whenever we want to display a new welcome dialog
+// Make sure to also update the content of the welcome dialog
+#define FSEARCH_WELCOME_DIALOG_VERSION "0.3"
+
+static int
+version_compare(const char *a, const char *b) {
+    g_auto(GStrv) version_a = g_strsplit(a ? a : "", ".", -1);
+    g_auto(GStrv) version_b = g_strsplit(b ? b : "", ".", -1);
+    const guint num_version_components_a = g_strv_length(version_a);
+    const guint num_version_components_b = g_strv_length(version_b);
+
+    for (guint i = 0; i < MAX(num_version_components_a, num_version_components_b); i++) {
+        const long c_a = i < num_version_components_a ? strtol(version_a[i], NULL, 10) : 0;
+        const long c_b = i < num_version_components_b ? strtol(version_b[i], NULL, 10) : 0;
+        if (c_a != c_b) {
+            return c_a < c_b ? -1 : 1;
+        }
+    }
+    return 0;
+}
+
+static bool
+should_show_welcome_dialog(void) {
+    g_autofree gchar *state_dir = fsearch_file_utils_get_app_user_state_dir();
+
+    // Ensure the state directory exists
+    g_mkdir_with_parents(state_dir, 0700);
+
+    g_autofree gchar *state_file = g_build_filename(state_dir, "fsearch.ini", NULL);
+
+    g_autoptr(GKeyFile) key_file = g_key_file_new();
+    bool should_show = false;
+
+    // Try to load the existing INI file. If it fails, we assume it's the first run.
+    if (g_key_file_load_from_file(key_file, state_file, G_KEY_FILE_NONE, NULL)) {
+        g_autofree gchar *last_version = g_key_file_get_string(key_file, "State", "last_seen_version", NULL);
+
+        // Only show if the user hasn't yet seen a version with this (or newer) welcome content.
+        if (version_compare(last_version, FSEARCH_WELCOME_DIALOG_VERSION) < 0) {
+            should_show = true;
+        }
+    }
+    else {
+        should_show = true;
+    }
+
+    if (should_show) {
+        g_key_file_set_string(key_file, "State", "last_seen_version", PACKAGE_VERSION);
+
+        g_autoptr(GError) error = NULL;
+        if (!g_key_file_save_to_file(key_file, state_file, &error)) {
+            g_warning("[app] Failed to write welcome state to INI: %s", error->message);
+        }
+    }
+
+    return should_show;
+}
+
+static void
+fsearch_welcome_dialog_show(GtkWindow *parent) {
+    g_return_if_fail(parent != NULL);
+
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                  "fsearch_welcome_dialog.ui");
+
+    GtkWidget *dialog = GTK_WIDGET(gtk_builder_get_object(builder, "welcome_dialog"));
+
+    if (!dialog) {
+        g_warning("[app] Failed to load the welcome dialog from the UI resource.");
+        return;
+    }
+
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 static void
 fsearch_application_activate(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
@@ -543,12 +622,12 @@ fsearch_application_activate(GApplication *app) {
     }
 
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", g_variant_new_boolean(self->minimized));
-
-    database_auto_update_init(self);
-
-    if (self->config->update_database_on_launch) {
-        // TODO: implement
-        // database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
+    if (should_show_welcome_dialog()) {
+        FsearchApplicationWindow *window = get_first_application_window(self);
+        if (window) {
+            g_debug("[app] Triggering welcome dialog for version %s", PACKAGE_VERSION);
+            fsearch_welcome_dialog_show(GTK_WINDOW(window));
+        }
     }
 }
 
@@ -659,17 +738,24 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 static int
 database_scan_in_local_instance() {
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
+
+    g_autofree FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
+    g_return_val_if_fail(config, EXIT_FAILURE);
+
+    if (!config_load(config)) {
+        return EXIT_FAILURE;
+    }
 
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
-    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file));
+    g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file), config->includes, config->excludes);
     FsearchResult result = fsearch_database_rescan_blocking(db);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
 
     g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);
+    g_clear_pointer(&config, config_free);
 
     return result == FSEARCH_RESULT_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }

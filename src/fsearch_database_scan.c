@@ -3,7 +3,6 @@
 #include "fsearch_database_scan.h"
 
 #include "fsearch_database_entry.h"
-#include "fsearch_database_sort.h"
 
 #include <config.h>
 #include <dirent.h>
@@ -24,7 +23,6 @@ typedef struct DatabaseWalkContext {
     DynamicArray *files;
     FsearchFolderMonitorFanotify *fanotify_monitor;
     FsearchFolderMonitorInotify *inotify_monitor;
-    uint32_t index_id;
     bool one_file_system;
     GTimer *timer;
     GMutex *monitor_lock;
@@ -51,21 +49,31 @@ watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, co
         }
     }
 #endif
+    if (walk_context->fanotify_monitor || walk_context->inotify_monitor) {
+        db_entry_set_monitored_failed(folder);
+    }
+}
+
+static void
+unwatch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder) {
+#ifdef HAVE_FANOTIFY
+    if (walk_context->fanotify_monitor && db_entry_is_monitored_fanotify(folder)) {
+        fsearch_folder_monitor_fanotify_unwatch(walk_context->fanotify_monitor, folder);
+    }
+#endif
+#ifdef HAVE_INOTIFY
+    if (walk_context->inotify_monitor && db_entry_is_monitored_inotify(folder)) {
+        fsearch_folder_monitor_inotify_unwatch(walk_context->inotify_monitor, folder);
+    }
+#endif
 }
 
 static FsearchDatabaseEntry *
-add_folder(DatabaseWalkContext *walk_context,
-           const char *name,
-           const char *path,
-           time_t mtime,
-           FsearchDatabaseEntry *parent) {
-    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                      | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path, time_t mtime, FsearchDatabaseEntry *parent) {
+    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                                       name,
                                                                       parent,
                                                                       DATABASE_ENTRY_TYPE_FOLDER,
-                                                                      DATABASE_INDEX_PROPERTY_DB_INDEX,
-                                                                      walk_context->index_id,
                                                                       DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                                       mtime,
                                                                       DATABASE_INDEX_PROPERTY_NONE);
@@ -77,10 +85,7 @@ add_folder(DatabaseWalkContext *walk_context,
         g_assert_cmpstr(name, ==, n);
     }
     time_t t = 0;
-    if (db_entry_get_attribute(folder_entry,
-                               DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                               (void *)&t,
-                               sizeof(time_t))) {
+    if (db_entry_get_attribute(folder_entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, (void *)&t, sizeof(time_t))) {
         g_assert(t == mtime);
     }
     watch_folder(walk_context, folder_entry, path);
@@ -91,8 +96,7 @@ add_folder(DatabaseWalkContext *walk_context,
 
 FsearchDatabaseEntry *
 add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntry *parent) {
-    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                    | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_DEFAULT,
                                                                     name,
                                                                     parent,
                                                                     DATABASE_ENTRY_TYPE_FILE,
@@ -164,7 +168,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
         const size_t d_name_len = strlen(dent->d_name);
-        if (d_name_len >= 256) {
+        if (d_name_len > UINT16_MAX) {
             g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %zd)", dent->d_name, d_name_len);
             continue;
         }
@@ -207,6 +211,35 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     return WALK_OK;
 }
 
+// Called when a scan didn't complete: undoes everything the partial scan did.
+// `top` is the entry representing `path` itself; if it was linked to a caller-supplied
+// parent, detach it again so that parent's file/folder count and size aren't left
+// permanently wrong. Every entry only references other entries in `folders`/`files`,
+// which are being discarded together, so they can all be freed directly. The arrays
+// are left empty (not NULL) so callers don't need to special-case a failed scan.
+static void
+discard_scanned_entries(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *top, bool top_has_external_parent) {
+    for (uint32_t i = 0; i < darray_get_num_items(walk_context->folders); ++i) {
+        unwatch_folder(walk_context, darray_get_item(walk_context->folders, i));
+    }
+
+    if (top_has_external_parent) {
+        db_entry_set_parent(top, NULL);
+    }
+
+    for (uint32_t i = 0; i < darray_get_num_items(walk_context->folders); ++i) {
+        FsearchDatabaseEntry *folder = darray_get_item(walk_context->folders, i);
+        g_clear_pointer(&folder, db_entry_free_no_unparent);
+    }
+    darray_remove(walk_context->folders, 0, darray_get_num_items(walk_context->folders));
+
+    for (uint32_t i = 0; i < darray_get_num_items(walk_context->files); ++i) {
+        FsearchDatabaseEntry *file = darray_get_item(walk_context->files, i);
+        g_clear_pointer(&file, db_entry_free_no_unparent);
+    }
+    darray_remove(walk_context->files, 0, darray_get_num_items(walk_context->files));
+}
+
 bool
 db_scan_folder(const char *path,
                FsearchDatabaseEntry *parent,
@@ -215,7 +248,6 @@ db_scan_folder(const char *path,
                FsearchDatabaseExcludeManager *exclude_manager,
                FsearchFolderMonitorFanotify *fanotify_monitor,
                FsearchFolderMonitorInotify *inotify_monitor,
-               uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *, gpointer),
@@ -241,7 +273,6 @@ db_scan_folder(const char *path,
     }
 
     g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
 
     DatabaseWalkContext walk_context = {
         .folders = folders,
@@ -251,7 +282,6 @@ db_scan_folder(const char *path,
         .exclude_manager = exclude_manager,
         .path = path_string,
         .one_file_system = one_file_system,
-        .index_id = index_id,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,
@@ -259,6 +289,8 @@ db_scan_folder(const char *path,
         .root_device_id = root_st.st_dev,
         .file_handle_payload = 0,
     };
+
+    const bool top_has_external_parent = parent != NULL;
 
     if (!parent) {
         parent = add_folder(&walk_context, path, path, root_st.st_mtime, NULL);
@@ -274,12 +306,14 @@ db_scan_folder(const char *path,
         return true;
     }
 
-    // TODO: free
     if (res == WALK_CANCEL) {
         g_debug("[db_scan] scan cancelled.");
     }
     else {
         g_warning("[db_scan] walk error: %d", res);
     }
+
+    discard_scanned_entries(&walk_context, parent, top_has_external_parent);
+
     return false;
 }

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2026-04-16 09:09+0000\n"
+"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"PO-Revision-Date: 2026-08-16 05:44+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,10 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -51,7 +50,15 @@ msgstr ""
 "FSearch помогает находить файлы и папки максимально просто и быстро. Просто "
 "введите несколько букв, и результаты поиска появятся практически мгновенно."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+"Существует множество функций, которые делают поиск максимально эффективным и "
+"мощным. Такие, как:"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -59,23 +66,23 @@ msgstr ""
 "Игнорировать регистр (например, поиску «<code>fsearch</code>» также будет "
 "соответствовать «FSearch»)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Регулярные выражения"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Поддержка подстановочных знаков"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Поддержка фильтров (например, поиск только аудиофайлов)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Исключить определенные файлы и папки"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Быстрая сортировка по названию, пути, размеру, времени модификации и "
@@ -137,20 +144,21 @@ msgstr "инструмент"
 msgid "everything"
 msgstr "все"
 
+#. Kept for appstreamcli < 1.0 (e.g. Ubuntu 20.04/22.04 PPA builds), which doesn't know <developer>.
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:77
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
 msgstr "Перезапись базы данных"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add support for filesystem monitoring"
 msgstr "БД: Добавлена поддержка мониторинга файловой системы"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
@@ -158,63 +166,89 @@ msgstr ""
 "БД: Добавлена функциональность для исключения файлов и папок на основе "
 "фиксированных шаблонов, подстановочных символов или регулярных выражений"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+msgid ""
+"DB: Allow included folders to be scheduled and scanned after launch "
+"independently"
+msgstr ""
+"БД: Добавлена функциональность позволяющая планировать и сканировать "
+"включённые папки независимо друг от друга после запуска"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+msgid "DB: Make rescanning more efficient"
+msgstr "БД: Повторное сканирование стало более эффективным"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
 msgstr "БД: Сохранение конфигурации базы данных в файле базы данных"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid "DB: Add checksum to DB file"
 msgstr "БД: Добавлена контрольная сумма в файл базы данных"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 "Изменен способ получения информации о файлах и значках на асинхронный (во "
 "избежание блокировки пользовательского интерфейса)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Reduce memory usage"
+msgstr "Снижено использование памяти"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Add contextual help for all preferences"
+msgstr "Добавлена контекстная справка для всех настроек"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+msgid "Numerous bug fixes and stability and performance improvements"
+msgstr ""
+"Многочисленные исправления ошибок, а также улучшения стабильности и "
+"производительности"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
 msgstr "Новая поисковая система"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Greatly improved highlighting of search terms"
 msgstr "Значительно улучшено выделение условий поиска"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Custom filters"
 msgstr "Пользовательские фильтры"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Improved sort performance"
 msgstr "Улучшена производительность сортировки"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Improved scroll performance"
 msgstr "Улучшена производительность прокрутки"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Remember file selection after a database update"
 msgstr "Запомнить выбор файла после обновления базы данных"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 "Автоматически прокручивать список результатов в режиме выделения резиной "
 "нитью"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Инвертировать выделение резиновой нитью при нажатии «Ctrl»"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Focus search entry when the main window gets activated"
 msgstr "При активации главного окна сфокусироваться на записи поиска"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Добавлен фильтр для приложений (например, .desktop-файлы)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -222,15 +256,15 @@ msgstr ""
 "Добавлена возможность запуска приложений напрямую вместо открытия .desktop-"
 "файлов"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Show application icons for .desktop files"
 msgstr "Показывать значки приложений для .desktop-файлов"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Add .odp and .ods files to document filter"
 msgstr "Добавлены файлы .odp и .ods в фильтр документов"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -238,7 +272,7 @@ msgstr ""
 "В меню «Открыть с помощью» теперь отображаются только те приложения, которые "
 "могут работать с выбранными файлами"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -246,22 +280,22 @@ msgstr ""
 "Улучшено открытие нескольких файлов одного типа (теперь они передаются "
 "приложениям списком, а не по одному)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Улучшена поддержка открытия файлов в режиме изоляции"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Добавлены пункты меню со ссылками на баг-трекер, форум и страницу "
 "пожертвований"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Improve support for non-Linux systems"
 msgstr "Улучшена поддержка систем, отличных от Linux"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -269,183 +303,161 @@ msgstr ""
 "Добавлена возможность выхода из FSearch, вместо сворачивания окна, при "
 "нажатии клавиши Escape"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Исключены по умолчанию «/proc» и «/sys»"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Открытие контекстного меню при нажатии клавиши «Меню» или «Shift + F10»"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "и множество исправлений ошибок, обновлений переводов и небольших улучшений"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
 msgid "Initial release."
 msgstr "Первый релиз."
 
-#: src/fsearch.c:204
+#: src/fsearch.c:181
 msgid "translator-credits"
 msgstr ""
 "Konstantin Yablochkin @yakonstb\n"
 "Ser82-png <asvmail.as@gmail.com>"
 
-#: src/fsearch.c:206
+#: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент поиска, нацеленный на быстродействие и продвинутые возможности"
 
-#: src/fsearch.c:721
+#: src/fsearch.c:330
+msgid "Saving database and config…"
+msgstr "Сохранение базы данных и конфигурации…"
+
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "Открыть новое окно приложения"
 
-#: src/fsearch.c:722
+#: src/fsearch.c:808
 msgid "Minimize the application window"
 msgstr "Свернуть окно приложения"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:809
 msgid "Show the application preferences"
 msgstr "Показать параметры приложения"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:810
 msgid "Set the search pattern"
 msgstr "Установить шаблон поиска"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:811
 msgid "Update the database and exit"
 msgstr "Обновить базу данных и выйти"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:812
 msgid "Print version information and exit"
 msgstr "Показать информацию о версии и выйти"
 
-#: src/fsearch_database_file.c:1250
+#: src/fsearch_database.c:794
+msgid "Index rescan: applying changes…"
+msgstr "Повторное сканирование индекса: применение изменений…"
+
+#: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
 msgstr "Загрузка папок…"
 
-#: src/fsearch_database_file.c:1264
+#: src/fsearch_database_file.c:1353
 msgid "Loading files…"
 msgstr "Загрузка файлов…"
 
-#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:920 src/fsearch_statusbar.c:73
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Сортировка…"
 
-#: src/fsearch_database_preferences_widget.c:129
-#: src/fsearch_database_preferences_widget.c:144
+#: src/fsearch_database_preferences_widget.c:162
+#: src/fsearch_database_preferences_widget.c:176
 msgid "Select folder"
 msgstr "Выберите папку"
 
-#: src/fsearch_database_preferences_widget.c:132
-#: src/fsearch_database_preferences_widget.c:144
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:314
+#: src/fsearch_database_preferences_widget.c:165
+#: src/fsearch_database_preferences_widget.c:180
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_dialog.c:331
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: src/fsearch_database_preferences_widget.c:134
-#: src/fsearch_database_preferences_widget.c:144
+#: src/fsearch_database_preferences_widget.c:167
+#: src/fsearch_database_preferences_widget.c:179
 msgid "_Select"
 msgstr "_Выбрать"
 
-#: src/fsearch_database_preferences_widget.c:356
+#: src/fsearch_database_preferences_widget.c:389
 msgid "Literal"
 msgstr "Литерал"
 
-#: src/fsearch_database_preferences_widget.c:358
+#: src/fsearch_database_preferences_widget.c:391
 msgid "Wildcard"
 msgstr "Подстановочные знаки"
 
-#: src/fsearch_database_preferences_widget.c:360
+#: src/fsearch_database_preferences_widget.c:393
 msgid "Regex"
 msgstr "Регулярное выражение"
 
-#: src/fsearch_database_preferences_widget.c:381
+#: src/fsearch_database_preferences_widget.c:414
 msgid "Full Path"
 msgstr "Полный путь"
 
-#: src/fsearch_database_preferences_widget.c:383
+#: src/fsearch_database_preferences_widget.c:416
 msgid "Basename"
-msgstr ""
+msgstr "Базовое имя"
 
-#: src/fsearch_database_preferences_widget.c:401
+#: src/fsearch_database_preferences_widget.c:434
 msgid "Files & Folders"
 msgstr "Файлы & Папки"
 
-#: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
+#: src/fsearch_database_preferences_widget.c:436 src/fsearch_filter.c:114
 msgid "Files"
 msgstr "Файлы"
 
-#: src/fsearch_database_preferences_widget.c:405 src/fsearch_filter.c:113
+#: src/fsearch_database_preferences_widget.c:438 src/fsearch_filter.c:113
 msgid "Folders"
 msgstr "Папки"
 
-#: src/fsearch_database_preferences_widget.c:622
-#: src/fsearch_database_preferences_widget.c:724
+#: src/fsearch_database_preferences_widget.c:635
+#: src/fsearch_database_preferences_widget.c:860
 msgid "Active"
 msgstr "Активно"
 
-#: src/fsearch_database_preferences_widget.c:627
+#: src/fsearch_database_preferences_widget.c:640
 msgid "Pattern"
 msgstr "Шаблон"
 
-#: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
 #: src/menus.ui:275
 msgid "Type"
 msgstr "Тип"
 
-#: src/fsearch_database_preferences_widget.c:695
-#, fuzzy
-#| msgid "Match case"
+#: src/fsearch_database_preferences_widget.c:700
 msgid "Match"
-msgstr "Учитывать регистр"
+msgstr "Совпадение"
 
-#: src/fsearch_database_preferences_widget.c:701
+#: src/fsearch_database_preferences_widget.c:706
 msgid "Applies To"
-msgstr ""
+msgstr "Применить к"
 
-#: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
 #: src/menus.ui:219 src/menus.ui:267
 msgid "Path"
 msgstr "Путь"
 
-#: src/fsearch_database_preferences_widget.c:731
-msgid "One Filesystem"
-msgstr "Одна файловая система"
-
-#: src/fsearch_database_preferences_widget.c:738
-msgid "Monitor"
-msgstr "Отслеживание"
-
-#: src/fsearch_database_preferences_widget.ui:56
-msgid "Rescan database on startup"
-msgstr "Пересканировать базу данных при запуске"
-
-#: src/fsearch_database_preferences_widget.ui:76
-msgid "Rescan every"
-msgstr "Пересканировать каждые"
-
-#: src/fsearch_database_preferences_widget.ui:115
-msgid "hour(s) and"
-msgstr "час(ов) и"
-
-#: src/fsearch_database_preferences_widget.ui:127
-msgid "30"
-msgstr "30"
-
-#: src/fsearch_database_preferences_widget.ui:145
-msgid "minute(s)"
-msgstr "минут(у)"
-
-#: src/fsearch_database_preferences_widget.ui:191
+#: src/fsearch_database_preferences_widget.ui:78
 msgid "Enter path…"
 msgstr "Введите путь…"
 
-#: src/fsearch_database_preferences_widget.ui:211
-#: src/fsearch_database_preferences_widget.ui:274
+#: src/fsearch_database_preferences_widget.ui:97
+#: src/fsearch_database_preferences_widget.ui:372
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
@@ -455,31 +467,43 @@ msgstr ""
 "                                            в базу данных\n"
 "                                        "
 
-#: src/fsearch_database_preferences_widget.ui:294
+#: src/fsearch_database_preferences_widget.ui:176
+msgid "Attempt to monitor"
+msgstr "Пытаться отслеживать"
+
+#: src/fsearch_database_preferences_widget.ui:191
+msgid "Scan after launch"
+msgstr "Сканировать после запуска"
+
+#: src/fsearch_database_preferences_widget.ui:206
+msgid "Stay on one file system"
+msgstr "Оставаться в пределах одной файловая система"
+
+#: src/fsearch_database_preferences_widget.ui:221
+msgid "Rescan every"
+msgstr "Пересканировать каждые"
+
+#: src/fsearch_database_preferences_widget.ui:254
+msgid "Hours:"
+msgstr "Часы:"
+
+#: src/fsearch_database_preferences_widget.ui:298
+msgid "Minutes:"
+msgstr "Минуты:"
+
+#: src/fsearch_database_preferences_widget.ui:310
+msgid "30"
+msgstr "30"
+
+#: src/fsearch_database_preferences_widget.ui:391
 msgid "Remove selected path"
 msgstr "Убрать выбранный путь"
 
-#: src/fsearch_database_preferences_widget.ui:322
+#: src/fsearch_database_preferences_widget.ui:418
 msgid "Include"
 msgstr "Включить"
 
-#: src/fsearch_database_preferences_widget.ui:353
-msgid ""
-"Enter path…\n"
-"                                                "
-msgstr ""
-"Введите путь…\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:374
-msgid ""
-"Add fixed path exclude\n"
-"                                                "
-msgstr ""
-"Добавить фиксированный путь в исключение\n"
-"                                                "
-
-#: src/fsearch_database_preferences_widget.ui:436
+#: src/fsearch_database_preferences_widget.ui:477
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -487,7 +511,7 @@ msgstr ""
 "Добавить правило исключения\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:455
+#: src/fsearch_database_preferences_widget.ui:495
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -495,64 +519,68 @@ msgstr ""
 "Удалить выбранный путь\n"
 "                                                "
 
-#: src/fsearch_database_preferences_widget.ui:487
+#: src/fsearch_database_preferences_widget.ui:512
+msgid "Restore default exclude list"
+msgstr "Восстановить исходный список исключений"
+
+#: src/fsearch_database_preferences_widget.ui:541
 msgid "Exclude hidden files and folders"
 msgstr "Исключить скрытые файлы и папки"
 
-#: src/fsearch_database_preferences_widget.ui:509
+#: src/fsearch_database_preferences_widget.ui:563
 msgid "Exclude"
 msgstr "Исключить"
 
-#: src/fsearch_file_utils.c:143
+#: src/fsearch_file_utils.c:163
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Ошибка при удалении файла"
 
-#: src/fsearch_file_utils.c:145
+#: src/fsearch_file_utils.c:165
 msgid "Failed to get path"
 msgstr "Не удалось получить путь"
 
-#: src/fsearch_file_utils.c:260
+#: src/fsearch_file_utils.c:269
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
 msgstr "Ошибка при получении информации из файла"
 
-#: src/fsearch_file_utils.c:262
+#: src/fsearch_file_utils.c:271
 msgid "Failed to get application information"
 msgstr "Не удалось получить информацию о приложении"
 
-#: src/fsearch_file_utils.c:277
-msgctxt "Will be followed by the content type string."
-msgid "Error when getting information for content type"
-msgstr "Ошибка при получении информации для типа контента"
+#: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
+msgctxt "Will be followed by the file path."
+msgid "Error when opening file"
+msgstr "Ошибка при открытии файла"
 
-#: src/fsearch_file_utils.c:279
+#: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
 msgstr "Приложение по умолчанию не зарегистрировано"
 
-#: src/fsearch_file_utils.c:504
+#: src/fsearch_file_utils.c:536
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Ошибка при открытии родительской папки"
 
-#: src/fsearch_file_utils.c:506
+#: src/fsearch_file_utils.c:538
 msgid "Failed to get parent path"
 msgstr "Не удалось получить путь родителя"
 
-#: src/fsearch_file_utils.c:510
+#: src/fsearch_file_utils.c:542
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Ошибка при открытии папки"
 
-#: src/fsearch_file_utils.c:513
+#: src/fsearch_file_utils.c:545
 msgid "Failed to build open command"
 msgstr "Не удалось создать команду open"
 
-#: src/fsearch_file_utils.c:569
+#: src/fsearch_file_utils.c:601
 msgid "Folder"
 msgstr "Папка"
 
-#: src/fsearch_file_utils.c:575
+#: src/fsearch_file_utils.c:607
 msgid "Unknown Type"
 msgstr "Неизвестный тип"
 
@@ -588,11 +616,11 @@ msgstr "Видео"
 msgid "Macro names must not contain `:` characters."
 msgstr "Названия макросов не должны содержать символ «:»."
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:315
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_dialog.c:332
 msgid "_OK"
 msgstr "_Принять"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_filter_preferences_widget.c:157
+#: src/fsearch_filter_editor.ui:10 src/fsearch_filter_preferences_widget.c:156
 msgid "Edit filter"
 msgstr "Редактор фильтра"
 
@@ -638,20 +666,20 @@ msgstr ""
 "фильтру из поисковой записи, введя его текст, за которым следует «:»\n"
 "                "
 
-#: src/fsearch_filter_preferences_widget.c:134
+#: src/fsearch_filter_preferences_widget.c:133
 msgid "Add filter"
 msgstr "Добавить фильтр"
 
-#: src/fsearch_filter_preferences_widget.c:316 src/fsearch_window.c:656
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
 #: src/menus.ui:215 src/menus.ui:263
 msgid "Name"
 msgstr "Название"
 
-#: src/fsearch_filter_preferences_widget.c:317
+#: src/fsearch_filter_preferences_widget.c:316
 msgid "Macro"
 msgstr "Макрос"
 
-#: src/fsearch_filter_preferences_widget.c:318
+#: src/fsearch_filter_preferences_widget.c:317
 msgid "Query"
 msgstr "Запрос"
 
@@ -861,7 +889,7 @@ msgstr "Фильтр:"
 msgid "Search"
 msgstr "Поиск"
 
-#: src/fsearch_preferences.ui:854
+#: src/fsearch_preferences.ui:855
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -880,7 +908,7 @@ msgstr ""
 "Обратите внимание, что не все системные темы предоставляют такой более "
 "тёмный вариант, поэтому включение этого параметра может не иметь эффекта."
 
-#: src/fsearch_preferences.ui:872
+#: src/fsearch_preferences.ui:873
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -902,7 +930,7 @@ msgstr ""
 "Это напоминает более традиционный макет пользовательского интерфейса и "
 "занимает немного больше места."
 
-#: src/fsearch_preferences.ui:892
+#: src/fsearch_preferences.ui:893
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -922,7 +950,7 @@ msgstr ""
 "• <b>Десятичные единицы:</b> Имеются ввиду десятичные приставки в системе СИ "
 "<i>(например, 1 кБ = 1000 байт)</i>"
 
-#: src/fsearch_preferences.ui:912
+#: src/fsearch_preferences.ui:913
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -940,7 +968,7 @@ msgstr ""
 "Обратите внимание, что некоторые оконные менеджеры игнорируют этот запрос и "
 "заставляют окно иметь другой размер."
 
-#: src/fsearch_preferences.ui:931
+#: src/fsearch_preferences.ui:932
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -970,7 +998,7 @@ msgstr ""
 "\t• <b>комбинаций клавиш или пунктов меню</b> и/или\n"
 "\t• <b>щелчком мыши</b>"
 
-#: src/fsearch_preferences.ui:955
+#: src/fsearch_preferences.ui:956
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -996,7 +1024,7 @@ msgstr ""
 "Это также работает для регулярных выражений и выражений с подстановочными "
 "знаками, начинающихся или заканчивающихся звездочкой. "
 
-#: src/fsearch_preferences.ui:977
+#: src/fsearch_preferences.ui:978
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -1008,7 +1036,7 @@ msgstr ""
 "Если этот параметр включён, то при наведении указателя, в списке результатов "
 "будет отображаться подсказка с полным путём к выбранному файлу/папке."
 
-#: src/fsearch_preferences.ui:994
+#: src/fsearch_preferences.ui:995
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -1019,7 +1047,7 @@ msgstr ""
 "Если этот параметр включён, в названиях столбцов будут отображаться значки "
 "файлов/папок."
 
-#: src/fsearch_preferences.ui:1011
+#: src/fsearch_preferences.ui:1012
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -1033,7 +1061,7 @@ msgstr ""
 "из предыдущего сеанса при открытии окна FSearch будет восстановлена. Этот "
 "параметр включает размер и видимость всех столбцов."
 
-#: src/fsearch_preferences.ui:1028
+#: src/fsearch_preferences.ui:1029
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -1045,7 +1073,7 @@ msgstr ""
 "Если этот параметр включён, при запуске окна FSearch будет восстановлен "
 "порядок сортировки результатов предыдущего сеанса."
 
-#: src/fsearch_preferences.ui:1045
+#: src/fsearch_preferences.ui:1046
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -1056,7 +1084,7 @@ msgstr ""
 "Если этот параметр включён, то двойной щелчок в колонке откроет выбранное "
 "местоположение."
 
-#: src/fsearch_preferences.ui:1062
+#: src/fsearch_preferences.ui:1063
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -1070,7 +1098,7 @@ msgstr ""
 "Если вы хотите выбрать только файл/папку, когда этот параметр активен, вам "
 "нужно одновременно удерживая <i>Ctrl</i>, щёлкнуть по файлу/папке."
 
-#: src/fsearch_preferences.ui:1079
+#: src/fsearch_preferences.ui:1080
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -1082,7 +1110,7 @@ msgstr ""
 "Если этот параметр включён, путь, который в настоящее время индексируется, "
 "отображается в строке состояния."
 
-#: src/fsearch_preferences.ui:1096
+#: src/fsearch_preferences.ui:1097
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -1094,7 +1122,7 @@ msgstr ""
 "Если этот параметр включён, при неудачном открытии файла или папки "
 "отобразится диалоговое окно с предупреждением."
 
-#: src/fsearch_preferences.ui:1113
+#: src/fsearch_preferences.ui:1114
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -1107,7 +1135,7 @@ msgstr ""
 "(например, «/»), будут автоматически сопоставляться с полным путем к файлу "
 "или папке."
 
-#: src/fsearch_preferences.ui:1130
+#: src/fsearch_preferences.ui:1131
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -1123,7 +1151,7 @@ msgstr ""
 "означает, что поисковый запрос <i>Foo</i> будет соответствовать "
 "<i>FooBar.txt</i>, но не <i>foobar.txt</i>."
 
-#: src/fsearch_preferences.ui:1147
+#: src/fsearch_preferences.ui:1148
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -1140,7 +1168,7 @@ msgstr ""
 "Если этот параметр отключён, все файлы и папки будут отображаться, при "
 "пустой поисковой записи."
 
-#: src/fsearch_preferences.ui:1166
+#: src/fsearch_preferences.ui:1167
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -1157,7 +1185,7 @@ msgstr ""
 "Если этот параметр отключён, поиск обновляется только после нажатия "
 "<i>Enter</i> или кнопки поиска. "
 
-#: src/fsearch_preferences.ui:1185
+#: src/fsearch_preferences.ui:1186
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -1169,7 +1197,7 @@ msgstr ""
 "Если этот параметр включён, база данных будет обновляться автоматически в "
 "фоновом режиме при запуске FSearch."
 
-#: src/fsearch_preferences.ui:1202
+#: src/fsearch_preferences.ui:1203
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1191,7 +1219,7 @@ msgstr ""
 "\t• <b>Одна файловая система:</b> Если этот параметр включён, FSearch не "
 "будет пересекать границы файловой системы для этой папки"
 
-#: src/fsearch_preferences.ui:1223
+#: src/fsearch_preferences.ui:1224
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1203,7 +1231,21 @@ msgstr ""
 "Эта кнопка открывает диалоговое окно, в котором вы можете выбрать папку для "
 "включения в базу данных поиска."
 
-#: src/fsearch_preferences.ui:1240
+#: src/fsearch_preferences.ui:1241
+msgid ""
+"<b>Add a specific path:</b>\n"
+"\n"
+"Type the full path of a folder here and click the button next to it to "
+"include that folder in the database. This is useful for adding a path "
+"directly without browsing for it."
+msgstr ""
+"<b>Добавить путь:</b>\n"
+"\n"
+"Введите полный путь к папке и нажмите кнопку рядом с ним, чтобы добавить эту "
+"папку в базу данных. Это удобно для добавления пути напрямую, без "
+"необходимости его поиска."
+
+#: src/fsearch_preferences.ui:1258
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1213,47 +1255,148 @@ msgstr ""
 "\n"
 "Это действие удаляет выбранную папку из списка включённых папок."
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1275
 msgid ""
-"<b>Excluded folders:</b>\n"
+"<b>Attempt to monitor:</b>\n"
 "\n"
-"This list contains all folders you want to exclude from the database.\n"
+"If enabled, FSearch watches this folder for changes and keeps the database "
+"up to date automatically, so you don't have to rescan manually.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database and "
-"can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
+"Monitoring isn't supported on every file system and uses a small amount of "
+"system resources per watched folder. For large directory trees with many "
+"files the system may run out of resources to watch them all."
 msgstr ""
-"<b>Исключённые папки:</b>\n"
+"<b>Пытаться отслеживать:</b>\n"
 "\n"
-"Этот список содержит все папки, которые вы хотите исключить из базы данных.\n"
+"Если этот параметр включён, FSearch будет отслеживать изменения в этой папке "
+"и автоматически обновлять базу данных, поэтому вам не нужно проводить "
+"сканирование вручную.\n"
 "\n"
-"\t• <b>Активно:</b> Если этот параметр включён, то путь будет исключён из "
-"базы и поиск в нем будет невозможен.\n"
-"\t• <b>Путь:</b> Полный путь, который необходимо исключить."
-
-#: src/fsearch_preferences.ui:1277
-msgid ""
-"<b>Exclude folder from database:</b>\n"
-"\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
-msgstr ""
-"<b>Исключить папку из базы данных:</b>\n"
-"\n"
-"Эта кнопка открывает диалоговое окно, в котором вы можете выбрать папку для "
-"исключения из базы данных."
+"Мониторинг поддерживается не на всех файловых системах и использует "
+"небольшое количество системных ресурсов на каждую отслеживаемую папку. Для "
+"больших разветвлённых каталогов с большим количеством файлов системе может "
+"не хватить ресурсов, чтобы просмотреть их все."
 
 #: src/fsearch_preferences.ui:1294
 msgid ""
+"<b>Scan after launch:</b>\n"
+"\n"
+"If enabled, this folder is rescanned every time FSearch starts, so the "
+"database reflects any changes made while FSearch wasn't running."
+msgstr ""
+"<b>Сканирование после запуска:</b>\n"
+"\n"
+"Если этот параметр включён, будет проводиться сканирование папки при каждом "
+"запуске FSearch, поэтому база данных будет отражать любые изменения, "
+"внесённые в промежутках между запусками FSearch."
+
+#: src/fsearch_preferences.ui:1311
+msgid ""
+"<b>Stay on one file system:</b>\n"
+"\n"
+"If enabled, FSearch won't cross file system boundaries while scanning this "
+"folder. Mounted file systems below it (e.g. external drives or network "
+"shares) are skipped."
+msgstr ""
+"<b>Оставаться в пределах одной файловой системы:</b>\n"
+"\n"
+"Если этот параметр включён, FSearch не будет пересекать границы файловых "
+"систем при сканировании этой папки. Примонтированные файловые системы под "
+"ней (например, внешние диски или сетевые ресурсы) будут пропущены."
+
+#: src/fsearch_preferences.ui:1328
+msgid ""
+"<b>Rescan every:</b>\n"
+"\n"
+"If enabled, this folder is rescanned automatically at the given interval. "
+"Use the hours and minutes fields to set how often the rescan happens.\n"
+"\n"
+"This is useful for folders on file systems that can't be monitored for "
+"changes."
+msgstr ""
+"<b>Проводить повторное сканирование каждые:</b>\n"
+"\n"
+"Если этот параметр включён, папка будет автоматически пересканирована с "
+"заданным интервалом. Используйте поля «часы» и «минуты», чтобы установить "
+"частоту проведения повторного сканирования.\n"
+"\n"
+"Это действие полезно для папок в файловых системах, которые невозможно "
+"отслеживать на предмет изменений."
+
+#: src/fsearch_preferences.ui:1347
+msgid ""
+"<b>Exclude rules:</b>\n"
+"\n"
+"This list contains rules for the files and folders you want to exclude from "
+"the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the rule is applied and matching items are "
+"excluded.\n"
+"\t• <b>Pattern:</b> The text matched against each item, interpreted "
+"according to the Type.\n"
+"\t• <b>Type:</b> How the pattern is interpreted — <i>Literal</i> (exact "
+"text), <i>Wildcard</i> (using * and ?) or <i>Regex</i> (a regular "
+"expression).\n"
+"\t• <b>Match:</b> Whether the pattern is matched against the item's <i>Full "
+"Path</i> or only its <i>Basename</i> (the name without the path).\n"
+"\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
+"or both."
+msgstr ""
+"<b>Правила исключения:</b>\n"
+"\n"
+"Этот список содержит правила для файлов и папок, которые вы хотите исключить "
+"из базы данных..\n"
+"\n"
+"\t• <b>Активно:</b> Если включено, то соответствующее правило будет "
+"применено и соответствующие элементы будут исключены из поиска.\n"
+"\t• <b>Шаблон:</b> Текст сопоставляется с каждым элементом, а результат "
+"интерпретируется в соответствии с типом.\n"
+"\t• <b>Тип:</b> Способ интерпретации шаблона — <i>Literal</i> (точный текст)"
+", <i>Wildcard</i> (используются «*» и «?») или <i>Regex</i> (регулярные "
+"выражения).\n"
+"\t• <b>Совпадение:</b> Соответствует ли шаблон правил элементу <i>Полный "
+"путь</i> или только <i>Базовое имя</i> (имя без указания пути).\n"
+"\t• <b>Применить к:</b> Применяются ли правила к <i>файлам</i>, <i>папкам</"
+"i> или к тому и другому."
+
+#: src/fsearch_preferences.ui:1370
+msgid ""
+"<b>Add exclude rule:</b>\n"
+"\n"
+"This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
+"Applies To columns to control what gets excluded from the database."
+msgstr ""
+"<b>Добавить правило исключения:</b>\n"
+"\n"
+"Это действие добавляет в список новое пустое правило. Отредактируйте столбцы "
+"«Шаблон», «Тип», «Совпадение» и «Применить к», чтобы контролировать, что "
+"будет исключено из поисковой базы данных."
+
+#: src/fsearch_preferences.ui:1387
+msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of excluded folders."
+"This removes the selected rule from the list of exclude rules."
 msgstr ""
 "<b>Удалить выбранный вариант:</b>\n"
 "\n"
-"Это действие удаляет выбранную папку из списка исключённых папок."
+"Это действие удаляет выбранное правило из списка правил исключения."
 
-#: src/fsearch_preferences.ui:1311
+#: src/fsearch_preferences.ui:1404
+msgid ""
+"<b>Restore default exclude rules:</b>\n"
+"\n"
+"This button restores the default set of exclude rules.\n"
+"\n"
+"⚠ All rules which were created or edited by the user will be lost! ⚠"
+msgstr ""
+"<b>Восстановить правила исключения, установленные по умолчанию:</b>\n"
+"\n"
+"Эта кнопка восстановит набор правил исключения, установленные по умолчанию.\n"
+"\n"
+"⚠ Все правила, созданные или изменённые пользователем, будут потеряны! ⚠"
+
+#: src/fsearch_preferences.ui:1423
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1269,7 +1412,7 @@ msgstr ""
 "все файлы или папки, которые начинаются с <i>.git</i> или <i>.cache</i> или "
 "заканчиваются на <i>.swp</i>."
 
-#: src/fsearch_preferences.ui:1328
+#: src/fsearch_preferences.ui:1440
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1281,11 +1424,11 @@ msgstr ""
 "Если этот параметр включён, скрытые файлы и папки будут исключены из базы "
 "данных <i> (т.е. все файлы и папки, начинающиеся с точки) </i>."
 
-#: src/fsearch_preferences.ui:1345
+#: src/fsearch_preferences.ui:1457
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr "Наведите мышью на параметр для получения подробной информации."
 
-#: src/fsearch_preferences.ui:1358
+#: src/fsearch_preferences.ui:1470
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1298,8 +1441,8 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
-"<b>Периодически обновлять базу данных через определенный промежуток "
-"времени:</b>\n"
+"<b>Периодически обновлять базу данных через определенный промежуток времени:"
+"</b>\n"
 "\n"
 "Если этот параметр включён, то база данных будет периодически обновляться с "
 "заданным интервалом времени пока работает FSearch.\n"
@@ -1310,7 +1453,7 @@ msgstr ""
 "\n"
 "<i> <tt>fsearch --update-database</tt> </i>"
 
-#: src/fsearch_preferences.ui:1379
+#: src/fsearch_preferences.ui:1491
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1327,7 +1470,7 @@ msgstr ""
 "будет открыт приложением, установленным по умолчанию для этого типа файлов, "
 "обычно это текстовый редактор."
 
-#: src/fsearch_preferences.ui:1396
+#: src/fsearch_preferences.ui:1508
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1349,7 +1492,7 @@ msgstr ""
 "\t• <b>Запрос:</b> Критерий поиска, по которому следует фильтровать базу "
 "данных"
 
-#: src/fsearch_preferences.ui:1417
+#: src/fsearch_preferences.ui:1529
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1360,7 +1503,7 @@ msgstr ""
 "Эта кнопка открывает диалоговое окно, в котором вы можете отредактировать "
 "новый фильтр."
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1546
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1370,7 +1513,7 @@ msgstr ""
 "\n"
 "Это кнопка удаляет выбранный в данный момент фильтр."
 
-#: src/fsearch_preferences.ui:1451
+#: src/fsearch_preferences.ui:1563
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1381,7 +1524,7 @@ msgstr ""
 "Эта кнопка открывает диалоговое окно, в котором вы можете редактировать "
 "выбранный фильтр."
 
-#: src/fsearch_preferences.ui:1468
+#: src/fsearch_preferences.ui:1580
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1395,7 +1538,7 @@ msgstr ""
 "\n"
 "⚠ Все фильтры, созданные или изменённые пользователем, будут потеряны! ⚠"
 
-#: src/fsearch_preferences.ui:1487
+#: src/fsearch_preferences.ui:1599
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1407,38 +1550,38 @@ msgstr ""
 "Если этот параметр включён, то при нажатии клавиши Escape приложение FSearch "
 "будет закрыто вместо сворачивания окна."
 
-#: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "Справка"
 
-#: src/fsearch_preferences_dialog.c:214
+#: src/fsearch_preferences_dialog.c:238
 msgid "Database"
 msgstr "База данных"
 
-#: src/fsearch_result_view.c:380
+#: src/fsearch_result_view.c:487
 msgid "Invalid row data"
 msgstr "Неверные данные в строке"
 
-#: src/fsearch_statusbar.c:57
+#: src/fsearch_statusbar.c:58
 #, c-format
 msgid "%'d Item"
 msgstr "%'d элемент"
 
-#: src/fsearch_statusbar.c:57 src/fsearch_statusbar.c:182
+#: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
 msgstr "%'d элемент(а/ов)"
 
-#: src/fsearch_statusbar.c:79
+#: src/fsearch_statusbar.c:80
 msgid "Querying…"
 msgstr "Идёт запрос…"
 
-#: src/fsearch_statusbar.c:171
+#: src/fsearch_statusbar.c:175
 msgid "Loading…"
 msgstr "Загрузка…"
 
-#: src/fsearch_statusbar.c:176
+#: src/fsearch_statusbar.c:180
 msgid "Scanning…"
 msgstr "Сканирование…"
 
@@ -1511,19 +1654,98 @@ msgstr "ПУТЬ"
 msgid "REGEX"
 msgstr "РЕГ ВЫР"
 
-#: src/fsearch_window.c:670 src/menus.ui:279
+#: src/fsearch_statusbar.ui:726
+msgid ""
+"The search was cancelled before it finished.\n"
+"<b>These results are incomplete.</b>"
+msgstr ""
+"Действие поиска было отменено до его завершения.\n"
+"<b>Эти результаты являются неполными.</b>"
+
+#: src/fsearch_statusbar.ui:756
+msgid "PARTIAL"
+msgstr "ЧАСТИЧНО"
+
+#: src/fsearch_welcome_dialog.ui:26
+msgid "What's New in FSearch"
+msgstr "Что появилось нового в FSearch"
+
+#: src/fsearch_welcome_dialog.ui:79
+msgid ""
+"<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
+msgstr ""
+"<span size=\"xx-large\" weight=\"bold\">Что появилось нового в FSearch 0.3</"
+"span>"
+
+#: src/fsearch_welcome_dialog.ui:149
+msgid "<big><b>File System Monitoring</b></big>"
+msgstr "<big><b>Мониторинг файловой системы</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:163
+msgid ""
+"You can now actively watch individual folders to eliminate frequent rescans. "
+"File changes then appear in your search results immediately.\n"
+"\n"
+"To enable this feature go to the Database section of the Preferences "
+"dialog.\n"
+"\n"
+"See the online documentation for more information:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
+msgstr ""
+"Теперь можно активно отслеживать отдельные папки, для избежания частого "
+"повторного сканирования. Изменения файлов будут немедленно отображаться в "
+"результатах поиска.\n"
+"\n"
+"Чтобы включить эту функцию, перейдите в раздел «База данных» диалогового "
+"окна «Параметры».\n"
+"\n"
+"Для получения дополнительной информации смотрите он-лайн документацию:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
+
+#: src/fsearch_welcome_dialog.ui:232
+msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
+msgstr "<big><b>Повторное сканирование отдельных папок по расписанию</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:246
+msgid ""
+"You can now configure automatic update intervals for individual folders "
+"independently and tailored to each distinct location."
+msgstr ""
+"Теперь можно настраивать интервалы автоматического обновления информации "
+"индивидуально для каждой из папок."
+
+#: src/fsearch_welcome_dialog.ui:309
+msgid "<big><b>Improved Exclude Rules</b></big>"
+msgstr "<big><b>Улучшенные правила исключения</b></big>"
+
+#: src/fsearch_welcome_dialog.ui:323
+msgid ""
+"You can now use wildcards and regular expressions to define more powerful "
+"exclude rules. \n"
+"Rules can be targeted specifically at files, folders, or both, and can be "
+"configured to match against either the basename or the full absolute path."
+msgstr ""
+"Теперь можно использовать подстановочные знаки и регулярные выражения для "
+"определения более эффективных правил исключения. \n"
+"Правила могут быть определены для файлов, папок по отдельности или вместе и "
+"могут быть настроены таким образом, чтобы соответствовать либо базовому "
+"имени, либо полному абсолютному пути."
+
+#: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
 msgstr "Размер"
 
-#: src/fsearch_window.c:684 src/menus.ui:271
+#: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
 msgstr "Расширение"
 
-#: src/fsearch_window.c:691 src/menus.ui:283
+#: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
 msgstr "Дата изменения"
 
-#: src/fsearch_window.c:705
+#: src/fsearch_window.c:801
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1608,57 +1830,48 @@ msgstr "Поиск…"
 msgid "Select a Filter"
 msgstr "Выбрать фильтр"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:110
 #, c-format
-msgid "Do you really want to open %'d file(s)?"
-msgstr "Вы действительно хотите открыть %'d файл(а/ов)?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "Вы действительно хотите открыть %'d файл?"
+msgstr[1] "Вы действительно хотите открыть %'d файла?"
+msgstr[2] "Вы действительно хотите открыть %'d файлов?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:115
 msgid "Opening Files…"
 msgstr "Открыть файл(ы)…"
 
-#: src/fsearch_window_actions.c:184
+#: src/fsearch_window_actions.c:198
 #, c-format
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "Вы действительно хотите удалить %'d файл(а/ов)?"
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "Вы действительно хотите удалить %'d файл?"
+msgstr[1] "Вы действительно хотите удалить %'d файла?"
+msgstr[2] "Вы действительно хотите удалить %'d файлов?"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:205
 msgid "Deleting files…"
 msgstr "Удаление файлов…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:205
 msgid "Moving files to trash…"
 msgstr "Перемещение файлов в корзину…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
+#: src/fsearch_window_actions.c:580
 msgid "Something went wrong."
 msgstr "Что-то пошло не так."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:263
 #, c-format
-msgid "Deleted %'d file(s)."
-msgstr "Удалено файлов: %'d."
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "Вы действительно хотите открыть %'d окно свойств файла?"
+msgstr[1] "Вы действительно хотите открыть %'d окна свойств файла?"
+msgstr[2] "Вы действительно хотите открыть %'d окон свойств файла?"
 
-#: src/fsearch_window_actions.c:223
-#, c-format
-msgid "Moved %'d file(s) to the trash."
-msgstr "Перемещено файлов в корзину: %'d."
-
-#: src/fsearch_window_actions.c:229
-msgid ""
-"The database needs to be updated before it becomes aware of those changes! "
-"This will be fixed with future updates."
-msgstr ""
-"База данных должна быть обновлена, прежде чем она узнает об этих изменениях! "
-"В дальнейшем это будет исправлено."
-
-#: src/fsearch_window_actions.c:255
-#, c-format
-msgid "Do you really want to open %'d file property windows?"
-msgstr "Вы действительно хотите открыть окно свойств файла %'d?"
-
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:270
 msgid "Opening file properties…"
 msgstr "Открытие свойств файла…"
 
@@ -1746,6 +1959,91 @@ msgstr "Путь + Название"
 msgid "Move to _Trash"
 msgstr "_Переместить в корзину"
 
+#~ msgctxt "Will be followed by the content type string."
+#~ msgid "Error when getting information for content type"
+#~ msgstr "Ошибка при получении информации для типа контента"
+
+#~ msgid ""
+#~ "<b>Excluded folders:</b>\n"
+#~ "\n"
+#~ "This list contains all folders you want to exclude from the database.\n"
+#~ "\n"
+#~ "\t• <b>Active:</b> If enabled, the path will excluded from the database "
+#~ "and can't be searched in.\n"
+#~ "\t• <b>Path:</b> The full path to be excluded."
+#~ msgstr ""
+#~ "<b>Исключённые папки:</b>\n"
+#~ "\n"
+#~ "Этот список содержит все папки, которые вы хотите исключить из базы "
+#~ "данных.\n"
+#~ "\n"
+#~ "\t• <b>Активно:</b> Если этот параметр включён, то путь будет исключён из "
+#~ "базы и поиск в нем будет невозможен.\n"
+#~ "\t• <b>Путь:</b> Полный путь, который необходимо исключить."
+
+#~ msgid ""
+#~ "<b>Exclude folder from database:</b>\n"
+#~ "\n"
+#~ "This button opens a dialog where you can select a folder you want to "
+#~ "exclude from the database."
+#~ msgstr ""
+#~ "<b>Исключить папку из базы данных:</b>\n"
+#~ "\n"
+#~ "Эта кнопка открывает диалоговое окно, в котором вы можете выбрать папку "
+#~ "для исключения из базы данных."
+
+#~ msgid ""
+#~ "<b>Database Update Required:</b> This update will migrate your database "
+#~ "index format. This may take a moment."
+#~ msgstr ""
+#~ "<b>Требуется обновление базы данных:</b> Это обновление перенесёт формат "
+#~ "индекса вашей базы данных. Это действие может занять продолжительное "
+#~ "время."
+
+#, c-format
+#~ msgid "Deleted %'d file."
+#~ msgid_plural "Deleted %'d files."
+#~ msgstr[0] "Удалён %'d файл."
+#~ msgstr[1] "Удалено %'d файла."
+#~ msgstr[2] "Удалено %'d файлов."
+
+#, c-format
+#~ msgid "Moved %'d file to the trash."
+#~ msgid_plural "Moved %'d files to the trash."
+#~ msgstr[0] "Перемещён в корзину %'d файл."
+#~ msgstr[1] "Перемещено в корзину %'d файла."
+#~ msgstr[2] "Перемещено в корзину %'d файлов."
+
+#~ msgid ""
+#~ "The database needs to be updated before it becomes aware of those "
+#~ "changes! This will be fixed with future updates."
+#~ msgstr ""
+#~ "База данных должна быть обновлена, прежде чем она узнает об этих "
+#~ "изменениях! В дальнейшем это будет исправлено."
+
+#~ msgid ""
+#~ "Enter path…\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Введите путь…\n"
+#~ "                                                "
+
+#~ msgid ""
+#~ "Add fixed path exclude\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Добавить фиксированный путь в исключение\n"
+#~ "                                                "
+
+#~ msgid "Monitor"
+#~ msgstr "Отслеживание"
+
+#~ msgid "Rescan database on startup"
+#~ msgstr "Пересканировать базу данных при запуске"
+
+#~ msgid "hour(s) and"
+#~ msgstr "час(ов) и"
+
 #~ msgid "Saving…"
 #~ msgstr "Сохранение…"
 
@@ -1772,13 +2070,6 @@ msgstr "_Переместить в корзину"
 
 #~ msgid "e.g. \".git;*.tmp\""
 #~ msgstr "например, «.git;*.tmp»"
-
-#~ msgid ""
-#~ "There are a lot of features which make searching as efficient and "
-#~ "powerful as possible. Such as:"
-#~ msgstr ""
-#~ "Существует множество функций, которые делают поиск максимально "
-#~ "эффективным и мощным. Такие, как:"
 
 #~ msgctxt "Will be followed by the path of the desktop file."
 #~ msgid "Error when launching desktop file"

@@ -1,7 +1,20 @@
 #include "fsearch_database_work.h"
 
+#include "fsearch_array.h"
+#include "fsearch_database_entry_info.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_database_index.h"
+#include "fsearch_database_index_properties.h"
+#include "fsearch_query.h"
+#include "fsearch_selection_type.h"
+
+#include <gio/gio.h>
+#include <glib-object.h>
 #include <glib.h>
-#include <string.h>
+#include <gtk/gtk.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 struct FsearchDatabaseWork {
     FsearchDatabaseWorkKind kind;
@@ -40,6 +53,20 @@ struct FsearchDatabaseWork {
             int32_t idx_1;
             int32_t idx_2;
         };
+
+        // FSEARCH_DATABASE_WORK_RESCAN_INDEX
+        struct {
+            GString *root_path;
+        };
+
+        // FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED
+        struct {
+            FsearchDatabaseIndex *rescan_new_index;
+        };
+        // FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED
+        struct {
+            DynamicArray *item_paths;
+        };
     };
 
     guint view_id;
@@ -72,6 +99,11 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
     case FSEARCH_DATABASE_WORK_QUIT:
         break;
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
+        g_string_free(g_steal_pointer(&work->root_path), TRUE);
+    case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
+        g_clear_pointer(&work->item_paths, darray_unref);
+        break;
     case FSEARCH_DATABASE_WORK_SCAN:
         g_clear_object(&work->include_manager);
         g_clear_object(&work->exclude_manager);
@@ -80,6 +112,9 @@ work_free(FsearchDatabaseWork *work) {
         g_clear_pointer(&work->index_store, work->index_store_free_func);
     case FSEARCH_DATABASE_WORK_SEARCH:
         g_clear_pointer(&work->query, fsearch_query_unref);
+        break;
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
+        g_clear_pointer(&work->rescan_new_index, fsearch_database_index_unref);
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
@@ -93,7 +128,7 @@ work_free(FsearchDatabaseWork *work) {
 FsearchDatabaseWork *
 fsearch_database_work_ref(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work != NULL, NULL);
-    g_return_val_if_fail(work->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&work->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&work->ref_count);
 
@@ -103,7 +138,7 @@ fsearch_database_work_ref(FsearchDatabaseWork *work) {
 void
 fsearch_database_work_unref(FsearchDatabaseWork *work) {
     g_return_if_fail(work != NULL);
-    g_return_if_fail(work->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&work->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&work->ref_count)) {
         g_clear_pointer(&work, work_free);
@@ -125,6 +160,27 @@ fsearch_database_work_new_rescan() {
 }
 
 FsearchDatabaseWork *
+fsearch_database_work_new_rescan_index(const char *root_path) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX;
+    work->root_path = g_string_new(root_path);
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable) {
+    g_return_val_if_fail(new_index, NULL);
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED;
+    work->rescan_new_index = fsearch_database_index_ref(new_index);
+    if (cancellable) {
+        // Carry forward the cancellable of the work item that requested this rescan
+        g_set_object(&work->cancellable, cancellable);
+    }
+    return work;
+}
+
+FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
                                FsearchDatabaseIndexPropertyFlags flags) {
@@ -137,20 +193,23 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_func)(void *), void (*index_free_func)(void *)) {
+fsearch_database_work_new_scan_finished(void *index_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN_FINISHED;
     work->index_store = index_ref_func(index_store);
     work->index_store_ref_func = index_ref_func;
     work->index_store_free_func = index_free_func;
+    if (cancellable) {
+        g_set_object(&work->cancellable, cancellable);
+    }
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_modify_selection(guint view_id,
-                                           FsearchSelectionType selection_type,
-                                           int32_t idx_1,
-                                           int32_t idx_2) {
+fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MODIFY_SELECTION;
     work->view_id = view_id;
@@ -201,6 +260,15 @@ fsearch_database_work_new_get_item_info(guint view_id, guint idx, FsearchDatabas
 }
 
 FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED;
+    work->item_paths = darray_ref(item_paths);
+
+    return work;
+}
+
+FsearchDatabaseWork *
 fsearch_database_work_new_load() {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_LOAD_FROM_FILE;
@@ -219,11 +287,10 @@ fsearch_database_work_new_save() {
 guint
 fsearch_database_work_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(
-        work->kind == FSEARCH_DATABASE_WORK_SEARCH || work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION
-        || work->kind == FSEARCH_DATABASE_WORK_SORT
-        || work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
-        0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH || work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION
+                             || work->kind == FSEARCH_DATABASE_WORK_SORT
+                             || work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+                         0);
     return work->view_id;
 }
 
@@ -344,6 +411,27 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
 }
 
 const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, 0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX, 0);
+    return work->root_path->str;
+}
+
+FsearchDatabaseIndex *
+fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED, NULL);
+    return fsearch_database_index_ref(work->rescan_new_index);
+}
+
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED, NULL);
+    return darray_ref(work->item_paths);
+}
+
+const char *
 fsearch_database_work_to_string(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, "NULL");
 
@@ -352,6 +440,10 @@ fsearch_database_work_to_string(FsearchDatabaseWork *work) {
         return "LOAD_FROM_FILE";
     case FSEARCH_DATABASE_WORK_RESCAN:
         return "RESCAN";
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
+        return "RESCAN_INDEX";
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED:
+        return "RESCAN_INDEX_FINISHED";
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
         return "SAVE_TO_FILE";
     case FSEARCH_DATABASE_WORK_SCAN:

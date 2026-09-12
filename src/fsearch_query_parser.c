@@ -1,4 +1,6 @@
 #include "fsearch_query_parser.h"
+
+#include "fsearch_filter.h"
 #include "fsearch_query_lexer.h"
 #include "fsearch_query_node.h"
 #include "fsearch_size_utils.h"

@@ -1,25 +1,32 @@
 #pragma once
 
+#include "fsearch_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
 
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <stdint.h>
 
 typedef struct FsearchDatabaseWork FsearchDatabaseWork;
 
 typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_LOAD_FROM_FILE,
     FSEARCH_DATABASE_WORK_RESCAN,
+    FSEARCH_DATABASE_WORK_RESCAN_INDEX,
+    FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED,
     FSEARCH_DATABASE_WORK_SAVE_TO_FILE,
     FSEARCH_DATABASE_WORK_SCAN,
     FSEARCH_DATABASE_WORK_SCAN_FINISHED,
     FSEARCH_DATABASE_WORK_SEARCH,
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+    FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
     FSEARCH_DATABASE_WORK_QUIT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
@@ -38,12 +45,30 @@ FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);
 
 FsearchDatabaseWork *
+fsearch_database_work_new_rescan_index(const char *root_path);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable);
+
+const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work);
+
+FsearchDatabaseIndex *
+fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work);
+
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work);
+
+FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
                                FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_func)(void *), void (*index_free_func)(void *));
+fsearch_database_work_new_scan_finished(void *index_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id,
@@ -62,6 +87,9 @@ fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_
 
 FsearchDatabaseWork *
 fsearch_database_work_new_get_item_info(guint view_id, guint index, FsearchDatabaseEntryInfoFlags flags);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_load(void);

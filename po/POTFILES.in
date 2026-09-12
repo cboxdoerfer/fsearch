@@ -1,6 +1,7 @@
 data/io.github.cboxdoerfer.FSearch.desktop.in.in
 data/io.github.cboxdoerfer.FSearch.metainfo.xml.in
 src/fsearch.c
+src/fsearch_database.c
 src/fsearch_database_file.c
 src/fsearch_database_index_store.c
 src/fsearch_database_preferences_widget.c
@@ -18,6 +19,7 @@ src/fsearch_preferences_dialog.c
 src/fsearch_result_view.c
 src/fsearch_statusbar.c
 src/fsearch_statusbar.ui
+src/fsearch_welcome_dialog.ui
 src/fsearch_window.c
 src/fsearch_window.ui
 src/fsearch_window_actions.c

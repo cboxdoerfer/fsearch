@@ -1,11 +1,20 @@
 #include "fsearch_folder_monitor_inotify.h"
 
-#include <config.h>
-#include <glib-unix.h>
-#include <sys/inotify.h>
-
 #include "fsearch_database_entry.h"
 #include "fsearch_folder_monitor_event.h"
+#include "fsearch_main_context_utils.h"
+
+#include <config.h>
+#include <errno.h>
+#include <glib.h>
+#include <glib-unix.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <sys/inotify.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 
 #define INOTIFY_FOLDER_MASK                                                                                            \
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
@@ -87,12 +96,13 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
+            // Membership check only -- never dereference an entry off this thread.
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntry *folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
-                                                               GINT_TO_POINTER(event->wd));
+            const bool is_watched = g_hash_table_contains(self->watch_descriptors_to_folders,
+                                                           GINT_TO_POINTER(event->wd));
             g_mutex_unlock(&self->mutex);
 
-            if (!folder) {
+            if (!is_watched) {
                 if (event->mask & IN_IGNORED) {
                     // The only expected situation when a watched entry is no longer present for a given event,
                     // is when the IN_IGNORED bit is set. This happens after a watched folder was removed or
@@ -113,7 +123,7 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
             g_async_queue_push(self->event_queue,
                                fsearch_folder_monitor_event_new(event->len ? event->name : NULL,
-                                                                folder,
+                                                                GINT_TO_POINTER(event->wd),
                                                                 get_index_event_kind_for_inotify_mask(event->mask),
                                                                 FSEARCH_FOLDER_MONITOR_INOTIFY,
                                                                 event->mask & IN_ISDIR ? true : false));
@@ -154,7 +164,7 @@ fsearch_folder_monitor_inotify_new(GMainContext *monitor_context, GAsyncQueue *e
     self->watch_descriptors_to_folders = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
     self->watched_folders_to_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
 
-    self->monitor_context = g_main_context_ref(monitor_context);
+    self->monitor_context = monitor_context;
 
     self->monitor_source = g_unix_fd_source_new(self->fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
     g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
@@ -168,11 +178,12 @@ fsearch_folder_monitor_inotify_free(FsearchFolderMonitorInotify *self) {
     g_return_if_fail(self);
 
     if (self->monitor_source) {
-        g_source_destroy(self->monitor_source);
+        fsearch_main_context_blocking_call(self->monitor_context,
+                                           (FsearchMainContextFunc)g_source_destroy,
+                                           self->monitor_source);
     }
-    g_clear_pointer(&self->monitor_source, g_source_unref);
 
-    g_clear_pointer(&self->monitor_context, g_main_context_unref);
+    g_clear_pointer(&self->monitor_source, g_source_unref);
 
     unwatch_all(self);
     g_clear_pointer(&self->watched_folders_to_descriptors, g_hash_table_unref);
@@ -241,3 +252,10 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
     }
 }
 
+FsearchDatabaseEntry *
+fsearch_folder_monitor_inotify_resolve(FsearchFolderMonitorInotify *self, gpointer handle) {
+    g_return_val_if_fail(self, NULL);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return g_hash_table_lookup(self->watch_descriptors_to_folders, handle);
+}

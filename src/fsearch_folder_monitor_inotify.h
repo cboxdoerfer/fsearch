@@ -17,3 +17,6 @@ fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchD
 
 void
 fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder);
+
+FsearchDatabaseEntry *
+fsearch_folder_monitor_inotify_resolve(FsearchFolderMonitorInotify *self, gpointer handle);

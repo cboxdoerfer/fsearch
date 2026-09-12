@@ -3,8 +3,6 @@
 #include <gio/gio.h>
 
 #include "fsearch_database_entry_info.h"
-#include "fsearch_database_exclude_manager.h"
-#include "fsearch_database_include_manager.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_work.h"
@@ -20,6 +18,11 @@ typedef void
 
 void
 fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work);
+
+// Cancels the most recently queued scan (SCAN/RESCAN/RESCAN_INDEX), however it was triggered.
+// No-op if none is pending. Only the filesystem walk can be aborted, not applying its results.
+void
+fsearch_database_cancel_scan(FsearchDatabase *self);
 
 FsearchResult
 fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
@@ -44,6 +47,8 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfo **info_out);
 
 FsearchDatabase *
-fsearch_database_new(GFile *file);
+fsearch_database_new(GFile *file,
+                     FsearchDatabaseIncludeManager *include_manager,
+                     FsearchDatabaseExcludeManager *exclude_manager);
 
 G_END_DECLS

@@ -5,8 +5,8 @@
 #include <stdint.h>
 
 #include "fsearch_array.h"
-#include "fsearch_database_index_properties.h"
 #include "fsearch_database_entry_flags.h"
+#include "fsearch_database_index_properties.h"
 
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
@@ -20,24 +20,25 @@ typedef struct FsearchDatabaseEntry FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryCompareContext {
     GHashTable *file_type_table;
     GHashTable *entry_to_file_type_table;
-    DynamicArrayCompareDataFunc next_comp_func;
-    void *next_comp_func_data;
-    GDestroyNotify next_comp_func_data_free_func;
+    FsearchDatabaseSortOrderChain chain;
 } FsearchDatabaseEntryCompareContext;
 
 void
 db_entry_compare_context_free(FsearchDatabaseEntryCompareContext *ctx);
 
 FsearchDatabaseEntryCompareContext *
-db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
-                             void *next_comp_func_data,
-                             GDestroyNotify next_comp_func_data_free_func);
+db_entry_compare_context_new(FsearchDatabaseSortOrderChain chain);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseEntryCompareContext, db_entry_compare_context_free)
 
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry);
 
 bool
 db_entry_is_file(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_sibling(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_sibling);
 
 bool
 db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_ancestor);
@@ -50,9 +51,6 @@ db_entry_folder_get_num_files(FsearchDatabaseEntry *entry);
 
 uint32_t
 db_entry_folder_get_num_folders(FsearchDatabaseEntry *entry);
-
-void
-db_entry_set_index(FsearchDatabaseEntry *entry, uint32_t idx);
 
 void
 db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime);
@@ -70,10 +68,13 @@ void
 db_entry_set_parent_no_update(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
 
 void
-db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
+db_entry_increment_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
 
 void
-db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
+db_entry_set_parent_update_childcount(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
+
+void
+db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent);
 
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry);
@@ -87,14 +88,14 @@ db_entry_get_idx(FsearchDatabaseEntry *entry);
 uint32_t
 db_entry_get_depth(FsearchDatabaseEntry *entry);
 
-uint32_t
-db_entry_get_db_index(FsearchDatabaseEntry *entry);
-
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);
 
 GString *
 db_entry_get_path_full(FsearchDatabaseEntry *entry);
+
+const char *
+db_entry_get_root_path(FsearchDatabaseEntry *entry);
 
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
@@ -168,6 +169,11 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseE
 int
 db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
+// Applies each property in `data`'s chain (a FsearchDatabaseEntryCompareContext *) in order until
+// a non-zero result, giving the full, deterministic total order that chain represents.
+int
+db_entry_compare_entries_by_chain(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data);
+
 FsearchDatabaseEntry *
 db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
              const char *name,
@@ -190,20 +196,20 @@ db_entry_get_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty
 bool
 db_entry_set_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size);
 
+void
+db_entry_set_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *src, size_t size);
+
 size_t *
 db_entry_get_attribute_offsets(FsearchDatabaseIndexPropertyFlags attribute_flags);
 
 uint32_t
 db_entry_get_member_flags(FsearchDatabaseEntry *entry);
 
-uint32_t
-db_entry_get_index(FsearchDatabaseEntry *entry);
-
 const char *
 db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offset);
 
 void
-db_entry_get_attribute_for_offest(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size);
+db_entry_get_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size);
 
 bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
@@ -215,8 +221,14 @@ db_entry_set_unmonitored_fanotify(FsearchDatabaseEntry *entry);
 void
 db_entry_set_monitored_fanotify(FsearchDatabaseEntry *entry);
 
+void
+db_entry_set_monitored_failed(FsearchDatabaseEntry *entry);
+
 bool
 db_entry_is_monitored_fanotify(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_monitored_failed(FsearchDatabaseEntry *entry);
 
 void
 db_entry_set_unmonitored_inotify(FsearchDatabaseEntry *entry);

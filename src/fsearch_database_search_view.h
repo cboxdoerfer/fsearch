@@ -1,15 +1,13 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_query.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_database_entries_container.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
+#include "fsearch_query.h"
 
-#include <glib.h>
 #include <gio/gio.h>
-#include <glib/gmacros.h>
+#include <glib.h>
 #include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -24,19 +22,26 @@ fsearch_database_search_view_new(uint32_t id,
                                  DynamicArray *files,
                                  DynamicArray *folders,
                                  GHashTable *old_selection,
-                                 FsearchDatabaseIndexProperty sort_order,
-                                 FsearchDatabaseIndexProperty secondary_sort_order,
-                                 GtkSortType sort_type);
+                                 FsearchDatabaseSortOrderChain chain,
+                                 GtkSortType sort_type,
+                                 bool is_complete);
 
 void
 fsearch_database_search_view_free(FsearchDatabaseSearchView *view);
 
 // Manipulation
 void
-fsearch_database_search_view_add(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders);
+fsearch_database_search_view_add(FsearchDatabaseSearchView *view,
+                                 DynamicArray *files,
+                                 DynamicArray *folders,
+                                 FsearchDatabaseIndexPropertyFlags affected_sort_orders);
 
 void
-fsearch_database_search_view_remove(FsearchDatabaseSearchView *view, DynamicArray *files, DynamicArray *folders);
+fsearch_database_search_view_remove(FsearchDatabaseSearchView *view,
+                                    DynamicArray *files,
+                                    DynamicArray *folders,
+                                    FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                    bool marked);
 
 void
 fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,

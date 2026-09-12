@@ -1,19 +1,19 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
 #include "fsearch_database_index_properties.h"
+#include "fsearch_database_rescan_manager.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
 
-#include <glib/gmacros.h>
-#include <glib.h>
 #include <gio/gio.h>
+#include <glib.h>
 #include <gtk/gtkenums.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -29,14 +29,15 @@ typedef enum {
     FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED,
     FSEARCH_DATABASE_INDEX_STORE_EVENT_PROGRESS,
     FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED,
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_STARTED,
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_FINISHED,
     NUM_FSEARCH_DATABASE_STORE_EVENTS,
 } FsearchDatabaseIndexStoreEventKind;
 
-typedef void
-(*FsearchDatabaseIndexStoreEventFunc)(FsearchDatabaseIndexStore *store,
-                                      FsearchDatabaseIndexStoreEventKind kind,
-                                      gpointer data,
-                                      gpointer user_data);
+typedef void (*FsearchDatabaseIndexStoreEventFunc)(FsearchDatabaseIndexStore *store,
+                                                   FsearchDatabaseIndexStoreEventKind kind,
+                                                   gpointer data,
+                                                   gpointer user_data);
 
 // Object management
 FsearchDatabaseIndexStore *
@@ -68,14 +69,28 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
 void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store);
 
-// Getters
-FsearchDatabaseEntriesContainer *
-fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *store,
-                                       FsearchDatabaseIndexProperty sort_order);
+// True once fsearch_database_index_store_start() has completed without being cancelled.
+// False if it was never called, is still in progress, or was aborted via `cancellable`.
+bool
+fsearch_database_index_store_is_running(FsearchDatabaseIndexStore *store);
 
-FsearchDatabaseEntriesContainer *
-fsearch_database_index_store_get_folders(FsearchDatabaseIndexStore *store,
-                                         FsearchDatabaseIndexProperty sort_order);
+FsearchDatabaseIndex *
+fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, const char *path);
+
+bool
+fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *new_index);
+
+void
+fsearch_database_index_store_remove_paths(FsearchDatabaseIndexStore *store,
+                                          DynamicArray *item_paths,
+                                          FsearchDatabaseRescanManager *rescan_manager);
+
+// Getters
+FsearchDatabaseChunkedArray *
+fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order);
+
+FsearchDatabaseChunkedArray *
+fsearch_database_index_store_get_folders(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order);
 
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_store_get_flags(FsearchDatabaseIndexStore *store);
@@ -108,8 +123,7 @@ FsearchDatabaseSearchInfo *
 fsearch_database_index_store_get_search_info(FsearchDatabaseIndexStore *store, uint32_t id);
 
 bool
-fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *store,
-                                           FsearchDatabaseEntriesContainer *container);
+fsearch_database_index_store_has_chunks(FsearchDatabaseIndexStore *store, FsearchDatabaseChunkedArray *chunks);
 
 // Manipulation
 GMutexLocker *
