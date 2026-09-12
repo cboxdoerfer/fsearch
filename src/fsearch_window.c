@@ -858,7 +858,7 @@ on_listview_row_is_selected(int row, gpointer user_data) {
 }
 
 static void
-append_path_to_uri_list(FsearchDatabaseEntry *entry, gpointer userdata) {    
+append_path_to_uri_list(FsearchDatabaseEntry *entry, gpointer userdata) {
     GString *uri_list = (GString *)userdata;
     g_autoptr(GString) path = db_entry_get_path_full(entry);
     gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
@@ -869,7 +869,7 @@ append_path_to_uri_list(FsearchDatabaseEntry *entry, gpointer userdata) {
 
 static void
 on_drag_data_get(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *selection_data, guint info, guint time, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);    
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     GString *uri_list = g_string_new(NULL);
     fsearch_application_window_selection_for_each(win, append_path_to_uri_list, uri_list);
@@ -884,10 +884,11 @@ on_drag_data_get(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *s
 }
 
 static void
-on_drag(FsearchListView *lv, int row, gpointer user_data) {
+on_drag(FsearchListView *lv, gpointer user_data) {
     GtkTargetEntry targets[] = {{"text/uri-list", 0, 0}};
-    GtkTargetList *target_list = gtk_target_list_new(targets, 1);
-    gtk_drag_begin_with_coordinates(GTK_WIDGET(lv), target_list, GDK_ACTION_COPY, 1, NULL, -1, -1);
+    GtkTargetList *target_list = gtk_target_list_new(targets, G_N_ELEMENTS(targets));
+    gtk_drag_begin_with_coordinates(GTK_WIDGET(lv), target_list, GDK_ACTION_COPY, GDK_BUTTON_PRIMARY, NULL, -1, -1);
+    gtk_target_list_unref(target_list);
 }
 
 static void

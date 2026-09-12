@@ -746,6 +746,11 @@ fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modif
     }
 }
 
+static gint
+get_row_drag_end_position(FsearchListView *view, int32_t row) {
+    return view->row_drag_end_position_array[row % view->row_drag_end_position_array_size];
+}
+
 static void
 on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                                                  gint n_press,
@@ -815,26 +820,28 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             else {
                 gboolean is_selected = fsearch_list_view_is_selected(view, row_idx);
 
-                if(!is_selected) {
+                if (!is_selected) {
+                    view->cursor_idx = row_idx;
                     fsearch_list_view_selection_clear_silent(view);
                     fsearch_list_view_selection_toggle_silent(view, row_idx);
                     if (view->single_click_activate) {
                         FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
                         if (col) {
                             g_signal_emit(view,
-                                        signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
-                                        0,
-                                        col->type,
-                                        get_row_idx_for_sort_type(view, row_idx));
+                                          signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
+                                          0,
+                                          col->type,
+                                          get_row_idx_for_sort_type(view, row_idx));
                         }
                     }
                 }
 
                 if (!view->single_click_activate) {
                     FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
-                    if(col) {
-                        // Dragging only starts when clicking in the range of 0 to "drag end x position". otherwise - it's a rubberband selection operation
-                        gint drag_end_x = view->row_drag_end_position_array[row_idx % view->row_drag_end_position_array_size];
+                    if (col) {
+                        // Dragging only starts when the press lands on the name (icon + text) of an unselected row,
+                        // or anywhere on an already selected row. Otherwise it's a rubberband selection.
+                        const gint drag_end_x = get_row_drag_end_position(view, row_idx);
                         view->drag_and_drop_started = (x_view < drag_end_x) || is_selected;
                     }
                 }
@@ -928,7 +935,7 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
                                           FsearchListView *view) {
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
 
-    view->single_row_selected  = view->rubberband_start_idx == view->rubberband_end_idx;
+    view->single_row_selected = view->rubberband_start_idx == view->rubberband_end_idx;
 
     if (view->rubberband_drag_mode) {
         view->rubberband_drag_mode = FALSE;
@@ -1154,8 +1161,7 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     //     return;
     // }
 
-    if(view->drag_and_drop_started)
-    {
+    if (view->drag_and_drop_started) {
         view->drag_and_drop_started = FALSE;
         g_signal_emit(view, signals[FSEARCH_LIST_VIEW_SIGNAL_DRAG], 0);
         return;
@@ -1952,10 +1958,13 @@ fsearch_list_view_destroy(GtkWidget *widget) {
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->destroy(widget);
 }
 
-static void fsearch_list_view_finalize(GObject *obj) {
+static void
+fsearch_list_view_finalize(GObject *obj) {
     FsearchListView *view = FSEARCH_LIST_VIEW(obj);
 
-    g_free(view->row_drag_end_position_array);
+    g_clear_pointer(&view->row_drag_end_position_array, g_free);
+
+    G_OBJECT_CLASS(fsearch_list_view_parent_class)->finalize(obj);
 }
 
 static void
@@ -2092,8 +2101,7 @@ fsearch_list_view_init(FsearchListView *view) {
     // gtk_style_context_add_class(style, GTK_STYLE_CLASS_CELL);
 
     view->row_drag_end_position_array_size = DEFAULT_MAX_ROWS_IN_VIEWPORT;
-    view->row_drag_end_position_array = g_new(gint, view->row_drag_end_position_array_size);
-
+    view->row_drag_end_position_array = g_new0(gint, view->row_drag_end_position_array_size);
 }
 
 FsearchListView *
@@ -2453,15 +2461,13 @@ fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean valu
 
 void
 fsearch_list_view_set_row_drag_end_position(FsearchListView *view, int32_t row, gint end_x) {
-    gint num_rows_in_view = fsearch_list_view_num_rows_for_view_height(view) * 2;
-    guint length = view->row_drag_end_position_array_size;
-    if(num_rows_in_view > length) {
+    const guint num_rows_in_view = fsearch_list_view_num_rows_for_view_height(view) * 2;
+    if (num_rows_in_view > view->row_drag_end_position_array_size) {
         view->row_drag_end_position_array_size = num_rows_in_view;
-        view->row_drag_end_position_array = g_realloc(view->row_drag_end_position_array, view->row_drag_end_position_array_size * sizeof(gint));
+        view->row_drag_end_position_array = g_renew(gint, view->row_drag_end_position_array, num_rows_in_view);
     }
-    view->row_drag_end_position_array[row % length] = end_x;
+    view->row_drag_end_position_array[row % view->row_drag_end_position_array_size] = end_x;
 }
-
 
 FsearchListViewColumn *
 fsearch_list_view_column_ref(FsearchListViewColumn *col) {
