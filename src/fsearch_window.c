@@ -667,13 +667,9 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexPr
     FsearchApplicationWindow *self = user_data;
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    int launch_folder = false;
-    if (config->double_click_path && col == DATABASE_INDEX_PROPERTY_PATH) {
-        launch_folder = true;
-    }
+    const bool launch_folder = config->double_click_path && col == DATABASE_INDEX_PROPERTY_PATH;
 
-    fsearch_window_action_open_generic(self, launch_folder ? true : false, true);
-    return;
+    fsearch_window_action_open_row(self, (uint32_t)row_idx, launch_folder);
 }
 
 static void
@@ -1321,6 +1317,13 @@ fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
 
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     fsearch_database_selection_foreach(self->db, win_id, func, user_data);
+}
+
+FsearchDatabaseEntryInfo *
+fsearch_application_window_get_entry_info_for_row(FsearchApplicationWindow *self, uint32_t row_idx) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+
+    return fsearch_result_view_get_entry_info(self->result_view, row_idx);
 }
 
 void

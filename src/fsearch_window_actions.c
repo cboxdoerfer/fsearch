@@ -300,15 +300,20 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
 }
 
 static void
-fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
+fsearch_window_action_dbus_open_folder(GList *full_paths) {
     GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
     if (!connection) {
         g_debug("[open_folder] failed to get bus connection");
+        return;
     }
 
-    const guint num_selected_rows = fsearch_application_window_get_num_selected(win);
-    g_autoptr(GPtrArray) file_array = g_ptr_array_new_full(num_selected_rows, g_free);
-    fsearch_application_window_selection_for_each(win, prepend_path_uri_to_array, &file_array);
+    g_autoptr(GPtrArray) file_array = g_ptr_array_new_full(g_list_length(full_paths), g_free);
+    for (GList *p = full_paths; p; p = p->next) {
+        char *file_uri = g_filename_to_uri(p->data, NULL, NULL);
+        if (file_uri) {
+            g_ptr_array_add(file_array, file_uri);
+        }
+    }
 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
@@ -544,27 +549,34 @@ has_folder_open_cmd(FsearchConfig *config) {
     return config->folder_open_cmd && !fsearch_string_is_empty(config->folder_open_cmd);
 }
 
-void
-fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
-    const guint selected_rows = fsearch_application_window_get_num_selected(win);
-    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
-        return;
-    }
-    const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
+typedef enum {
+    OPEN_MODE_FILES,
+    OPEN_MODE_PARENT_CMD,
+    OPEN_MODE_PARENT_BUS,
+    OPEN_MODE_PARENT_PATHS,
+} FsearchOpenMode;
 
+static FsearchOpenMode
+get_open_mode(bool open_parent_folder) {
+    if (!open_parent_folder) {
+        return OPEN_MODE_FILES;
+    }
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    if (has_folder_open_cmd(config)) {
+        return OPEN_MODE_PARENT_CMD;
+    }
+    if (fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT)) {
+        return OPEN_MODE_PARENT_BUS;
+    }
+    return OPEN_MODE_PARENT_PATHS;
+}
+
+static void
+open_paths(FsearchApplicationWindow *win, GList *paths, FsearchOpenMode mode, bool triggered_with_mouse) {
     g_autoptr(GString) error_message = g_string_sized_new(8192);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    const bool folder_open_cmd_exists = has_folder_open_cmd(config);
-    GList *paths = NULL;
-    if (open_parent_folder && !folder_open_cmd_exists) {
-        fsearch_application_window_selection_for_each(win, collect_selected_entry_parent_path, &paths);
-    }
-    else {
-        fsearch_application_window_selection_for_each(win, collect_selected_entry_path, &paths);
-    }
-
-    if (open_parent_folder && folder_open_cmd_exists) {
+    if (mode == OPEN_MODE_PARENT_CMD) {
         fsearch_file_utils_open_path_list_with_command(paths, config->folder_open_cmd, error_message);
 
         if (error_message->len == 0) {
@@ -584,8 +596,8 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
             }
         }
     }
-    else if (open_parent_folder && has_file_manager_on_bus) {
-        fsearch_window_action_dbus_open_folder(win);
+    else if (mode == OPEN_MODE_PARENT_BUS) {
+        fsearch_window_action_dbus_open_folder(paths);
     }
     else {
         GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
@@ -604,6 +616,42 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
     }
 
     g_list_free_full(paths, g_free);
+}
+
+void
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
+    const guint selected_rows = fsearch_application_window_get_num_selected(win);
+    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
+        return;
+    }
+
+    const FsearchOpenMode mode = get_open_mode(open_parent_folder);
+
+    GList *paths = NULL;
+    fsearch_application_window_selection_for_each(win,
+                                                  mode == OPEN_MODE_PARENT_PATHS ? collect_selected_entry_parent_path
+                                                                                 : collect_selected_entry_path,
+                                                  &paths);
+
+    open_paths(win, paths, mode, triggered_with_mouse);
+}
+
+void
+fsearch_window_action_open_row(FsearchApplicationWindow *win, uint32_t row_idx, bool open_parent_folder) {
+    g_autoptr(FsearchDatabaseEntryInfo) info = fsearch_application_window_get_entry_info_for_row(win, row_idx);
+    if (!info) {
+        g_debug("[open_row] no info for row %u yet, ignoring activation", row_idx);
+        return;
+    }
+
+    const FsearchOpenMode mode = get_open_mode(open_parent_folder);
+    GString *path = mode == OPEN_MODE_PARENT_PATHS ? fsearch_database_entry_info_get_path(info)
+                                                   : fsearch_database_entry_info_get_path_full(info);
+    if (!path) {
+        return;
+    }
+
+    open_paths(win, g_list_append(NULL, g_strdup(path->str)), mode, true);
 }
 
 static void

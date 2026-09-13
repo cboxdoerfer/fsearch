@@ -114,6 +114,15 @@ set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info,
     pango_layout_set_attributes(layout, attrs);
 }
 
+FsearchDatabaseEntryInfo *
+fsearch_result_view_get_entry_info(FsearchResultView *view, uint32_t row) {
+    FsearchDatabaseEntryInfo *info = NULL;
+    if (!try_get_entry_info(view, row, &info) || !info) {
+        return NULL;
+    }
+    return fsearch_database_entry_info_ref(info);
+}
+
 char *
 fsearch_result_view_query_tooltip(FsearchResultView *view,
                                   uint32_t row,

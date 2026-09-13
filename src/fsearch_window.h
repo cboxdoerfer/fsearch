@@ -107,6 +107,9 @@ fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
                                               FsearchDatabaseForeachFunc func,
                                               gpointer user_data);
 
+FsearchDatabaseEntryInfo *
+fsearch_application_window_get_entry_info_for_row(FsearchApplicationWindow *self, uint32_t row_idx);
+
 void
 fsearch_application_window_toggle_app_menu(FsearchApplicationWindow *self);
 G_END_DECLS
