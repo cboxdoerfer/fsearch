@@ -28,3 +28,6 @@ fsearch_window_actions_update(FsearchApplicationWindow *self);
 
 void
 fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse);
+
+void
+fsearch_window_action_open_row(FsearchApplicationWindow *win, uint32_t row_idx, bool open_parent_folder);
