@@ -665,10 +665,9 @@ parse_close_bracket(FsearchQueryParseContext *parse_ctx) {
 
 static GList *
 parse_open_bracket(FsearchQueryParseContext *parse_ctx) {
-    GList *res = get_implicit_and_if_necessary(parse_ctx, parse_ctx->last_token, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
     parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
     push_query_token(parse_ctx->operator_stack, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
-    return res;
+    return NULL;
 }
 
 GList *
@@ -685,10 +684,12 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx,
         FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
         FsearchQueryToken last_token = parse_ctx->last_token;
 
-        // When a NOT operator is parsed, an implicit AND is added in the process (if necessary)
-        // so in that case an additional implicit AND check before adding the parsed result to the final list
-        // isn't necessary anymore and can be skipped
-        bool skip_implicit_and_check = false;
+        // Must be emitted before the token is parsed, since parsing can descend into a bracketed
+        // sub-expression (e.g. `case:(a || b)`) and push the AND onto the operator stack too late.
+        GList *implicit_and = NULL;
+        if (is_operand_token(token) || token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+            implicit_and = get_implicit_and_if_necessary(parse_ctx, last_token, token);
+        }
 
         GList *to_append = NULL;
         switch (token) {
@@ -699,7 +700,6 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx,
                 // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
                 // so even numbers of NOT operators get ignored and for uneven numbers we add a single one only
                 if (is_operator_token_followed_by_operand(parse_ctx->lexer, token)) {
-                    skip_implicit_and_check = true;
                     to_append = get_implicit_and_if_necessary(parse_ctx, last_token, token);
                     to_append = g_list_concat(to_append, parse_operator(parse_ctx, token));
                 }
@@ -757,10 +757,8 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx,
             break;
         }
 
+        res = g_list_concat(res, implicit_and);
         if (to_append) {
-            if (!skip_implicit_and_check) {
-                res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, last_token, token));
-            }
             parse_ctx->last_token = token;
             res = g_list_concat(res, to_append);
         }
