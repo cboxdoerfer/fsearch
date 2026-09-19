@@ -437,14 +437,12 @@ remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destinati
 
     while (chunk_idx < darray_get_num_items(self->chunks)) {
         if (num_entries_known && removed_entries >= num_expected) {
-            g_assert(num_expected == removed_entries);
             break;
         }
         DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
         uint32_t entry_idx = entry_start_idx;
         while (entry_idx < darray_get_num_items(chunk)) {
             if (num_entries_known && removed_entries >= num_expected) {
-                g_assert(num_expected == removed_entries);
                 break;
             }
             FsearchDatabaseEntry *maybe_marked = darray_get_item(chunk, entry_idx);
@@ -458,6 +456,12 @@ remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destinati
                         break; // End of contiguous block
                     }
                     n_elements++;
+                }
+
+                if (num_entries_known) {
+                    // The block may be longer than what the caller asked for. Removing the surplus would
+                    // free entries the caller still owns, so stop at the budget
+                    n_elements = MIN(n_elements, num_expected - removed_entries);
                 }
 
                 // Steal or drop the entire contiguous block at once to minimize memmoves
@@ -479,10 +483,10 @@ remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destinati
         entry_start_idx = 0;
     }
 
-    // Sanity check
     if (num_entries_known && removed_entries != num_expected) {
-        g_debug("[chunked_array] expected %u marked entries, found %u", num_expected, removed_entries);
-        g_assert_not_reached();
+        // The caller's count disagrees with the marks. Carry on with what was actually removed rather
+        // than taking the process down
+        g_warning("[chunked_array] expected %u marked entries, found %u", num_expected, removed_entries);
     }
 
     self->num_entries -= removed_entries;
