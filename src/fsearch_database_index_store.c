@@ -265,8 +265,8 @@ index_store_remove_from_store_worker(FsearchDatabaseChunkedArray *chunks, Dynami
     if (marked && num_entries > num_total / 100) {
         // When removing lots of entries, its usually more efficient to walk the entire list of entries and remove
         // marked ones in bulk
-        // Mismatches are reported by remove_marked_folders itself
-        fsearch_database_chunked_array_remove_marked_folders(chunks, (int32_t)num_entries);
+        uint32_t removed_entries = fsearch_database_chunked_array_remove_marked_folders(chunks, (int32_t)num_entries);
+        g_assert(removed_entries == num_entries);
     }
     else {
         // When there are only few entries to be removed, we avoid iterating over the entire list of entires

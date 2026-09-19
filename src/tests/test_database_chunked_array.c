@@ -1149,6 +1149,97 @@ test_steal_descendants_spanning_multiple_chunks(void) {
  * remove_marked_folders
  * ------------------------------------------------------------------------ */
 
+#define CHUNKED_ARRAY_LOG_DOMAIN "fsearch-database-chunked-array"
+
+// A caller asking for fewer entries than are actually marked must not have the surplus removed:
+// with an entry_free_func set they'd be freed while the caller still owns them.
+static void
+test_remove_marked_stops_at_expected_count(void) {
+    g_autoptr(DynamicArray) input = make_sorted_files("f", 20);
+    for (uint32_t i = 0; i < 10; i++) {
+        db_entry_set_mark(darray_get_item(input, i), 1);
+    }
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr, 5), ==, 5);
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 15);
+
+    // Every surviving entry must still be readable; the five still-marked ones in particular
+    g_autoptr(DynamicArray) rest = fsearch_database_chunked_array_get_joined(arr);
+    for (uint32_t i = 0; i < darray_get_num_items(rest); i++) {
+        g_assert_nonnull(db_entry_get_name_raw(darray_get_item(rest, i)));
+    }
+}
+
+// Fewer marked entries than the caller expected is reported, not fatal.
+static void
+test_remove_marked_reports_count_mismatch(void) {
+    g_autoptr(DynamicArray) input = make_sorted_files("f", 20);
+    for (uint32_t i = 0; i < 3; i++) {
+        db_entry_set_mark(darray_get_item(input, i), 1);
+    }
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_NAME,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    g_test_expect_message(CHUNKED_ARRAY_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "*expected 10 marked entries, found 3*");
+    g_assert_cmpuint(fsearch_database_chunked_array_remove_marked_folders(arr, 10), ==, 3);
+    g_test_assert_expected_messages();
+
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 17);
+}
+
+// A descendant count that doesn't match the array must fall back to the scan that doesn't trust it,
+// rather than ripping out whatever happens to sit next to the folder.
+static void
+test_steal_descendants_wrong_count_falls_back(void) {
+    FsearchDatabaseEntry *root = make_folder("root", NULL);
+    FsearchDatabaseEntry *sub = make_folder("sub", root);
+
+    // `tub` sorts after `sub`, so its files sit directly behind sub's - an over-claimed count
+    // reaches into them instead of running off the end of the array
+    FsearchDatabaseEntry *tub = make_folder("tub", root);
+
+    g_autoptr(DynamicArray) input = darray_new(8);
+    darray_add_item(input, make_file_in("aaa_before", root));
+    darray_add_item(input, make_file_in("f1", sub));
+    darray_add_item(input, make_file_in("f2", sub));
+    darray_add_item(input, make_file_in("g1", tub));
+    darray_add_item(input, make_file_in("zzz_after", root));
+
+    g_autoptr(FsearchDatabaseChunkedArray) arr = make_chunked_array(input,
+                                                                    FALSE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    (GDestroyNotify)db_entry_free_no_unparent);
+
+    // `sub` holds 2 files, but claim 3: the third slot is a sibling of `sub`, not a descendant
+    g_test_expect_message(CHUNKED_ARRAY_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "*falling back to a full scan*");
+    g_autoptr(DynamicArray) descendants = fsearch_database_chunked_array_steal_descendants(arr, sub, 3);
+    g_test_assert_expected_messages();
+
+    // Exactly the real descendants; tub's file and root's own files are untouched
+    g_assert_cmpuint(darray_get_num_items(descendants), ==, 2);
+    for (uint32_t i = 0; i < darray_get_num_items(descendants); i++) {
+        g_assert_true(db_entry_is_descendant(darray_get_item(descendants, i), sub));
+    }
+    g_assert_cmpuint(fsearch_database_chunked_array_get_num_entries(arr), ==, 3);
+
+    for (uint32_t i = 0; i < darray_get_num_items(descendants); i++) {
+        db_entry_free_no_unparent(darray_get_item(descendants, i));
+    }
+    db_entry_free_no_unparent(tub);
+    db_entry_free_no_unparent(sub);
+    db_entry_free_no_unparent(root);
+}
+
+
 static void
 test_remove_marked_none_marked_is_noop(void) {
     g_autoptr(DynamicArray) input = make_sorted_files("f", 20);
@@ -1418,6 +1509,12 @@ main(int argc, char **argv) {
                     test_steal_descendants_spanning_multiple_chunks);
 
     // remove_marked_folders
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_stops_at_expected_count",
+                    test_remove_marked_stops_at_expected_count);
+    g_test_add_func("/FSearch/database/chunked_array/remove_marked_reports_count_mismatch",
+                    test_remove_marked_reports_count_mismatch);
+    g_test_add_func("/FSearch/database/chunked_array/steal_descendants_wrong_count_falls_back",
+                    test_steal_descendants_wrong_count_falls_back);
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_none_noop", test_remove_marked_none_marked_is_noop);
     g_test_add_func("/FSearch/database/chunked_array/remove_marked_contiguous_block",
                     test_remove_marked_contiguous_block);
