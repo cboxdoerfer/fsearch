@@ -1,4 +1,22 @@
 =================
+Version 0.3.2
+=================
+
+* Fix crash when the filesystem monitor received events for unknown watches (e.g. after aborted scans or removed folders)
+* Fix possible crash and removal of unrelated entries when folders are removed from the database
+* Fix implicit AND placement in search queries (#742)
+* Fix wrong icon size when the scale factor changes (#718)
+* Fix icons not refreshing after a theme change
+* Fix broken single click to open
+* Fix row activation not working outside of the columns
+* Fix new window action not working
+* Fix blocking UI when opening files in some situations
+* Fix memory leak when building the file list for file actions
+* Try to guess the content type of a file if querying it failed
+* Only show the welcome dialog when upgrading from versions before 0.3
+* Improve database update performance (faster sorting, insertion and removal of entries)
+
+=================
 Version 0.3.1
 =================
 

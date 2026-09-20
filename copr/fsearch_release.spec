@@ -54,6 +54,20 @@ popd
 %{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.metainfo.xml
 
 %changelog
+* Sun Sep 20 2026 Christian Boxdörfer <christian.boxdoerfer@posteo.de> - 1:0.3.2-1
+- Fix crash when the filesystem monitor received events for unknown watches (e.g. after aborted scans or removed folders)
+- Fix possible crash and removal of unrelated entries when folders are removed from the database
+- Fix implicit AND placement in search queries (#742)
+- Fix wrong icon size when the scale factor changes (#718)
+- Fix icons not refreshing after a theme change
+- Fix broken single click to open
+- Fix row activation not working outside of the columns
+- Fix new window action not working
+- Fix blocking UI when opening files in some situations
+- Fix memory leak when building the file list for file actions
+- Try to guess the content type of a file if querying it failed
+- Only show the welcome dialog when upgrading from versions before 0.3
+- Improve database update performance (faster sorting, insertion and removal of entries)
 * Fri Jul 17 2026 Christian Boxdörfer <christian.boxdoerfer@posteo.de> - 1:0.3.1-1
 - Fix blocking UI when loading icons
 - Fix option 'action after file open' not getting saved

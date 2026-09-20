@@ -83,6 +83,25 @@
         <value key="Purism::form_factor">workstation</value>
     </custom>
     <releases>
+        <release date="2026-09-20" version="0.3.2">
+            <description>
+                <ul>
+                    <li>Fix crash when the filesystem monitor received events for unknown watches (e.g. after aborted scans or removed folders)</li>
+                    <li>Fix possible crash and removal of unrelated entries when folders are removed from the database</li>
+                    <li>Fix implicit AND placement in search queries (#742)</li>
+                    <li>Fix wrong icon size when the scale factor changes (#718)</li>
+                    <li>Fix icons not refreshing after a theme change</li>
+                    <li>Fix broken single click to open</li>
+                    <li>Fix row activation not working outside of the columns</li>
+                    <li>Fix new window action not working</li>
+                    <li>Fix blocking UI when opening files in some situations</li>
+                    <li>Fix memory leak when building the file list for file actions</li>
+                    <li>Try to guess the content type of a file if querying it failed</li>
+                    <li>Only show the welcome dialog when upgrading from versions before 0.3</li>
+                    <li>Improve database update performance (faster sorting, insertion and removal of entries)</li>
+                </ul>
+            </description>
+        </release>
         <release date="2026-07-17" version="0.3.1">
             <description>
                 <ul>
