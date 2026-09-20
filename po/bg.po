@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"POT-Creation-Date: 2026-09-20 13:29+0200\n"
 "PO-Revision-Date: 2026-06-26 13:01+0000\n"
 "Last-Translator: Golden Axolotl <gardevg@proton.me>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -149,14 +149,85 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
+msgid ""
+"Fix crash when the filesystem monitor received events for unknown watches "
+"(e.g. after aborted scans or removed folders)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+msgid ""
+"Fix possible crash and removal of unrelated entries when folders are removed "
+"from the database"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+msgid "Fix implicit AND placement in search queries (#742)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+msgid "Fix wrong icon size when the scale factor changes (#718)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+msgid "Fix icons not refreshing after a theme change"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#, fuzzy
+msgid "Fix broken single click to open"
+msgstr "Отваряне с едно кликване"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+msgid "Fix row activation not working outside of the columns"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+msgid "Fix new window action not working"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Fix blocking UI when opening files in some situations"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Fix memory leak when building the file list for file actions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+msgid "Try to guess the content type of a file if querying it failed"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+msgid "Only show the welcome dialog when upgrading from versions before 0.3"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+msgid ""
+"Improve database update performance (faster sorting, insertion and removal "
+"of entries)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+msgid "Fix blocking UI when loading icons"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+msgid "Fix option 'action after file open' not getting saved"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+msgid "Remove duplicate language to fix build on newer gettext versions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "DB rewrite"
 msgstr "БД преработване"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "DB: Add support for filesystem monitoring"
 msgstr "БД: Добави поддръжка за наблюдение на файловата система"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
@@ -164,7 +235,7 @@ msgstr ""
 "БД: Позволи на файлове и папки да бъдат изключени според фиксирани шаблони, "
 "заместващи символи или регулярни изрази"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
@@ -172,81 +243,80 @@ msgstr ""
 "БД: Разрешаване на включените папки да бъдат планирани и сканирани след "
 "стартиране независимо"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "DB: Make rescanning more efficient"
 msgstr "БД: Направи повторното сканиране по-ефективно"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid "DB: Store database config in DB file"
 msgstr "БД: Запази конфигурация за БД във файл"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "DB: Add checksum to DB file"
 msgstr "БД: Добави контролна сума в БД файла"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 "Направи събирането на информация за икони и файлове асинхронно (без "
 "блокиране на интерфейс)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Reduce memory usage"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Add contextual help for all preferences"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 #, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
 msgstr ""
 "и тонове корекции на грешки, актуализации на превода и по-малки подобрения"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:134
 msgid "New search engine"
 msgstr "Нова търсачка"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:135
 msgid "Greatly improved highlighting of search terms"
 msgstr "Значително подобрено подчертаване на думите за търсене"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:136
 msgid "Custom filters"
 msgstr "Потребителски филтри"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:137
 msgid "Improved sort performance"
 msgstr "Подобрена производителност при сортиране"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:138
 msgid "Improved scroll performance"
 msgstr "Подобрена производителност при превъртане"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:139
 msgid "Remember file selection after a database update"
 msgstr "Запомняне на избора на файл след актуализация на базата данни"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:140
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 "Автоматично превъртане на списъка с резултати в режим на ластичен избор"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:141
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Обръщане на селекцията с ластик, когато се натисне 'Ctrl'"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:142
 msgid "Focus search entry when the main window gets activated"
 msgstr "Фокусиране на търсеният елемент, когато главният прозорец се активира"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:143
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Добавете филтър за приложения (т.е. .desktop файлове)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:144
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -254,15 +324,15 @@ msgstr ""
 "Добавяне на опция за директно стартиране на приложения, вместо да "
 "отваряте .desktop файловете"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:145
 msgid "Show application icons for .desktop files"
 msgstr "Показване на икони на приложения за .desktop файлове"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:146
 msgid "Add .odp and .ods files to document filter"
 msgstr "Добавяне на .odp и .ods файлове към филтъра за документи"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:147
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -270,7 +340,7 @@ msgstr ""
 "Менюто „Отваряне с“, вече показва само приложения, които могат да обработват "
 "избраните файлове"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:148
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -278,22 +348,22 @@ msgstr ""
 "Подобрено e отварянеto на множество файлове от един и същи тип (те сега се "
 "предават като списък към приложенията, вместо един по един)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:149
 msgid "Better support for opening files in sandboxed mode"
 msgstr "По-добра поддръжка за отваряне на файлове в режим пясъчник"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:150
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Добавяне на елементи от менюто с връзки към страницата за проследяване на "
 "проблеми, форум и дарения"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:151
 msgid "Improve support for non-Linux systems"
 msgstr "Подобрена е поддръжката за системи, различни от Linux"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:152
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -301,22 +371,22 @@ msgstr ""
 "Добавена е опция за излизане от FSearch при натискане на Escape вместо "
 "минимизиране на прозореца"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:153
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Изключване на „/proc“ и „/sys“ по подразбиране"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:154
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Отваряне на контекстното меню при натискане на клавиша „Меню“ или „Shift + "
 "F10“"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:155
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "и тонове корекции на грешки, актуализации на превода и по-малки подобрения"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:161
 msgid "Initial release."
 msgstr "Първоначално издание."
 
@@ -332,7 +402,6 @@ msgstr ""
 
 #: src/fsearch.c:330
 #, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
 msgstr "Зареждане на базата с данни…"
 
@@ -434,8 +503,8 @@ msgstr "Активно"
 msgid "Pattern"
 msgstr "Шаблон"
 
-#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
-#: src/menus.ui:275
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:769
+#: src/menus.ui:276
 msgid "Type"
 msgstr "Тип (файлово разширение)"
 
@@ -447,8 +516,8 @@ msgstr "Съвпадение"
 msgid "Applies To"
 msgstr "Отнася се за"
 
-#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
-#: src/menus.ui:219 src/menus.ui:267
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:755
+#: src/menus.ui:220 src/menus.ui:268
 msgid "Path"
 msgstr "Път"
 
@@ -551,8 +620,6 @@ msgstr "Не може да бъде взета информация за при�
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
 #, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
 msgstr "Грешка при отварянето на папката"
@@ -673,8 +740,8 @@ msgstr ""
 msgid "Add filter"
 msgstr "Добавяне на филтър"
 
-#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
-#: src/menus.ui:215 src/menus.ui:263
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:748
+#: src/menus.ui:216 src/menus.ui:264
 msgid "Name"
 msgstr "Име"
 
@@ -754,7 +821,7 @@ msgstr "Опитайте с друго търсене"
 msgid "Sorting results…"
 msgstr "Сортиране на резултатите…"
 
-#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:84
+#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:85
 msgid "Preferences"
 msgstr "Предпочитания"
 
@@ -1321,10 +1388,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1387
 #, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1336,12 +1399,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1404
 #, fuzzy
-#| msgid ""
-#| "<b>Restore default filters:</b>\n"
-#| "\n"
-#| "This button restores the default filter configuration.\n"
-#| "\n"
-#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgid ""
 "<b>Restore default exclude rules:</b>\n"
 "\n"
@@ -1511,7 +1568,7 @@ msgstr ""
 "вместо прозорецът да бъде минимизиран."
 
 #: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
-#: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
+#: src/fsearch_window.ui:415 src/menus.ui:151 src/menus.ui:157
 msgid "Help"
 msgstr "Помощ"
 
@@ -1519,7 +1576,7 @@ msgstr "Помощ"
 msgid "Database"
 msgstr "База с данни"
 
-#: src/fsearch_result_view.c:487
+#: src/fsearch_result_view.c:491
 msgid "Invalid row data"
 msgstr "Невалидни данни на редове"
 
@@ -1671,19 +1728,19 @@ msgid ""
 "configured to match against either the basename or the full absolute path."
 msgstr ""
 
-#: src/fsearch_window.c:766 src/menus.ui:279
+#: src/fsearch_window.c:762 src/menus.ui:280
 msgid "Size"
 msgstr "Размер"
 
-#: src/fsearch_window.c:780 src/menus.ui:271
+#: src/fsearch_window.c:776 src/menus.ui:272
 msgid "Extension"
 msgstr "Разширение"
 
-#: src/fsearch_window.c:787 src/menus.ui:283
+#: src/fsearch_window.c:783 src/menus.ui:284
 msgid "Date Modified"
 msgstr "Дата на последна промяна"
 
-#: src/fsearch_window.c:801
+#: src/fsearch_window.c:797
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1703,59 +1760,59 @@ msgstr "Нов прозорец"
 msgid "Update database"
 msgstr "Обновяване на базата с данни"
 
-#: src/fsearch_window.ui:144 src/menus.ui:112
+#: src/fsearch_window.ui:144 src/menus.ui:113
 msgid "Search in Path"
 msgstr "Търсене в Пътя"
 
-#: src/fsearch_window.ui:158 src/menus.ui:116
+#: src/fsearch_window.ui:158 src/menus.ui:117
 msgid "Match Case"
 msgstr "Случай на съвпадение"
 
-#: src/fsearch_window.ui:172 src/menus.ui:120
+#: src/fsearch_window.ui:172 src/menus.ui:121
 msgid "Enable RegEx"
 msgstr "Включване на регулярни изрази"
 
-#: src/fsearch_window.ui:197 src/menus.ui:95
+#: src/fsearch_window.ui:197 src/menus.ui:96
 msgid "Show Statusbar"
 msgstr "Показване на лентата на състоянието"
 
-#: src/fsearch_window.ui:211 src/menus.ui:99
+#: src/fsearch_window.ui:211 src/menus.ui:100
 msgid "Show Filter"
 msgstr "Показване на филтър"
 
-#: src/fsearch_window.ui:225 src/menus.ui:103
+#: src/fsearch_window.ui:225 src/menus.ui:104
 msgid "Show Search Button"
 msgstr "Показване на бутон за търсене"
 
-#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
+#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:130
 msgid "FSearch Online"
 msgstr "FSearch онлайн"
 
-#: src/fsearch_window.ui:304 src/menus.ui:161
+#: src/fsearch_window.ui:304 src/menus.ui:162
 msgid "About"
 msgstr "Относно"
 
-#: src/fsearch_window.ui:329 src/menus.ui:47
+#: src/fsearch_window.ui:329 src/menus.ui:48
 msgid "Quit"
 msgstr "Изход"
 
-#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:131
+#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:132
 msgid "Donate"
 msgstr "Направете дарение"
 
-#: src/fsearch_window.ui:387 src/menus.ui:142
+#: src/fsearch_window.ui:387 src/menus.ui:143
 msgid "Forum"
 msgstr "Форум"
 
-#: src/fsearch_window.ui:401 src/menus.ui:146
+#: src/fsearch_window.ui:401 src/menus.ui:147
 msgid "Bug Reports and Feature Requests"
 msgstr "Докладване на грешки и заявки за функции"
 
-#: src/fsearch_window.ui:460 src/menus.ui:133
+#: src/fsearch_window.ui:460 src/menus.ui:134
 msgid "GitHub Sponsors"
 msgstr "GitHub спонсори"
 
-#: src/fsearch_window.ui:474 src/menus.ui:137
+#: src/fsearch_window.ui:474 src/menus.ui:138
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1793,8 +1850,8 @@ msgstr "Изтриване на файловете…"
 msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
 
-#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
-#: src/fsearch_window_actions.c:580
+#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:538
+#: src/fsearch_window_actions.c:592
 msgid "Something went wrong."
 msgstr "Нещо се обърка."
 
@@ -1818,79 +1875,79 @@ msgstr "_Файл"
 msgid "New Window"
 msgstr "Нов прозорец"
 
-#: src/menus.ui:16 src/menus.ui:171
+#: src/menus.ui:17 src/menus.ui:172
 msgid "_Open"
 msgstr "_Отваряне"
 
-#: src/menus.ui:21
+#: src/menus.ui:22
 msgid "Open Folder"
 msgstr "Отваряне на папка"
 
-#: src/menus.ui:29
+#: src/menus.ui:30
 msgid "Update Database"
 msgstr "Обновяване на базата с данни"
 
-#: src/menus.ui:35
+#: src/menus.ui:36
 msgid "Cancel Update"
 msgstr "Отказ от обновяване"
 
-#: src/menus.ui:42
+#: src/menus.ui:43
 msgid "Close Window"
 msgstr "Затваряне на прозореца"
 
-#: src/menus.ui:54
+#: src/menus.ui:55
 msgid "_Edit"
 msgstr "_Редактиране"
 
-#: src/menus.ui:57 src/menus.ui:207
+#: src/menus.ui:58 src/menus.ui:208
 msgid "_Copy"
 msgstr "_Копиране"
 
-#: src/menus.ui:62 src/menus.ui:228
+#: src/menus.ui:63 src/menus.ui:229
 msgid "Cu_t"
 msgstr "_Отрязване"
 
-#: src/menus.ui:69
+#: src/menus.ui:70
 msgid "Select All"
 msgstr "Избор на всички"
 
-#: src/menus.ui:74
+#: src/menus.ui:75
 msgid "Deselect All"
 msgstr "Премахване на цялата селекция"
 
-#: src/menus.ui:78
+#: src/menus.ui:79
 msgid "Invert Selection"
 msgstr "Обръщане на селекцията"
 
-#: src/menus.ui:92
+#: src/menus.ui:93
 msgid "_View"
 msgstr "_Преглед"
 
-#: src/menus.ui:109
+#: src/menus.ui:110
 msgid "_Search"
 msgstr "_Търсене"
 
-#: src/menus.ui:126
+#: src/menus.ui:127
 msgid "_Help"
 msgstr "_Помощ"
 
-#: src/menus.ui:177
+#: src/menus.ui:178
 msgid "Open _With"
 msgstr "Отваряне с"
 
-#: src/menus.ui:191
+#: src/menus.ui:192
 msgid "_Open Folder"
 msgstr "Отваряне на папка"
 
-#: src/menus.ui:213
+#: src/menus.ui:214
 msgid "Copy as Text"
 msgstr "Копиране като текст"
 
-#: src/menus.ui:223
+#: src/menus.ui:224
 msgid "Path + Name"
 msgstr "Път + Име"
 
-#: src/menus.ui:236
+#: src/menus.ui:237
 msgid "Move to _Trash"
 msgstr "Преместване в кошчето"
 

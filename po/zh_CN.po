@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"POT-Creation-Date: 2026-09-20 13:29+0200\n"
 "PO-Revision-Date: 2026-08-15 05:51+0000\n"
 "Last-Translator: Hosted Weblate user 54392 "
 "<hamburger2048@users.noreply.hosted.weblate.org>\n"
@@ -140,114 +140,185 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
+msgid ""
+"Fix crash when the filesystem monitor received events for unknown watches "
+"(e.g. after aborted scans or removed folders)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+msgid ""
+"Fix possible crash and removal of unrelated entries when folders are removed "
+"from the database"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+msgid "Fix implicit AND placement in search queries (#742)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+msgid "Fix wrong icon size when the scale factor changes (#718)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+msgid "Fix icons not refreshing after a theme change"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#, fuzzy
+msgid "Fix broken single click to open"
+msgstr "单击打开"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+msgid "Fix row activation not working outside of the columns"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+msgid "Fix new window action not working"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Fix blocking UI when opening files in some situations"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Fix memory leak when building the file list for file actions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+msgid "Try to guess the content type of a file if querying it failed"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+msgid "Only show the welcome dialog when upgrading from versions before 0.3"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+msgid ""
+"Improve database update performance (faster sorting, insertion and removal "
+"of entries)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+msgid "Fix blocking UI when loading icons"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+msgid "Fix option 'action after file open' not getting saved"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+msgid "Remove duplicate language to fix build on newer gettext versions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "DB rewrite"
 msgstr "数据库重写"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "DB: Add support for filesystem monitoring"
 msgstr "数据库：新增支持文件系统监听"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr "数据库：允许基于固定模式、通配符或正则表达式排除文件和文件夹"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr "数据库：允许已纳入的文件夹在启动后独立计划扫描"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "DB: Make rescanning more efficient"
 msgstr "数据库：重扫描更加高效"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid "DB: Store database config in DB file"
 msgstr "数据库：在数据库文件中保存数据库配置"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "DB: Add checksum to DB file"
 msgstr "数据库：新增数据库文件校验和"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr "图标和文件信息获取异步化（避免用户界面卡顿）"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Reduce memory usage"
 msgstr "减少内存占用"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Add contextual help for all preferences"
 msgstr "为所有设置项添加上下文帮助"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 msgid "Numerous bug fixes and stability and performance improvements"
 msgstr "大量的错误修复以及稳定性和性能改进"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:134
 msgid "New search engine"
 msgstr "新的搜索引擎"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:135
 msgid "Greatly improved highlighting of search terms"
 msgstr "极大改进了搜索项目的高亮显示"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:136
 msgid "Custom filters"
 msgstr "自定义过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:137
 msgid "Improved sort performance"
 msgstr "改进的排序性能"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:138
 msgid "Improved scroll performance"
 msgstr "改进的滚动性能"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:139
 msgid "Remember file selection after a database update"
 msgstr "数据库更新之后记住文件选择"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:140
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "在矩形选择模式下自动滚动结果列表"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:141
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "按住Ctrl键时，使用矩形反选"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:142
 msgid "Focus search entry when the main window gets activated"
 msgstr "当主窗口被激活时聚焦搜索条目"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:143
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "为应用程序（即 .desktop 文件）添加过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:144
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr "添加直接启动程序而不是打开 .desktop 文件的选项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:145
 msgid "Show application icons for .desktop files"
 msgstr "显示 .desktop 文件的应用程序图标"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:146
 msgid "Add .odp and .ods files to document filter"
 msgstr "将 .odp 和 .ods 文件添加到文档过滤器"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:147
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr "现在“打开方式”菜单中只会显示可处理选定文件的程序"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:148
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -255,38 +326,38 @@ msgstr ""
 "改进的多个同类型文件打开方式（它们将以列表形式一次性地传递给程序，而不是重复"
 "调用程序）"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:149
 msgid "Better support for opening files in sandboxed mode"
 msgstr "更好支持在沙盒模式中打开文件"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:150
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr "添加带有问题跟踪器、论坛和捐赠页面链接的菜单项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:151
 msgid "Improve support for non-Linux systems"
 msgstr "改进对非 Linux 系统的支持"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:152
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr "添加在按 Esc 键时退出 FSearch，而不是最小化窗口的选项"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:153
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "默认排除“/proc”和“/sys”"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:154
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "按下菜单键或“Shift + F10”时打开上下文菜单"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:155
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "以及大量的错误修复、翻译更新和小小改进"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:161
 msgid "Initial release."
 msgstr "首次发布。"
 
@@ -403,8 +474,8 @@ msgstr "激活"
 msgid "Pattern"
 msgstr "模式"
 
-#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
-#: src/menus.ui:275
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:769
+#: src/menus.ui:276
 msgid "Type"
 msgstr "类型"
 
@@ -416,8 +487,8 @@ msgstr "匹配"
 msgid "Applies To"
 msgstr "应用于"
 
-#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
-#: src/menus.ui:219 src/menus.ui:267
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:755
+#: src/menus.ui:220 src/menus.ui:268
 msgid "Path"
 msgstr "路径"
 
@@ -639,8 +710,8 @@ msgstr ""
 msgid "Add filter"
 msgstr "添加筛选器"
 
-#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
-#: src/menus.ui:215 src/menus.ui:263
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:748
+#: src/menus.ui:216 src/menus.ui:264
 msgid "Name"
 msgstr "名称"
 
@@ -720,7 +791,7 @@ msgstr "试试其他搜索条件"
 msgid "Sorting results…"
 msgstr "正在给结果排序……"
 
-#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:84
+#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:85
 msgid "Preferences"
 msgstr "首选项"
 
@@ -1417,7 +1488,7 @@ msgstr ""
 "如启用，FSearch 会在按下 Escape 键时而不是最小化窗口时退出。"
 
 #: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
-#: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
+#: src/fsearch_window.ui:415 src/menus.ui:151 src/menus.ui:157
 msgid "Help"
 msgstr "帮助"
 
@@ -1425,7 +1496,7 @@ msgstr "帮助"
 msgid "Database"
 msgstr "数据库"
 
-#: src/fsearch_result_view.c:487
+#: src/fsearch_result_view.c:491
 msgid "Invalid row data"
 msgstr "无效行数据"
 
@@ -1577,19 +1648,19 @@ msgid ""
 "configured to match against either the basename or the full absolute path."
 msgstr ""
 
-#: src/fsearch_window.c:766 src/menus.ui:279
+#: src/fsearch_window.c:762 src/menus.ui:280
 msgid "Size"
 msgstr "大小"
 
-#: src/fsearch_window.c:780 src/menus.ui:271
+#: src/fsearch_window.c:776 src/menus.ui:272
 msgid "Extension"
 msgstr "扩展名"
 
-#: src/fsearch_window.c:787 src/menus.ui:283
+#: src/fsearch_window.c:783 src/menus.ui:284
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: src/fsearch_window.c:801
+#: src/fsearch_window.c:797
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1608,59 +1679,59 @@ msgstr "打开新窗口"
 msgid "Update database"
 msgstr "更新数据源"
 
-#: src/fsearch_window.ui:144 src/menus.ui:112
+#: src/fsearch_window.ui:144 src/menus.ui:113
 msgid "Search in Path"
 msgstr "搜索路径"
 
-#: src/fsearch_window.ui:158 src/menus.ui:116
+#: src/fsearch_window.ui:158 src/menus.ui:117
 msgid "Match Case"
 msgstr "区分大小写"
 
-#: src/fsearch_window.ui:172 src/menus.ui:120
+#: src/fsearch_window.ui:172 src/menus.ui:121
 msgid "Enable RegEx"
 msgstr "启用正则"
 
-#: src/fsearch_window.ui:197 src/menus.ui:95
+#: src/fsearch_window.ui:197 src/menus.ui:96
 msgid "Show Statusbar"
 msgstr "显示状态栏"
 
-#: src/fsearch_window.ui:211 src/menus.ui:99
+#: src/fsearch_window.ui:211 src/menus.ui:100
 msgid "Show Filter"
 msgstr "显示筛选器"
 
-#: src/fsearch_window.ui:225 src/menus.ui:103
+#: src/fsearch_window.ui:225 src/menus.ui:104
 msgid "Show Search Button"
 msgstr "显示搜索按钮"
 
-#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
+#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:130
 msgid "FSearch Online"
 msgstr "FSearch 在线"
 
-#: src/fsearch_window.ui:304 src/menus.ui:161
+#: src/fsearch_window.ui:304 src/menus.ui:162
 msgid "About"
 msgstr "关于"
 
-#: src/fsearch_window.ui:329 src/menus.ui:47
+#: src/fsearch_window.ui:329 src/menus.ui:48
 msgid "Quit"
 msgstr "退出"
 
-#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:131
+#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:132
 msgid "Donate"
 msgstr "捐赠"
 
-#: src/fsearch_window.ui:387 src/menus.ui:142
+#: src/fsearch_window.ui:387 src/menus.ui:143
 msgid "Forum"
 msgstr "论坛"
 
-#: src/fsearch_window.ui:401 src/menus.ui:146
+#: src/fsearch_window.ui:401 src/menus.ui:147
 msgid "Bug Reports and Feature Requests"
 msgstr "缺陷报告和功能请求"
 
-#: src/fsearch_window.ui:460 src/menus.ui:133
+#: src/fsearch_window.ui:460 src/menus.ui:134
 msgid "GitHub Sponsors"
 msgstr "GitHub 赞助者"
 
-#: src/fsearch_window.ui:474 src/menus.ui:137
+#: src/fsearch_window.ui:474 src/menus.ui:138
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1696,8 +1767,8 @@ msgstr "删除文件中…"
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
-#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
-#: src/fsearch_window_actions.c:580
+#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:538
+#: src/fsearch_window_actions.c:592
 msgid "Something went wrong."
 msgstr "出问题了。"
 
@@ -1719,79 +1790,79 @@ msgstr "文件(_F)"
 msgid "New Window"
 msgstr "新建窗口"
 
-#: src/menus.ui:16 src/menus.ui:171
+#: src/menus.ui:17 src/menus.ui:172
 msgid "_Open"
 msgstr "打开(_O)"
 
-#: src/menus.ui:21
+#: src/menus.ui:22
 msgid "Open Folder"
 msgstr "打开文件夹"
 
-#: src/menus.ui:29
+#: src/menus.ui:30
 msgid "Update Database"
 msgstr "更新数据库"
 
-#: src/menus.ui:35
+#: src/menus.ui:36
 msgid "Cancel Update"
 msgstr "取消更新"
 
-#: src/menus.ui:42
+#: src/menus.ui:43
 msgid "Close Window"
 msgstr "关闭窗口"
 
-#: src/menus.ui:54
+#: src/menus.ui:55
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: src/menus.ui:57 src/menus.ui:207
+#: src/menus.ui:58 src/menus.ui:208
 msgid "_Copy"
 msgstr "复制(_C)"
 
-#: src/menus.ui:62 src/menus.ui:228
+#: src/menus.ui:63 src/menus.ui:229
 msgid "Cu_t"
 msgstr "剪切(_T)"
 
-#: src/menus.ui:69
+#: src/menus.ui:70
 msgid "Select All"
 msgstr "选择所有"
 
-#: src/menus.ui:74
+#: src/menus.ui:75
 msgid "Deselect All"
 msgstr "取消所有选择"
 
-#: src/menus.ui:78
+#: src/menus.ui:79
 msgid "Invert Selection"
 msgstr "反选"
 
-#: src/menus.ui:92
+#: src/menus.ui:93
 msgid "_View"
 msgstr "视图(_V)"
 
-#: src/menus.ui:109
+#: src/menus.ui:110
 msgid "_Search"
 msgstr "搜索(_S)"
 
-#: src/menus.ui:126
+#: src/menus.ui:127
 msgid "_Help"
 msgstr "帮助(_H)"
 
-#: src/menus.ui:177
+#: src/menus.ui:178
 msgid "Open _With"
 msgstr "打开方式(_W)"
 
-#: src/menus.ui:191
+#: src/menus.ui:192
 msgid "_Open Folder"
 msgstr "打开文件夹(_O)"
 
-#: src/menus.ui:213
+#: src/menus.ui:214
 msgid "Copy as Text"
 msgstr "以文本复制"
 
-#: src/menus.ui:223
+#: src/menus.ui:224
 msgid "Path + Name"
 msgstr "路径+名称"
 
-#: src/menus.ui:236
+#: src/menus.ui:237
 msgid "Move to _Trash"
 msgstr "移动到回收站(_T)"
 

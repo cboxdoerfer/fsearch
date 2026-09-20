@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"POT-Creation-Date: 2026-09-20 13:29+0200\n"
 "PO-Revision-Date: 2025-12-12 09:00+0000\n"
 "Last-Translator: \"Tinde (Joke)\" <jouko.tiilikainen@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -148,98 +148,168 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
-msgid "DB rewrite"
+msgid ""
+"Fix crash when the filesystem monitor received events for unknown watches "
+"(e.g. after aborted scans or removed folders)"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
-msgid "DB: Add support for filesystem monitoring"
+msgid ""
+"Fix possible crash and removal of unrelated entries when folders are removed "
+"from the database"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
+msgid "Fix implicit AND placement in search queries (#742)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+msgid "Fix wrong icon size when the scale factor changes (#718)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+msgid "Fix icons not refreshing after a theme change"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#, fuzzy
+msgid "Fix broken single click to open"
+msgstr "Avaa yhdellä napsautuksella"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+msgid "Fix row activation not working outside of the columns"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+msgid "Fix new window action not working"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Fix blocking UI when opening files in some situations"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Fix memory leak when building the file list for file actions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+msgid "Try to guess the content type of a file if querying it failed"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+msgid "Only show the welcome dialog when upgrading from versions before 0.3"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+msgid ""
+"Improve database update performance (faster sorting, insertion and removal "
+"of entries)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+msgid "Fix blocking UI when loading icons"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+msgid "Fix option 'action after file open' not getting saved"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+msgid "Remove duplicate language to fix build on newer gettext versions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+msgid "DB rewrite"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+msgid "DB: Add support for filesystem monitoring"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "DB: Make rescanning more efficient"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Reduce memory usage"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Add contextual help for all preferences"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 #, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
 msgstr ""
 "ja paljon virheenkorjauksia, käännöspäivityksiä ja pienempiä parannuksia"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:134
 msgid "New search engine"
 msgstr "Uusi hakukone"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:135
 msgid "Greatly improved highlighting of search terms"
 msgstr "Hakusanojen korostus on parantunut huomattavasti"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:136
 msgid "Custom filters"
 msgstr "Mukautetut suodattimet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:137
 msgid "Improved sort performance"
 msgstr "Parannettu lajittelun suorituskyky"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:138
 msgid "Improved scroll performance"
 msgstr "Parempi rullauksen suorituskyky"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:139
 msgid "Remember file selection after a database update"
 msgstr "Muista tiedostovalinta tietokannan päivityksen jälkeen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:140
 #, fuzzy
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "Vieritä tulosluetteloa automaattisesti kuminauhavalintatilassa"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:141
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Käännä valinta kuminauhalla, kun Ctrl-näppäintä painetaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:142
 msgid "Focus search entry when the main window gets activated"
 msgstr "Keskity hakukenttään, kun pääikkuna aktivoituu"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:143
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Lisää suodatin sovelluksille (esim. .desktop-tiedostoille)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:144
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -247,15 +317,15 @@ msgstr ""
 "Lisätty vaihtoehto sovellusten käynnistämiseen suoraan .desktop-tiedostojen "
 "avaamisen sijaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:145
 msgid "Show application icons for .desktop files"
 msgstr "Näytä .desktop-tiedostojen sovelluskuvakkeet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:146
 msgid "Add .odp and .ods files to document filter"
 msgstr "Lisää .odp- ja .ods-tiedostot asiakirjasuodattimeen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:147
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -263,7 +333,7 @@ msgstr ""
 "'Avaa sovelluksella' -valikko näyttää nyt vain sovellukset, jotka voivat "
 "käsitellä valittuja tiedostoja"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:148
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -271,22 +341,22 @@ msgstr ""
 "Parannettu useiden saman tyyppisten tiedostojen avaamista (ne välitetään nyt "
 "sovelluksille luettelona yksitellen)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:149
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Parempi tuki tiedostojen avaamiselle hiekkalaatikkotilassa"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:150
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Lisää valikkokohtia, joissa on linkit ongelmanseurantaan, foorumille ja "
 "lahjoitussivuille"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:151
 msgid "Improve support for non-Linux systems"
 msgstr "Parempi muiden kuin Linux-järjestelmien tuki"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:152
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -294,22 +364,22 @@ msgstr ""
 "Lisätty vaihtoehto, jolla FSearchistä poistutaan Esc-näppäintä painettaessa "
 "ikkunan pienentämisen sijaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:153
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Jätä pois oletusarvoisesti '/proc' ja '/sys'"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:154
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Avaa kontekstivalikko painettaessa 'Menu'-näppäintä tai 'Shift + F10' "
 "-näppäinyhdistelmää"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:155
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "ja paljon virheenkorjauksia, käännöspäivityksiä ja pienempiä parannuksia"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:161
 msgid "Initial release."
 msgstr "Ensimmäinen julkaisu."
 
@@ -323,7 +393,6 @@ msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: src/fsearch.c:330
 #, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
 msgstr "Ladataan tietokanta…"
 
@@ -429,8 +498,8 @@ msgstr "Aktiivinen"
 msgid "Pattern"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:773
-#: src/menus.ui:275
+#: src/fsearch_database_preferences_widget.c:694 src/fsearch_window.c:769
+#: src/menus.ui:276
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -443,8 +512,8 @@ msgstr "Sama kirjainkoko"
 msgid "Applies To"
 msgstr ""
 
-#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:759
-#: src/menus.ui:219 src/menus.ui:267
+#: src/fsearch_database_preferences_widget.c:864 src/fsearch_window.c:755
+#: src/menus.ui:220 src/menus.ui:268
 msgid "Path"
 msgstr "Polku"
 
@@ -521,7 +590,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:512
 #, fuzzy
-#| msgid "Restore default filters"
 msgid "Restore default exclude list"
 msgstr "Palauta oletussuodattimet"
 
@@ -553,8 +621,6 @@ msgstr "Sovellustietojen saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
 #, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
 msgstr "Virhe avattaessa kansiota"
@@ -675,8 +741,8 @@ msgstr ""
 msgid "Add filter"
 msgstr "Lisää suodatin"
 
-#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:752
-#: src/menus.ui:215 src/menus.ui:263
+#: src/fsearch_filter_preferences_widget.c:315 src/fsearch_window.c:748
+#: src/menus.ui:216 src/menus.ui:264
 msgid "Name"
 msgstr "Nimi"
 
@@ -756,7 +822,7 @@ msgstr "Kokeile eri Hakusanalla"
 msgid "Sorting results…"
 msgstr "Lajitellaan tuloksia…"
 
-#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:84
+#: src/fsearch_preferences.ui:7 src/fsearch_window.ui:251 src/menus.ui:85
 msgid "Preferences"
 msgstr "Asetukset"
 
@@ -1321,10 +1387,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1387
 #, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1336,12 +1398,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1404
 #, fuzzy
-#| msgid ""
-#| "<b>Restore default filters:</b>\n"
-#| "\n"
-#| "This button restores the default filter configuration.\n"
-#| "\n"
-#| "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgid ""
 "<b>Restore default exclude rules:</b>\n"
 "\n"
@@ -1508,7 +1564,7 @@ msgstr ""
 "pienentämisen sijaan."
 
 #: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
-#: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
+#: src/fsearch_window.ui:415 src/menus.ui:151 src/menus.ui:157
 msgid "Help"
 msgstr "Ohje"
 
@@ -1516,7 +1572,7 @@ msgstr "Ohje"
 msgid "Database"
 msgstr "Tietokanta"
 
-#: src/fsearch_result_view.c:487
+#: src/fsearch_result_view.c:491
 msgid "Invalid row data"
 msgstr ""
 
@@ -1668,19 +1724,19 @@ msgid ""
 "configured to match against either the basename or the full absolute path."
 msgstr ""
 
-#: src/fsearch_window.c:766 src/menus.ui:279
+#: src/fsearch_window.c:762 src/menus.ui:280
 msgid "Size"
 msgstr "Koko"
 
-#: src/fsearch_window.c:780 src/menus.ui:271
+#: src/fsearch_window.c:776 src/menus.ui:272
 msgid "Extension"
 msgstr "Laajennus"
 
-#: src/fsearch_window.c:787 src/menus.ui:283
+#: src/fsearch_window.c:783 src/menus.ui:284
 msgid "Date Modified"
 msgstr "Muokattu"
 
-#: src/fsearch_window.c:801
+#: src/fsearch_window.c:797
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1701,59 +1757,59 @@ msgstr "Uusi ikkuna"
 msgid "Update database"
 msgstr "Päivitä tietokanta"
 
-#: src/fsearch_window.ui:144 src/menus.ui:112
+#: src/fsearch_window.ui:144 src/menus.ui:113
 msgid "Search in Path"
 msgstr "Etsi polusta"
 
-#: src/fsearch_window.ui:158 src/menus.ui:116
+#: src/fsearch_window.ui:158 src/menus.ui:117
 msgid "Match Case"
 msgstr "Sama kirjainkoko"
 
-#: src/fsearch_window.ui:172 src/menus.ui:120
+#: src/fsearch_window.ui:172 src/menus.ui:121
 msgid "Enable RegEx"
 msgstr "Käytä säännöllisiä lausekkeita"
 
-#: src/fsearch_window.ui:197 src/menus.ui:95
+#: src/fsearch_window.ui:197 src/menus.ui:96
 msgid "Show Statusbar"
 msgstr "Näytä tilapalkki"
 
-#: src/fsearch_window.ui:211 src/menus.ui:99
+#: src/fsearch_window.ui:211 src/menus.ui:100
 msgid "Show Filter"
 msgstr "Näytä suodatin"
 
-#: src/fsearch_window.ui:225 src/menus.ui:103
+#: src/fsearch_window.ui:225 src/menus.ui:104
 msgid "Show Search Button"
 msgstr "Näytä Etsi-painike"
 
-#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
+#: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:130
 msgid "FSearch Online"
 msgstr "FSearch Online"
 
-#: src/fsearch_window.ui:304 src/menus.ui:161
+#: src/fsearch_window.ui:304 src/menus.ui:162
 msgid "About"
 msgstr "Tietoja"
 
-#: src/fsearch_window.ui:329 src/menus.ui:47
+#: src/fsearch_window.ui:329 src/menus.ui:48
 msgid "Quit"
 msgstr "Sulje"
 
-#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:131
+#: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:132
 msgid "Donate"
 msgstr "Lahjoita"
 
-#: src/fsearch_window.ui:387 src/menus.ui:142
+#: src/fsearch_window.ui:387 src/menus.ui:143
 msgid "Forum"
 msgstr "Foorumi"
 
-#: src/fsearch_window.ui:401 src/menus.ui:146
+#: src/fsearch_window.ui:401 src/menus.ui:147
 msgid "Bug Reports and Feature Requests"
 msgstr "Virheraportit ja ominaisuuspyynnöt"
 
-#: src/fsearch_window.ui:460 src/menus.ui:133
+#: src/fsearch_window.ui:460 src/menus.ui:134
 msgid "GitHub Sponsors"
 msgstr "GitHub-sponsorit"
 
-#: src/fsearch_window.ui:474 src/menus.ui:137
+#: src/fsearch_window.ui:474 src/menus.ui:138
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -1791,8 +1847,8 @@ msgstr "Poistetaan tiedostoja…"
 msgid "Moving files to trash…"
 msgstr "Siirretään tiedostoja roskakoriin…"
 
-#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
-#: src/fsearch_window_actions.c:580
+#: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:538
+#: src/fsearch_window_actions.c:592
 msgid "Something went wrong."
 msgstr "Jotain meni pieleen."
 
@@ -1815,79 +1871,79 @@ msgstr "_Tiedosto"
 msgid "New Window"
 msgstr "Uusi ikkuna"
 
-#: src/menus.ui:16 src/menus.ui:171
+#: src/menus.ui:17 src/menus.ui:172
 msgid "_Open"
 msgstr "_Avaa"
 
-#: src/menus.ui:21
+#: src/menus.ui:22
 msgid "Open Folder"
 msgstr "Avaa kansio"
 
-#: src/menus.ui:29
+#: src/menus.ui:30
 msgid "Update Database"
 msgstr "Päivitä tietokanta"
 
-#: src/menus.ui:35
+#: src/menus.ui:36
 msgid "Cancel Update"
 msgstr "Peruuta päivitys"
 
-#: src/menus.ui:42
+#: src/menus.ui:43
 msgid "Close Window"
 msgstr "Sulje ikkuna"
 
-#: src/menus.ui:54
+#: src/menus.ui:55
 msgid "_Edit"
 msgstr "_Muokkaa"
 
-#: src/menus.ui:57 src/menus.ui:207
+#: src/menus.ui:58 src/menus.ui:208
 msgid "_Copy"
 msgstr "_Kopioi"
 
-#: src/menus.ui:62 src/menus.ui:228
+#: src/menus.ui:63 src/menus.ui:229
 msgid "Cu_t"
 msgstr "Leik_kaa"
 
-#: src/menus.ui:69
+#: src/menus.ui:70
 msgid "Select All"
 msgstr "Valitse kaikki"
 
-#: src/menus.ui:74
+#: src/menus.ui:75
 msgid "Deselect All"
 msgstr "Poista kaikkien valinta"
 
-#: src/menus.ui:78
+#: src/menus.ui:79
 msgid "Invert Selection"
 msgstr "Käänteinen valinta"
 
-#: src/menus.ui:92
+#: src/menus.ui:93
 msgid "_View"
 msgstr "_Näytä"
 
-#: src/menus.ui:109
+#: src/menus.ui:110
 msgid "_Search"
 msgstr "_Etsi"
 
-#: src/menus.ui:126
+#: src/menus.ui:127
 msgid "_Help"
 msgstr "_Ohje"
 
-#: src/menus.ui:177
+#: src/menus.ui:178
 msgid "Open _With"
 msgstr "Avaa _Sovelluksessa"
 
-#: src/menus.ui:191
+#: src/menus.ui:192
 msgid "_Open Folder"
 msgstr "_Avaa kansio"
 
-#: src/menus.ui:213
+#: src/menus.ui:214
 msgid "Copy as Text"
 msgstr "Kopioi tekstinä"
 
-#: src/menus.ui:223
+#: src/menus.ui:224
 msgid "Path + Name"
 msgstr "Polku + Nimi"
 
-#: src/menus.ui:236
+#: src/menus.ui:237
 msgid "Move to _Trash"
 msgstr "Siirrä _roskakoriin"
 
