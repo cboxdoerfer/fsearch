@@ -10,7 +10,7 @@ Build-Depends: debhelper-compat (= 13),
     pkg-config,
     libicu-dev (>= 4.4),
     libpcre2-dev (>= 10.21),
-    libglib2.0-dev (>= 2.58),
+    libglib2.0-dev (>= 2.62),
     libgtk-3-dev (>= 3.22),
     meson
 Standards-Version: 4.7.0
