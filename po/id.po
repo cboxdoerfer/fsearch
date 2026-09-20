@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 17:26+0200\n"
-"PO-Revision-Date: 2026-04-20 06:13+0000\n"
+"POT-Creation-Date: 2026-07-18 13:55+0200\n"
+"PO-Revision-Date: 2026-08-04 04:01+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -168,10 +168,12 @@ msgid ""
 "DB: Allow included folders to be scheduled and scanned after launch "
 "independently"
 msgstr ""
+"DB: Izinkan folder yang disertakan untuk dijadwalkan dan dipindai setelah "
+"diluncurkan secara independen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "DB: Make rescanning more efficient"
-msgstr ""
+msgstr "DB: Buat pemindaian ulang lebih efisien"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "DB: Store database config in DB file"
@@ -186,47 +188,62 @@ msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 "Jadikan pengambilan ikon dan info file asinkronus (tanpa pemblokiran UI)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+msgid "Reduce memory usage"
+msgstr "Kurangi penggunaan memori"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+msgid "Add contextual help for all preferences"
+msgstr "Tambahkan bantuan kontekstual untuk semua preferensi"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#, fuzzy
+#| msgid "and tons of bug fixes, translation updates and smaller improvements"
+msgid "Numerous bug fixes and stability and performance improvements"
+msgstr ""
+"dan banyak perbaikan bug, pembaruan terjemahan, dan peningkatan kecil lainnya"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
 msgstr "Mesin pencari baru"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Greatly improved highlighting of search terms"
 msgstr "Penyorotan istilah pencarian yang sangat ditingkatkan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid "Custom filters"
 msgstr "Filter kustom"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Improved sort performance"
 msgstr "Performa pengurutan yang ditingkatkan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Improved scroll performance"
 msgstr "Performa gulir yang ditingkatkan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid "Remember file selection after a database update"
 msgstr "Ingat pemilihan file setelah pembaruan basis data"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "Gulir otomatis daftar hasil dalam mode pemilihan karet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Balik pemilihan dengan karet saat 'Ctrl' ditekan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid "Focus search entry when the main window gets activated"
 msgstr "Fokus ke kolom pencarian saat jendela utama diaktifkan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Tambah filter untuk aplikasi (yaitu file .desktop)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -234,15 +251,15 @@ msgstr ""
 "Tambah opsi untuk meluncurkan aplikasi secara langsung alih-alih membuka "
 "file .desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Show application icons for .desktop files"
 msgstr "Tampilkan ikon aplikasi untuk file .desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Add .odp and .ods files to document filter"
 msgstr "Tambahkan file .odp dan .ods ke filter dokumen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -250,7 +267,7 @@ msgstr ""
 "Menu 'Buka dengan' kini hanya menampilkan aplikasi yang dapat menangani file "
 "yang dipilih"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -258,21 +275,21 @@ msgstr ""
 "Peningkatan pembukaan beberapa file dengan tipe yang sama (sekarang "
 "diteruskan sebagai daftar ke aplikasi, bukan satu per satu)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Dukungan lebih baik untuk membuka file dalam mode sandbox"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Tambah item menu dengan tautan ke pelacak masalah, forum, dan halaman donasi"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:120
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
 msgid "Improve support for non-Linux systems"
 msgstr "Tingkatkan dukungan untuk sistem non-Linux"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -280,20 +297,20 @@ msgstr ""
 "Tambah opsi untuk keluar dari FSearch saat Escape ditekan alih-alih "
 "meminimalkan jendela"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:122
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Kecualikan '/proc' dan '/sys' secara bawaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:123
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:126
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "Buka menu konteks saat tombol 'Menu' atau 'Shift + F10' ditekan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:124
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:127
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "dan banyak perbaikan bug, pembaruan terjemahan, dan peningkatan kecil lainnya"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:130
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:133
 msgid "Initial release."
 msgstr "Rilis pertama."
 
@@ -304,35 +321,41 @@ msgstr ""
 
 #: src/fsearch.c:183
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Utilitas pencarian yang berfokus pada performa dan fitur canggih"
+msgstr "Utilitas pencarian yang berfokus pada performa dan fitur lanjutan"
 
-#: src/fsearch.c:766
+#: src/fsearch.c:330
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Saving database and config…"
+msgstr "Memuat Basis Data…"
+
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "Buka jendela aplikasi baru"
 
-#: src/fsearch.c:767
+#: src/fsearch.c:808
 msgid "Minimize the application window"
 msgstr "Minimalkan jendela aplikasi"
 
-#: src/fsearch.c:768
+#: src/fsearch.c:809
 msgid "Show the application preferences"
 msgstr "Tampilkan preferensi aplikasi"
 
-#: src/fsearch.c:769
+#: src/fsearch.c:810
 msgid "Set the search pattern"
 msgstr "Atur pola pencarian"
 
-#: src/fsearch.c:770
+#: src/fsearch.c:811
 msgid "Update the database and exit"
 msgstr "Perbarui basis data dan keluar"
 
-#: src/fsearch.c:771
+#: src/fsearch.c:812
 msgid "Print version information and exit"
 msgstr "Cetak informasi versi dan keluar"
 
 #: src/fsearch_database.c:794
 msgid "Index rescan: applying changes…"
-msgstr ""
+msgstr "Pemindaian ulang indeks: menerapkan perubahan…"
 
 #: src/fsearch_database_file.c:1337
 msgid "Loading folders…"
@@ -439,11 +462,11 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:176
 msgid "Attempt to monitor"
-msgstr ""
+msgstr "Coba pantau"
 
 #: src/fsearch_database_preferences_widget.ui:191
 msgid "Scan after launch"
-msgstr ""
+msgstr "Pindai setelah diluncurkan"
 
 #: src/fsearch_database_preferences_widget.ui:206
 #, fuzzy
@@ -456,7 +479,7 @@ msgstr "Pindai ulang setiap"
 
 #: src/fsearch_database_preferences_widget.ui:254
 msgid "Hours:"
-msgstr ""
+msgstr "Jam:"
 
 #: src/fsearch_database_preferences_widget.ui:298
 #, fuzzy
@@ -488,7 +511,7 @@ msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Hapus jalur yang dipilih\n"
+"Hapus path yang dipilih\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:512
@@ -505,56 +528,59 @@ msgstr "Kecualikan file dan folder tersembunyi"
 msgid "Exclude"
 msgstr "Kecualikan"
 
-#: src/fsearch_file_utils.c:161
+#: src/fsearch_file_utils.c:163
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Kesalahan saat menghapus file"
 
-#: src/fsearch_file_utils.c:163
+#: src/fsearch_file_utils.c:165
 msgid "Failed to get path"
 msgstr "Gagal mendapatkan jalur"
 
-#: src/fsearch_file_utils.c:277
+#: src/fsearch_file_utils.c:269
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
 msgstr "Kesalahan saat mendapatkan informasi dari file"
 
-#: src/fsearch_file_utils.c:279
+#: src/fsearch_file_utils.c:271
 msgid "Failed to get application information"
 msgstr "Gagal mendapatkan informasi aplikasi"
 
-#: src/fsearch_file_utils.c:294
-msgctxt "Will be followed by the content type string."
-msgid "Error when getting information for content type"
-msgstr "Kesalahan saat mendapatkan informasi untuk tipe konten"
+#: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
+#, fuzzy
+#| msgctxt "Will be followed by the path of the folder."
+#| msgid "Error while opening folder"
+msgctxt "Will be followed by the file path."
+msgid "Error when opening file"
+msgstr "Kesalahan saat membuka folder"
 
-#: src/fsearch_file_utils.c:296
+#: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
 msgstr "Tidak ada aplikasi bawaan yang terdaftar"
 
-#: src/fsearch_file_utils.c:524
+#: src/fsearch_file_utils.c:536
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Kesalahan saat membuka folder induk"
 
-#: src/fsearch_file_utils.c:526
+#: src/fsearch_file_utils.c:538
 msgid "Failed to get parent path"
 msgstr "Gagal mendapatkan jalur induk"
 
-#: src/fsearch_file_utils.c:530
+#: src/fsearch_file_utils.c:542
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Kesalahan saat membuka folder"
 
-#: src/fsearch_file_utils.c:533
+#: src/fsearch_file_utils.c:545
 msgid "Failed to build open command"
 msgstr "Gagal membuat perintah buka"
 
-#: src/fsearch_file_utils.c:589
+#: src/fsearch_file_utils.c:601
 msgid "Folder"
 msgstr "Folder"
 
-#: src/fsearch_file_utils.c:595
+#: src/fsearch_file_utils.c:607
 msgid "Unknown Type"
 msgstr "Tipe Tidak Diketahui"
 
@@ -863,7 +889,7 @@ msgstr "Filter:"
 msgid "Search"
 msgstr "Pencarian"
 
-#: src/fsearch_preferences.ui:854
+#: src/fsearch_preferences.ui:855
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -881,7 +907,7 @@ msgstr ""
 "Perlu diketahui bahwa tidak semua tema sistem menyediakan varian yang lebih "
 "gelap, sehingga mengaktifkan pengaturan ini mungkin tidak berpengaruh."
 
-#: src/fsearch_preferences.ui:872
+#: src/fsearch_preferences.ui:873
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -903,7 +929,7 @@ msgstr ""
 "Ini menyerupai tata letak UI yang lebih tradisional dan membutuhkan sedikit "
 "lebih banyak ruang."
 
-#: src/fsearch_preferences.ui:892
+#: src/fsearch_preferences.ui:893
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -923,7 +949,7 @@ msgstr ""
 "\t-  <b>Satuan desimal:</b> Mengacu pada awalan SI desimal <i>(mis. 1 kB = "
 "1000 byte)</i>"
 
-#: src/fsearch_preferences.ui:912
+#: src/fsearch_preferences.ui:913
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -941,7 +967,7 @@ msgstr ""
 "Perlu diketahui bahwa beberapa pengelola jendela mengabaikan permintaan ini "
 "dan memaksa jendela memiliki ukuran yang berbeda."
 
-#: src/fsearch_preferences.ui:931
+#: src/fsearch_preferences.ui:932
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -971,7 +997,7 @@ msgstr ""
 "\t-  <b>pintasan keyboard atau entri menu</b> dan/atau\n"
 "\t-  <b>klik mouse</b>"
 
-#: src/fsearch_preferences.ui:955
+#: src/fsearch_preferences.ui:956
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -997,7 +1023,7 @@ msgstr ""
 "Ini juga berfungsi untuk ekspresi reguler dan ekspresi wildcard yang dimulai "
 "atau diakhiri dengan tanda bintang. "
 
-#: src/fsearch_preferences.ui:977
+#: src/fsearch_preferences.ui:978
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -1009,7 +1035,7 @@ msgstr ""
 "Jika diaktifkan, tampilan hasil akan menampilkan jalur lengkap dari file/"
 "folder yang difokuskan dalam jendela tooltip kecil."
 
-#: src/fsearch_preferences.ui:994
+#: src/fsearch_preferences.ui:995
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -1019,7 +1045,7 @@ msgstr ""
 "\n"
 "Jika diaktifkan, ikon file/folder akan ditampilkan di kolom nama."
 
-#: src/fsearch_preferences.ui:1011
+#: src/fsearch_preferences.ui:1012
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -1033,7 +1059,7 @@ msgstr ""
 "dipulihkan saat Anda membuka jendela FSearch. Ini mencakup ukuran dan "
 "visibilitas semua kolom."
 
-#: src/fsearch_preferences.ui:1028
+#: src/fsearch_preferences.ui:1029
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -1045,7 +1071,7 @@ msgstr ""
 "Jika diaktifkan, urutan pengurutan tampilan hasil dari sesi sebelumnya akan "
 "dipulihkan saat Anda membuka jendela FSearch."
 
-#: src/fsearch_preferences.ui:1045
+#: src/fsearch_preferences.ui:1046
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -1055,7 +1081,7 @@ msgstr ""
 "\n"
 "Jika diaktifkan, klik ganda di kolom jalur akan membuka jalur yang dipilih."
 
-#: src/fsearch_preferences.ui:1062
+#: src/fsearch_preferences.ui:1063
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -1069,7 +1095,7 @@ msgstr ""
 "hanya ingin memilih file/folder saat pengaturan ini aktif, Anda perlu "
 "menahan <i>Ctrl</i> secara bersamaan saat mengklik file/folder tersebut."
 
-#: src/fsearch_preferences.ui:1079
+#: src/fsearch_preferences.ui:1080
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -1080,7 +1106,7 @@ msgstr ""
 "\n"
 "Jika diaktifkan, jalur yang sedang diindeks akan ditampilkan di bilah status."
 
-#: src/fsearch_preferences.ui:1096
+#: src/fsearch_preferences.ui:1097
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -1092,7 +1118,7 @@ msgstr ""
 "Jika diaktifkan, dialog peringatan akan ditampilkan saat file atau folder "
 "gagal dibuka."
 
-#: src/fsearch_preferences.ui:1113
+#: src/fsearch_preferences.ui:1114
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -1104,7 +1130,7 @@ msgstr ""
 "Jika diaktifkan, istilah pencarian yang mengandung pemisah jalur (yaitu \"/"
 "\") akan secara otomatis dicocokkan dengan jalur lengkap file atau folder."
 
-#: src/fsearch_preferences.ui:1130
+#: src/fsearch_preferences.ui:1131
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -1120,7 +1146,7 @@ msgstr ""
 "pencarian seperti <i>Foo</i> akan cocok dengan <i>FooBar.txt</i> tetapi "
 "tidak dengan <i>foobar.txt</i>."
 
-#: src/fsearch_preferences.ui:1147
+#: src/fsearch_preferences.ui:1148
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -1137,7 +1163,7 @@ msgstr ""
 "Jika dinonaktifkan, semua file dan folder akan ditampilkan saat kolom "
 "pencarian kosong."
 
-#: src/fsearch_preferences.ui:1166
+#: src/fsearch_preferences.ui:1167
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -1154,7 +1180,7 @@ msgstr ""
 "Jika dinonaktifkan, pencarian hanya diperbarui saat Anda menekan <i>Enter</"
 "i> atau tombol cari. "
 
-#: src/fsearch_preferences.ui:1185
+#: src/fsearch_preferences.ui:1186
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -1166,7 +1192,7 @@ msgstr ""
 "Jika diaktifkan, basis data akan diperbarui secara otomatis di latar "
 "belakang saat Anda memulai FSearch."
 
-#: src/fsearch_preferences.ui:1202
+#: src/fsearch_preferences.ui:1203
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1188,7 +1214,7 @@ msgstr ""
 "\t-  <b>Satu Sistem Berkas:</b> Jika diaktifkan, FSearch tidak akan melewati "
 "batas sistem berkas untuk folder ini"
 
-#: src/fsearch_preferences.ui:1223
+#: src/fsearch_preferences.ui:1224
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1200,7 +1226,7 @@ msgstr ""
 "Tombol ini membuka dialog tempat Anda dapat memilih folder yang ingin "
 "disertakan dalam basis data untuk pencarian."
 
-#: src/fsearch_preferences.ui:1240
+#: src/fsearch_preferences.ui:1241
 msgid ""
 "<b>Add a specific path:</b>\n"
 "\n"
@@ -1208,8 +1234,13 @@ msgid ""
 "include that folder in the database. This is useful for adding a path "
 "directly without browsing for it."
 msgstr ""
+"<b>Tambahkan path tertentu:</b>\n"
+"\n"
+"Masukkan path lengkap suatu folder di sini dan klik tombol di sebelahnya "
+"untuk menyertakan folder tersebut ke dalam database. Ini berguna untuk "
+"menambahkan path secara langsung tanpa menelusurinya."
 
-#: src/fsearch_preferences.ui:1257
+#: src/fsearch_preferences.ui:1258
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1219,7 +1250,7 @@ msgstr ""
 "\n"
 "Ini menghapus folder yang dipilih dari daftar folder yang disertakan."
 
-#: src/fsearch_preferences.ui:1274
+#: src/fsearch_preferences.ui:1275
 msgid ""
 "<b>Attempt to monitor:</b>\n"
 "\n"
@@ -1230,16 +1261,31 @@ msgid ""
 "system resources per watched folder. For large directory trees with many "
 "files the system may run out of resources to watch them all."
 msgstr ""
+"<b>Coba pantau:</b>\n"
+"\n"
+"Jika diaktifkan, FSearch akan memantau folder ini terhadap perubahan dan "
+"menjaga database tetap mutakhir secara otomatis, sehingga Anda tidak perlu "
+"melakukan pemindaian ulang secara manual.\n"
+"\n"
+"Pemantauan tidak didukung di semua file system dan menggunakan sejumlah "
+"kecil sumber daya sistem untuk setiap folder yang dipantau. Pada struktur "
+"direktori besar dengan banyak file, sistem mungkin kehabisan sumber daya "
+"untuk memantaunya semua."
 
-#: src/fsearch_preferences.ui:1293
+#: src/fsearch_preferences.ui:1294
 msgid ""
 "<b>Scan after launch:</b>\n"
 "\n"
 "If enabled, this folder is rescanned every time FSearch starts, so the "
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
+"<b>Pindai setelah diluncurkan:</b>\n"
+"\n"
+"Jika diaktifkan, folder ini akan dipindai ulang setiap kali FSearch dimulai, "
+"sehingga database mencerminkan setiap perubahan yang dibuat saat FSearch "
+"tidak berjalan."
 
-#: src/fsearch_preferences.ui:1310
+#: src/fsearch_preferences.ui:1311
 msgid ""
 "<b>Stay on one file system:</b>\n"
 "\n"
@@ -1247,8 +1293,13 @@ msgid ""
 "folder. Mounted file systems below it (e.g. external drives or network "
 "shares) are skipped."
 msgstr ""
+"<b>Tetap pada satu file system:</b>\n"
+"\n"
+"Jika diaktifkan, FSearch tidak akan melintasi batas file system saat "
+"memindai folder ini. File system yang terpasang di bawahnya (mis. drive "
+"eksternal atau shared network) akan dilewati."
 
-#: src/fsearch_preferences.ui:1327
+#: src/fsearch_preferences.ui:1328
 msgid ""
 "<b>Rescan every:</b>\n"
 "\n"
@@ -1258,8 +1309,16 @@ msgid ""
 "This is useful for folders on file systems that can't be monitored for "
 "changes."
 msgstr ""
+"<b>Pindai ulang setiap:</b>\n"
+"\n"
+"Jika diaktifkan, folder ini akan dipindai ulang secara otomatis pada "
+"interval yang ditentukan. Gunakan bidang jam dan menit untuk menentukan "
+"seberapa sering pemindaian ulang dilakukan.\n"
+"\n"
+"Ini berguna untuk folder pada file system yang tidak dapat dipantau "
+"perubahannya."
 
-#: src/fsearch_preferences.ui:1346
+#: src/fsearch_preferences.ui:1347
 msgid ""
 "<b>Exclude rules:</b>\n"
 "\n"
@@ -1278,21 +1337,35 @@ msgid ""
 "\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
 "or both."
 msgstr ""
+"<b>Aturan pengecualian:</b>\n"
+"\n"
+"Daftar ini berisi aturan untuk file dan folder yang ingin Anda kecualikan "
+"dari database.\n"
+"\n"
+"-  <b>Aktif:</b> Jika diaktifkan, aturan diterapkan dan item yang cocok "
+"dikecualikan.\n"
+"-  <b>Pola:</b> Teks yang dicocokkan dengan setiap item, ditafsirkan sesuai "
+"Type.\n"
+"-  <b>Type:</b> Cara pola ditafsirkan — <i>Literal</i> (teks persis), <i>"
+"Wildcard</i> (menggunakan * dan ?) atau <i>Regex</i> (ekspresi reguler).\n"
+"-  <b>Match:</b> Apakah pola dicocokkan terhadap <i>Full Path</i> item atau "
+"hanya <i>Basename</i> (nama tanpa path).\n"
+"-  <b>Berlaku untuk:</b> Apakah aturan memengaruhi <i>Files</i>, <i>Folders</"
+"i> atau keduanya."
 
-#: src/fsearch_preferences.ui:1369
+#: src/fsearch_preferences.ui:1370
 msgid ""
 "<b>Add exclude rule:</b>\n"
 "\n"
 "This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
+"<b>Tambahkan aturan pengecualian:</b>\n"
+"\n"
+"Ini menambahkan aturan baru yang kosong ke daftar. Edit kolom Pattern, Type, "
+"Match, dan Applies To untuk mengontrol apa yang dikecualikan dari database."
 
-#: src/fsearch_preferences.ui:1386
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
+#: src/fsearch_preferences.ui:1387
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1300,9 +1373,9 @@ msgid ""
 msgstr ""
 "<b>Hapus baris yang dipilih:</b>\n"
 "\n"
-"Ini menghapus folder yang dipilih dari daftar folder yang dikecualikan."
+"Ini menghapus aturan yang dipilih dari daftar aturan pengecualian."
 
-#: src/fsearch_preferences.ui:1403
+#: src/fsearch_preferences.ui:1404
 #, fuzzy
 #| msgid ""
 #| "<b>Restore default filters:</b>\n"
@@ -1323,7 +1396,7 @@ msgstr ""
 "\n"
 "⚠ Semua filter yang dibuat atau diedit oleh pengguna akan hilang! ⚠"
 
-#: src/fsearch_preferences.ui:1422
+#: src/fsearch_preferences.ui:1423
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1339,7 +1412,7 @@ msgstr ""
 "mengecualikan semua file atau folder yang bernama <i>.git</i> atau "
 "<i>.cache</i> atau berakhiran <i>.swp</i>."
 
-#: src/fsearch_preferences.ui:1439
+#: src/fsearch_preferences.ui:1440
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1352,13 +1425,13 @@ msgstr ""
 "data <i>(yaitu semua file atau folder yang dimulai dengan karakter titik)</"
 "i>."
 
-#: src/fsearch_preferences.ui:1456
+#: src/fsearch_preferences.ui:1457
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "Fokus ke suatu pengaturan untuk mendapatkan deskripsi lengkap tentang "
 "fungsinya."
 
-#: src/fsearch_preferences.ui:1469
+#: src/fsearch_preferences.ui:1470
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1382,7 +1455,7 @@ msgstr ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
-#: src/fsearch_preferences.ui:1490
+#: src/fsearch_preferences.ui:1491
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1399,7 +1472,7 @@ msgstr ""
 "dibuka dengan penangan bawaan untuk tipe file ini, yang biasanya adalah "
 "editor teks."
 
-#: src/fsearch_preferences.ui:1507
+#: src/fsearch_preferences.ui:1508
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1421,7 +1494,7 @@ msgstr ""
 "\t-  <b>Kueri:</b> Istilah pencarian yang digunakan untuk memfilter basis "
 "data"
 
-#: src/fsearch_preferences.ui:1528
+#: src/fsearch_preferences.ui:1529
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1431,7 +1504,7 @@ msgstr ""
 "\n"
 "Tombol ini membuka dialog tempat Anda dapat mengedit filter baru."
 
-#: src/fsearch_preferences.ui:1545
+#: src/fsearch_preferences.ui:1546
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1441,7 +1514,7 @@ msgstr ""
 "\n"
 "Tombol ini menghapus filter yang sedang dipilih."
 
-#: src/fsearch_preferences.ui:1562
+#: src/fsearch_preferences.ui:1563
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1451,7 +1524,7 @@ msgstr ""
 "\n"
 "Tombol ini membuka dialog tempat Anda dapat mengedit filter yang dipilih."
 
-#: src/fsearch_preferences.ui:1579
+#: src/fsearch_preferences.ui:1580
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
@@ -1465,7 +1538,7 @@ msgstr ""
 "\n"
 "⚠ Semua filter yang dibuat atau diedit oleh pengguna akan hilang! ⚠"
 
-#: src/fsearch_preferences.ui:1598
+#: src/fsearch_preferences.ui:1599
 msgid ""
 "<b>Exit on Escape:</b>\n"
 "\n"
@@ -1477,7 +1550,7 @@ msgstr ""
 "Jika diaktifkan, FSearch keluar saat tombol Escape ditekan alih-alih jendela "
 "diminimalkan."
 
-#: src/fsearch_preferences.ui:1617 src/fsearch_window.ui:290
+#: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
 msgstr "Bantuan"
@@ -1486,7 +1559,7 @@ msgstr "Bantuan"
 msgid "Database"
 msgstr "Basis Data"
 
-#: src/fsearch_result_view.c:381
+#: src/fsearch_result_view.c:487
 msgid "Invalid row data"
 msgstr "Data baris tidak valid"
 
@@ -1585,23 +1658,25 @@ msgid ""
 "The search was cancelled before it finished.\n"
 "<b>These results are incomplete.</b>"
 msgstr ""
+"Pencarian dibatalkan sebelum selesai.\n"
+"<b>Hasil ini tidak lengkap.</b>"
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "SEBAGIAN"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "Yang Baru di FSearch"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\">Yang Baru di FSearch 0.3</span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>Pemantauan File System</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
 msgid ""
@@ -1615,20 +1690,32 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"Kini Anda dapat memantau folder individual secara aktif untuk menghilangkan "
+"pemindaian ulang yang sering. Perubahan file kemudian akan langsung muncul "
+"di hasil pencarian Anda.\n"
+"\n"
+"Untuk mengaktifkan fitur ini, buka bagian Database pada dialog Preferences.\n"
+"\n"
+"Lihat dokumentasi online untuk informasi lebih lanjut:\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>Jadwal Pemindaian Ulang Khusus Folder</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
 msgstr ""
+"Anda kini dapat mengonfigurasi interval pembaruan otomatis untuk folder "
+"individual secara independen dan disesuaikan dengan setiap lokasi yang "
+"berbeda."
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>Aturan Pengecualian yang Ditingkatkan</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
@@ -1637,6 +1724,10 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"Anda kini dapat menggunakan wildcard dan regular expressions untuk "
+"mendefinisikan aturan pengecualian yang lebih kuat. \n"
+"Aturan dapat ditujukan khusus untuk file, folder, atau keduanya, dan dapat "
+"dikonfigurasi agar cocok terhadap basename atau full absolute path."
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
@@ -1856,7 +1947,11 @@ msgstr "Jalur + Nama"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr "Pindahkan ke Sampah"
+msgstr "Pindahkan ke _Trash"
+
+#~ msgctxt "Will be followed by the content type string."
+#~ msgid "Error when getting information for content type"
+#~ msgstr "Kesalahan saat mendapatkan informasi untuk tipe konten"
 
 #~ msgid ""
 #~ "<b>Excluded folders:</b>\n"
