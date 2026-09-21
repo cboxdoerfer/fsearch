@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-07-09 04:01+0000\n"
+"PO-Revision-Date: 2026-09-22 09:51+0000\n"
 "Last-Translator: 那個呆萌在山外 "
 "<5h1n38r16h7.d14m0nd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.7.1.dev0\n"
+"X-Generator: Weblate 2026.10.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -141,7 +141,7 @@ msgstr "全部檔案"
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:77
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB rewrite"
@@ -181,11 +181,11 @@ msgstr "將圖示與檔案資訊的擷取改為非同步處理（不再卡死介
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Reduce memory usage"
-msgstr ""
+msgstr "降低記憶體使用量"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "Add contextual help for all preferences"
-msgstr ""
+msgstr "為所有偏好設定新增情境說明"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 #, fuzzy
@@ -1170,6 +1170,9 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>將資料夾新增至資料庫：</b>\n"
+"\n"
+"此按鈕會開啟一個對話框，讓您選取要納入資料庫以供搜尋的資料夾。"
 
 #: src/fsearch_preferences.ui:1241
 msgid ""
@@ -1179,6 +1182,10 @@ msgid ""
 "include that folder in the database. This is useful for adding a path "
 "directly without browsing for it."
 msgstr ""
+"<b>新增特定路徑：</b>\n"
+"\n"
+"在此輸入資料夾的完整路徑，並點擊旁邊的按鈕，將該資料夾納入資料庫。當您想直接"
+"新增路徑而不想逐層瀏覽時，這相當實用。"
 
 #: src/fsearch_preferences.ui:1258
 msgid ""
@@ -1186,6 +1193,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>移除選取的資料列：</b>\n"
+"\n"
+"這會將選取的資料夾從包含的資料夾清單中移除。"
 
 #: src/fsearch_preferences.ui:1275
 msgid ""
@@ -1198,6 +1208,13 @@ msgid ""
 "system resources per watched folder. For large directory trees with many "
 "files the system may run out of resources to watch them all."
 msgstr ""
+"<b>嘗試監控：</b>\n"
+"\n"
+"若啟用，FSearch 會監控此資料夾的變更，自動讓資料庫保持最新，您就不必手動重新"
+"掃描。\n"
+"\n"
+"並非所有檔案系統都支援監控，且每個受監控的資料夾都會佔用少量系統資源。對於檔"
+"案眾多的大型目錄樹，系統可能沒有足夠資源監控所有內容。"
 
 #: src/fsearch_preferences.ui:1294
 msgid ""
@@ -1206,6 +1223,10 @@ msgid ""
 "If enabled, this folder is rescanned every time FSearch starts, so the "
 "database reflects any changes made while FSearch wasn't running."
 msgstr ""
+"<b>啟動後掃描：</b>\n"
+"\n"
+"若啟用，每次啟動 FSearch 時都會重新掃描此資料夾，讓資料庫反映 FSearch 未執行"
+"期間所發生的變更。"
 
 #: src/fsearch_preferences.ui:1311
 msgid ""
@@ -1215,6 +1236,10 @@ msgid ""
 "folder. Mounted file systems below it (e.g. external drives or network "
 "shares) are skipped."
 msgstr ""
+"<b>僅在單一檔案系統中搜尋：</b>\n"
+"\n"
+"若啟用，FSearch 掃描此資料夾時不會跨越檔案系統邊界，其下掛載的檔案系統（例如"
+"外接磁碟或網路共用）會被跳過。"
 
 #: src/fsearch_preferences.ui:1328
 msgid ""
@@ -1226,6 +1251,12 @@ msgid ""
 "This is useful for folders on file systems that can't be monitored for "
 "changes."
 msgstr ""
+"<b>重新掃描間隔：</b>\n"
+"\n"
+"若啟用，會依指定間隔自動重新掃描此資料夾。請使用小時與分鐘欄位設定重新掃描的"
+"頻率。\n"
+"\n"
+"適用於無法監控變更的檔案系統上的資料夾。"
 
 #: src/fsearch_preferences.ui:1347
 msgid ""
@@ -1246,6 +1277,17 @@ msgid ""
 "\t• <b>Applies To:</b> Whether the rule affects <i>Files</i>, <i>Folders</i> "
 "or both."
 msgstr ""
+"<b>排除規則：</b>\n"
+"\n"
+"此清單包含您要從資料庫排除的檔案與資料夾規則。\n"
+"\n"
+"\t• <b>啟用：</b> 若啟用，則套用此規則並排除符合的項目。\n"
+"\t• <b>樣式：</b> 與每個項目比對的文字，其解讀方式取決於類型。\n"
+"\t• <b>類型：</b> 樣式的解讀方式 —<i>字面比對</i>（確切文字）、<i>萬用字元</"
+"i>（使用 * 和 ?）或<i>正規表示式</i>。\n"
+"\t• <b>比對：</b> 樣式是與項目的<i>完整路徑</i>比對，還是僅與<i>主檔名</i>（"
+"不含路徑的名稱）比對。\n"
+"\t• <b>適用於：</b> 此規則影響<i>檔案</i>、<i>資料夾</i>或兩者。"
 
 #: src/fsearch_preferences.ui:1370
 msgid ""
@@ -1254,6 +1296,10 @@ msgid ""
 "This adds a new, empty rule to the list. Edit its Pattern, Type, Match and "
 "Applies To columns to control what gets excluded from the database."
 msgstr ""
+"<b>新增排除規則：</b>\n"
+"\n"
+"這會向清單新增一則空白規則。編輯它的樣式、類型、比對與適用於欄位，即可控制要"
+"從資料庫排除的內容。"
 
 #: src/fsearch_preferences.ui:1387
 msgid ""
@@ -1261,6 +1307,9 @@ msgid ""
 "\n"
 "This removes the selected rule from the list of exclude rules."
 msgstr ""
+"<b>移除選取的資料列：</b>\n"
+"\n"
+"這會將選取的規則從排除規則清單中移除。"
 
 #: src/fsearch_preferences.ui:1404
 msgid ""
@@ -1270,6 +1319,11 @@ msgid ""
 "\n"
 "⚠ All rules which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>還原預設排除規則：</b>\n"
+"\n"
+"此按鈕會還原預設的排除規則集。\n"
+"\n"
+"⚠ 所有使用者建立或編輯過的規則都將遺失！ ⚠"
 
 #: src/fsearch_preferences.ui:1423
 msgid ""
@@ -1280,6 +1334,11 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>從資料庫排除檔案與資料夾：</b>\n"
+"\n"
+"這是您要從資料庫排除的檔案（或資料夾）清單，項目間以分號分隔。例如 <i>"
+".git;.cache;*.swp</i> 會排除所有名稱為 <i>.git</i> 或 <i>.cache</i>、或以 <i>"
+".swp</i> 結尾的檔案與資料夾。"
 
 #: src/fsearch_preferences.ui:1440
 msgid ""
@@ -1288,10 +1347,14 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>排除隱藏檔案與資料夾：</b>\n"
+"\n"
+"若啟用，隱藏的檔案與資料夾將被排除於資料庫之外<i>（即以點字符開頭的所有檔案或"
+"資料夾）</i>。"
 
 #: src/fsearch_preferences.ui:1457
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "聚焦至某項設定，即可查看其詳細說明。"
 
 #: src/fsearch_preferences.ui:1470
 msgid ""
@@ -1306,6 +1369,14 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>定期以指定時間間隔更新資料庫：</b>\n"
+"\n"
+"若啟用，只要 FSearch 正在執行，資料庫就會依指定間隔定期更新。\n"
+"\n"
+"若您希望在 FSearch 未執行時也能於背景更新資料庫，應使用 cron 或 systemd 計時"
+"器等工具，以以下方式定期觸發更新：\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1491
 msgid ""
@@ -1316,6 +1387,11 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
+"<b>啟動桌面檔案：</b>\n"
+"\n"
+"若啟用，啟動 <i>.desktop</i> 檔案時會執行其中定義的應用程式，讓 FSearch 可作"
+"為應用程式啟動器使用。否則會以這類檔案的預設處理器開啟 <i>.desktop</i> 檔案，"
+"通常是文字編輯器。"
 
 #: src/fsearch_preferences.ui:1508
 msgid ""
@@ -1328,6 +1404,13 @@ msgid ""
 "the filter on demand\n"
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
+"<b>篩選器：</b>\n"
+"\n"
+"這是所有可用篩選器的清單。篩選器是一組預先定義的搜尋。\n"
+"\n"
+"\t• <b>名稱：</b> 用以識別篩選器的唯一描述名稱\n"
+"\t• <b>巨集：</b> 輸入巨集文字並接上「:」，即可隨時啟用該篩選器\n"
+"\t• <b>查詢條件：</b> 用以過濾資料庫的搜尋詞"
 
 #: src/fsearch_preferences.ui:1529
 msgid ""
@@ -1335,6 +1418,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit a new filter."
 msgstr ""
+"<b>新增篩選器：</b>\n"
+"\n"
+"此按鈕會開啟一個對話框，讓您可以編輯一個新的篩選器。"
 
 #: src/fsearch_preferences.ui:1546
 msgid ""
@@ -1342,6 +1428,9 @@ msgid ""
 "\n"
 "This button removes the currently selected filter."
 msgstr ""
+"<b>移除已選篩選器：</b>\n"
+"\n"
+"此按鈕會移除目前選取的篩選器。"
 
 #: src/fsearch_preferences.ui:1563
 msgid ""
@@ -1349,6 +1438,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit the selected filter."
 msgstr ""
+"<b>編輯已選篩選器：</b>\n"
+"\n"
+"此按鈕會開啟一個對話框，讓您可以編輯選取的篩選器。"
 
 #: src/fsearch_preferences.ui:1580
 msgid ""
@@ -1358,6 +1450,11 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>還原預設篩選器：</b>\n"
+"\n"
+"此按鈕會還原預設的篩選器設定。\n"
+"\n"
+"⚠ 所有使用者建立或編輯過的篩選器都將遺失！ ⚠"
 
 #: src/fsearch_preferences.ui:1599
 msgid ""
@@ -1366,128 +1463,137 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>按下 Escape 鍵時離開：</b>\n"
+"\n"
+"若啟用，按下 Escape 鍵時 FSearch 會直接結束，而不是將視窗最小化。"
 
 #: src/fsearch_preferences.ui:1618 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
 msgid "Help"
-msgstr ""
+msgstr "說明"
 
 #: src/fsearch_preferences_dialog.c:238
 msgid "Database"
-msgstr ""
+msgstr "資料庫"
 
 #: src/fsearch_result_view.c:487
 msgid "Invalid row data"
-msgstr ""
+msgstr "無效的資料列"
 
 #: src/fsearch_statusbar.c:58
 #, c-format
 msgid "%'d Item"
-msgstr ""
+msgstr "%'d 個項目"
 
 #: src/fsearch_statusbar.c:58 src/fsearch_statusbar.c:186
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d 個項目"
 
 #: src/fsearch_statusbar.c:80
 msgid "Querying…"
-msgstr ""
+msgstr "正在查詢…"
 
 #: src/fsearch_statusbar.c:175
 msgid "Loading…"
-msgstr ""
+msgstr "正在載入…"
 
 #: src/fsearch_statusbar.c:180
 msgid "Scanning…"
-msgstr ""
+msgstr "正在掃描…"
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
-msgstr ""
+msgstr "搜尋結果數量"
 
 #: src/fsearch_statusbar.ui:53
 msgid "0 Items"
-msgstr ""
+msgstr "0 個項目"
 
 #: src/fsearch_statusbar.ui:106
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
-msgstr ""
+msgstr "索引："
 
 #: src/fsearch_statusbar.ui:228
 msgid "Number of selected folders"
-msgstr ""
+msgstr "已選取的資料夾數量"
 
 #: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
-msgstr ""
+msgstr "已選取的檔案數量"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:103
 msgid "Cancel database update"
-msgstr ""
+msgstr "取消資料庫更新"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
-msgstr ""
+msgstr "資料庫項目數量"
 
 #: src/fsearch_statusbar.ui:370
 msgid "(empty)"
-msgstr ""
+msgstr "（空）"
 
 #: src/fsearch_statusbar.ui:407
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"搜尋詞包含大寫字元。 \n"
+"已對此搜尋詞暫時啟用<b>區分大小寫</b>。"
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
-msgstr ""
+msgstr "大小寫"
 
 #: src/fsearch_statusbar.ui:514
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"搜尋詞包含路徑分隔符號。\n"
+"已對此搜尋詞暫時啟用<b>在路徑中搜尋</b>。"
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
-msgstr ""
+msgstr "路徑"
 
 #: src/fsearch_statusbar.ui:651
 msgid "REGEX"
-msgstr ""
+msgstr "正規表示式"
 
 #: src/fsearch_statusbar.ui:726
 msgid ""
 "The search was cancelled before it finished.\n"
 "<b>These results are incomplete.</b>"
 msgstr ""
+"搜尋在完成前已取消。\n"
+"<b>這些結果不完整。</b>"
 
 #: src/fsearch_statusbar.ui:756
 msgid "PARTIAL"
-msgstr ""
+msgstr "不完整"
 
 #: src/fsearch_welcome_dialog.ui:26
 msgid "What's New in FSearch"
-msgstr ""
+msgstr "FSearch 新功能"
 
 #: src/fsearch_welcome_dialog.ui:79
 msgid ""
 "<span size=\"xx-large\" weight=\"bold\">What's New in FSearch 0.3</span>"
-msgstr ""
+msgstr "<span size=\"xx-large\" weight=\"bold\">FSearch 0.3 新功能</span>"
 
 #: src/fsearch_welcome_dialog.ui:149
 msgid "<big><b>File System Monitoring</b></big>"
-msgstr ""
+msgstr "<big><b>檔案系統監控</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:163
 msgid ""
@@ -1501,20 +1607,28 @@ msgid ""
 "<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
 "a>"
 msgstr ""
+"您現在可以主動監控個別資料夾，免去頻繁的重新掃描。檔案變更會立即呈現在搜尋結"
+"果中。\n"
+"\n"
+"若要啟用此功能，請前往偏好設定對話框的資料庫區塊。\n"
+"\n"
+"更多資訊請參閱線上文件：\n"
+"<a href=\"URL\">https://github.com/cboxdoerfer/fsearch/wiki/Database-update</"
+"a>"
 
 #: src/fsearch_welcome_dialog.ui:232
 msgid "<big><b>Folder-Specific Rescan Schedules</b></big>"
-msgstr ""
+msgstr "<big><b>資料夾專屬的重新掃描排程</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:246
 msgid ""
 "You can now configure automatic update intervals for individual folders "
 "independently and tailored to each distinct location."
-msgstr ""
+msgstr "您現在可以為各個資料夾獨立設定自動更新間隔，依各位置的需求分別調整。"
 
 #: src/fsearch_welcome_dialog.ui:309
 msgid "<big><b>Improved Exclude Rules</b></big>"
-msgstr ""
+msgstr "<big><b>更完善的排除規則</b></big>"
 
 #: src/fsearch_welcome_dialog.ui:323
 msgid ""
@@ -1523,18 +1637,20 @@ msgid ""
 "Rules can be targeted specifically at files, folders, or both, and can be "
 "configured to match against either the basename or the full absolute path."
 msgstr ""
+"您現在可以使用萬用字元與正規表示式，定義更強大的排除規則。 \n"
+"規則可專門套用於檔案、資料夾或兩者，並可設定依主檔名或完整絕對路徑進行比對。"
 
 #: src/fsearch_window.c:766 src/menus.ui:279
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 #: src/fsearch_window.c:780 src/menus.ui:271
 msgid "Extension"
-msgstr ""
+msgstr "副檔名"
 
 #: src/fsearch_window.c:787 src/menus.ui:283
 msgid "Date Modified"
-msgstr ""
+msgstr "修改日期"
 
 #: src/fsearch_window.c:801
 msgid ""
@@ -1543,18 +1659,21 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"結果很多時，依 <b> 類型 </b> 排序可能需要幾秒。\n"
+"\n"
+"此排序方式不會保留，搜尋詞變更時將被重置。"
 
 #: src/fsearch_window.ui:68
 msgid "New window"
-msgstr ""
+msgstr "開新視窗"
 
 #: src/fsearch_window.ui:89
 msgid "Update database"
-msgstr ""
+msgstr "更新資料庫"
 
 #: src/fsearch_window.ui:144 src/menus.ui:112
 msgid "Search in Path"
-msgstr ""
+msgstr "在路徑中搜尋"
 
 #: src/fsearch_window.ui:158 src/menus.ui:116
 msgid "Match Case"
@@ -1562,185 +1681,182 @@ msgstr "區分大小寫"
 
 #: src/fsearch_window.ui:172 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr ""
+msgstr "啟用正規表示式"
 
 #: src/fsearch_window.ui:197 src/menus.ui:95
 msgid "Show Statusbar"
-msgstr ""
+msgstr "顯示狀態列"
 
 #: src/fsearch_window.ui:211 src/menus.ui:99
 msgid "Show Filter"
-msgstr ""
+msgstr "顯示篩選器"
 
 #: src/fsearch_window.ui:225 src/menus.ui:103
 msgid "Show Search Button"
-msgstr ""
+msgstr "顯示搜尋按鈕"
 
 #: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
 msgid "FSearch Online"
-msgstr ""
+msgstr "FSearch 線上服務"
 
 #: src/fsearch_window.ui:304 src/menus.ui:161
 msgid "About"
-msgstr ""
+msgstr "關於"
 
 #: src/fsearch_window.ui:329 src/menus.ui:47
 msgid "Quit"
-msgstr ""
+msgstr "結束"
 
 #: src/fsearch_window.ui:372 src/fsearch_window.ui:443 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "捐款"
 
 #: src/fsearch_window.ui:387 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "討論區"
 
 #: src/fsearch_window.ui:401 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "錯誤報告與功能建議"
 
 #: src/fsearch_window.ui:460 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub Sponsors"
 
 #: src/fsearch_window.ui:474 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:586
 msgid "Search…"
-msgstr ""
+msgstr "搜尋…"
 
 #: src/fsearch_window.ui:608
 msgid "Select a Filter"
-msgstr ""
+msgstr "選擇篩選器"
 
 #: src/fsearch_window_actions.c:110
 #, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "確定要開啟 %'d 個檔案嗎？"
 
 #: src/fsearch_window_actions.c:115
 msgid "Opening Files…"
-msgstr ""
+msgstr "正在開啟檔案…"
 
 #: src/fsearch_window_actions.c:198
 #, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "確定要移除 %'d 個檔案嗎？"
 
 #: src/fsearch_window_actions.c:205
 msgid "Deleting files…"
-msgstr ""
+msgstr "正在刪除檔案…"
 
 #: src/fsearch_window_actions.c:205
 msgid "Moving files to trash…"
-msgstr ""
+msgstr "正在移至資源回收筒…"
 
 #: src/fsearch_window_actions.c:238 src/fsearch_window_actions.c:533
 #: src/fsearch_window_actions.c:580
 msgid "Something went wrong."
-msgstr ""
+msgstr "發生錯誤。"
 
 #: src/fsearch_window_actions.c:263
 #, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "確定要開啟 %'d 個檔案屬性視窗嗎？"
 
 #: src/fsearch_window_actions.c:270
 msgid "Opening file properties…"
-msgstr ""
+msgstr "正在開啟檔案屬性…"
 
 #: src/menus.ui:6
 msgid "_File"
-msgstr ""
+msgstr "_檔案"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr ""
+msgstr "開新視窗"
 
 #: src/menus.ui:16 src/menus.ui:171
 msgid "_Open"
-msgstr ""
+msgstr "_開啟"
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr ""
+msgstr "開啟資料夾"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr ""
+msgstr "更新資料庫"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "取消更新"
 
 #: src/menus.ui:42
 msgid "Close Window"
-msgstr ""
+msgstr "關閉視窗"
 
 #: src/menus.ui:54
 msgid "_Edit"
-msgstr ""
+msgstr "_編輯"
 
 #: src/menus.ui:57 src/menus.ui:207
 msgid "_Copy"
-msgstr ""
+msgstr "_複製"
 
 #: src/menus.ui:62 src/menus.ui:228
 msgid "Cu_t"
-msgstr ""
+msgstr "_剪下"
 
 #: src/menus.ui:69
 msgid "Select All"
-msgstr ""
+msgstr "全選"
 
 #: src/menus.ui:74
 msgid "Deselect All"
-msgstr ""
+msgstr "取消全選"
 
 #: src/menus.ui:78
 msgid "Invert Selection"
-msgstr ""
+msgstr "反向選取"
 
 #: src/menus.ui:92
 msgid "_View"
-msgstr ""
+msgstr "_檢視"
 
 #: src/menus.ui:109
 msgid "_Search"
-msgstr ""
+msgstr "_搜尋"
 
 #: src/menus.ui:126
 msgid "_Help"
-msgstr ""
+msgstr "_說明"
 
 #: src/menus.ui:177
 msgid "Open _With"
-msgstr ""
+msgstr "_開啟工具"
 
 #: src/menus.ui:191
 msgid "_Open Folder"
-msgstr ""
+msgstr "_開啟資料夾"
 
 #: src/menus.ui:213
 msgid "Copy as Text"
-msgstr ""
+msgstr "複製為文字"
 
 #: src/menus.ui:223
 msgid "Path + Name"
-msgstr ""
+msgstr "路徑 + 名稱"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr ""
+msgstr "_移至資源回收筒"
 
 #~ msgctxt "Will be followed by the content type string."
 #~ msgid "Error when getting information for content type"
