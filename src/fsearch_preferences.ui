@@ -298,6 +298,24 @@
                                 <property name="position">5</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkCheckButton" id="show_tray_icon_button">
+                                <property name="label" translatable="yes">Show tray icon when minimized</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="draw-indicator">True</property>
+                                  <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                  <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                  <signal name="query-tooltip" handler="on_help_show" object="help_show_tray_icon" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">6</property>
+                              </packing>
+                            </child>
                           </object>
                         </child>
                       </object>

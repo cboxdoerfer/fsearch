@@ -611,8 +611,7 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
     FsearchApplicationWindow *self = user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
-    fsearch_application_window_prepare_shutdown(self);
-    gtk_widget_destroy(GTK_WIDGET(self));
+    gtk_window_close(GTK_WINDOW(self));
 }
 
 static void
@@ -719,7 +718,10 @@ fsearch_window_action_focus_search(GSimpleAction *action, GVariant *variant, gpo
 static void
 fsearch_window_action_hide_window(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    gtk_window_iconify(GTK_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+
+    // Close the window - this will trigger delete-event which hides instead of destroys
+    gtk_window_close(GTK_WINDOW(self));
 }
 
 static void
