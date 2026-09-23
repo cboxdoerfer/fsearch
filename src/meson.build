@@ -14,6 +14,7 @@ libfsearch_sources = [
     resources,
     'fsearch.c',
     'fsearch_array.c',
+    'fsearch_cli.c',
     'fsearch_clipboard.c',
     'fsearch_config.c',
     'fsearch_database.c',
