@@ -39,6 +39,7 @@ typedef struct {
     bool database_config_changed;
     bool listview_config_changed;
     bool search_config_changed;
+    bool tray_icon_config_changed;
 } FsearchConfigCompareResult;
 
 struct _FsearchConfig {
@@ -86,6 +87,7 @@ struct _FsearchConfig {
     bool show_statusbar;
     bool show_filter;
     bool show_search_button;
+    bool show_tray_icon;
 
     // Columns
     bool show_listview_icons;

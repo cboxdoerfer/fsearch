@@ -122,6 +122,7 @@ static const FsearchKeyData INTERFACE_SECTION[] = {
     CONF_BOOL(show_statusbar, true),
     CONF_BOOL(show_filter, true),
     CONF_BOOL(show_search_button, false),
+    CONF_BOOL(show_tray_icon, true),
     CONF_BOOL(show_listview_icons, true),
     CONF_BOOL(show_path_column, true),
     CONF_BOOL(show_type_column, false),
@@ -844,6 +845,10 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
 
     if (excludes_changed || includes_changed) {
         result.database_config_changed = true;
+    }
+
+    if (c1->show_tray_icon != c2->show_tray_icon) {
+        result.tray_icon_config_changed = true;
     }
 
     return result;
