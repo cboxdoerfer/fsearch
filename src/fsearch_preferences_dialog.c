@@ -48,6 +48,7 @@ struct _FsearchPreferencesDialog {
     GtkToggleButton *action_after_file_open_keyboard;
     GtkToggleButton *action_after_file_open_mouse;
     GtkToggleButton *show_indexing_status_button;
+    GtkToggleButton *show_tray_icon_button;
 
     // Search page
     GtkToggleButton *auto_search_in_path_button;
@@ -143,6 +144,7 @@ update_config(FsearchPreferencesDialog *self) {
     self->config->action_after_file_open_keyboard = gtk_toggle_button_get_active(self->action_after_file_open_keyboard);
     self->config->action_after_file_open_mouse = gtk_toggle_button_get_active(self->action_after_file_open_mouse);
     self->config->show_indexing_status = gtk_toggle_button_get_active(self->show_indexing_status_button);
+    self->config->show_tray_icon = gtk_toggle_button_get_active(self->show_tray_icon_button);
     self->config->auto_search_in_path = gtk_toggle_button_get_active(self->auto_search_in_path_button);
     self->config->auto_match_case = gtk_toggle_button_get_active(self->auto_match_case_button);
     self->config->search_as_you_type = gtk_toggle_button_get_active(self->search_as_you_type_button);
@@ -256,6 +258,7 @@ fsearch_preferences_dialog_constructed(GObject *object) {
                                  self->config_old->action_after_file_open_keyboard);
     gtk_toggle_button_set_active(self->action_after_file_open_mouse, self->config_old->action_after_file_open_mouse);
     gtk_toggle_button_set_active(self->show_indexing_status_button, self->config_old->show_indexing_status);
+    gtk_toggle_button_set_active(self->show_tray_icon_button, self->config_old->show_tray_icon);
     gtk_toggle_button_set_active(self->auto_search_in_path_button, self->config_old->auto_search_in_path);
     gtk_toggle_button_set_active(self->auto_match_case_button, self->config_old->auto_match_case);
     gtk_toggle_button_set_active(self->search_as_you_type_button, self->config_old->search_as_you_type);
@@ -310,6 +313,7 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_keyboard);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_mouse);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_indexing_status_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_tray_icon_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_search_in_path_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_match_case_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, search_as_you_type_button);

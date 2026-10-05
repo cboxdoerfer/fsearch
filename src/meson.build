@@ -64,6 +64,7 @@ libfsearch_sources = [
     'fsearch_window.c',
     'fsearch_window_actions.c',
     'fsearch_preview.c',
+    'fsearch_tray_icon.c',
 ]
 
 if have_inotify
@@ -80,6 +81,7 @@ fsearch_deps = [
     dependency('gtk+-3.0', version: '>= 3.22'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 4.4'),
+    dependency('appindicator3-0.1', version: '>= 0.5.0'),
 ]
 
 fsearch_enums_headers = [

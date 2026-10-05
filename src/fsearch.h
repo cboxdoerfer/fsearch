@@ -35,8 +35,6 @@ G_DECLARE_FINAL_TYPE(FsearchApplication, fsearch_application, FSEARCH, APPLICATI
 FsearchApplication *
 fsearch_application_new(void);
 
-G_END_DECLS
-
 typedef enum {
     FSEARCH_DATABASE_STATE_SCANNING,
     FSEARCH_DATABASE_STATE_LOADING,
@@ -64,3 +62,14 @@ fsearch_application_get_database_dir(void);
 
 gboolean
 fsearch_application_has_file_manager_on_bus(FsearchApplication *self);
+
+struct _FsearchApplicationWindow;
+typedef struct _FsearchApplicationWindow FsearchApplicationWindow;
+
+FsearchApplicationWindow *
+fsearch_application_get_first_window(FsearchApplication *self);
+
+void
+fsearch_application_present_window(FsearchApplication *self);
+
+G_END_DECLS

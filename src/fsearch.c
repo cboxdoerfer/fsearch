@@ -29,6 +29,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_preferences_dialog.h"
 #include "fsearch_preview.h"
+#include "fsearch_tray_icon.h"
 #include "fsearch_window.h"
 
 #ifdef HAVE_CONFIG_H
@@ -54,8 +55,10 @@ struct _FsearchApplication {
     FsearchConfig *config;
 
     char *option_search_term;
+    char *startup_id;
     bool new_window;
     bool minimized;
+    guint activation_idle_id;
 
     guint file_manager_watch_id;
     bool has_file_manager_on_bus;
@@ -64,6 +67,8 @@ struct _FsearchApplication {
 
     uint32_t num_files;
     uint32_t num_folders;
+
+    struct _FsearchTrayIcon *tray_icon;
 };
 
 static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
@@ -96,6 +101,14 @@ get_first_application_window(FsearchApplication *self) {
     }
 
     return FSEARCH_APPLICATION_WINDOW(windows->data);
+}
+
+FsearchApplicationWindow *
+fsearch_application_get_first_window(FsearchApplication *self)
+{
+  g_return_val_if_fail(FSEARCH_IS_APPLICATION(self), NULL);
+
+  return get_first_application_window(self);
 }
 
 static GString *
@@ -186,12 +199,7 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
 
 static void
 action_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
-    // Close all open windows. This ensures that all refernces to the database will be dropped and the database
-    // is properly finalized.
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-    for (GList *l = windows; l != NULL; l = l->next) {
-        gtk_window_close(GTK_WINDOW(l->data));
-    }
+    g_application_quit(G_APPLICATION(app));
 }
 
 static void
@@ -231,6 +239,18 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         }
 
         set_accels_for_escape(G_APPLICATION(self));
+        if (config_diff.tray_icon_config_changed) {
+            if (self->config->show_tray_icon) {
+                if (!self->tray_icon) {
+                    self->tray_icon = fsearch_tray_icon_new(GTK_APPLICATION(self));
+                }
+            } else {
+                if (self->tray_icon) {
+                    fsearch_tray_icon_free(self->tray_icon);
+                    self->tray_icon = NULL;
+                }
+            }
+        }
     }
 }
 
@@ -270,15 +290,23 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
 }
 
 static void
-show_app_window(FsearchApplication *self, FsearchApplicationWindow *app_window, gboolean minimized) {
+show_app_window(FsearchApplication *self, FsearchApplicationWindow *app_window, gboolean minimized)
+{
     g_return_if_fail(FSEARCH_IS_APPLICATION(self));
     g_return_if_fail(FSEARCH_IS_APPLICATION_WINDOW(app_window));
 
     move_search_term_to_window(self, app_window);
     fsearch_application_window_focus_search_entry(app_window);
 
+    if (self->startup_id) {
+        gtk_window_set_startup_id(GTK_WINDOW(app_window), self->startup_id);
+        g_clear_pointer(&self->startup_id, g_free);
+    }
+
+    // Ensure the window is visible (in case it was just hidden)
+    gtk_widget_show(GTK_WIDGET(app_window));
+
     if (minimized) {
-        gtk_widget_show(GTK_WIDGET(app_window));
         gtk_window_iconify(GTK_WINDOW(app_window));
     }
     else {
@@ -295,10 +323,30 @@ action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer
     show_app_window(self, app_window, minimized);
 }
 
+void
+fsearch_application_present_window(FsearchApplication *self)
+{
+    g_return_if_fail(FSEARCH_IS_APPLICATION(self));
+
+    FsearchApplicationWindow *window = get_first_application_window(self);
+    if (window) {
+        show_app_window(self, window, false);
+        return;
+    }
+
+    g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", g_variant_new_boolean(false));
+}
+
 static void
 fsearch_application_shutdown(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     FsearchApplication *self = FSEARCH_APPLICATION(app);
+
+    if (self->activation_idle_id != 0) {
+        g_source_remove(self->activation_idle_id);
+        self->activation_idle_id = 0;
+        g_application_release(G_APPLICATION(self));
+    }
 
     for (GList *windows = gtk_application_get_windows(GTK_APPLICATION(app)); windows; windows = windows->next) {
         GtkWindow *window = windows->data;
@@ -310,6 +358,12 @@ fsearch_application_shutdown(GApplication *app) {
     if (self->file_manager_watch_id) {
         g_bus_unwatch_name(self->file_manager_watch_id);
         self->file_manager_watch_id = 0;
+    }
+
+    // Clean up tray icon
+    if (self->tray_icon) {
+        fsearch_tray_icon_free(self->tray_icon);
+        self->tray_icon = NULL;
     }
 
     // close the preview
@@ -332,6 +386,7 @@ fsearch_application_shutdown(GApplication *app) {
     g_clear_object(&self->db); // blocks until the database is saved
 
     g_clear_pointer(&self->option_search_term, g_free);
+    g_clear_pointer(&self->startup_id, g_free);
 
     config_save(self->config);
 
@@ -457,6 +512,12 @@ fsearch_application_startup(GApplication *app) {
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
     self->db = fsearch_database_new(g_steal_pointer(&db_file), self->config->includes, self->config->excludes);
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
+
+    // Initialize tray icon if enabled in config
+    if (self->config->show_tray_icon)
+    {
+        self->tray_icon = fsearch_tray_icon_new(GTK_APPLICATION(app));
+    }
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_load_finished), self, G_CONNECT_AFTER);
@@ -631,6 +692,36 @@ fsearch_application_activate(GApplication *app) {
     }
 }
 
+static gboolean
+activate_from_command_line(gpointer user_data)
+{
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+
+    self->activation_idle_id = 0;
+    g_application_activate(G_APPLICATION(self));
+    self->new_window = false;
+    self->minimized = false;
+    g_application_release(G_APPLICATION(self));
+
+    return G_SOURCE_REMOVE;
+}
+
+static void
+queue_command_line_activation(FsearchApplication *self)
+{
+    if (self->activation_idle_id != 0) {
+        return;
+    }
+
+    /* Keep a first instance alive until its deferred activation creates a window. */
+    g_application_hold(G_APPLICATION(self));
+    self->activation_idle_id =
+        g_idle_add_full(G_PRIORITY_HIGH_IDLE,
+                        activate_from_command_line,
+                        g_object_ref(self),
+                        g_object_unref);
+}
+
 static gint
 fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmdline) {
     FsearchApplication *self = FSEARCH_APPLICATION(app);
@@ -638,6 +729,7 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     g_assert(G_IS_APPLICATION_COMMAND_LINE(cmdline));
 
     GVariantDict *dict = g_application_command_line_get_options_dict(cmdline);
+    GVariant *platform_data = g_application_command_line_get_platform_data(cmdline);
 
     if (g_variant_dict_contains(dict, "new-window")) {
         self->new_window = true;
@@ -663,11 +755,21 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
         self->option_search_term = g_strdup(search_term);
     }
 
-    g_application_activate(G_APPLICATION(self));
-    self->new_window = false;
-    self->minimized = false;
+    const gchar *startup_id = NULL;
+    if (platform_data && g_variant_lookup(platform_data, "desktop-startup-id", "&s", &startup_id)) {
+        g_clear_pointer(&self->startup_id, g_free);
+        self->startup_id = g_strdup(startup_id);
+    }
 
-    return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
+    /*
+     * A secondary fsearch process waits for this D-Bus command-line handler
+     * to return.  Presenting a GTK window here makes that process (and its
+     * startup cursor) wait on the primary UI thread.  Defer it to the next
+     * main-loop iteration instead; bursts of launches are coalesced.
+     */
+    queue_command_line_activation(self);
+
+    return 0;
 }
 
 typedef struct {

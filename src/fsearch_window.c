@@ -32,6 +32,7 @@
 #include "fsearch_statusbar.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
+#include "fsearch.h"
 #include <glib/gi18n.h>
 
 struct _FsearchApplicationWindow {
@@ -977,11 +978,29 @@ on_database_scan_started(FsearchDatabase *db2, gpointer user_data) {
     database_scan_started(win);
 }
 
+static gboolean
+on_window_delete_event (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+    FsearchApplicationWindow *window = FSEARCH_APPLICATION_WINDOW(widget);
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    if (config->show_tray_icon) {
+        gtk_widget_hide(widget);
+        return TRUE;
+    }
+
+    fsearch_application_window_prepare_shutdown(window);
+    return FALSE;
+}
+
 static void
 fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
+
+    // Hide window on close instead of destroying it (GTK3 compatible)
+    g_signal_connect(GTK_WIDGET(self), "delete-event", G_CALLBACK(on_window_delete_event), NULL);
 
     guint id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     self->result_view = fsearch_result_view_new(id);
@@ -1057,14 +1076,6 @@ on_search_entry_activate(GtkButton *widget, gpointer user_data) {
     }
 }
 
-static gboolean
-on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(widget);
-    fsearch_application_window_prepare_shutdown(win);
-    g_clear_pointer(&widget, gtk_widget_destroy);
-    return TRUE;
-}
-
 static void
 fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
@@ -1089,7 +1100,6 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
-    gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
