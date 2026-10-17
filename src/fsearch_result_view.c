@@ -486,6 +486,14 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         pango_layout_set_alignment(layout, column->alignment);
         pango_layout_set_ellipsize(layout, column->ellipsize_mode);
         gtk_render_layout(context, cr, x + ROW_PADDING_X + dx, rect->y + ROW_PADDING_Y, layout);
+
+        // Remember where the name (icon + text) ends, so a mouse drag starting inside that box
+        // becomes a drag and drop operation instead of a rubberband selection
+        if (column->type == DATABASE_INDEX_PROPERTY_NAME) {
+            int text_width = 0;
+            pango_layout_get_pixel_size(layout, &text_width, NULL);
+            fsearch_list_view_set_row_drag_end_position(result_view->list_view, row, x + ROW_PADDING_X + dx + text_width);
+        }
         x += column->effective_width;
         cairo_restore(cr);
     }
