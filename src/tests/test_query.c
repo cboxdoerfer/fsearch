@@ -65,11 +65,11 @@ test_query(QueryTest *t) {
     g_clear_pointer(&match_data, fsearch_query_match_data_free);
 
     if (found != t->result) {
-        g_printerr("[%s] should%s match [name:%s, size:%zd]\n",
+        g_printerr("[%s] should%s match [name:%s, size:%lld]\n",
                    t->needle,
                    t->result ? "" : " NOT",
                    t->haystack,
-                   t->size);
+                   (long long)t->size);
     }
     g_assert_true(found == t->result);
 }

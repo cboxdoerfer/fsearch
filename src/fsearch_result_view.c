@@ -1,5 +1,5 @@
-#include "gdk/gdk.h"
 #define G_LOG_DOMAIN "fsearch-result-view"
+#include "gdk/gdk.h"
 
 #include "fsearch_result_view.h"
 
