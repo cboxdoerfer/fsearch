@@ -352,8 +352,10 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     return fsearch_query_node_new_regex(regex_search_term, flags);
 }
 
+// `ascii_haystack` forces the plain string matchers, for callers which replace the haystack with
+// one that isn't a FsearchUtfBuilder
 static FsearchQueryNode *
-query_node_new_string_comparison(const char *search_term, FsearchQueryFlags flags) {
+query_node_new_string_comparison(const char *search_term, FsearchQueryFlags flags, bool ascii_haystack) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
 
@@ -361,7 +363,7 @@ query_node_new_string_comparison(const char *search_term, FsearchQueryFlags flag
     qnode->flags = flags;
     node_init_needle(qnode, search_term);
 
-    if (fsearch_string_is_ascii_icase(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
+    if (ascii_haystack || fsearch_string_is_ascii_icase(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         if (flags & QUERY_FLAG_EXACT_MATCH) {
             qnode->search_func = flags & QUERY_FLAG_MATCH_CASE
                                      ? fsearch_query_matcher_strcmp
@@ -401,7 +403,8 @@ fsearch_query_node_new_contenttype(const char *search_term, FsearchQueryFlags fl
         res = fsearch_query_node_new_wildcard(search_term, flags);
     }
     else {
-        res = query_node_new_string_comparison(search_term, flags);
+        // Content types are plain ASCII, so the utf matchers would gain nothing anyway
+        res = query_node_new_string_comparison(search_term, flags, true);
     }
 
     if (res) {
@@ -438,7 +441,7 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
         res = fsearch_query_node_new_wildcard(search_term, flags);
     }
     else {
-        res = query_node_new_string_comparison(search_term, flags);
+        res = query_node_new_string_comparison(search_term, flags, false);
     }
     if (res) {
         res->triggers_auto_match_case = triggers_auto_match_case;
