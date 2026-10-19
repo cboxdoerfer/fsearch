@@ -175,7 +175,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
         // create full path of file/folder
         g_string_truncate(path, path_len);
-        g_string_append(path, dent->d_name);
+        g_string_append_len(path, dent->d_name, d_name_len);
 
         struct stat st;
         int stat_flags = AT_SYMLINK_NOFOLLOW;
