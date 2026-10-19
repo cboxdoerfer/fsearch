@@ -121,6 +121,9 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry);
 const char *
 db_entry_get_name_raw(FsearchDatabaseEntry *entry);
 
+uint16_t
+db_entry_get_name_len(FsearchDatabaseEntry *entry);
+
 FsearchDatabaseEntry *
 db_entry_get_parent(FsearchDatabaseEntry *entry);
 
@@ -179,6 +182,13 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
              const char *name,
              FsearchDatabaseEntry *parent,
              FsearchDatabaseEntryType type);
+
+FsearchDatabaseEntry *
+db_entry_new_with_name_len(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                           const char *name,
+                           size_t name_len,
+                           FsearchDatabaseEntry *parent,
+                           FsearchDatabaseEntryType type);
 
 FsearchDatabaseEntry *
 db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,

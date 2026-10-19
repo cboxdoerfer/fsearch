@@ -236,6 +236,11 @@ db_entry_get_name_raw(FsearchDatabaseEntry *entry) {
     return G_LIKELY(entry) ? entry_get_name(entry) : NULL;
 }
 
+uint16_t
+db_entry_get_name_len(FsearchDatabaseEntry *entry) {
+    return G_LIKELY(entry) ? entry->name_len : 0;
+}
+
 FsearchDatabaseEntry *
 db_entry_get_parent(FsearchDatabaseEntry *entry) {
     return entry ? entry->parent : NULL;
@@ -847,14 +852,14 @@ entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, size
 }
 
 FsearchDatabaseEntry *
-db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
-             const char *name,
-             FsearchDatabaseEntry *parent,
-             FsearchDatabaseEntryType type) {
+db_entry_new_with_name_len(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                           const char *name,
+                           size_t name_len,
+                           FsearchDatabaseEntry *parent,
+                           FsearchDatabaseEntryType type) {
     if (type == DATABASE_ENTRY_TYPE_FOLDER) {
         attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS;
     }
-    const size_t name_len = name ? strlen(name) : 0;
     g_assert(name_len <= UINT16_MAX);
     const size_t entry_size = entry_get_size_for_flags(attribute_flags, name_len);
     FsearchDatabaseEntry *entry = calloc(1, entry_size);
@@ -874,7 +879,8 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
     entry->name_len = (uint16_t)name_len;
 
     if (name) {
-        memcpy(entry->attributes, name, name_len + 1);
+        // we can skip copying the null terminated since our buffer is already zerod (calloc)
+        memcpy(entry->attributes, name, name_len);
     }
 
     if (parent) {
@@ -882,6 +888,14 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
         db_entry_set_parent(entry, parent);
     }
     return entry;
+}
+
+FsearchDatabaseEntry *
+db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
+             const char *name,
+             FsearchDatabaseEntry *parent,
+             FsearchDatabaseEntryType type) {
+    return db_entry_new_with_name_len(attribute_flags, name, name ? strlen(name) : 0, parent, type);
 }
 
 FsearchDatabaseEntry *
