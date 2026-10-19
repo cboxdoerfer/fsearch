@@ -222,8 +222,13 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
 
 GString *
 db_entry_get_name_for_display(FsearchDatabaseEntry *entry) {
-    const char *name = db_entry_get_name_raw_for_display(entry);
-    return name ? g_string_new(name) : NULL;
+    if (G_UNLIKELY(!entry)) {
+        return NULL;
+    }
+    if (G_LIKELY(entry->name_len > 0)) {
+        return g_string_new_len(entry_get_name(entry), entry->name_len);
+    }
+    return g_string_new(G_DIR_SEPARATOR_S);
 }
 
 const char *
