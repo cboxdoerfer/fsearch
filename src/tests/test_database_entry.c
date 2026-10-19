@@ -18,7 +18,7 @@
  *   - db_entry_append_path / db_entry_append_full_path / db_entry_append_content_type
  *   - db_entry_get_extension / db_entry_get_name_raw / db_entry_get_name_raw_for_display /
  * db_entry_get_name_for_display
- *   - db_entry_get_attribute_name / db_entry_get_attribute_name_for_offset
+ *   - db_entry_get_attribute_name
  *   - db_entry_get_attribute / db_entry_set_attribute / db_entry_get_attribute_for_offset /
  * db_entry_set_attribute_for_offset
  *   - db_entry_get_attribute_offset / db_entry_get_attribute_offsets
@@ -78,8 +78,7 @@ test_new_folder_has_folder_type(void) {
 
 static void
 test_new_stores_name_even_without_name_flag(void) {
-    // The NAME attribute is stored unconditionally: db_entry_get_attribute_offset()
-    // always succeeds for DATABASE_INDEX_PROPERTY_NAME, regardless of attribute_flags.
+    // The name is stored unconditionally, it's not one of the flag controlled attributes.
     FsearchDatabaseEntry *e = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "unflagged.txt", NULL);
     g_assert_cmpstr(db_entry_get_name_raw(e), ==, "unflagged.txt");
     db_entry_free(e);
@@ -229,8 +228,8 @@ test_get_attribute_offset_full_layout(void) {
     g_assert_cmpuint(offset, ==, 32);
     g_assert_true(db_entry_get_attribute_offset(flags, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &offset));
     g_assert_cmpuint(offset, ==, 36);
-    g_assert_true(db_entry_get_attribute_offset(flags, DATABASE_INDEX_PROPERTY_NAME, &offset));
-    g_assert_cmpuint(offset, ==, 40);
+    // The name is stored in front of the optional attributes, so it has no offset within them
+    g_assert_false(db_entry_get_attribute_offset(flags, DATABASE_INDEX_PROPERTY_NAME, &offset));
 }
 
 static void
@@ -252,16 +251,42 @@ test_get_attribute_offsets_computed_properties_are_absent(void) {
     g_assert_cmpuint(offsets[DATABASE_INDEX_PROPERTY_CREATION_TIME], ==, invalid);
     g_assert_cmpuint(offsets[DATABASE_INDEX_PROPERTY_FILETYPE], ==, invalid);
     g_assert_cmpuint(offsets[DATABASE_INDEX_PROPERTY_EXTENSION], ==, invalid);
-    g_assert_cmpuint(offsets[DATABASE_INDEX_PROPERTY_NAME], ==, 40);
+    g_assert_cmpuint(offsets[DATABASE_INDEX_PROPERTY_NAME], ==, invalid);
 }
 
 static void
-test_get_attribute_name_for_offset(void) {
+test_get_attribute_name(void) {
     FsearchDatabaseEntry *e = new_file(DATABASE_INDEX_PROPERTY_FLAG_NONE, "myname", NULL);
-    size_t offset = 0;
-    g_assert_true(db_entry_get_attribute_offset(db_entry_get_attribute_flags(e), DATABASE_INDEX_PROPERTY_NAME, &offset));
-    g_assert_cmpstr(db_entry_get_attribute_name_for_offset(e, offset), ==, "myname");
+    const char *name = NULL;
+    g_assert_true(db_entry_get_attribute_name(e, &name));
+    g_assert_cmpstr(name, ==, "myname");
     db_entry_free(e);
+}
+
+// The name is stored in front of the optional attributes, so their offsets are relative to the
+// end of the name and must not be mixed up between entries with differently sized names
+static void
+test_attributes_are_independent_of_name_length(void) {
+    FsearchDatabaseEntry *short_name = new_file(DATABASE_INDEX_PROPERTY_FLAG_SIZE, "a", NULL);
+    FsearchDatabaseEntry *long_name = new_file(DATABASE_INDEX_PROPERTY_FLAG_SIZE, "a-considerably-longer-name", NULL);
+
+    off_t size = 4242;
+    g_assert_true(db_entry_set_attribute(short_name, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size)));
+    size = 2424;
+    g_assert_true(db_entry_set_attribute(long_name, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size)));
+
+    off_t out = 0;
+    g_assert_true(db_entry_get_attribute(short_name, DATABASE_INDEX_PROPERTY_SIZE, &out, sizeof(out)));
+    g_assert_cmpint(out, ==, 4242);
+    g_assert_true(db_entry_get_attribute(long_name, DATABASE_INDEX_PROPERTY_SIZE, &out, sizeof(out)));
+    g_assert_cmpint(out, ==, 2424);
+
+    // Writing an attribute must not have clobbered either name
+    g_assert_cmpstr(db_entry_get_name_raw(short_name), ==, "a");
+    g_assert_cmpstr(db_entry_get_name_raw(long_name), ==, "a-considerably-longer-name");
+
+    db_entry_free(short_name);
+    db_entry_free(long_name);
 }
 
 static void
@@ -1473,7 +1498,9 @@ main(int argc, char **argv) {
     g_test_add_func("/FSearch/database/entry/attribute_offset_none_fails", test_get_attribute_offset_none_property_fails);
     g_test_add_func("/FSearch/database/entry/attribute_offsets_computed_properties_absent",
                     test_get_attribute_offsets_computed_properties_are_absent);
-    g_test_add_func("/FSearch/database/entry/attribute_name_for_offset", test_get_attribute_name_for_offset);
+    g_test_add_func("/FSearch/database/entry/attribute_name", test_get_attribute_name);
+    g_test_add_func("/FSearch/database/entry/attributes_independent_of_name_length",
+                    test_attributes_are_independent_of_name_length);
     g_test_add_func("/FSearch/database/entry/attribute_for_offset_roundtrip",
                     test_get_attribute_for_offset_and_set_attribute_for_offset);
 

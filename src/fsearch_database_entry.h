@@ -205,12 +205,11 @@ db_entry_get_attribute_offsets(FsearchDatabaseIndexPropertyFlags attribute_flags
 uint32_t
 db_entry_get_member_flags(FsearchDatabaseEntry *entry);
 
-const char *
-db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offset);
-
 void
 db_entry_get_attribute_for_offset(FsearchDatabaseEntry *entry, size_t offset, void *dest, size_t size);
 
+// Offset of `attribute` within an entry's optional attributes, which start behind the name.
+// The name itself has a fixed position and is retrieved with db_entry_get_attribute_name().
 bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
                               FsearchDatabaseIndexProperty attribute,

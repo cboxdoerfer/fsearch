@@ -89,6 +89,8 @@ fsearch_string_has_upper(const char *str) {
 
 const char *
 fsearch_string_get_extension(const char *str) {
+    g_return_val_if_fail(str, NULL);
+
     const char *ext = strrchr(str, '.');
     if (!ext || ext == str || ext[1] == '\0') {
         // filename has no dot
