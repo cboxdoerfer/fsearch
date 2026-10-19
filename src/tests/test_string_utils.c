@@ -1,6 +1,7 @@
 #include <glib.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <src/fsearch_string_utils.h>
 
@@ -41,7 +42,15 @@ test_str_get_extension(void) {
         FsearchTestExtensionContext *ctx = &file_names[i];
         const char *ext = fsearch_string_get_extension(ctx->file_name);
         g_assert_cmpstr(ext, ==, ctx->extension);
+
+        // The length aware variant must agree with the scanning one for every input
+        const char *ext_len = fsearch_string_get_extension_len(ctx->file_name, strlen(ctx->file_name));
+        g_assert_cmpstr(ext_len, ==, ctx->extension);
     }
+
+    // Both variants return a pointer into the name itself, not a copy
+    const char *name = "archive.tar.gz";
+    g_assert_true(fsearch_string_get_extension_len(name, strlen(name)) == name + 12);
 }
 
 void

@@ -199,7 +199,7 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
     if (db_entry_is_folder(entry)) {
         return NULL;
     }
-    return fsearch_string_get_extension(entry_get_name(entry));
+    return fsearch_string_get_extension_len(entry_get_name(entry), entry->name_len);
 }
 
 const char *

@@ -18,6 +18,7 @@
 
 #pragma once
 #include <stdbool.h>
+#include <stddef.h>
 #include <unistd.h>
 
 bool
@@ -28,6 +29,9 @@ fsearch_string_has_upper(const char *str);
 
 const char *
 fsearch_string_get_extension(const char *str);
+
+const char *
+fsearch_string_get_extension_len(const char *str, size_t len);
 
 bool
 fsearch_string_utf8_has_upper(const char *str);
