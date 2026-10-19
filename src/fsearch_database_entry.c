@@ -909,17 +909,16 @@ db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char 
     return entry;
 }
 
-FsearchDatabaseEntry *
-db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
+// Shared body of the two variadic constructors, which can't forward their varargs to each other
+static FsearchDatabaseEntry *
+entry_new_with_attributes_va(FsearchDatabaseIndexPropertyFlags attribute_flags,
                              const char *name,
+                             size_t name_len,
                              FsearchDatabaseEntry *parent,
                              FsearchDatabaseEntryType type,
-                             ...) {
-    va_list args;
-    va_start(args, type);
-
+                             va_list args) {
     // Set Parent to NULL. We will set the parent anyway after setting all the attributes
-    FsearchDatabaseEntry *entry = db_entry_new(attribute_flags, name, NULL, type);
+    FsearchDatabaseEntry *entry = db_entry_new_with_name_len(attribute_flags, name, name_len, NULL, type);
 
     FsearchDatabaseIndexProperty attribute = va_arg(args, int);
     while (attribute != DATABASE_INDEX_PROPERTY_NONE) {
@@ -951,14 +950,40 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
         attribute = va_arg(args, int);
     }
 
-    va_end(args);
-
     // Set parent at the end after all properties have ben set. This ensures that the entry has the correct size
     // and the parent entry size is updated properly
     if (parent) {
         db_entry_set_parent(entry, parent);
     }
 
+    return entry;
+}
+
+FsearchDatabaseEntry *
+db_entry_new_with_attributes_len(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                                 const char *name,
+                                 size_t name_len,
+                                 FsearchDatabaseEntry *parent,
+                                 FsearchDatabaseEntryType type,
+                                 ...) {
+    va_list args;
+    va_start(args, type);
+    FsearchDatabaseEntry *entry = entry_new_with_attributes_va(attribute_flags, name, name_len, parent, type, args);
+    va_end(args);
+    return entry;
+}
+
+FsearchDatabaseEntry *
+db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                             const char *name,
+                             FsearchDatabaseEntry *parent,
+                             FsearchDatabaseEntryType type,
+                             ...) {
+    va_list args;
+    va_start(args, type);
+    FsearchDatabaseEntry *entry =
+        entry_new_with_attributes_va(attribute_flags, name, name ? strlen(name) : 0, parent, type, args);
+    va_end(args);
     return entry;
 }
 

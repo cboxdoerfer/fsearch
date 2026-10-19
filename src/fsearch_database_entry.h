@@ -197,6 +197,14 @@ db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
                              FsearchDatabaseEntryType type,
                              ...);
 
+FsearchDatabaseEntry *
+db_entry_new_with_attributes_len(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                                 const char *name,
+                                 size_t name_len,
+                                 FsearchDatabaseEntry *parent,
+                                 FsearchDatabaseEntryType type,
+                                 ...);
+
 bool
 db_entry_get_attribute_name(FsearchDatabaseEntry *entry, const char **name);
 
