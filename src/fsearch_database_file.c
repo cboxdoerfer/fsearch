@@ -193,7 +193,11 @@ database_file_load_entry(DatabaseFileReadCursor *cursor,
         cursor->ptr += name_len;
     }
 
-    *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
+    *entry_out = db_entry_new_with_name_len(index_flags,
+                                            previous_entry_name->str,
+                                            previous_entry_name->len,
+                                            NULL,
+                                            type);
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
         int64_t size = 0;
@@ -658,7 +662,8 @@ database_file_save_entry(DatabaseFileWriteCursor *cursor,
                          GString *previous_entry_name,
                          GString *new_entry_name) {
     // init new_entry_name with the name of the current entry
-    g_string_assign(new_entry_name, db_entry_get_name_raw(entry));
+    g_string_truncate(new_entry_name, 0);
+    g_string_append_len(new_entry_name, db_entry_get_name_raw(entry), db_entry_get_name_len(entry));
 
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     const uint16_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
@@ -670,7 +675,7 @@ database_file_save_entry(DatabaseFileWriteCursor *cursor,
 
     // append new unique characters to previous_entry_name starting at name_offset
     g_string_erase(previous_entry_name, name_offset, -1);
-    g_string_append(previous_entry_name, new_entry_name->str + name_offset);
+    g_string_append_len(previous_entry_name, new_entry_name->str + name_offset, name_len);
 
     if (name_len > 0) {
         // name: new characters to be written to file
