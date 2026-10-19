@@ -54,8 +54,10 @@ build_path_recursively(FsearchDatabaseEntry *folder, GString *str) {
         build_path_recursively(folder->parent, str);
     }
     const char *name = entry_get_name(folder);
-    if (G_LIKELY(name[0] != '\0' && strcmp(name, G_DIR_SEPARATOR_S) != 0)) {
-        g_string_append(str, name);
+    const uint16_t name_len = folder->name_len;
+    // Skip empty names and a root named "/", the separator below covers both
+    if (G_LIKELY(name_len > 0 && !(name_len == 1 && name[0] == G_DIR_SEPARATOR))) {
+        g_string_append_len(str, name, name_len);
     }
     g_string_append_c(str, G_DIR_SEPARATOR);
 }
@@ -173,8 +175,12 @@ db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str) {
         build_path_recursively(entry->parent, str);
     }
 
-    const char *name = db_entry_get_name_raw(entry);
-    g_string_append(str, name[0] == '\0' ? G_DIR_SEPARATOR_S : name);
+    if (G_LIKELY(entry->name_len > 0)) {
+        g_string_append_len(str, entry_get_name(entry), entry->name_len);
+    }
+    else {
+        g_string_append_c(str, G_DIR_SEPARATOR);
+    }
 }
 
 time_t
@@ -207,10 +213,10 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
-    const char *name = entry_get_name(entry);
-    if (name && strcmp(name, "") != 0) {
-        return name;
+    if (G_LIKELY(entry->name_len > 0)) {
+        return entry_get_name(entry);
     }
+    // Only a root entry can have an empty name
     return G_DIR_SEPARATOR_S;
 }
 
