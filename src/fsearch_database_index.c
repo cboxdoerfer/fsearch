@@ -599,9 +599,9 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                                                                    event->watched_entry,
                                                                    DATABASE_ENTRY_TYPE_FILE,
                                                                    DATABASE_INDEX_PROPERTY_SIZE,
-                                                                   size,
+                                                                   (int64_t)size,
                                                                    DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                                                                   mtime,
+                                                                   (int64_t)mtime,
                                                                    DATABASE_INDEX_PROPERTY_NONE);
         fsearch_database_chunked_array_insert(self->file_chunks, entry);
 

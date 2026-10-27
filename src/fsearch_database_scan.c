@@ -75,7 +75,7 @@ add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path
                                                                       parent,
                                                                       DATABASE_ENTRY_TYPE_FOLDER,
                                                                       DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                                                                      mtime,
+                                                                      (int64_t)mtime,
                                                                       DATABASE_INDEX_PROPERTY_NONE);
     if (!folder_entry) {
         return NULL;
@@ -101,9 +101,9 @@ add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t
                                                                     parent,
                                                                     DATABASE_ENTRY_TYPE_FILE,
                                                                     DATABASE_INDEX_PROPERTY_SIZE,
-                                                                    size,
+                                                                    (int64_t)size,
                                                                     DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                                                                    mtime,
+                                                                    (int64_t)mtime,
                                                                     DATABASE_INDEX_PROPERTY_NONE);
     if (!file_entry) {
         return NULL;
