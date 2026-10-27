@@ -31,6 +31,8 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <stdint.h>
+#include <string.h>
 
 static void
 write_file(const char *path, const char *content) {
@@ -169,12 +171,108 @@ test_save_load_roundtrip_preserves_hierarchy_and_sort_orders(void) {
     g_rmdir(tmp_dir);
 }
 
+// Regression test for the "all results show 1969-12-31 19:00 / 0 bytes" bug.
+//
+// A database file whose header `index_flags` is missing the stored data properties (size, mtime)
+// -- e.g. one written with a zero flag set -- used to load successfully: entries were built
+// without those attributes, so db_entry_get_mtime()/db_entry_get_size() returned 0, and the next
+// save re-persisted the zero flags, keeping the database broken forever.
+//
+// This test builds such a corrupt-by-construction file (a valid checksum, header index_flags == 0,
+// entries lacking size/mtime bytes) by saving a store created with FLAG_NONE, then asserts that
+// fsearch_database_file_load() now refuses it instead of silently surfacing all-zero values. A
+// healthy store (FLAG_DEFAULT) must still load successfully.
+static void
+test_load_rejects_file_missing_required_data_flags(void) {
+    g_autofree char *tmp_dir = g_dir_make_tmp("fsearch-test-database-file-XXXXXX", NULL);
+    g_assert_nonnull(tmp_dir);
+
+    g_autofree char *file_a = g_build_filename(tmp_dir, "a.txt", NULL);
+    write_file(file_a, "aaaaaaaaaaaa"); // 12 bytes
+
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
+    g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(tmp_dir, TRUE, FALSE, FALSE, FALSE, 0);
+    fsearch_database_include_manager_add(include_manager, include);
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
+
+    // Healthy store: the app's default property set. Save + load must still work (no regression).
+    FsearchDatabaseIndexStore *good_store =
+        fsearch_database_index_store_new(include_manager, exclude_manager,
+                                         DATABASE_INDEX_PROPERTY_FLAG_DEFAULT, NULL, NULL);
+    fsearch_database_index_store_start(good_store, NULL);
+    g_assert_cmpuint(fsearch_database_index_store_get_num_files(good_store), ==, 1);
+    g_autofree char *good_path = g_build_filename(tmp_dir, "good.db", NULL);
+    g_assert_true(fsearch_database_file_save(good_store, good_path));
+    fsearch_database_index_store_unref(good_store);
+
+    g_autoptr(FsearchDatabaseIndexStore) loaded_good = NULL;
+    g_assert_true(fsearch_database_file_load(good_path,
+                                             NULL,
+                                             &loaded_good,
+                                             include_manager,
+                                             exclude_manager,
+                                             NULL,
+                                             NULL));
+    g_assert_nonnull(loaded_good);
+    g_assert_cmpuint(fsearch_database_index_store_get_num_files(loaded_good), ==, 1);
+    g_assert_cmpint(fsearch_database_index_store_get_flags(loaded_good), ==,
+                    DATABASE_INDEX_PROPERTY_FLAG_DEFAULT);
+
+    // Corrupt store: created with a zero flag set, as before the flags were defaulted. Saving it
+    // writes header index_flags == 0 with a valid checksum and entries that store no size/mtime.
+    FsearchDatabaseIndexStore *bad_store = fsearch_database_index_store_new(include_manager,
+                                                                            exclude_manager,
+                                                                            DATABASE_INDEX_PROPERTY_FLAG_NONE,
+                                                                            NULL,
+                                                                            NULL);
+    fsearch_database_index_store_start(bad_store, NULL);
+    g_autofree char *bad_path = g_build_filename(tmp_dir, "bad.db", NULL);
+    g_assert_true(fsearch_database_file_save(bad_store, bad_path));
+    fsearch_database_index_store_unref(bad_store);
+
+    // Sanity: the corrupt file really has a zero index_flags in its header (offset 7, 8 bytes LE)
+    // even though its checksum is valid -- i.e. it is indistinguishable from a healthy file by
+    // checksum alone.
+    {
+        g_autoptr(GError) read_error = NULL;
+        g_autofree char *raw = NULL;
+        gsize len = 0;
+        g_assert_true(g_file_get_contents(bad_path, &raw, &len, &read_error));
+        g_assert_cmpuint(len, >=, 7 + sizeof(uint64_t));
+        uint64_t header_index_flags = 0;
+        memcpy(&header_index_flags, raw + 7, sizeof(uint64_t));
+        g_assert_cmpuint(header_index_flags, ==, 0);
+    }
+
+    // The fix: a zero-flag file must be rejected so the caller can rescan from disk and repair it,
+    // rather than being loaded with all-zero size/mtime. g_test_init() treats g_warning() as fatal,
+    // so expect exactly one "corrupt file" warning before the load and assert it fired afterward.
+    g_test_expect_message("fsearch-database-file", G_LOG_LEVEL_WARNING, "*missing required data properties*");
+    g_autoptr(FsearchDatabaseIndexStore) loaded_bad = NULL;
+    g_assert_false(fsearch_database_file_load(bad_path,
+                                              NULL,
+                                              &loaded_bad,
+                                              include_manager,
+                                              exclude_manager,
+                                              NULL,
+                                              NULL));
+    g_assert_null(loaded_bad);
+    g_test_assert_expected_messages();
+
+    g_unlink(file_a);
+    g_unlink(good_path);
+    g_unlink(bad_path);
+    g_rmdir(tmp_dir);
+}
+
 int
 main(int argc, char **argv) {
     g_test_init(&argc, &argv, NULL);
 
     g_test_add_func("/FSearch/database/file/save_load_roundtrip_preserves_hierarchy_and_sort_orders",
                     test_save_load_roundtrip_preserves_hierarchy_and_sort_orders);
+    g_test_add_func("/FSearch/database/file/load_rejects_file_missing_required_data_flags",
+                    test_load_rejects_file_missing_required_data_flags);
 
     return g_test_run();
 }
