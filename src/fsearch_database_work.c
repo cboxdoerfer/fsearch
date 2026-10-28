@@ -1,4 +1,6 @@
 #include "fsearch_database_work.h"
+
+#include "fsearch_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
@@ -10,7 +12,6 @@
 #include <gio/gio.h>
 #include <glib-object.h>
 #include <glib.h>
-#include <gtk/gtk.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -36,7 +37,7 @@ struct FsearchDatabaseWork {
         struct {
             FsearchQuery *query;
             FsearchDatabaseIndexProperty sort_order;
-            GtkSortType sort_type;
+            FsearchSortDirection sort_direction;
         };
 
         // FSEARCH_DATABASE_WORK_GET_ITEM_INFO
@@ -54,12 +55,16 @@ struct FsearchDatabaseWork {
 
         // FSEARCH_DATABASE_WORK_RESCAN_INDEX
         struct {
-            uint32_t rescan_index_id;
+            GString *root_path;
         };
 
         // FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED
         struct {
             FsearchDatabaseIndex *rescan_new_index;
+        };
+        // FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED
+        struct {
+            DynamicArray *item_paths;
         };
     };
 
@@ -88,11 +93,15 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
     case FSEARCH_DATABASE_WORK_RESCAN:
-    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
     case FSEARCH_DATABASE_WORK_SORT:
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
     case FSEARCH_DATABASE_WORK_QUIT:
+        break;
+    case FSEARCH_DATABASE_WORK_RESCAN_INDEX:
+        g_string_free(g_steal_pointer(&work->root_path), TRUE);
+    case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
+        g_clear_pointer(&work->item_paths, darray_unref);
         break;
     case FSEARCH_DATABASE_WORK_SCAN:
         g_clear_object(&work->include_manager);
@@ -118,7 +127,7 @@ work_free(FsearchDatabaseWork *work) {
 FsearchDatabaseWork *
 fsearch_database_work_ref(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work != NULL, NULL);
-    g_return_val_if_fail(work->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&work->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&work->ref_count);
 
@@ -128,7 +137,7 @@ fsearch_database_work_ref(FsearchDatabaseWork *work) {
 void
 fsearch_database_work_unref(FsearchDatabaseWork *work) {
     g_return_if_fail(work != NULL);
-    g_return_if_fail(work->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&work->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&work->ref_count)) {
         g_clear_pointer(&work, work_free);
@@ -150,19 +159,23 @@ fsearch_database_work_new_rescan() {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index(uint32_t index_id) {
+fsearch_database_work_new_rescan_index(const char *root_path) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX;
-    work->rescan_index_id = index_id;
+    work->root_path = g_string_new(root_path);
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index) {
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable) {
     g_return_val_if_fail(new_index, NULL);
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED;
     work->rescan_new_index = fsearch_database_index_ref(new_index);
+    if (cancellable) {
+        // Carry forward the cancellable of the work item that requested this rescan
+        g_set_object(&work->cancellable, cancellable);
+    }
     return work;
 }
 
@@ -181,12 +194,16 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
 FsearchDatabaseWork *
 fsearch_database_work_new_scan_finished(void *index_store,
                                         void *(*index_ref_func)(void *),
-                                        void (*index_free_func)(void *)) {
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN_FINISHED;
     work->index_store = index_ref_func(index_store);
     work->index_store_ref_func = index_ref_func;
     work->index_store_free_func = index_free_func;
+    if (cancellable) {
+        g_set_object(&work->cancellable, cancellable);
+    }
     return work;
 }
 
@@ -206,26 +223,26 @@ FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexProperty sort_order,
-                                 GtkSortType sort_type) {
+                                 FsearchSortDirection sort_direction) {
     g_return_val_if_fail(query, NULL);
 
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SEARCH;
     work->view_id = view_id;
     work->sort_order = sort_order;
-    work->sort_type = sort_type;
+    work->sort_direction = sort_direction;
     work->query = fsearch_query_ref(query);
 
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, GtkSortType sort_type) {
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, FsearchSortDirection sort_direction) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SORT;
     work->view_id = view_id;
     work->sort_order = sort_order;
-    work->sort_type = sort_type;
+    work->sort_direction = sort_direction;
 
     return work;
 }
@@ -237,6 +254,15 @@ fsearch_database_work_new_get_item_info(guint view_id, guint idx, FsearchDatabas
     work->entry_info_flags = flags;
     work->idx = idx;
     work->view_id = view_id;
+
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED;
+    work->item_paths = darray_ref(item_paths);
 
     return work;
 }
@@ -299,11 +325,11 @@ fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work) {
     return work->sort_order;
 }
 
-GtkSortType
-fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, GTK_SORT_ASCENDING);
-    return work->sort_type;
+FsearchSortDirection
+fsearch_database_work_search_get_sort_direction(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, FSEARCH_SORT_DIRECTION_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, FSEARCH_SORT_DIRECTION_ASCENDING);
+    return work->sort_direction;
 }
 
 FsearchDatabaseIndexProperty
@@ -313,11 +339,11 @@ fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work) {
     return work->sort_order;
 }
 
-GtkSortType
-fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, GTK_SORT_ASCENDING);
-    return work->sort_type;
+FsearchSortDirection
+fsearch_database_work_sort_get_sort_direction(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, FSEARCH_SORT_DIRECTION_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, FSEARCH_SORT_DIRECTION_ASCENDING);
+    return work->sort_direction;
 }
 
 void *
@@ -383,11 +409,11 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
     return work->selection_type;
 }
 
-uint32_t
-fsearch_database_work_rescan_index_get_id(FsearchDatabaseWork *work) {
+const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX, 0);
-    return work->rescan_index_id;
+    return work->root_path->str;
 }
 
 FsearchDatabaseIndex *
@@ -395,6 +421,13 @@ fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work)
     g_return_val_if_fail(work, NULL);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_RESCAN_INDEX_FINISHED, NULL);
     return fsearch_database_index_ref(work->rescan_new_index);
+}
+
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED, NULL);
+    return darray_ref(work->item_paths);
 }
 
 const char *

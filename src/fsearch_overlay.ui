@@ -2,11 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">folder-new-symbolic</property>
-  </object>
   <object class="GtkStack" id="main_database_overlay_stack">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -16,6 +11,7 @@
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="overlay_database_empty">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
@@ -57,14 +53,43 @@
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">Add folders</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.preferences</property>
             <property name="action-target">uint32 2</property>
-            <property name="image">image1</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">center</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkImage" id="image1">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">folder-new-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Add folders</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="left-attach">0</property>
@@ -80,6 +105,7 @@
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="overlay_database_loading">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
@@ -91,7 +117,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="pixel-size">72</property>
-            <property name="icon-name">emblem-synchronizing-symbolic</property>
+            <property name="icon-name">view-refresh-symbolic</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -143,6 +169,7 @@
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="overlay_database_updating">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
@@ -154,7 +181,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="pixel-size">72</property>
-            <property name="icon-name">emblem-synchronizing-symbolic</property>
+            <property name="icon-name">view-refresh-symbolic</property>
             <style>
               <class name="dim-label"/>
             </style>
@@ -213,6 +240,7 @@
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="overlay_query_empty">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
@@ -276,6 +304,7 @@
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="overlay_results_empty">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
@@ -339,6 +368,7 @@
   </object>
   <!-- n-columns=1 n-rows=3 -->
   <object class="GtkGrid" id="overlay_results_sorting">
+    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
@@ -351,7 +381,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="pixel-size">72</property>
-        <property name="icon-name">emblem-synchronizing-symbolic</property>
+        <property name="icon-name">view-refresh-symbolic</property>
         <style>
           <class name="dim-label"/>
         </style>

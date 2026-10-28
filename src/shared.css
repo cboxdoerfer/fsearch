@@ -8,6 +8,11 @@
     border-top-width: 0px;
 }
 
+.fsearch-statusbar-partial-results-label {
+    color: @warning_color;
+    font-weight: bold;
+}
+
 .filter_combobox box.linked button:dir(ltr) {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;

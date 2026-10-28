@@ -46,7 +46,6 @@ fsearch_utf_builder_clear(FsearchUtfBuilder *builder) {
     }
     builder->initialized = false;
     g_clear_pointer(&builder->case_map, ucasemap_close);
-    g_clear_pointer(&builder->string, free);
     g_clear_pointer(&builder->string_utf8_folded, free);
     g_clear_pointer(&builder->string_folded, free);
     g_clear_pointer(&builder->string_normalized_folded, free);
@@ -82,7 +81,6 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
 
     UErrorCode status = U_ZERO_ERROR;
 
-    builder->string = g_strdup(string);
     // first perform case folding (this can be done while our string is still in UTF8 form)
     builder->string_utf8_folded_len =
         ucasemap_utf8FoldCase(builder->case_map,

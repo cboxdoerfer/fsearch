@@ -175,10 +175,6 @@ listview_popup_menu(GtkWidget *widget, FsearchDatabase *db, uint32_t view_id) {
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));
 
     gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(widget), NULL);
-#if !GTK_CHECK_VERSION(3, 22, 0)
-    gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, GDK_BUTTON_SECONDARY, time);
-#else
     gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
-#endif
     return TRUE;
 }

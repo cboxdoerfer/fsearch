@@ -3,9 +3,9 @@
 Name:    fsearch
 Summary: A fast file search utility for Unix-like systems based on GTK 3
 Epoch:   1
-Version: 0.2
+Version: 0.3
 Release: 1%{?dist}
-License: GPLv2+
+License: GPL-2.0-or-later
 URL:     https://github.com/cboxdoerfer/fsearch
 Source0: %{giturl}/archive/%{version}/%{name}-%{version}.tar.gz
 
@@ -17,6 +17,7 @@ BuildRequires: gtk3-devel
 BuildRequires: glib2-devel
 BuildRequires: appstream
 BuildRequires: desktop-file-utils
+BuildRequires: itstool
 
 
 %description
@@ -30,7 +31,7 @@ mv fsearch-%{version} build
 %build
 export LDFLAGS="%{?__global_ldflags} -pthread"
 pushd build
-%meson
+%meson -Dchannel=copr-stable
 %meson_build -v
 popd
 
@@ -41,12 +42,14 @@ pushd build
 desktop-file-install \
   --dir=%{buildroot}%{_datadir}/applications/ \
   %{buildroot}%{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
+popd
 
-%files
+%find_lang %{name} --with-gnome
+
+%files -f %{name}.lang
 %{_bindir}/fsearch
 %{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
 %{_datadir}/icons/hicolor/scalable/apps/io.github.cboxdoerfer.FSearch.svg
 %{_datadir}/man/man1/fsearch.1.gz
 %{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.metainfo.xml
-%{_datadir}/locale/*/*/fsearch.mo
 

@@ -6,15 +6,14 @@
 
 #include <config.h>
 #include <errno.h>
-#include <glib.h>
 #include <glib-unix.h>
+#include <glib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/inotify.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 
 #define INOTIFY_FOLDER_MASK                                                                                            \
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
@@ -96,33 +95,22 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
+            // Membership check only -- never dereference an entry off this thread.
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntry *folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
-                                                               GINT_TO_POINTER(event->wd));
+            const bool is_watched = g_hash_table_contains(self->watch_descriptors_to_folders, GINT_TO_POINTER(event->wd));
             g_mutex_unlock(&self->mutex);
 
-            if (!folder) {
-                if (event->mask & IN_IGNORED) {
-                    // The only expected situation when a watched entry is no longer present for a given event,
-                    // is when the IN_IGNORED bit is set. This happens after a watched folder was removed or
-                    // moved to a different filesystem and we already removed the watch descriptor while handling
-                    // this earlier event.
-                    g_debug("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
-                            fsearch_folder_monitor_event_kind_to_string(
-                                get_index_event_kind_for_inotify_mask(event->mask)),
-                            event->mask,
-                            event->len ? event->name : "UNKNOWN");
-                }
-                else {
-                    // The IN_IGNORED bit is not set and we don't have an associate watched entry. This is probably
-                    // a bug.
-                    g_assert_not_reached();
-                }
+            if (!is_watched) {
+                // The kernel still delivers events queued before inotify_rm_watch(), so an unknown wd is normal
+                g_debug("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
+                        fsearch_folder_monitor_event_kind_to_string(get_index_event_kind_for_inotify_mask(event->mask)),
+                        event->mask,
+                        event->len ? event->name : "UNKNOWN");
                 continue;
             }
             g_async_queue_push(self->event_queue,
                                fsearch_folder_monitor_event_new(event->len ? event->name : NULL,
-                                                                folder,
+                                                                GINT_TO_POINTER(event->wd),
                                                                 get_index_event_kind_for_inotify_mask(event->mask),
                                                                 FSEARCH_FOLDER_MONITOR_INOTIFY,
                                                                 event->mask & IN_ISDIR ? true : false));
@@ -199,9 +187,7 @@ fsearch_folder_monitor_inotify_free(FsearchFolderMonitorInotify *self) {
 }
 
 bool
-fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self,
-                                     FsearchDatabaseEntry *folder,
-                                     const char *path) {
+fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder, const char *path) {
     const int32_t wd = inotify_add_watch(self->fd, path, INOTIFY_FOLDER_MASK);
     if (wd < 0) {
         g_debug("failed to add inotify watch");
@@ -249,4 +235,12 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
         g_debug("[unwatch_folder] no inotify fd found for folder: %s", path_full->str);
     }
+}
+
+FsearchDatabaseEntry *
+fsearch_folder_monitor_inotify_resolve(FsearchFolderMonitorInotify *self, gpointer handle) {
+    g_return_val_if_fail(self, NULL);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return g_hash_table_lookup(self->watch_descriptors_to_folders, handle);
 }

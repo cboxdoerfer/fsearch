@@ -88,7 +88,23 @@ fsearch_string_has_upper(const char *str) {
 }
 
 const char *
+fsearch_string_get_extension_len(const char *str, size_t len) {
+    g_return_val_if_fail(str, NULL);
+
+    const char *ext = len > 0 ? memrchr(str, '.', len) : NULL;
+    if (!ext || ext == str || ext == str + len - 1) {
+        // filename has no dot
+        // OR filename starts with dot (i.e. hidden file)
+        // OR filename ends with dot
+        return "";
+    }
+    return ext + 1;
+}
+
+const char *
 fsearch_string_get_extension(const char *str) {
+    g_return_val_if_fail(str, NULL);
+
     const char *ext = strrchr(str, '.');
     if (!ext || ext == str || ext[1] == '\0') {
         // filename has no dot

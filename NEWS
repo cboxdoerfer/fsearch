@@ -1,5 +1,5 @@
 =================
-Version 0.3-beta2
+Version 0.3
 =================
 
 * DB rewrite
@@ -10,6 +10,8 @@ Version 0.3-beta2
 * DB: Store database config in DB file
 * DB: Add checksum to DB file
 * Make icon and file info gathering asynchronous (no UI blocking)
+* Reduce memory usage
+* Numerous bug fixes and stability and performance improvements
 
 =================
 Version 0.2

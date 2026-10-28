@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fsearch_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
@@ -7,9 +8,9 @@
 #include "fsearch_database_index_properties.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
+#include "fsearch_sort_direction.h"
 
 #include <glib.h>
-#include <gtk/gtk.h>
 #include <stdint.h>
 
 typedef struct FsearchDatabaseWork FsearchDatabaseWork;
@@ -25,6 +26,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SEARCH,
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+    FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
     FSEARCH_DATABASE_WORK_QUIT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
@@ -43,16 +45,19 @@ FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index(uint32_t index_id);
+fsearch_database_work_new_rescan_index(const char *root_path);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index);
+fsearch_database_work_new_rescan_index_finished(FsearchDatabaseIndex *new_index, GCancellable *cancellable);
 
-uint32_t
-fsearch_database_work_rescan_index_get_id(FsearchDatabaseWork *work);
+const char *
+fsearch_database_work_rescan_index_get_path(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndex *
 fsearch_database_work_rescan_index_finished_get_index(FsearchDatabaseWork *work);
+
+DynamicArray *
+fsearch_database_work_notify_items_removed_get_item_paths(FsearchDatabaseWork *work);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
@@ -60,7 +65,10 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan_finished(void *index_store, void *(*index_ref_func)(void *), void (*index_free_func)(void *));
+fsearch_database_work_new_scan_finished(void *index_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *),
+                                        GCancellable *cancellable);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id,
@@ -72,13 +80,16 @@ FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexProperty sort_order,
-                                 GtkSortType sort_type);
+                                 FsearchSortDirection sort_direction);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, GtkSortType sort_type);
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, FsearchSortDirection sort_direction);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_get_item_info(guint view_id, guint index, FsearchDatabaseEntryInfoFlags flags);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_notify_items_removed(DynamicArray *item_paths);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_load(void);
@@ -113,14 +124,14 @@ fsearch_database_work_search_get_query(FsearchDatabaseWork *work);
 FsearchDatabaseIndexProperty
 fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work);
 
-GtkSortType
-fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work);
+FsearchSortDirection
+fsearch_database_work_search_get_sort_direction(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndexProperty
 fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work);
 
-GtkSortType
-fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work);
+FsearchSortDirection
+fsearch_database_work_sort_get_sort_direction(FsearchDatabaseWork *work);
 
 void *
 fsearch_database_work_scan_finished_get_index_store(FsearchDatabaseWork *work);

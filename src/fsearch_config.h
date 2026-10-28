@@ -42,6 +42,9 @@ typedef struct {
 } FsearchConfigCompareResult;
 
 struct _FsearchConfig {
+    // State
+    GString *last_seen_version;
+
     // Search
     bool hide_results_on_empty_search;
     bool search_in_path;

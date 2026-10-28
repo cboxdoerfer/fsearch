@@ -1,13 +1,12 @@
 #define G_LOG_DOMAIN "fsearch-database-chunked-array"
 
 #include "fsearch_database_chunked_array.h"
-#include "fsearch_database_index_properties.h"
-#include "fsearch_database_entry.h"
-#include "fsearch_database_sort.h"
 #include "fsearch_array.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_database_index_properties.h"
 
-#include <glib.h>
 #include <gio/giotypes.h>
+#include <glib.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -20,12 +19,10 @@ struct _FsearchDatabaseChunkedArray {
     uint32_t num_entries;
     uint32_t target_chunk_size;
 
-    FsearchDatabaseIndexProperty sort_order;
-    FsearchDatabaseIndexProperty secondary_sort_order;
+    FsearchDatabaseSortOrderChain chain;
 
     FsearchDatabaseEntryType entry_type;
     DynamicArrayCompareDataFunc entry_comp_func;
-    DynamicArrayCompareDataFunc secondary_entry_comp_func;
 
     FsearchDatabaseEntryCompareContext *compare_context;
 
@@ -40,6 +37,7 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseChunkedArray,
                     fsearch_database_chunked_array_unref)
 
 #define TARGET_CHUNK_SIZE 2048
+#define MIN_ENTRIES_FOR_BULK_INSERT 8192
 
 static int32_t
 chunk_compare_func(DynamicArray **chunk_ptr, FsearchDatabaseEntry **entry_ptr, FsearchDatabaseChunkedArray *self) {
@@ -58,9 +56,7 @@ chunk_compare_func(DynamicArray **chunk_ptr, FsearchDatabaseEntry **entry_ptr, F
 }
 
 static DynamicArray *
-get_chunk_for_entry(FsearchDatabaseChunkedArray *self,
-                    FsearchDatabaseEntry *entry,
-                    uint32_t *chunk_idx_out) {
+get_chunk_for_entry(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry, uint32_t *chunk_idx_out) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(entry, NULL);
 
@@ -106,7 +102,7 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
 
     const uint32_t num_items_in_chunk = darray_get_num_items(chunk);
     if (num_items_in_chunk <= target_chunk_size) {
-        DynamicArray *chunks = darray_new(1);
+        DynamicArray *chunks = darray_new_full(1, (GDestroyNotify)darray_unref);
         DynamicArray *chunk_copy = darray_copy(chunk);
         darray_set_free_func(chunk_copy, entry_free_func);
         darray_add_item(chunks, chunk_copy);
@@ -116,14 +112,11 @@ split_chunk(DynamicArray *chunk, uint32_t target_chunk_size, GDestroyNotify entr
     const uint32_t num_chunks = ceil(num_items_in_chunk / (double)target_chunk_size);
     const uint32_t num_items_per_chunk = floor(num_items_in_chunk / (double)num_chunks);
 
-    g_debug("[chunk] splitting: %d", num_items_in_chunk);
-    g_debug("[chunk] num_chunks: %d", num_chunks);
-    g_debug("[chunk] num_items_per_chunk: %d", num_items_per_chunk);
-
-    DynamicArray *chunks = darray_new(num_chunks);
+    DynamicArray *chunks = darray_new_full(num_chunks, (GDestroyNotify)darray_unref);
     for (uint32_t n = 0; n < num_chunks; ++n) {
-        DynamicArray *chunk_slice =
-            darray_get_range(chunk, n * num_items_per_chunk, n + 1 == num_chunks ? UINT32_MAX : num_items_per_chunk);
+        DynamicArray *chunk_slice = darray_get_range(chunk,
+                                                     n * num_items_per_chunk,
+                                                     n + 1 == num_chunks ? UINT32_MAX : num_items_per_chunk);
         darray_set_free_func(chunk_slice, entry_free_func);
         darray_add_item(chunks, chunk_slice);
     }
@@ -140,11 +133,9 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
             // Don't remove the last chunk
             return;
         }
-        g_debug("[balance_chunk] remove empty: %d", chunk_idx);
-        darray_remove(self->chunks, chunk_idx, 1);
-        // Make sure to set free_func to NULL, to avoid entries being freed
         darray_set_free_func(chunk, NULL);
-        g_clear_pointer(&chunk, darray_unref);
+        darray_remove(self->chunks, chunk_idx, 1);
+        chunk = NULL;
         return;
     }
 
@@ -154,27 +145,29 @@ balance_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t c
 
     g_autoptr(DynamicArray) splitted = split_chunk(chunk, self->target_chunk_size, self->entry_free_func);
 
-    g_debug("[balance_chunk] split idx %d with %d entries into %d chunks",
-            chunk_idx,
-            darray_get_num_items(chunk),
-            darray_get_num_items(splitted));
-
-    darray_remove(self->chunks, chunk_idx, 1);
-    // Make sure to set free_func to NULL, to avoid entries being freed
     darray_set_free_func(chunk, NULL);
-    g_clear_pointer(&chunk, darray_unref);
+    darray_remove(self->chunks, chunk_idx, 1);
+    chunk = NULL;
 
     for (uint32_t i = 0; i < darray_get_num_items(splitted); ++i) {
         DynamicArray *c = darray_get_item(splitted, i);
-        darray_insert_item(self->chunks, c, chunk_idx++);
+        darray_insert_item(self->chunks, darray_ref(c), chunk_idx++);
     }
+}
+
+static uint32_t
+advance_past_chunk(FsearchDatabaseChunkedArray *self, DynamicArray *chunk, uint32_t chunk_idx) {
+    if (darray_get_num_items(chunk) > 0 || darray_get_num_items(self->chunks) == 1) {
+        return chunk_idx + 1;
+    }
+    darray_remove(self->chunks, chunk_idx, 1);
+    return chunk_idx;
 }
 
 FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_new(DynamicArray *array,
                                    gboolean is_array_sorted,
-                                   FsearchDatabaseIndexProperty sort_order,
-                                   FsearchDatabaseIndexProperty secondary_sort_order,
+                                   FsearchDatabaseSortOrderChain chain,
                                    FsearchDatabaseEntryType entry_type,
                                    GCancellable *cancellable,
                                    GDestroyNotify entry_free_func) {
@@ -184,21 +177,10 @@ fsearch_database_chunked_array_new(DynamicArray *array,
 
     self->target_chunk_size = TARGET_CHUNK_SIZE;
 
-    self->sort_order = sort_order;
-    self->secondary_sort_order = secondary_sort_order;
-
+    self->chain = chain;
     self->entry_type = entry_type;
-    self->entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
-        self->sort_order,
-        self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
-
-    self->secondary_entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
-        self->secondary_sort_order,
-        self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
-
-    if (self->sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
-        self->compare_context = db_entry_compare_context_new(self->secondary_entry_comp_func, NULL, NULL);
-    }
+    self->entry_comp_func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_chain;
+    self->compare_context = db_entry_compare_context_new(self->chain);
 
     if (!is_array_sorted) {
         darray_sort_multi_threaded(array, self->entry_comp_func, cancellable, self->compare_context);
@@ -217,7 +199,7 @@ fsearch_database_chunked_array_new(DynamicArray *array,
 FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_ref(FsearchDatabaseChunkedArray *self) {
     g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+    g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);
 
     g_atomic_int_inc(&self->ref_count);
 
@@ -227,12 +209,9 @@ fsearch_database_chunked_array_ref(FsearchDatabaseChunkedArray *self) {
 void
 fsearch_database_chunked_array_unref(FsearchDatabaseChunkedArray *self) {
     g_return_if_fail(self != NULL);
-    g_return_if_fail(self->ref_count > 0);
+    g_return_if_fail(g_atomic_int_get(&self->ref_count) > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
-        for (uint32_t i = 0; i < darray_get_num_items(self->chunks); ++i) {
-            darray_unref(darray_get_item(self->chunks, i));
-        }
         g_clear_pointer(&self->chunks, darray_unref);
         g_clear_pointer(&self->compare_context, db_entry_compare_context_free);
         g_free(self);
@@ -253,15 +232,125 @@ fsearch_database_chunked_array_insert(FsearchDatabaseChunkedArray *self, Fsearch
     balance_chunk(self, chunk, chunk_idx);
 }
 
+static DynamicArray *
+get_next_nonempty_chunk(DynamicArray *chunks, uint32_t start_chunk_idx, uint32_t *out_chunk_idx) {
+    while (start_chunk_idx < darray_get_num_items(chunks)) {
+        DynamicArray *chunk = darray_get_item(chunks, start_chunk_idx);
+        if (darray_get_num_items(chunk) > 0) {
+            *out_chunk_idx = start_chunk_idx;
+            return chunk;
+        }
+        start_chunk_idx++;
+    }
+    return NULL;
+}
+
 void
 fsearch_database_chunked_array_insert_array(FsearchDatabaseChunkedArray *self, DynamicArray *array) {
     g_return_if_fail(self);
     g_return_if_fail(array);
 
-    for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(array, i);
-        fsearch_database_chunked_array_insert(self, entry);
+    const uint32_t num_new_entries = darray_get_num_items(array);
+    if (num_new_entries == 0) {
+        return;
     }
+
+    // If the number of items being inserted is small,
+    // the overhead of flattening/merging isn't worth it.
+    // Fall back to lookups + memmoves.
+    const uint64_t individual_insertion_cost = num_new_entries * self->target_chunk_size;
+    const uint64_t bulk_insertion_cost = num_new_entries + self->num_entries;
+    if ((num_new_entries < MIN_ENTRIES_FOR_BULK_INSERT || individual_insertion_cost < bulk_insertion_cost)) {
+        for (uint32_t i = 0; i < num_new_entries; ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(array, i);
+            fsearch_database_chunked_array_insert(self, entry);
+        }
+        // g_print("slow array insert: %f\n", g_timer_elapsed(timer, NULL));
+        return;
+    }
+
+    g_autoptr(DynamicArray) sorted_new_entries = darray_copy_borrowed(array);
+    darray_sort(sorted_new_entries, self->entry_comp_func, NULL, self->compare_context);
+
+    // Calculate the exact even distribution of our new chunks
+    const uint32_t total_entries = self->num_entries + num_new_entries;
+    const uint32_t num_chunks_target = ceil(total_entries / (double)self->target_chunk_size);
+    const uint32_t num_items_per_chunk = floor(total_entries / (double)num_chunks_target);
+
+    g_autoptr(DynamicArray) new_chunks = darray_new_full(num_chunks_target, (GDestroyNotify)darray_unref);
+
+    // Allocate slightly extra space in case the final chunk absorbs the remainder
+    g_autoptr(DynamicArray) current_chunk = darray_new_full(num_items_per_chunk + 2, self->entry_free_func);
+    uint32_t chunks_created = 0;
+
+    uint32_t old_chunk_idx = 0;
+    uint32_t old_entry_idx = 0;
+    uint32_t new_entry_idx = 0;
+
+    // Find the first chunk which actually contains entries
+    DynamicArray *current_old_chunk = get_next_nonempty_chunk(self->chunks, old_chunk_idx, &old_chunk_idx);
+
+    // Merge directly into evenly-sized chunks
+    while (current_old_chunk != NULL || new_entry_idx < num_new_entries) {
+        void *entry_to_add = NULL;
+
+        if (current_old_chunk != NULL && new_entry_idx < num_new_entries) {
+            // Find entry to insert
+            void *entry_old = darray_get_item(current_old_chunk, old_entry_idx);
+            void *entry_new = darray_get_item(sorted_new_entries, new_entry_idx);
+
+            if (self->entry_comp_func(&entry_old, &entry_new, self->compare_context) <= 0) {
+                entry_to_add = entry_old;
+                old_entry_idx++;
+            }
+            else {
+                entry_to_add = entry_new;
+                new_entry_idx++;
+            }
+        }
+        else if (current_old_chunk != NULL) {
+            entry_to_add = darray_get_item(current_old_chunk, old_entry_idx);
+            old_entry_idx++;
+        }
+        else {
+            entry_to_add = darray_get_item(sorted_new_entries, new_entry_idx);
+            new_entry_idx++;
+        }
+
+        // Advance to the next old chunk if we've exhausted the current one
+        if (current_old_chunk != NULL && old_entry_idx >= darray_get_num_items(current_old_chunk)) {
+            old_chunk_idx++;
+            current_old_chunk = get_next_nonempty_chunk(self->chunks, old_chunk_idx, &old_chunk_idx);
+            old_entry_idx = 0;
+        }
+
+        // Add the "smaller" entry to our new chunk
+        darray_add_item(current_chunk, entry_to_add);
+
+        // Add the chunk if it hits the calculated even size
+        // Ensure the very last chunk is allowed to absorb a few more entries
+        if (darray_get_num_items(current_chunk) == num_items_per_chunk && chunks_created < num_chunks_target - 1) {
+            darray_add_item(new_chunks, g_steal_pointer(&current_chunk));
+            chunks_created++;
+            current_chunk = darray_new_full(num_items_per_chunk + 2, self->entry_free_func);
+        }
+    }
+
+    // Add the final remainder chunk
+    if (darray_get_num_items(current_chunk) > 0) {
+        darray_add_item(new_chunks, g_steal_pointer(&current_chunk));
+    }
+
+    // Clean up old chunks (preventing entries from being freed)
+    for (uint32_t c = 0; c < darray_get_num_items(self->chunks); ++c) {
+        DynamicArray *chunk = darray_get_item(self->chunks, c);
+        darray_set_free_func(chunk, NULL);
+    }
+    g_clear_pointer(&self->chunks, darray_unref);
+
+    // Commit the new chunk array
+    self->chunks = g_steal_pointer(&new_chunks);
+    self->num_entries = total_entries;
 }
 
 FsearchDatabaseEntry *
@@ -283,8 +372,24 @@ fsearch_database_chunked_array_find(FsearchDatabaseChunkedArray *self, FsearchDa
 }
 
 FsearchDatabaseEntry *
+fsearch_database_chunked_array_find_slow(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry) {
+    for (uint32_t i = 0; i < darray_get_num_items(self->chunks); ++i) {
+        DynamicArray *chunk = darray_get_item(self->chunks, i);
+        for (uint32_t j = 0; j < darray_get_num_items(chunk); ++j) {
+            FsearchDatabaseEntry *e = darray_get_item(chunk, j);
+            const int32_t res = self->entry_comp_func((void *)&e, (void *)&entry, self->compare_context);
+            if (res == 0) {
+                return e;
+            }
+        }
+    }
+    return NULL;
+}
+
+FsearchDatabaseEntry *
 fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(self, NULL);
+    g_assert(db_entry_get_type(entry) == self->entry_type);
     g_return_val_if_fail(db_entry_get_type(entry) == self->entry_type, NULL);
 
     if (self->num_entries == 0) {
@@ -304,6 +409,111 @@ fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchD
     return NULL;
 }
 
+static inline bool
+is_marked(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
+    if (type == DATABASE_ENTRY_TYPE_FILE) {
+        if (db_entry_get_mark(entry) == 1) {
+            return true;
+        }
+        entry = db_entry_get_parent(entry);
+    }
+    if (!entry) {
+        return false;
+    }
+    return db_entry_get_mark(entry) == 1 ? true : false;
+}
+
+// Finds and removes every marked entry in `self`. If `destination` is non-NULL, removed
+// entries are stolen into it (ownership transferred, no destructor called); otherwise they
+// are dropped from their chunk and freed via the chunk's entry_free_func (if any is set).
+static uint32_t
+remove_marked_entries(FsearchDatabaseChunkedArray *self, DynamicArray *destination, int32_t num_expected_entries) {
+    uint32_t chunk_idx = 0;
+    uint32_t entry_start_idx = 0;
+    uint32_t removed_entries = 0;
+
+    const bool num_entries_known = num_expected_entries >= 0;
+    const uint32_t num_expected = num_entries_known ? (uint32_t)num_expected_entries : 0;
+
+    while (chunk_idx < darray_get_num_items(self->chunks)) {
+        if (num_entries_known && removed_entries >= num_expected) {
+            break;
+        }
+        DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
+        uint32_t entry_idx = entry_start_idx;
+        while (entry_idx < darray_get_num_items(chunk)) {
+            if (num_entries_known && removed_entries >= num_expected) {
+                break;
+            }
+            FsearchDatabaseEntry *maybe_marked = darray_get_item(chunk, entry_idx);
+            if (is_marked(maybe_marked, self->entry_type)) {
+                uint32_t n_elements = 1;
+
+                // Peek ahead to find the full contiguous block of marked entries
+                while (entry_idx + n_elements < darray_get_num_items(chunk)) {
+                    FsearchDatabaseEntry *next_entry = darray_get_item(chunk, entry_idx + n_elements);
+                    if (!is_marked(next_entry, self->entry_type)) {
+                        break; // End of contiguous block
+                    }
+                    n_elements++;
+                }
+
+                if (num_entries_known) {
+                    // The block may be longer than what the caller asked for. Removing the surplus would
+                    // free entries the caller still owns, so stop at the budget
+                    n_elements = MIN(n_elements, num_expected - removed_entries);
+                }
+
+                // Steal or drop the entire contiguous block at once to minimize memmoves
+                removed_entries += destination ? darray_steal(chunk, entry_idx, n_elements, destination)
+                                               : darray_remove(chunk, entry_idx, n_elements);
+
+                // Note: Do NOT increment entry_idx here.
+                // Removing the elements shifts the rest of the array left,
+                // so the next unchecked item naturally falls into the current entry_idx.
+            }
+            else {
+                // Only move forward if we didn't remove anything
+                entry_idx++;
+            }
+        }
+        // Remove the chunk if it became empty (unless it's the last one left).
+        chunk_idx = advance_past_chunk(self, chunk, chunk_idx);
+        // We must set the start index back to zero before we move on to the next entry chunk
+        entry_start_idx = 0;
+    }
+
+    if (num_entries_known && removed_entries != num_expected) {
+        // The caller's count disagrees with the marks. Carry on with what was actually removed rather
+        // than taking the process down
+        g_warning("[chunked_array] expected %u marked entries, found %u", num_expected, removed_entries);
+    }
+
+    self->num_entries -= removed_entries;
+    return removed_entries;
+}
+
+uint32_t
+fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self, int32_t num_expected_entries) {
+    g_return_val_if_fail(self, 0);
+
+    return remove_marked_entries(self, NULL, num_expected_entries);
+}
+
+// With a path sort order a folder's descendants form one contiguous run, so checking both ends is
+// enough to tell whether a whole block belongs to `folder`.
+static bool
+block_is_descendant_of(DynamicArray *chunk, uint32_t start_idx, uint32_t n_elements, FsearchDatabaseEntry *folder) {
+    const uint32_t num_items = darray_get_num_items(chunk);
+    if (start_idx >= num_items) {
+        // Nothing to take from this chunk, the run continues in the next one
+        return true;
+    }
+    const uint32_t last_idx = MIN(start_idx + n_elements, num_items) - 1;
+    return db_entry_is_descendant(darray_get_item(chunk, start_idx), folder)
+        && db_entry_is_descendant(darray_get_item(chunk, last_idx), folder);
+}
+
 DynamicArray *
 fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
                                                  FsearchDatabaseEntry *folder,
@@ -311,48 +521,75 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(folder, NULL);
 
+    // We can only steal in large chunks when descendants are sorted one after another
+    // That's only guaranteed when sorted by path or path_full
+    const bool path_sorted = self->chain.length > 0
+                          && (self->chain.properties[0] == DATABASE_INDEX_PROPERTY_PATH
+                              || self->chain.properties[0] == DATABASE_INDEX_PROPERTY_PATH_FULL);
+
     uint32_t chunk_idx = 0;
     uint32_t entry_start_idx = 0;
-    if (self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
-        DynamicArray *chunk = get_chunk_for_entry(self, folder, &chunk_idx);
-        darray_binary_search_with_data(chunk,
-                                       folder,
-                                       self->entry_comp_func,
-                                       self->compare_context,
-                                       &entry_start_idx);
+    if (path_sorted) {
+        // A dummy named "" sorts after `folder` and before every descendant
+        FsearchDatabaseEntry *probe = db_entry_get_dummy_for_name_and_parent(folder, "", self->entry_type);
+        DynamicArray *start_chunk = get_chunk_for_entry(self, probe, &chunk_idx);
+        darray_binary_search_with_data(start_chunk, probe, self->entry_comp_func, self->compare_context, &entry_start_idx);
+        g_clear_pointer(&probe, db_entry_free_no_unparent);
     }
 
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
     uint32_t num_known_descendants_stolen = 0;
 
+    // Both are given up on if the array turns out not to match the order or the count we were promised
+    bool trust_order = path_sorted;
+    bool count_known = num_known_descendants >= 0;
+    const uint32_t num_expected = count_known ? (uint32_t)num_known_descendants : 0;
+
+    bool descendant_run_ended = false;
     while (chunk_idx < darray_get_num_items(self->chunks)) {
-        if (num_known_descendants == num_known_descendants_stolen) {
+        if (count_known && num_known_descendants_stolen >= num_expected) {
             // We've found all known descendants and are done here.
             break;
         }
         DynamicArray *chunk = darray_get_item(self->chunks, chunk_idx);
         uint32_t entry_idx = entry_start_idx;
 
-        if (num_known_descendants >= 0 && self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
-            // We know the exact number of descendants, and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
-            // it is guaranteed that they are all sorted next to each other. Therefore, we can use an optimized code
+        if (count_known && trust_order) {
+            // We know the exact number of descendants, and both path sort orders guarantee they are
+            // all sorted next to each other. Therefore, we can use an optimized code
             // path where we steal them in large chunks, instead of one by one.
-            // It's also safe to not clamp n_elements since darray_steal will only steal the available number of elements
-            // and report the actual amount stolen
-            num_known_descendants_stolen += darray_steal(chunk,
-                                                         entry_start_idx,
-                                                         num_known_descendants - num_known_descendants_stolen,
-                                                         descendants);
+            // It's also safe to not clamp n_elements since darray_steal will only steal the available number of
+            // elements and report the actual amount stolen
+            const uint32_t n_wanted = num_expected - num_known_descendants_stolen;
+            if (!block_is_descendant_of(chunk, entry_start_idx, n_wanted, folder)) {
+                // Either the entries aren't ordered the way the sort chain says, or the child counts
+                // are stale. Restart with the scan that relies on neither.
+                g_warning("[chunked_array] expected %u descendants next to each other, but found other entries; "
+                          "falling back to a full scan",
+                          num_expected);
+                trust_order = false;
+                count_known = false;
+                chunk_idx = 0;
+                entry_start_idx = 0;
+                continue;
+            }
+            num_known_descendants_stolen += darray_steal(chunk, entry_start_idx, n_wanted, descendants);
         }
         else {
-            // Unfortunately, we have to steal/remove descendants one by one.
+            // Steal/remove descendants one by one.
             while (entry_idx < darray_get_num_items(chunk)) {
                 FsearchDatabaseEntry *maybe_descendant = darray_get_item(chunk, entry_idx);
                 if (db_entry_is_descendant(maybe_descendant, folder)) {
                     darray_add_item(descendants, maybe_descendant);
-                    darray_remove(chunk, entry_idx, 1);
+                    darray_drop(chunk, entry_idx, 1);
                     continue;
+                }
+                if (trust_order) {
+                    // we reached the first non-descendant in a path sorted array, it is guaranteed
+                    // that there won't be any more descendants -> we're done
+                    descendant_run_ended = true;
+                    break;
                 }
                 entry_idx++;
             }
@@ -360,19 +597,16 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
         // We must set the start index back to zero before we move on to the next entry chunk
         entry_start_idx = 0;
 
-        // Remove the chunk if it became empty
-        if (darray_get_num_items(chunk) == 0) {
-            darray_remove(self->chunks, chunk_idx, 1);
-            g_clear_pointer(&chunk, darray_unref);
-        }
-        else {
-            chunk_idx++;
+        // Remove the chunk if it became empty (unless it's the last one left).
+        chunk_idx = advance_past_chunk(self, chunk, chunk_idx);
+
+        if (descendant_run_ended) {
+            break;
         }
     }
 
-    if (num_known_descendants >= 0) {
-        // Ensure that we got the exact number of descendants
-        g_assert(num_known_descendants == darray_get_num_items(descendants));
+    if (count_known && darray_get_num_items(descendants) != num_expected) {
+        g_warning("[chunked_array] expected %u descendants, stole %u", num_expected, darray_get_num_items(descendants));
     }
 
     self->num_entries -= darray_get_num_items(descendants);

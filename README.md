@@ -25,11 +25,11 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Requirements
 
-- GTK 3.18
-- GLib 2.50
+- GTK 3.24
+- GLib 2.60
 - glibc 2.19 or musl 1.1.15 (other C standard libraries might work too, those are just the ones I verified)
-- PCRE2 (libpcre2)
-- ICU 3.8
+- PCRE2 (libpcre2) 10.21
+- ICU 4.4
 
 ## Download
 
@@ -41,7 +41,7 @@ The **Development** packages are primarily intended for testing and adventurous 
 | Distribution                                                                                          | Stable                                                                                                                     | Development                                                                            |
 |-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | Ubuntu                                                                                                | [PPA Stable](https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable)                                   | [PPA Daily](https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily) |
-| Arch Linux                                                                                            | [AUR](https://aur.archlinux.org/packages/fsearch/)                                                                         | [AUR (git)](https://aur.archlinux.org/packages/fsearch-git/)                           |
+| Arch Linux                                                                                            | [Official Repository](https://archlinux.org/packages/extra/x86_64/fsearch/)                                                                         | [AUR (git)](https://aur.archlinux.org/packages/fsearch-git/)                           |
 | Fedora/RHEL/CentOS                                                                                    | [COPR Stable](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/)                                                | [COPR Nightly](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/)   |
 | Debian                                                                                                | [OpenBuildService](https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualDebian)   |                                                                                        |
 | openSUSE                                                                                              | [OpenBuildService](https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualopenSUSE) |                                                                                        |

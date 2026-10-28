@@ -1,5 +1,7 @@
 #include "fsearch_database_include_manager.h"
 
+#include "fsearch_database_include.h"
+
 #include <glib.h>
 
 struct _FsearchDatabaseIncludeManager {
@@ -41,12 +43,11 @@ fsearch_database_include_manager_new_with_defaults() {
     return fsearch_database_include_manager_new();
 }
 
-
 void
 fsearch_database_include_manager_add(FsearchDatabaseIncludeManager *self, FsearchDatabaseInclude *include) {
     g_return_if_fail(self);
     g_return_if_fail(FSEARCH_IS_DATABASE_INCLUDE_MANAGER(self));
-    if (!g_ptr_array_find_with_equal_func(self->includes, include, (GEqualFunc)fsearch_database_include_equal, NULL)) {
+    if (!g_ptr_array_find_with_equal_func(self->includes, include, (GEqualFunc)fsearch_database_include_equal_path, NULL)) {
         g_ptr_array_add(self->includes, fsearch_database_include_ref(include));
         g_ptr_array_sort(self->includes, fsearch_database_include_compare);
     }

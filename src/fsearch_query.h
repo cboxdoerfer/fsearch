@@ -19,7 +19,6 @@
 #pragma once
 
 #include <glib.h>
-#include <gtk/gtk.h>
 #include <pango/pango.h>
 #include <stdbool.h>
 

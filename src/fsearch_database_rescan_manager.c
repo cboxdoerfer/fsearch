@@ -38,8 +38,8 @@ fsearch_database_rescan_manager_new(FsearchDatabaseIncludeManager *include_manag
     self->cb_data = cb_data;
     self->context = context ? g_main_context_ref(context) : NULL;
 
-    self->active_scans = g_hash_table_new(g_direct_hash, g_direct_equal);
-    self->offline_indices = g_hash_table_new(g_direct_hash, g_direct_equal);
+    self->active_scans = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    self->offline_indices = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     self->global_scan_active = FALSE;
 
     fsearch_database_rescan_manager_reschedule(self);
@@ -97,12 +97,10 @@ request_scans(FsearchDatabaseRescanManager *self, GPtrArray *due_includes) {
         else {
             for (uint32_t i = 0; i < due_includes->len; i++) {
                 FsearchDatabaseInclude *include = g_ptr_array_index(due_includes, i);
-                const uint32_t index_id = fsearch_database_include_get_id(include);
+                const char *path = fsearch_database_include_get_path(include);
 
-                g_debug("[rescan-manager] Queuing scan for index %u: %s",
-                        index_id,
-                        fsearch_database_include_get_path(include));
-                fsearch_database_rescan_manager_request_index_scan(self, index_id);
+                g_debug("[rescan-manager] Queuing scan for index %s", path);
+                fsearch_database_rescan_manager_request_index_scan(self, path);
             }
         }
     }
@@ -125,11 +123,10 @@ calculate_next_timeout_ms(FsearchDatabaseRescanManager *self, GPtrArray **due_in
 
     for (uint32_t i = 0; i < includes->len; i++) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        const uint32_t index_id = fsearch_database_include_get_id(include);
+        const char *path = fsearch_database_include_get_path(include);
 
-        if (!fsearch_database_include_get_active(include)
-            || g_hash_table_contains(self->active_scans, GUINT_TO_POINTER(index_id))
-            || g_hash_table_contains(self->offline_indices, GUINT_TO_POINTER(index_id))) {
+        if (!fsearch_database_include_get_active(include) || g_hash_table_contains(self->active_scans, path)
+            || g_hash_table_contains(self->offline_indices, path)) {
             continue;
         }
 
@@ -196,19 +193,10 @@ offline_poll_fired_cb(gpointer user_data) {
     g_hash_table_iter_init(&iter, self->offline_indices);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-        const uint32_t index_id = GPOINTER_TO_UINT(key);
-        const char *path = NULL;
-
-        for (uint32_t i = 0; i < includes->len; i++) {
-            FsearchDatabaseInclude *inc = g_ptr_array_index(includes, i);
-            if (fsearch_database_include_get_id(inc) == index_id) {
-                path = fsearch_database_include_get_path(inc);
-                break;
-            }
-        }
+        const char *path = key;
 
         if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
-            g_ptr_array_add(reappeared, GUINT_TO_POINTER(index_id));
+            g_ptr_array_add(reappeared, (gpointer)path);
         }
         else {
             still_has_offline = TRUE;
@@ -216,11 +204,13 @@ offline_poll_fired_cb(gpointer user_data) {
     }
 
     for (uint32_t i = 0; i < reappeared->len; i++) {
-        const uint32_t index_id = GPOINTER_TO_UINT(g_ptr_array_index(reappeared, i));
-        g_hash_table_remove(self->offline_indices, GUINT_TO_POINTER(index_id));
-        g_debug("[rescan-manager] Offline root reappeared for index %u", index_id);
+        const char *path = g_ptr_array_index(reappeared, i);
+        g_debug("[rescan-manager] Offline root reappeared for index %s", path);
 
-        fsearch_database_rescan_manager_request_index_scan(self, index_id);
+        fsearch_database_rescan_manager_request_index_scan(self, path);
+
+        // Don't use path after removing it from the hash table, since it will be a freed along with it
+        g_hash_table_remove(self->offline_indices, g_steal_pointer(&path));
     }
 
     if (!still_has_offline) {
@@ -250,16 +240,16 @@ fsearch_database_rescan_manager_reschedule(FsearchDatabaseRescanManager *self) {
 }
 
 void
-fsearch_database_rescan_manager_request_index_scan(FsearchDatabaseRescanManager *self, uint32_t index_id) {
+fsearch_database_rescan_manager_request_index_scan(FsearchDatabaseRescanManager *self, const char *path) {
     g_return_if_fail(self != NULL);
 
-    if (self->global_scan_active || g_hash_table_contains(self->active_scans, GUINT_TO_POINTER(index_id))) {
+    if (self->global_scan_active || g_hash_table_contains(self->active_scans, path)) {
         return;
     }
 
-    g_hash_table_add(self->active_scans, GUINT_TO_POINTER(index_id));
+    g_hash_table_add(self->active_scans, (gpointer)g_strdup(path));
     if (self->index_cb) {
-        self->index_cb(index_id, self->cb_data);
+        self->index_cb(path, self->cb_data);
     }
 }
 
@@ -338,22 +328,22 @@ fsearch_database_rescan_manager_trigger_startup_scans(FsearchDatabaseRescanManag
 }
 
 void
-fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, uint32_t index_id) {
+fsearch_database_rescan_manager_notify_index_finished(FsearchDatabaseRescanManager *self, const char *path) {
     g_return_if_fail(self != NULL);
-    if (g_hash_table_remove(self->active_scans, GUINT_TO_POINTER(index_id))) {
+    if (g_hash_table_remove(self->active_scans, path)) {
         fsearch_database_rescan_manager_reschedule(self);
     }
 }
 
 void
-fsearch_database_rescan_manager_notify_index_offline(FsearchDatabaseRescanManager *self, uint32_t index_id) {
+fsearch_database_rescan_manager_notify_index_offline(FsearchDatabaseRescanManager *self, const char *path) {
     g_return_if_fail(self != NULL);
 
-    g_hash_table_remove(self->active_scans, GUINT_TO_POINTER(index_id));
+    g_hash_table_remove(self->active_scans, path);
 
-    if (!g_hash_table_contains(self->offline_indices, GUINT_TO_POINTER(index_id))) {
-        g_debug("[rescan-manager] Index %u marked offline. Starting reappear poll.", index_id);
-        g_hash_table_add(self->offline_indices, GUINT_TO_POINTER(index_id));
+    if (!g_hash_table_contains(self->offline_indices, path)) {
+        g_debug("[rescan-manager] Index marked offline. Starting reappear poll: %s", path);
+        g_hash_table_add(self->offline_indices, (gpointer)g_strdup(path));
 
         if (!self->offline_poll_source) {
             self->offline_poll_source = g_timeout_source_new_seconds(5);

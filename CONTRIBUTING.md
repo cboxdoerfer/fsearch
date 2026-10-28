@@ -16,7 +16,6 @@
 - Update `io.github.cboxdoerfer.FSearch.yml` in flathub repository
 - Make sure flatpak
   works: `flatpak-builder --force-clean --user --install builder-dir io.github.cboxdoerfer.FSearch.yml`
-- Update `PKGBUILD` in *fsearch* AUR repository: `$EDITOR PKGBUILD && makepkg --printsrcinfo > .SRCINFO`
 - Update OBS build files: `fsearch.dsc`, `fsearch.spec`, add `fsearch-$version.tar.gz` with stripped `debian` diretory
 - Commit to OBS: `osc vc && osc commit`
 

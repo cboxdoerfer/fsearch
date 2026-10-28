@@ -1,6 +1,5 @@
 #pragma once
 
-#include <gtk/gtk.h>
 
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"

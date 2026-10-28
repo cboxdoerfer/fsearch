@@ -6,8 +6,8 @@
 
 #include <config.h>
 #include <fcntl.h>
-#include <glib.h>
 #include <glib-unix.h>
+#include <glib.h>
 #include <linux/fanotify.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -18,7 +18,6 @@
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <unistd.h>
-
 
 #define FANOTIFY_FOLDER_MASK                                                                                           \
     (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
@@ -36,8 +35,6 @@ struct FsearchFolderMonitorFanotify {
     int32_t fd;
 
     ssize_t file_handle_payload;
-    int32_t skip_create_delete;
-    int32_t skip_attrib;
 
     GMutex mutex;
 };
@@ -66,30 +63,29 @@ typedef struct {
     char absent_symbol;
 } FanotifyFlag;
 
-static const FanotifyFlag FANOTIFY_FLAGS[] = {
-    {FAN_CREATE, 'c', '-'},
-    {FAN_CLOSE_WRITE, 'w', '-'},
-    {FAN_ATTRIB, 'a', '-'},
-    {FAN_DELETE, 'd', '-'},
-    {FAN_DELETE_SELF, 'D', '-'},
-    {FAN_MOVED_TO, 'm', '-'},
-    {FAN_MOVED_FROM, 'M', '-'},
-    {FAN_MOVE_SELF, 'S', '-'},
-    {FAN_EVENT_ON_CHILD, 'o', '-'},
-    {FAN_ONDIR, '+', '-'}
-};
+/*
+static const FanotifyFlag FANOTIFY_FLAGS[] = {{FAN_CREATE, 'c', '-'},
+                                              {FAN_CLOSE_WRITE, 'w', '-'},
+                                              {FAN_ATTRIB, 'a', '-'},
+                                              {FAN_DELETE, 'd', '-'},
+                                              {FAN_DELETE_SELF, 'D', '-'},
+                                              {FAN_MOVED_TO, 'm', '-'},
+                                              {FAN_MOVED_FROM, 'M', '-'},
+                                              {FAN_MOVE_SELF, 'S', '-'},
+                                              {FAN_EVENT_ON_CHILD, 'o', '-'},
+                                              {FAN_ONDIR, '+', '-'}};
 
 static void
 print_fanotify_mask(uint32_t mask) {
     const size_t num_flags = G_N_ELEMENTS(FANOTIFY_FLAGS);
 
     for (size_t i = 0; i < num_flags; i++) {
-        uint8_t symbol = (mask & FANOTIFY_FLAGS[i].flag)
-                             ? FANOTIFY_FLAGS[i].present_symbol
-                             : FANOTIFY_FLAGS[i].absent_symbol;
+        uint8_t symbol = (mask & FANOTIFY_FLAGS[i].flag) ? FANOTIFY_FLAGS[i].present_symbol
+                                                         : FANOTIFY_FLAGS[i].absent_symbol;
         g_print("%c", symbol);
     }
 }
+*/
 
 static bool
 has_multiple_create_delete_events(uint32_t mask) {
@@ -110,17 +106,12 @@ has_multiple_create_delete_events(uint32_t mask) {
 }
 
 static void
-queue_monitor_event(GAsyncQueue *event_queue,
-                    const char *file_name,
-                    FsearchDatabaseEntry *watched_entry,
-                    int event_type,
-                    bool is_dir) {
-    g_async_queue_push(event_queue,
-                       fsearch_folder_monitor_event_new(file_name,
-                                                        watched_entry,
-                                                        event_type,
-                                                        FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                        is_dir));
+queue_monitor_event(GAsyncQueue *event_queue, const char *file_name, GBytes *fid_bytes, int event_type, bool is_dir) {
+    // fid_bytes needs to be copied to survive this call
+    GBytes *owned_handle = g_bytes_new(g_bytes_get_data(fid_bytes, NULL), g_bytes_get_size(fid_bytes));
+    g_async_queue_push(
+        event_queue,
+        fsearch_folder_monitor_event_new(file_name, owned_handle, event_type, FSEARCH_FOLDER_MONITOR_FANOTIFY, is_dir));
 }
 
 static gboolean
@@ -168,8 +159,9 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             FsearchDatabaseIndexHandleData *handle = (FsearchDatabaseIndexHandleData *)&fid->fsid;
             g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
 
+            // Membership check only -- never dereference an entry off this thread.
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->handles_to_folders, fid_bytes);
+            const bool is_watched = g_hash_table_contains(self->handles_to_folders, fid_bytes);
             g_mutex_unlock(&self->mutex);
 
             const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
@@ -177,91 +169,79 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 file_name = NULL;
             }
 
-            //print_fanotify_mask(metadata->mask);
-            //g_print(": %s\n", file_name ? file_name : "UNKNOWN");
+            // print_fanotify_mask(metadata->mask);
+            // g_print(": %s\n", file_name ? file_name : "UNKNOWN");
 
-            if (!watched_entry) {
-                g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
-                          metadata->mask,
-                          file_name ? file_name : ".");
+            if (!is_watched) {
+                g_debug("[fanotify_listener] no watched entry for handle found: %llu -> %s",
+                        metadata->mask,
+                        file_name ? file_name : ".");
                 continue;
             }
 
             const bool is_dir = metadata->mask & FAN_ONDIR ? true : false;
+            bool skip_attrib = false;
 
             // Always push MOVE_SELF and DELETE_SELF
             if (metadata->mask & FAN_MOVE_SELF) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF,
                                     is_dir);
             }
             if (metadata->mask & FAN_DELETE_SELF) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF,
                                     is_dir);
             }
             if (has_multiple_create_delete_events(metadata->mask)) {
                 // There's no way to know in which order those events happened, hence we must do a rescan.
-                g_print("multiple create/delete events: %s\n", file_name ? file_name : ".");
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_RESCAN,
-                                    is_dir);
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_RESCAN, is_dir);
                 // We can skip other events in the same mask here, since we're going to rescan the file/folder anyway
                 continue;
             }
 
             if (metadata->mask & FAN_CREATE) {
-                self->skip_attrib = true;
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_CREATE,
-                                    is_dir);
+                skip_attrib = true;
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_CREATE, is_dir);
             }
             if (metadata->mask & FAN_DELETE) {
-                self->skip_attrib = true;
-                queue_monitor_event(self->event_queue,
-                                    file_name,
-                                    watched_entry,
-                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
-                                    is_dir);
+                skip_attrib = true;
+                queue_monitor_event(self->event_queue, file_name, fid_bytes, FSEARCH_FOLDER_MONITOR_EVENT_DELETE, is_dir);
             }
             if (metadata->mask & FAN_MOVED_FROM) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVED_FROM,
                                     is_dir);
             }
             if (metadata->mask & FAN_MOVED_TO) {
-                self->skip_attrib = true;
+                skip_attrib = true;
                 queue_monitor_event(self->event_queue,
                                     file_name,
-                                    watched_entry,
+                                    fid_bytes,
                                     FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO,
                                     is_dir);
             }
-            if (!self->skip_attrib) {
+            if (!skip_attrib) {
                 if (metadata->mask & FAN_ATTRIB) {
                     queue_monitor_event(self->event_queue,
                                         file_name,
-                                        watched_entry,
+                                        fid_bytes,
                                         FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB,
                                         is_dir);
                 }
                 else if (metadata->mask & FAN_CLOSE_WRITE) {
                     queue_monitor_event(self->event_queue,
                                         file_name,
-                                        watched_entry,
+                                        fid_bytes,
                                         FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE,
                                         is_dir);
                 }
@@ -300,8 +280,7 @@ fsearch_folder_monitor_fanotify_new(GMainContext *monitor_context, GAsyncQueue *
     self->event_queue = g_async_queue_ref(event_queue);
 
     self->handles_to_folders = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
-    self->folders_to_handles =
-        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)g_bytes_unref);
+    self->folders_to_handles = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)g_bytes_unref);
 
     self->monitor_context = monitor_context;
 
@@ -340,9 +319,7 @@ fsearch_folder_monitor_fanotify_free(FsearchFolderMonitorFanotify *self) {
 }
 
 bool
-fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
-                                      FsearchDatabaseEntry *folder,
-                                      const char *path) {
+fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder, const char *path) {
     g_assert(folder != NULL);
     struct statfs buf;
     if (statfs(path, &buf) < 0) {
@@ -351,8 +328,9 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
         return false;
     }
 
-    g_autofree FsearchDatabaseIndexHandleData *handle_data =
-        calloc(1, sizeof(FsearchDatabaseIndexHandleData) + self->file_handle_payload);
+    g_autofree FsearchDatabaseIndexHandleData *handle_data = calloc(1,
+                                                                    sizeof(FsearchDatabaseIndexHandleData)
+                                                                        + self->file_handle_payload);
 
     while (true) {
         int32_t mntid = -1;
@@ -431,4 +409,12 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
         g_debug("[unwatch_folder] no fanotify handle found for folder: %s", path_full->str);
     }
+}
+
+FsearchDatabaseEntry *
+fsearch_folder_monitor_fanotify_resolve(FsearchFolderMonitorFanotify *self, gpointer handle) {
+    g_return_val_if_fail(self, NULL);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return g_hash_table_lookup(self->handles_to_folders, handle);
 }

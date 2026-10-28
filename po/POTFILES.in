@@ -19,6 +19,7 @@ src/fsearch_preferences_dialog.c
 src/fsearch_result_view.c
 src/fsearch_statusbar.c
 src/fsearch_statusbar.ui
+src/fsearch_welcome_dialog.ui
 src/fsearch_window.c
 src/fsearch_window.ui
 src/fsearch_window_actions.c

@@ -44,6 +44,9 @@ struct _FsearchListView {
     GtkGesture *rubberband_drag_gesture;
     GtkGesture *col_resize_drag_gesture;
 
+    GtkEventController *key_controller;
+    GtkEventController *motion_controller;
+
     gboolean rubberband_drag_mode;
     gboolean col_resize_drag_mode;
 
@@ -83,7 +86,7 @@ struct _FsearchListView {
     gint min_list_width;
     gint list_height;
 
-    GtkSortType sort_type;
+    FsearchSortDirection sort_direction;
     gint sort_order;
 
     FsearchListViewSortFunc sort_func;
@@ -149,11 +152,11 @@ get_last_row_idx(FsearchListView *view) {
 }
 
 static inline int
-get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
+get_row_idx_for_sort_direction(FsearchListView *view, int row_idx) {
     return row_idx;
     //}
 
-    // if (view->sort_type == GTK_SORT_ASCENDING) {
+    // if (view->sort_direction == FSEARCH_SORT_DIRECTION_ASCENDING) {
     //     return row_idx;
     // }
     // else {
@@ -280,11 +283,7 @@ fsearch_list_view_get_row_idx_for_y_canvas(FsearchListView *view, int y_canvas) 
 }
 
 static void
-fsearch_list_view_convert_view_to_canvas_coords(FsearchListView *view,
-                                                int x_view,
-                                                int y_view,
-                                                int *x_canvas,
-                                                int *y_canvas) {
+fsearch_list_view_convert_view_to_canvas_coords(FsearchListView *view, int x_view, int y_view, int *x_canvas, int *y_canvas) {
     if (x_canvas) {
         *x_canvas = get_hscroll_pos(view) + x_view;
     }
@@ -353,7 +352,7 @@ fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, doubl
 
     const gdouble x_drag_start_diff = view->rubberband_start_x_canvas - x_drag_start - get_hscroll_pos(view);
     const gdouble y_drag_start_diff = view->rubberband_start_y_canvas - y_drag_start - get_vscroll_pos(view)
-                                      + view->header_height;
+                                    + view->header_height;
 
     *x1 = view->rubberband_start_x_canvas;
     *y1 = view->rubberband_start_y_canvas;
@@ -473,7 +472,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
                                 context,
                                 columns,
                                 &row_rect,
-                                get_row_idx_for_sort_type(view, row_idx),
+                                get_row_idx_for_sort_direction(view, row_idx),
                                 fsearch_list_view_is_selected(view, row_idx),
                                 view->cursor_idx == row_idx ? TRUE : FALSE,
                                 view->hovered_idx == row_idx ? TRUE : FALSE,
@@ -533,19 +532,16 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->rubberband_drag_gesture), &x_drag_start, &y_drag_start);
 
         const gdouble x_drag_start_diff = view->rubberband_start_x_canvas - x_drag_start + x_scroll_offset;
-        const gdouble y_drag_start_diff = view->rubberband_start_y_canvas - y_drag_start + y_scroll_offset + view->
-                                          header_height;
+        const gdouble y_drag_start_diff = view->rubberband_start_y_canvas - y_drag_start + y_scroll_offset
+                                        + view->header_height;
 
         const double x1 = x_draw_start_view + view_rect.x + view->rubberband_start_x_canvas;
         const double y1 = y_scroll_offset + view_rect.y + view->rubberband_start_y_canvas;
 
-        const double x2 = x_draw_start_view + view_rect.x + view->rubberband_start_x_canvas + view->
-                          rubberband_drag_offset_x
-                          -
-                          x_drag_start_diff;
-        const double y2 = y_scroll_offset + view_rect.y + view->rubberband_start_y_canvas + view->
-                          rubberband_drag_offset_y
-                          - y_drag_start_diff;
+        const double x2 = x_draw_start_view + view_rect.x + view->rubberband_start_x_canvas
+                        + view->rubberband_drag_offset_x - x_drag_start_diff;
+        const double y2 = y_scroll_offset + view_rect.y + view->rubberband_start_y_canvas
+                        + view->rubberband_drag_offset_y - y_drag_start_diff;
 
         GdkRectangle rect = {};
         rect.width = ABS(x1 - x2);
@@ -648,7 +644,7 @@ fsearch_list_view_selection_clear_silent(FsearchListView *view) {
 static void
 fsearch_list_view_selection_add(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        view->select_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
         fsearch_list_view_redraw_row(view, row);
     }
 }
@@ -656,14 +652,14 @@ fsearch_list_view_selection_add(FsearchListView *view, int row) {
 static void
 fsearch_list_view_selection_toggle_silent(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_toggle_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        view->select_toggle_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
     }
 }
 
 static gboolean
 fsearch_list_view_is_selected(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        return view->is_selected_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
+        return view->is_selected_func(get_row_idx_for_sort_direction(view, row), view->selection_user_data);
     }
     return FALSE;
 }
@@ -697,8 +693,8 @@ fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, 
     start_idx = fit_row_idx_in_view(view, start_idx);
     end_idx = fit_row_idx_in_view(view, end_idx);
 
-    start_idx = get_row_idx_for_sort_type(view, (gint)start_idx);
-    end_idx = get_row_idx_for_sort_type(view, (gint)end_idx);
+    start_idx = get_row_idx_for_sort_direction(view, (gint)start_idx);
+    end_idx = get_row_idx_for_sort_direction(view, (gint)end_idx);
     const int32_t temp_idx = start_idx;
 
     if (start_idx > end_idx) {
@@ -717,23 +713,39 @@ fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, 
 }
 
 static void
-fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modify, gboolean *extend) {
+fsearch_list_view_get_selection_modifiers_for_state(FsearchListView *view,
+                                                    GdkModifierType state,
+                                                    gboolean *modify,
+                                                    gboolean *extend) {
     GtkWidget *widget = GTK_WIDGET(view);
 
+    GdkModifierType mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_MODIFY_SELECTION);
+    *modify = (state & mask) == mask ? TRUE : FALSE;
+
+    mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_EXTEND_SELECTION);
+    *extend = (state & mask) == mask ? TRUE : FALSE;
+}
+
+static void
+fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modify, gboolean *extend) {
     *modify = FALSE;
     *extend = FALSE;
 
     GdkModifierType state = 0;
     if (gtk_get_current_event_state(&state)) {
-        GdkModifierType mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_MODIFY_SELECTION);
-        if ((state & mask) == mask) {
-            *modify = TRUE;
-        }
-        mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_EXTEND_SELECTION);
-        if ((state & mask) == mask) {
-            *extend = TRUE;
-        }
+        fsearch_list_view_get_selection_modifiers_for_state(view, state, modify, extend);
     }
+}
+
+static void
+fsearch_list_view_emit_row_activated(FsearchListView *view, gdouble x_view, int row_idx) {
+    // Clicks right of the last column don't hit any column, but must still activate the row
+    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, (int)x_view);
+    g_signal_emit(view,
+                  signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
+                  0,
+                  col ? col->type : -1,
+                  get_row_idx_for_sort_direction(view, row_idx));
 }
 
 static void
@@ -807,14 +819,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 fsearch_list_view_selection_clear_silent(view);
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
                 if (view->single_click_activate) {
-                    FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
-                    if (col) {
-                        g_signal_emit(view,
-                                      signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
-                                      0,
-                                      col->type,
-                                      get_row_idx_for_sort_type(view, row_idx));
-                    }
+                    fsearch_list_view_emit_row_activated(view, x_view, row_idx);
                 }
             }
             fsearch_list_view_selection_changed(view);
@@ -822,14 +827,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         }
 
         if (n_press == 2 && !view->single_click_activate) {
-            FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x_view);
-            if (col) {
-                g_signal_emit(view,
-                              signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
-                              0,
-                              col->type,
-                              get_row_idx_for_sort_type(view, row_idx));
-            }
+            fsearch_list_view_emit_row_activated(view, x_view, row_idx);
         }
     }
 
@@ -924,9 +922,8 @@ rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int p
             // selection grows upwards
             fsearch_list_view_select_range_silent(view,
                                                   end_idx,
-                                                  prev_end_idx == VIRTUAL_ROW_BELOW_VIEW
-                                                      ? get_last_row_idx(view)
-                                                      : prev_end_idx - 1,
+                                                  prev_end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                         : prev_end_idx - 1,
                                                   TRUE);
         }
         else {
@@ -943,9 +940,8 @@ rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int p
                 if (end_idx + 1 <= get_last_row_idx(view)) {
                     fsearch_list_view_select_range_silent(view,
                                                           end_idx + 1,
-                                                          prev_end_idx == VIRTUAL_ROW_BELOW_VIEW
-                                                              ? get_last_row_idx(view)
-                                                              : prev_end_idx,
+                                                          prev_end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                                 : prev_end_idx,
                                                           TRUE);
                 }
             }
@@ -960,9 +956,8 @@ rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int p
                 // toggle everything from prev_end to the row before end
                 fsearch_list_view_select_range_silent(view,
                                                       prev_end_idx,
-                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW
-                                                          ? get_last_row_idx(view)
-                                                          : end_idx - 1,
+                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                        : end_idx - 1,
                                                       TRUE);
             }
             else {
@@ -978,9 +973,7 @@ rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int p
             if (prev_end_idx + 1 <= get_last_row_idx(view)) {
                 fsearch_list_view_select_range_silent(view,
                                                       prev_end_idx + 1,
-                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW
-                                                          ? get_last_row_idx(view)
-                                                          : end_idx,
+                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view) : end_idx,
                                                       TRUE);
             }
         }
@@ -994,10 +987,9 @@ update_rubberband_selection(FsearchListView *view) {
     }
     gdouble rubberband_drag_offset_x;
     gdouble rubberband_drag_offset_y;
-    gtk_gesture_drag_get_offset(
-        GTK_GESTURE_DRAG(view->rubberband_drag_gesture),
-        &rubberband_drag_offset_x,
-        &rubberband_drag_offset_y);
+    gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->rubberband_drag_gesture),
+                                &rubberband_drag_offset_x,
+                                &rubberband_drag_offset_y);
     view->highlight_cursor_idx = FALSE;
     view->rubberband_state = RUBBERBAND_SELECT_ACTIVE;
     view->rubberband_drag_offset_x = rubberband_drag_offset_x;
@@ -1210,8 +1202,12 @@ on_fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
 }
 
 static gboolean
-fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
-    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+on_fsearch_list_view_key_pressed(GtkEventControllerKey *controller,
+                                 guint keyval,
+                                 guint keycode,
+                                 GdkModifierType state,
+                                 gpointer user_data) {
+    FsearchListView *view = user_data;
 
     if (view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
         // Don't support key press events while rubber band selection is active
@@ -1221,10 +1217,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
     gboolean modify_selection;
     gboolean extend_selection;
 
-    fsearch_list_view_get_selection_modifiers(view, &modify_selection, &extend_selection);
-
-    guint keyval;
-    gdk_event_get_keyval((GdkEvent *)event, &keyval);
+    fsearch_list_view_get_selection_modifiers_for_state(view, state, &modify_selection, &extend_selection);
 
     int d_idx = 0;
     switch (keyval) {
@@ -1298,19 +1291,14 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
     return GDK_EVENT_PROPAGATE;
 }
 
-static gint
-fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
-    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+static void
+on_fsearch_list_view_focus_out(GtkEventControllerKey *controller, gpointer user_data) {
+    FsearchListView *view = FSEARCH_LIST_VIEW(user_data);
     fsearch_list_view_redraw_row(view, view->cursor_idx);
-    return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->focus_out_event(widget, event);
 }
 
 static gboolean
-fsearch_list_view_query_tooltip(GtkWidget *widget,
-                                int x_view,
-                                int y_view,
-                                gboolean keyboard_mode,
-                                GtkTooltip *tooltip) {
+fsearch_list_view_query_tooltip(GtkWidget *widget, int x_view, int y_view, gboolean keyboard_mode, GtkTooltip *tooltip) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     if (!view->query_tooltip_func) {
         return FALSE;
@@ -1328,7 +1316,7 @@ fsearch_list_view_query_tooltip(GtkWidget *widget,
 
     g_autofree char *tooltip_text = view->query_tooltip_func(layout,
                                                              view->row_height,
-                                                             get_row_idx_for_sort_type(view, row_idx),
+                                                             get_row_idx_for_sort_direction(view, row_idx),
                                                              col,
                                                              view->query_tooltip_func_data);
     g_clear_object(&layout);
@@ -1372,19 +1360,11 @@ fsearch_list_view_get_property(GObject *object, guint prop_id, GValue *value, GP
 
 static void
 update_hovered_idx_for_current_cursor_position(FsearchListView *view) {
-#if GTK_CHECK_VERSION(3, 20, 0)
     GdkSeat *seat = gdk_display_get_default_seat(gdk_display_get_default());
     if (!seat) {
         return;
     }
     GdkDevice *pointer_device = gdk_seat_get_pointer(seat);
-#else
-    GdkDeviceManager *device_manager = gdk_display_get_device_manager(gdk_display_get_default());
-    if (!device_manager) {
-        return;
-    }
-    GdkDevice *pointer_device = gdk_device_manager_get_client_pointer(device_manager);
-#endif
     if (!pointer_device) {
         return;
     }
@@ -1706,37 +1686,36 @@ fsearch_list_view_grab_focus(GtkWidget *widget) {
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->grab_focus(widget);
 }
 
-static gboolean
-fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event) {
-    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-    if (gtk_widget_get_realized(widget)) {
+static void
+on_fsearch_list_view_leave(GtkEventControllerMotion *controller, gpointer user_data) {
+    FsearchListView *view = user_data;
+    if (gtk_widget_get_realized(GTK_WIDGET(view))) {
         gdk_window_set_cursor(view->bin_window, NULL);
         fsearch_list_view_redraw_row(view, view->hovered_idx);
     }
     view->hovered_idx = UNSET_ROW;
-
-    return GDK_EVENT_PROPAGATE;
 }
 
-static gboolean
-fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
-    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+static void
+on_fsearch_list_view_motion(GtkEventControllerMotion *controller, gdouble x_view, gdouble y_view, gpointer user_data) {
+    FsearchListView *view = user_data;
 
     const gint prev_hovered_idx = view->hovered_idx;
 
-    if (event->window != view->bin_window) {
+    if (y_view < view->header_height || !view->bin_window) {
+        // The pointer is over the header, which has no hoverable rows
         view->hovered_idx = UNSET_ROW;
     }
     else {
-        const gint y_event_canvas = (gint)event->y;
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y_event_canvas);
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_view(view, (int)y_view);
 
         if (view->single_click_activate && view->hovered_idx >= 0) {
-            g_autoptr(GdkCursor) cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
-            gdk_window_set_cursor(event->window, cursor);
+            GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(view));
+            g_autoptr(GdkCursor) cursor = gdk_cursor_new_for_display(display, GDK_HAND2);
+            gdk_window_set_cursor(view->bin_window, cursor);
         }
         else {
-            gdk_window_set_cursor(event->window, NULL);
+            gdk_window_set_cursor(view->bin_window, NULL);
         }
     }
 
@@ -1744,8 +1723,6 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         fsearch_list_view_redraw_row(view, prev_hovered_idx);
         fsearch_list_view_redraw_row(view, view->hovered_idx);
     }
-
-    return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->motion_notify_event(widget, event);
 }
 
 static void
@@ -1792,8 +1769,7 @@ fsearch_list_view_realize_column(FsearchListView *view, FsearchListViewColumn *c
     attrs.wclass = GDK_INPUT_ONLY;
     attrs.visual = gtk_widget_get_visual(GTK_WIDGET(view));
     attrs.event_mask = gtk_widget_get_events(GTK_WIDGET(view))
-                       | (GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
-                          GDK_KEY_PRESS_MASK);
+                     | (GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_KEY_PRESS_MASK);
     guint attrs_mask = GDK_WA_CURSOR | GDK_WA_X | GDK_WA_Y;
     GdkDisplay *display = gdk_window_get_display(view->header_window);
     attrs.cursor = gdk_cursor_new_from_name(display, "col-resize");
@@ -1848,8 +1824,8 @@ fsearch_list_view_realize(GtkWidget *widget) {
     attrs.width = MAX(view->min_list_width, allocation.width);
     attrs.height = MAX(view->list_height, allocation.height);
     attrs.event_mask = GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK | GDK_POINTER_MOTION_MASK | GDK_ENTER_NOTIFY_MASK
-                       | GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
-                       | gtk_widget_get_events(widget);
+                     | GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
+                     | gtk_widget_get_events(widget);
 
     view->bin_window = gdk_window_new(window, &attrs, attrs_mask);
     gtk_widget_register_window(widget, view->bin_window);
@@ -1859,8 +1835,8 @@ fsearch_list_view_realize(GtkWidget *widget) {
     attrs.width = MAX(view->min_list_width, allocation.width);
     attrs.height = view->header_height;
     attrs.event_mask = GDK_EXPOSURE_MASK | GDK_SCROLL_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK
-                       | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK
-                       | gtk_widget_get_events(widget);
+                     | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK
+                     | gtk_widget_get_events(widget);
 
     view->header_window = gdk_window_new(window, &attrs, attrs_mask);
     gtk_widget_register_window(widget, view->header_window);
@@ -1886,6 +1862,8 @@ fsearch_list_view_destroy(GtkWidget *widget) {
     g_clear_object(&view->multi_press_gesture);
     g_clear_object(&view->rubberband_drag_gesture);
     g_clear_object(&view->col_resize_drag_gesture);
+    g_clear_object(&view->key_controller);
+    g_clear_object(&view->motion_controller);
 
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->destroy(widget);
 }
@@ -1912,12 +1890,8 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
     widget_class->size_allocate = fsearch_list_view_size_allocate;
     widget_class->get_preferred_width = fsearch_list_view_get_preferred_width;
     widget_class->get_preferred_height = fsearch_list_view_get_preferred_height;
-    widget_class->key_press_event = fsearch_list_view_key_press_event;
     widget_class->query_tooltip = fsearch_list_view_query_tooltip;
     widget_class->grab_focus = fsearch_list_view_grab_focus;
-    widget_class->focus_out_event = fsearch_list_view_focus_out_event;
-    widget_class->motion_notify_event = fsearch_list_view_motion_notify_event;
-    widget_class->leave_notify_event = fsearch_list_view_leave_notify_event;
 
     container_class->forall = fsearch_list_view_container_for_all;
     container_class->remove = fsearch_list_view_container_remove;
@@ -1937,9 +1911,7 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
                                                                    G_TYPE_INT,
                                                                    G_TYPE_INT);
 
-#if GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_class_set_css_name(widget_class, "treeview");
-#endif
 }
 
 static void
@@ -1988,10 +1960,7 @@ fsearch_list_view_init(FsearchListView *view) {
                      "drag-update",
                      G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_update),
                      view);
-    g_signal_connect(view->rubberband_drag_gesture,
-                     "drag-end",
-                     G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end),
-                     view);
+    g_signal_connect(view->rubberband_drag_gesture, "drag-end", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end), view);
 
     view->col_resize_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
     g_signal_connect(view->col_resize_drag_gesture,
@@ -2006,6 +1975,14 @@ fsearch_list_view_init(FsearchListView *view) {
                      "drag-end",
                      G_CALLBACK(on_fsearch_list_view_header_drag_gesture_end),
                      view);
+    view->key_controller = gtk_event_controller_key_new(GTK_WIDGET(view));
+    g_signal_connect(view->key_controller, "key-pressed", G_CALLBACK(on_fsearch_list_view_key_pressed), view);
+    g_signal_connect(view->key_controller, "focus-out", G_CALLBACK(on_fsearch_list_view_focus_out), view);
+
+    view->motion_controller = gtk_event_controller_motion_new(GTK_WIDGET(view));
+    g_signal_connect(view->motion_controller, "motion", G_CALLBACK(on_fsearch_list_view_motion), view);
+    g_signal_connect(view->motion_controller, "leave", G_CALLBACK(on_fsearch_list_view_leave), view);
+
     GtkStyleContext *style = gtk_widget_get_style_context(GTK_WIDGET(view));
     gtk_style_context_add_class(style, GTK_STYLE_CLASS_VIEW);
     gtk_style_context_add_class(style, GTK_STYLE_CLASS_LINKED);
@@ -2029,6 +2006,7 @@ fsearch_list_view_column_free(FsearchListViewColumn *col) {
     }
 
     g_clear_pointer(&col->name, g_free);
+    g_clear_object(&col->popup_gesture);
     g_clear_object(&col->button);
     g_clear_pointer(&col, free);
 }
@@ -2129,7 +2107,8 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
     fsearch_list_view_reset_sort_indicator(view);
 
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow),
-                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
+                                 view->sort_direction == FSEARCH_SORT_DIRECTION_DESCENDING ? "pan-up-symbolic"
+                                                                                           : "pan-down-symbolic",
                                  GTK_ICON_SIZE_BUTTON);
     gtk_widget_show(col->arrow);
 }
@@ -2137,15 +2116,15 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
 static void
 on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchListViewColumn *col = user_data;
-    GtkSortType current_sort_type = col->view->sort_type;
+    FsearchSortDirection current_sort_direction = col->view->sort_direction;
     int current_sort_order = col->view->sort_order;
 
     if (col->view->sort_func) {
         if (current_sort_order == col->type) {
-            col->view->sort_func(col->type, !current_sort_type, col->view->sort_func_data);
+            col->view->sort_func(col->type, !current_sort_direction, col->view->sort_func_data);
         }
         else {
-            col->view->sort_func(col->type, GTK_SORT_ASCENDING, col->view->sort_func_data);
+            col->view->sort_func(col->type, FSEARCH_SORT_DIRECTION_ASCENDING, col->view->sort_func_data);
         }
     }
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "content-loading-symbolic", GTK_ICON_SIZE_BUTTON);
@@ -2153,28 +2132,22 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
     gtk_widget_set_sensitive(col->button, FALSE);
 }
 
-static gboolean
-on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    if (gdk_event_triggers_context_menu(event)) {
-        g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
-        GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
+static void
+on_fsearch_list_view_header_button_pressed(GtkGestureMultiPress *gesture,
+                                           gint n_press,
+                                           gdouble x,
+                                           gdouble y,
+                                           gpointer user_data) {
+    FsearchListViewColumn *col = user_data;
 
-        FsearchListViewColumn *col = user_data;
-        GtkWidget *list = GTK_WIDGET(col->view);
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
+    GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
 
-        GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
-        gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
-#if !GTK_CHECK_VERSION(3, 22, 0)
-        guint button;
-        guint32 time = gdk_event_get_time(event);
-        gdk_event_get_button(event, &button);
-        gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, button, time);
-#else
-        gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
-#endif
-        return GDK_EVENT_STOP;
-    }
-    return GDK_EVENT_PROPAGATE;
+    GtkWidget *menu_widget = gtk_menu_new_from_model(menu_model);
+    gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(col->view), NULL);
+    gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
+
+    gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 }
 
 FsearchListViewColumn *
@@ -2207,10 +2180,10 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
     }
 
     g_signal_connect(G_OBJECT(col->button), "clicked", G_CALLBACK(on_fsearch_list_view_header_button_clicked), col);
-    g_signal_connect(G_OBJECT(col->button),
-                     "button-press-event",
-                     G_CALLBACK(on_fsearch_list_view_header_button_pressed),
-                     col);
+
+    col->popup_gesture = gtk_gesture_multi_press_new(col->button);
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(col->popup_gesture), GDK_BUTTON_SECONDARY);
+    g_signal_connect(col->popup_gesture, "pressed", G_CALLBACK(on_fsearch_list_view_header_button_pressed), col);
 
     gtk_widget_set_parent(col->button, GTK_WIDGET(view));
     gtk_widget_set_parent_window(col->button, view->header_window);
@@ -2223,24 +2196,23 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
-fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction) {
     if (!view) {
         return;
     }
     view->num_rows = num_rows;
     view->list_height = num_rows * view->row_height;
-    gtk_adjustment_set_value(view->vadjustment,
-                             CLAMP(gtk_adjustment_get_value(view->vadjustment), 0, view->list_height));
+    gtk_adjustment_set_value(view->vadjustment, CLAMP(gtk_adjustment_get_value(view->vadjustment), 0, view->list_height));
 
     view->sort_order = sort_order;
-    view->sort_type = sort_type;
+    view->sort_direction = sort_direction;
     fsearch_list_view_update_sort_indicator(view);
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
 
 void
-fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, FsearchSortDirection sort_direction) {
     if (!view) {
         return;
     }
@@ -2253,16 +2225,14 @@ fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_
     gtk_adjustment_set_value(view->vadjustment, 0);
 
     view->sort_order = sort_order;
-    view->sort_type = sort_type;
+    view->sort_direction = sort_direction;
     fsearch_list_view_update_sort_indicator(view);
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
 
 void
-fsearch_list_view_set_query_tooltip_func(FsearchListView *view,
-                                         FsearchListViewQueryTooltipFunc func,
-                                         gpointer func_data) {
+fsearch_list_view_set_query_tooltip_func(FsearchListView *view, FsearchListViewQueryTooltipFunc func, gpointer func_data) {
     if (!view) {
         return;
     }
@@ -2349,9 +2319,9 @@ fsearch_list_view_get_sort_order(FsearchListView *view) {
     return view->sort_order;
 }
 
-GtkSortType
-fsearch_list_view_get_sort_type(FsearchListView *view) {
-    return view->sort_type;
+FsearchSortDirection
+fsearch_list_view_get_sort_direction(FsearchListView *view) {
+    return view->sort_direction;
 }
 
 uint32_t

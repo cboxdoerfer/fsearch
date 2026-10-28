@@ -27,7 +27,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DATABASE_MAJOR_VERSION 4
+#define DATABASE_MAJOR_VERSION 6
 #define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 #define DATABASE_CHECKSUM_SIZE 16
@@ -40,18 +40,45 @@ typedef struct {
     FsearchDatabaseIndexPropertyFlags flags;
 } LoadSaveContext;
 
-static void
-update_folder_indices(DynamicArray *folders) {
-    g_assert(folders);
-    const uint32_t num_folders = darray_get_num_items(folders);
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-        if (!folder) {
-            continue;
-        }
-        db_entry_set_index(folder, i);
-    }
+// Entries have no permanent `index` field, so during save we borrow `parent` (via the raw,
+// bookkeeping-free db_entry_set_parent_no_update()) to stash each entry's own canonical index.
+// Safe only because the store's lock is held for the whole save, so nothing else can observe it.
+static inline uint32_t
+db_entry_get_encoded_index(FsearchDatabaseEntry *entry) {
+    return (uint32_t)(uintptr_t)db_entry_get_parent(entry);
 }
+
+typedef struct {
+    DynamicArray *entries;
+    FsearchDatabaseEntry **real_parents;
+} EncodedEntryIndices;
+
+static EncodedEntryIndices
+database_file_encode_indices(DynamicArray *entries) {
+    const uint32_t num_entries = darray_get_num_items(entries);
+    FsearchDatabaseEntry **real_parents = g_new(FsearchDatabaseEntry *, num_entries);
+    for (uint32_t i = 0; i < num_entries; i++) {
+        real_parents[i] = db_entry_get_parent(darray_get_item(entries, i));
+    }
+    for (uint32_t i = 0; i < num_entries; i++) {
+        db_entry_set_parent_no_update(darray_get_item(entries, i), (FsearchDatabaseEntry *)(uintptr_t)i);
+    }
+    return (EncodedEntryIndices){.entries = entries, .real_parents = real_parents};
+}
+
+static void
+encoded_entry_indices_clear(EncodedEntryIndices *encoded) {
+    if (!encoded->real_parents) {
+        return; // zero-initialized, never encoded
+    }
+    const uint32_t num_entries = darray_get_num_items(encoded->entries);
+    for (uint32_t i = 0; i < num_entries; i++) {
+        db_entry_set_parent_no_update(darray_get_item(encoded->entries, i), encoded->real_parents[i]);
+    }
+    g_clear_pointer(&encoded->real_parents, g_free);
+}
+
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC(EncodedEntryIndices, encoded_entry_indices_clear)
 
 static uint16_t
 get_name_offset(const char *old, const char *new) {
@@ -166,7 +193,11 @@ database_file_load_entry(DatabaseFileReadCursor *cursor,
         cursor->ptr += name_len;
     }
 
-    *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
+    *entry_out = db_entry_new_with_name_len(index_flags,
+                                            previous_entry_name->str,
+                                            previous_entry_name->len,
+                                            NULL,
+                                            type);
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
         int64_t size = 0;
@@ -239,12 +270,12 @@ database_file_load_header(FILE *fp, GChecksum *checksum) {
 
 static void
 database_file_load_add_to_index_array(GHashTable *index_table, FsearchDatabaseEntry *entry) {
-    const uint32_t db_index = db_entry_get_db_index(entry);
-    DynamicArray *index_array = g_hash_table_lookup(index_table, GUINT_TO_POINTER(db_index));
+    const char *root_path = db_entry_get_root_path(entry);
+    DynamicArray *index_array = g_hash_table_lookup(index_table, root_path);
 
     if (!index_array) {
         index_array = darray_new(1024);
-        g_hash_table_insert(index_table, GUINT_TO_POINTER(db_index), index_array);
+        g_hash_table_insert(index_table, (gpointer)root_path, index_array);
     }
     darray_add_item(index_array, entry);
 }
@@ -272,10 +303,6 @@ database_file_load_folders(FILE *fp,
     for (idx = 0; idx < num_folders; idx++) {
         g_autoptr(FsearchDatabaseEntry) folder = NULL;
 
-        // db_index: the database index this folder belongs to
-        uint16_t db_index = 0;
-        cursor_read(&cursor, &db_index, sizeof(db_index));
-
         database_file_load_entry(&cursor, index_flags, previous_entry_name, &folder, DATABASE_ENTRY_TYPE_FOLDER);
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -290,8 +317,6 @@ database_file_load_folders(FILE *fp,
             g_debug("[db_load] Corrupt parent index: %d", parent_idx);
             return false;
         }
-
-        db_entry_set_db_index(folder, db_index);
 
         if (parent_idx != idx) {
             // Until all folders are ready, we have to reference parents by their index
@@ -362,7 +387,7 @@ database_file_load_files(FILE *fp,
         }
 
         FsearchDatabaseEntry *parent = darray_get_item(folders, parent_idx);
-        db_entry_set_parent(entry, parent);
+        db_entry_set_parent_update_childcount(entry, parent);
 
         darray_add_item(files, g_steal_pointer(&entry));
     }
@@ -481,12 +506,6 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        int32_t id = 0;
-        if (!database_file_read_element(&id, sizeof(id), fp, checksum)) {
-            g_debug("[db_load] failed to read id of include");
-            return false;
-        }
-
         g_autofree char *path = database_file_read_string(fp, 4 * PATH_MAX, checksum);
         if (!path) {
             g_debug("[db_load] failed to read path of include");
@@ -552,8 +571,12 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseInclude) include =
-            fsearch_database_include_new(path, is_active, one_file_system, is_monitored, scan_after_launch, rescan_after, id);
+        g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(path,
+                                                                                 is_active,
+                                                                                 one_file_system,
+                                                                                 is_monitored,
+                                                                                 scan_after_launch,
+                                                                                 rescan_after);
         fsearch_database_include_set_last_scan_time(include, last_scan_time);
         fsearch_database_include_set_last_scan_duration(include, last_scan_duration);
         fsearch_database_include_set_last_scanned_file_count(include, last_scanned_file_count);
@@ -609,12 +632,11 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseExclude)
-            exclude = fsearch_database_exclude_new(pattern,
-                                                   is_active,
-                                                   (FsearchDatabaseExcludeType)exclude_type,
-                                                   (FsearchDatabaseExcludeMatchScope)scope,
-                                                   (FsearchDatabaseExcludeTarget)target);
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
+                                                                                 is_active,
+                                                                                 (FsearchDatabaseExcludeType)exclude_type,
+                                                                                 (FsearchDatabaseExcludeMatchScope)scope,
+                                                                                 (FsearchDatabaseExcludeTarget)target);
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
     }
 
@@ -640,7 +662,8 @@ database_file_save_entry(DatabaseFileWriteCursor *cursor,
                          GString *previous_entry_name,
                          GString *new_entry_name) {
     // init new_entry_name with the name of the current entry
-    g_string_assign(new_entry_name, db_entry_get_name_raw(entry));
+    g_string_truncate(new_entry_name, 0);
+    g_string_append_len(new_entry_name, db_entry_get_name_raw(entry), db_entry_get_name_len(entry));
 
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     const uint16_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
@@ -652,7 +675,7 @@ database_file_save_entry(DatabaseFileWriteCursor *cursor,
 
     // append new unique characters to previous_entry_name starting at name_offset
     g_string_erase(previous_entry_name, name_offset, -1);
-    g_string_append(previous_entry_name, new_entry_name->str + name_offset);
+    g_string_append_len(previous_entry_name, new_entry_name->str + name_offset, name_len);
 
     if (name_len > 0) {
         // name: new characters to be written to file
@@ -695,16 +718,16 @@ static void
 database_file_save_files(DatabaseFileWriteCursor *cursor,
                          FsearchDatabaseIndexPropertyFlags index_flags,
                          DynamicArray *files,
-                         uint32_t num_files) {
+                         uint32_t num_files,
+                         FsearchDatabaseEntry **real_parents_of_files) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(files, i);
 
-        db_entry_set_index(entry, i);
-        FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = db_entry_get_index(parent);
+        FsearchDatabaseEntry *real_parent = real_parents_of_files[i];
+        const uint32_t parent_idx = db_entry_get_encoded_index(real_parent);
         database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
@@ -722,7 +745,7 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
 
     for (int i = 0; i < num_entries; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        indexes[i] = db_entry_get_index(entry);
+        indexes[i] = db_entry_get_encoded_index(entry);
     }
     return indexes;
 }
@@ -789,18 +812,16 @@ static void
 database_file_save_folders(DatabaseFileWriteCursor *cursor,
                            FsearchDatabaseIndexPropertyFlags index_flags,
                            DynamicArray *folders,
-                           uint32_t num_folders) {
+                           uint32_t num_folders,
+                           FsearchDatabaseEntry **real_parents_of_folders) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
-        const uint16_t db_index = db_entry_get_db_index(entry);
-        cursor_write(cursor, &db_index, sizeof(db_index));
-
-        FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
+        FsearchDatabaseEntry *real_parent = real_parents_of_folders[i];
+        const uint32_t parent_idx = real_parent ? db_entry_get_encoded_index(real_parent) : i;
         database_file_save_entry(cursor, index_flags, entry, parent_idx, name_prev, name_new);
         if (cursor->error) {
             return;
@@ -826,9 +847,6 @@ database_file_save_includes(DatabaseFileWriteCursor *cursor, FsearchDatabaseInde
 
         const uint32_t type = 0;
         cursor_write(cursor, &type, sizeof(type));
-
-        const int32_t id = fsearch_database_include_get_id(include);
-        cursor_write(cursor, &id, sizeof(id));
 
         const char *path = fsearch_database_include_get_path(include);
         const uint32_t path_len = strlen(path);
@@ -927,6 +945,9 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_autoptr(DynamicArray) files = NULL;
     g_autoptr(DynamicArray) folders = NULL;
 
+    g_auto(EncodedEntryIndices) encoded_folders = {0};
+    g_auto(EncodedEntryIndices) encoded_files = {0};
+
     g_debug("[db_save] trying to open temporary database file: %s", file_tmp_path->str);
 
     g_autoptr(FILE) fp = file_open_locked(file_tmp_path->str, "wb");
@@ -975,10 +996,12 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
-    g_debug("[db_save] updating folder indices...");
     folder_chunks = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
     folders = fsearch_database_chunked_array_get_joined(folder_chunks);
-    update_folder_indices(folders);
+    if (!folders) {
+        g_debug("[db_save] failed saving. DB has no folders.");
+        goto save_fail;
+    }
 
     const uint32_t num_folders = darray_get_num_items(folders);
     cursor_write(&cursor, &num_folders, sizeof(num_folders));
@@ -1011,7 +1034,7 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     }
 
     uint64_t file_block_size = 0;
-    const uint64_t file_block_size_offset = cursor.bytes_written;
+    // const uint64_t file_block_size_offset = cursor.bytes_written;
     g_debug("[db_save] saving file block size...");
     cursor_write(&cursor, &file_block_size, sizeof(file_block_size));
     if (cursor.error == true) {
@@ -1024,25 +1047,31 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     uint8_t checksum_placeholder[DATABASE_CHECKSUM_SIZE] = {};
     cursor_write(&cursor, checksum_placeholder, sizeof(checksum_placeholder));
 
+    // From here on, every folder's/file's `parent` is repurposed as its canonical index (safe
+    // because database_save() holds the store's lock for this whole call); g_auto restores it
+    // regardless of how this function returns.
+    encoded_folders = database_file_encode_indices(folders);
+    encoded_files = database_file_encode_indices(files);
+
     g_debug("[db_save] saving folders...");
     uint64_t current_cursor_size = cursor.bytes_written;
-    database_file_save_folders(&cursor, index_flags, folders, num_folders);
-    if (cursor.error == true) {
-        goto save_fail;
-    }
+    database_file_save_folders(&cursor, index_flags, folders, num_folders, encoded_folders.real_parents);
     folder_block_size = cursor.bytes_written - current_cursor_size;
 
-    g_debug("[db_save] saving files...");
-    current_cursor_size = cursor.bytes_written;
-    database_file_save_files(&cursor, index_flags, files, num_files);
-    if (cursor.error == true) {
-        goto save_fail;
+    if (!cursor.error) {
+        g_debug("[db_save] saving files...");
+        current_cursor_size = cursor.bytes_written;
+        database_file_save_files(&cursor, index_flags, files, num_files, encoded_files.real_parents);
+        file_block_size = cursor.bytes_written - current_cursor_size;
     }
-    file_block_size = cursor.bytes_written - current_cursor_size;
 
-    g_debug("[db_save] saving sorted arrays...");
-    database_file_save_sorted_arrays(&cursor, store, num_files, num_folders);
-    if (cursor.error == true) {
+    if (!cursor.error) {
+        g_debug("[db_save] saving sorted arrays...");
+        database_file_save_sorted_arrays(&cursor, store, num_files, num_folders);
+    }
+
+    if (cursor.error) {
+        g_debug("[db_save] failed saving folders/files/sorted arrays");
         goto save_fail;
     }
 
@@ -1201,6 +1230,8 @@ bool
 fsearch_database_file_load(const char *file_path,
                            void (*status_cb)(const char *),
                            FsearchDatabaseIndexStore **store_out,
+                           FsearchDatabaseIncludeManager *config_include_manager,
+                           FsearchDatabaseExcludeManager *config_exclude_manager,
                            FsearchDatabaseIndexStoreEventFunc event_func,
                            void *event_func_user_data) {
     g_return_val_if_fail(file_path, false);
@@ -1219,10 +1250,14 @@ fsearch_database_file_load(const char *file_path,
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GHashTable)
-        folder_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
-    g_autoptr(GHashTable)
-        file_index_arrays = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_str_hash,
+                                                                      g_str_equal,
+                                                                      NULL,
+                                                                      (GDestroyNotify)darray_unref);
+    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_str_hash,
+                                                                    g_str_equal,
+                                                                    NULL,
+                                                                    (GDestroyNotify)darray_unref);
 
     g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
 
@@ -1246,8 +1281,16 @@ fsearch_database_file_load(const char *file_path,
         g_debug("[db_load] failed to load includes");
         goto load_fail;
     }
+    if (config_include_manager && !fsearch_database_include_manager_equal(include_manager, config_include_manager)) {
+        g_debug("[db_load] includes don't match config. Abort loading.");
+        goto load_fail;
+    }
     if (!database_file_load_excludes(fp, exclude_manager, checksum)) {
         g_debug("[db_load] excludes not loaded");
+        goto load_fail;
+    }
+    if (config_exclude_manager && !fsearch_database_exclude_manager_equal(exclude_manager, config_exclude_manager)) {
+        g_debug("[db_load] excludes don't match config. Abort loading.");
         goto load_fail;
     }
 
@@ -1306,7 +1349,9 @@ fsearch_database_file_load(const char *file_path,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *folder = darray_get_item(folders, i);
         const uint32_t parent_idx = GPOINTER_TO_UINT(db_entry_get_parent(folder));
-        db_entry_set_parent_no_update(folder, parent_idx == UINT32_MAX ? NULL : darray_get_item(folders, parent_idx));
+        FsearchDatabaseEntry *parent = parent_idx == UINT32_MAX ? NULL : darray_get_item(folders, parent_idx);
+        db_entry_set_parent_no_update(folder, parent);
+        db_entry_increment_childcount(parent, DATABASE_ENTRY_TYPE_FOLDER);
     }
 
     if (status_cb) {
@@ -1337,21 +1382,22 @@ fsearch_database_file_load(const char *file_path,
         database_file_load_add_to_index_array(file_index_arrays, file);
     }
 
+    g_ptr_array_sort(includes, fsearch_database_include_compare);
+
     for (uint32_t i = 0; i < includes->len; i++) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        const uint32_t id = fsearch_database_include_get_id(include);
-        DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, GINT_TO_POINTER(id));
-        DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, GINT_TO_POINTER(id));
+        const char *root_path = fsearch_database_include_get_path(include);
+        DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, root_path);
+        DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, root_path);
         if (!folder_array_index) {
             folder_array_index = darray_new(0);
-            g_hash_table_insert(folder_index_arrays, GINT_TO_POINTER(id), folder_array_index);
+            g_hash_table_insert(folder_index_arrays, (gpointer)root_path, folder_array_index);
         }
         if (!file_array_index) {
             file_array_index = darray_new(0);
-            g_hash_table_insert(file_index_arrays, GINT_TO_POINTER(id), file_array_index);
+            g_hash_table_insert(file_index_arrays, (gpointer)root_path, file_array_index);
         }
-        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(id,
-                                                                              include,
+        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(include,
                                                                               exclude_manager,
                                                                               folder_array_index,
                                                                               file_array_index,

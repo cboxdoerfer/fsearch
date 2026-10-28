@@ -9,7 +9,6 @@ typedef struct FsearchUtfBuilder {
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
 
-    char *string;
     char *string_utf8_folded;
     UChar *string_folded;
     UChar *string_normalized_folded;

@@ -3,8 +3,8 @@
 #include <gio/gio.h>
 
 #include "fsearch_array.h"
-#include "fsearch_database_index_properties.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_index_properties.h"
 
 #include <glib.h>
 #include <stdint.h>
@@ -21,8 +21,7 @@ fsearch_database_chunked_array_get_type(void);
 FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_new(DynamicArray *array,
                                    gboolean is_array_sorted,
-                                   FsearchDatabaseIndexProperty sort_order,
-                                   FsearchDatabaseIndexProperty secondary_sort_order,
+                                   FsearchDatabaseSortOrderChain chain,
                                    FsearchDatabaseEntryType entry_type,
                                    GCancellable *cancellable,
                                    GDestroyNotify entry_free_func);
@@ -45,10 +44,16 @@ fsearch_database_chunked_array_insert_array(FsearchDatabaseChunkedArray *self, D
 FsearchDatabaseEntry *
 fsearch_database_chunked_array_steal(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);
 
+FsearchDatabaseEntry *
+fsearch_database_chunked_array_find_slow(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);
+
 DynamicArray *
 fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
                                                  FsearchDatabaseEntry *folder,
                                                  int32_t num_known_descendants);
+
+uint32_t
+fsearch_database_chunked_array_remove_marked_folders(FsearchDatabaseChunkedArray *self, int32_t num_expected_entries);
 
 FsearchDatabaseEntry *
 fsearch_database_chunked_array_find(FsearchDatabaseChunkedArray *self, FsearchDatabaseEntry *entry);

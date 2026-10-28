@@ -2,40 +2,10 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="exclude_remove_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-remove-symbolic</property>
-  </object>
-  <object class="GtkImage" id="exclude_reset_to_defaults_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-revert-symbolic</property>
-  </object>
-  <object class="GtkImage" id="exculde_add_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add-symbolic</property>
-  </object>
   <object class="GtkAdjustment" id="hour_adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
-  </object>
-  <object class="GtkImage" id="include_add_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add-symbolic</property>
-  </object>
-  <object class="GtkImage" id="include_add_path_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add-symbolic</property>
-  </object>
-  <object class="GtkImage" id="include_remove_image">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-remove-symbolic</property>
   </object>
   <object class="GtkAdjustment" id="minute_adjustment">
     <property name="upper">100</property>
@@ -97,12 +67,17 @@
                     <property name="tooltip-text" translatable="yes">Add path to be included in
                                             database
                                         </property>
-                    <property name="image">include_add_path_image</property>
-                    <property name="always-show-image">True</property>
                     <signal name="clicked" handler="on_include_add_path_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                     <style>
                       <class name="path_add_button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="include_add_path_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">list-add-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -372,9 +347,14 @@
                     <property name="tooltip-text" translatable="yes">Add path to be included in
                                             database
                                         </property>
-                    <property name="image">include_add_image</property>
-                    <property name="always-show-image">True</property>
                     <signal name="clicked" handler="on_include_add_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="include_add_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">list-add-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -389,9 +369,14 @@
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Remove selected path</property>
-                    <property name="image">include_remove_image</property>
-                    <property name="always-show-image">True</property>
                     <signal name="clicked" handler="on_include_remove_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                    <child>
+                      <object class="GtkImage" id="include_remove_image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">list-remove-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -476,9 +461,14 @@
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Add exclude rule
                                                 </property>
-                        <property name="image">exculde_add_image</property>
-                        <property name="always-show-image">True</property>
                         <signal name="clicked" handler="on_exclude_add_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                        <child>
+                          <object class="GtkImage" id="exculde_add_image">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">list-add-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -494,9 +484,14 @@
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Remove selected path
                                                 </property>
-                        <property name="image">exclude_remove_image</property>
-                        <property name="always-show-image">True</property>
                         <signal name="clicked" handler="on_exclude_remove_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                        <child>
+                          <object class="GtkImage" id="exclude_remove_image">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">list-remove-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -510,8 +505,14 @@
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Restore default exclude list</property>
-                        <property name="image">exclude_reset_to_defaults_image</property>
                         <signal name="clicked" handler="on_exclude_reset_to_defaults_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
+                        <child>
+                          <object class="GtkImage" id="exclude_reset_to_defaults_image">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">document-revert-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>

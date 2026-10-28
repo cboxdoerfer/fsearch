@@ -11,6 +11,8 @@ bool
 fsearch_database_file_load(const char *file_path,
                            void (*status_cb)(const char *),
                            FsearchDatabaseIndexStore **store_out,
+                           FsearchDatabaseIncludeManager *config_include_manager,
+                           FsearchDatabaseExcludeManager *config_exclude_manager,
                            FsearchDatabaseIndexStoreEventFunc event_func,
                            void *event_func_user_data);
 

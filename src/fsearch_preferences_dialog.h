@@ -24,6 +24,9 @@ fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config);
 void
 fsearch_preferences_dialog_set_page(FsearchPreferencesDialog *self, FsearchPreferencesDialogPage page);
 
+void
+fsearch_preferences_dialog_bind_help(FsearchPreferencesDialog *self, GtkWidget *control, const char *help_page_name);
+
 FsearchConfig *
 fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self);
 

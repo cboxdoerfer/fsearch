@@ -1,8 +1,9 @@
 #pragma once
 
-#include <gtk/gtk.h>
+#include <stdbool.h>
 
 #include "fsearch_query.h"
+#include "fsearch_sort_direction.h"
 
 G_BEGIN_DECLS
 
@@ -27,7 +28,8 @@ fsearch_database_search_info_new(uint32_t id,
                                  uint32_t num_files_selected,
                                  uint32_t num_folders_selected,
                                  FsearchDatabaseIndexProperty sort_order,
-                                 GtkSortType sort_type);
+                                 FsearchSortDirection sort_direction,
+                                 bool is_complete);
 
 uint32_t
 fsearch_database_search_info_get_id(FsearchDatabaseSearchInfo *info);
@@ -53,11 +55,14 @@ fsearch_database_search_info_get_num_entries(FsearchDatabaseSearchInfo *info);
 FsearchDatabaseIndexProperty
 fsearch_database_search_info_get_sort_order(FsearchDatabaseSearchInfo *info);
 
-GtkSortType
-fsearch_database_search_info_get_sort_type(FsearchDatabaseSearchInfo *info);
+FsearchSortDirection
+fsearch_database_search_info_get_sort_direction(FsearchDatabaseSearchInfo *info);
 
 FsearchQuery *
 fsearch_database_search_info_get_query(FsearchDatabaseSearchInfo *info);
+
+bool
+fsearch_database_search_info_get_is_complete(FsearchDatabaseSearchInfo *info);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseSearchInfo, fsearch_database_search_info_unref)
 

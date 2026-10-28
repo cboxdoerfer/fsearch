@@ -1,6 +1,5 @@
 #include "fsearch_filter_preferences_widget.h"
 
-
 #include "fsearch_filter_editor.h"
 #include "fsearch_filter_manager.h"
 #include "fsearch_query_flags.h"
@@ -31,11 +30,7 @@ enum { COL_FILTER_NAME, COL_FILTER_MACRO, COL_FILTER_QUERY, NUM_FILTER_COLUMNS }
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
-#if GLIB_CHECK_VERSION(2, 70, 0)
 G_DEFINE_FINAL_TYPE(FsearchFilterPreferencesWidget, fsearch_filter_preferences_widget, GTK_TYPE_BOX)
-#else
-G_DEFINE_TYPE(FsearchFilterPreferencesWidget, fsearch_filter_preferences_widget, GTK_TYPE_BOX)
-#endif
 
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
@@ -275,12 +270,13 @@ fsearch_filter_preferences_widget_class_init(FsearchFilterPreferencesWidgetClass
     object_class->set_property = fsearch_filter_preferences_widget_set_property;
     object_class->get_property = fsearch_filter_preferences_widget_get_property;
 
-    properties[PROP_FILTER_MANAGER] =
-        g_param_spec_boxed("filter-manager",
-                           "Filter Manager",
-                           "The filter manager which will be represented and edited in this widget",
-                           FSEARCH_TYPE_FILTER_MANAGER,
-                           (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+    properties[PROP_FILTER_MANAGER] = g_param_spec_boxed("filter-manager",
+                                                         "Filter Manager",
+                                                         "The filter manager which will be represented and edited in "
+                                                         "this widget",
+                                                         FSEARCH_TYPE_FILTER_MANAGER,
+                                                         (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                          | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
