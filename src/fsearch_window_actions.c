@@ -42,7 +42,7 @@
 #include <config.h>
 #endif
 
-#ifndef __MACH__
+#if !defined(__MACH__) && !defined(_WIN32)
 #include <gio/gdesktopappinfo.h>
 #endif
 
@@ -612,8 +612,20 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     if (!app_id) {
         return;
     }
-#ifdef __MACH__
+#if defined(__MACH__)
     g_autoptr(GAppInfo) app_info = NULL;
+#elif defined(_WIN32)
+    // GIO can only look up applications by id on freedesktop systems
+    g_autoptr(GAppInfo) app_info = NULL;
+    GList *apps = g_app_info_get_all();
+    for (GList *a = apps; a != NULL; a = a->next) {
+        const char *id = g_app_info_get_id(a->data);
+        if (!g_strcmp0(id, app_id)) {
+            app_info = g_object_ref(a->data);
+            break;
+        }
+    }
+    g_list_free_full(apps, g_object_unref);
 #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
 #endif

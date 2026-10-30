@@ -43,7 +43,11 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkcssprovider.h>
+#ifdef __linux__
 #include <linux/limits.h>
+#else
+#include <limits.h>
+#endif
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>

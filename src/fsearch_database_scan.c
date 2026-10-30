@@ -5,10 +5,16 @@
 #include "fsearch_database_entry.h"
 
 #include <config.h>
+#ifndef _WIN32
 #include <dirent.h>
+#endif
 #include <fcntl.h>
 #include <glib/gi18n.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
 
 enum {
     WALK_OK = 0,
@@ -182,7 +188,14 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 #ifdef AT_NO_AUTOMOUNT
         stat_flags |= AT_NO_AUTOMOUNT;
 #endif
+#ifdef _WIN32
+        // Windows has no directory file descriptors, so stat the full path
+        (void)dir_fd;
+        (void)stat_flags;
+        if (lstat(path->str, &st)) {
+#else
         if (fstatat(dir_fd, dent->d_name, &st, stat_flags)) {
+#endif
             g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }

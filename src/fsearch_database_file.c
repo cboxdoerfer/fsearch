@@ -16,13 +16,21 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <inttypes.h>
+#ifdef __linux__
 #include <linux/limits.h>
+#else
+#include <limits.h>
+#endif
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include "win32_compat.h"
+#else
 #include <sys/file.h>
+#endif
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>

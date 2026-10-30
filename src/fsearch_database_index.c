@@ -19,7 +19,9 @@
 #include <config.h>
 #include <gio/gio.h>
 #include <glib-object.h>
+#ifndef _WIN32
 #include <glib-unix.h>
+#endif
 #include <glib.h>
 #include <stdbool.h>
 #include <stddef.h>
