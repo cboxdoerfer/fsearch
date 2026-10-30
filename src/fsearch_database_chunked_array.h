@@ -27,6 +27,11 @@ fsearch_database_chunked_array_new(DynamicArray *array,
                                    GDestroyNotify entry_free_func);
 
 FsearchDatabaseChunkedArray *
+fsearch_database_chunked_array_new_from_arrays(DynamicArray *arrays,
+                                               FsearchDatabaseSortOrderChain chain,
+                                               FsearchDatabaseEntryType entry_type);
+
+FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_ref(FsearchDatabaseChunkedArray *self);
 
 void

@@ -78,6 +78,9 @@ void
 darray_add_array(DynamicArray *dest, DynamicArray *source);
 
 void
+darray_add_array_range(DynamicArray *dest, DynamicArray *source, uint32_t start_idx, uint32_t num_items);
+
+void
 darray_add_item(DynamicArray *array, void *data);
 
 void *

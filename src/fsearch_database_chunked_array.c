@@ -197,6 +197,54 @@ fsearch_database_chunked_array_new(DynamicArray *array,
 }
 
 FsearchDatabaseChunkedArray *
+fsearch_database_chunked_array_new_from_arrays(DynamicArray *arrays,
+                                               FsearchDatabaseSortOrderChain chain,
+                                               FsearchDatabaseEntryType entry_type) {
+    g_return_val_if_fail(arrays, NULL);
+
+    FsearchDatabaseChunkedArray *self = g_new0(FsearchDatabaseChunkedArray, 1);
+
+    self->target_chunk_size = TARGET_CHUNK_SIZE;
+
+    self->chain = chain;
+    self->entry_type = entry_type;
+    self->entry_comp_func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_chain;
+    self->compare_context = db_entry_compare_context_new(self->chain);
+    self->num_entries = count_num_entries(arrays);
+
+    const uint32_t num_chunks = MAX(1, (uint32_t)ceil(self->num_entries / (double)self->target_chunk_size));
+    const uint32_t num_items_per_chunk = self->num_entries / num_chunks;
+    self->chunks = darray_new_full(num_chunks, (GDestroyNotify)darray_unref);
+
+    uint32_t src_idx = 0;
+    uint32_t src_pos = 0;
+    uint32_t num_added = 0;
+    for (uint32_t n = 0; n < num_chunks; ++n) {
+        uint32_t num_wanted = n + 1 == num_chunks ? self->num_entries - num_added : num_items_per_chunk;
+        DynamicArray *chunk = darray_new(num_wanted);
+        num_added += num_wanted;
+        while (num_wanted > 0) {
+            DynamicArray *src = darray_get_item(arrays, src_idx);
+            const uint32_t num_available = darray_get_num_items(src) - src_pos;
+            if (num_available == 0) {
+                src_idx++;
+                src_pos = 0;
+                continue;
+            }
+            const uint32_t num_taken = MIN(num_available, num_wanted);
+            darray_add_array_range(chunk, src, src_pos, num_taken);
+            src_pos += num_taken;
+            num_wanted -= num_taken;
+        }
+        darray_add_item(self->chunks, chunk);
+    }
+
+    self->ref_count = 1;
+
+    return self;
+}
+
+FsearchDatabaseChunkedArray *
 fsearch_database_chunked_array_ref(FsearchDatabaseChunkedArray *self) {
     g_return_val_if_fail(self != NULL, NULL);
     g_return_val_if_fail(g_atomic_int_get(&self->ref_count) > 0, NULL);

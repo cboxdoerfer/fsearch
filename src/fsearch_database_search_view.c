@@ -44,8 +44,8 @@ fsearch_database_search_view_free(FsearchDatabaseSearchView *view) {
 FsearchDatabaseSearchView *
 fsearch_database_search_view_new(uint32_t id,
                                  FsearchQuery *query,
-                                 DynamicArray *files,
-                                 DynamicArray *folders,
+                                 FsearchDatabaseChunkedArray *file_chunks,
+                                 FsearchDatabaseChunkedArray *folder_chunks,
                                  GHashTable *old_selection,
                                  FsearchDatabaseSortOrderChain chain,
                                  FsearchSortDirection sort_direction,
@@ -54,8 +54,8 @@ fsearch_database_search_view_new(uint32_t id,
     g_assert(view);
     view->id = id;
     view->query = fsearch_query_ref(query);
-    view->folder_chunks = fsearch_database_chunked_array_new(folders, TRUE, chain, DATABASE_ENTRY_TYPE_FOLDER, NULL, NULL);
-    view->file_chunks = fsearch_database_chunked_array_new(files, TRUE, chain, DATABASE_ENTRY_TYPE_FILE, NULL, NULL);
+    view->folder_chunks = folder_chunks;
+    view->file_chunks = file_chunks;
     view->chain = chain;
     view->sort_direction = sort_direction;
     view->is_complete = is_complete;

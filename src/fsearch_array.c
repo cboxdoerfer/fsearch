@@ -296,6 +296,18 @@ darray_add_array(DynamicArray *dest, DynamicArray *source) {
 }
 
 void
+darray_add_array_range(DynamicArray *dest, DynamicArray *source, uint32_t start_idx, uint32_t num_items) {
+    g_assert(dest);
+    g_assert(source);
+    g_assert(source->data);
+    g_assert((uint64_t)start_idx + num_items <= source->num_items);
+
+    if (num_items > 0) {
+        darray_add_items(dest, source->data + start_idx, num_items);
+    }
+}
+
+void
 darray_add_item(DynamicArray *array, void *data) {
     g_assert(array);
     g_assert(array->data);

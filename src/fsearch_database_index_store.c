@@ -85,16 +85,19 @@ typedef enum {
 } IndexStoreWorkerPoolDataType;
 
 typedef struct {
+    FsearchQuery *query;
+    GCancellable *cancellable;
+    DynamicArray *chunks;
+    DynamicArray **results;
+    volatile gint next_chunk_idx;
+} IndexStoreSearchContext;
+
+typedef struct {
     IndexStoreWorkerPoolDataType type;
 
     union {
         struct {
-            FsearchQuery *query;
-            GCancellable *cancellable;
-            DynamicArray *in;
-            DynamicArray *out;
-            uint32_t in_start_idx;
-            uint32_t in_end_idx;
+            IndexStoreSearchContext *ctx;
             int32_t thread_id;
         } search;
 
@@ -224,30 +227,33 @@ index_store_has_index_with_same_path(const FsearchDatabaseIndexStore *store,
 }
 
 static void
-index_store_search_worker(FsearchQuery *query,
-                          DynamicArray *entries,
-                          DynamicArray *results,
-                          int32_t thread_id,
-                          uint32_t start_idx,
-                          uint32_t end_idx,
-                          GCancellable *cancellable) {
-    g_assert(entries);
-    g_assert(start_idx <= end_idx);
-    g_assert(end_idx < darray_get_num_items(entries));
+index_store_search_worker(IndexStoreSearchContext *ctx, int32_t thread_id) {
+    g_assert(ctx);
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
 
     fsearch_query_match_data_set_thread_id(match_data, thread_id);
 
-    for (uint32_t i = start_idx; i <= end_idx; i++) {
-        if (G_UNLIKELY(g_cancellable_is_cancelled(cancellable))) {
+    const uint32_t num_chunks = darray_get_num_items(ctx->chunks);
+    while (true) {
+        const uint32_t chunk_idx = (uint32_t)g_atomic_int_add(&ctx->next_chunk_idx, 1);
+        if (chunk_idx >= num_chunks || G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
             break;
         }
-        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        fsearch_query_match_data_set_entry(match_data, entry);
-        if (fsearch_query_match(query, match_data)) {
-            darray_add_item(results, entry);
+        DynamicArray *chunk = darray_get_item(ctx->chunks, chunk_idx);
+        const uint32_t num_entries = darray_get_num_items(chunk);
+        DynamicArray *results = darray_new(MIN(num_entries, 128));
+        for (uint32_t i = 0; i < num_entries; i++) {
+            if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
+                break;
+            }
+            FsearchDatabaseEntry *entry = darray_get_item(chunk, i);
+            fsearch_query_match_data_set_entry(match_data, entry);
+            if (fsearch_query_match(ctx->query, match_data)) {
+                darray_add_item(results, entry);
+            }
         }
+        ctx->results[chunk_idx] = results;
     }
     g_clear_pointer(&match_data, fsearch_query_match_data_free);
 }
@@ -461,13 +467,7 @@ index_store_worker_pool_func(gpointer pool_data, gpointer user_data) {
 
     switch (data->type) {
     case INDEX_STORE_WORKER_POOL_DATA_TYPE_SEARCH: {
-        index_store_search_worker(data->search.query,
-                                  data->search.in,
-                                  data->search.out,
-                                  data->search.thread_id,
-                                  data->search.in_start_idx,
-                                  data->search.in_end_idx,
-                                  data->search.cancellable);
+        index_store_search_worker(data->search.ctx, data->search.thread_id);
         g_async_queue_push(store->worker_pool_collect_queue, data);
         break;
     }
@@ -1324,77 +1324,55 @@ fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
     fsearch_database_search_view_sort(view, files_fast_sorted, folders_fast_sorted, sort_order, sort_direction, cancellable);
 }
 
-static DynamicArray *
-collect_search_results(DynamicArray *pool_data_array) {
-    uint32_t num_entries_found = 0;
-    for (uint32_t i = 0; i < darray_get_num_items(pool_data_array); ++i) {
-        IndexStoreWorkerPoolData *data = darray_get_item(pool_data_array, i);
-        num_entries_found += darray_get_num_items(data->search.out);
-    }
-    g_autoptr(DynamicArray) search_entries = darray_new(num_entries_found);
-
-    for (uint32_t i = 0; i < darray_get_num_items(pool_data_array); ++i) {
-        IndexStoreWorkerPoolData *data = darray_get_item(pool_data_array, i);
-        darray_add_array(search_entries, data->search.out);
-
-        g_clear_pointer(&data->search.out, darray_unref);
-    }
-
-    return g_steal_pointer(&search_entries);
-}
-
-static inline uint32_t
-sub_or_zero_u32(uint32_t a, uint32_t b) {
-    return a > b ? a - b : 0;
-}
-
-static DynamicArray *
+static FsearchDatabaseChunkedArray *
 search_entries(FsearchQuery *query,
-               DynamicArray *in,
+               FsearchDatabaseChunkedArray *in,
+               FsearchDatabaseSortOrderChain chain,
+               FsearchDatabaseEntryType entry_type,
                GThreadPool *pool,
                GAsyncQueue *collect_queue,
                GCancellable *cancellable) {
-    const uint32_t num_entries = darray_get_num_items(in);
-    if (num_entries == 0) {
-        return darray_new(0);
+    g_autoptr(DynamicArray) chunks = fsearch_database_chunked_array_get_chunks(in);
+    const uint32_t num_chunks = darray_get_num_items(chunks);
+
+    if (fsearch_query_matches_everything(query)) {
+        return fsearch_database_chunked_array_new_from_arrays(chunks, chain, entry_type);
     }
 
+    const uint32_t num_entries = fsearch_database_chunked_array_get_num_entries(in);
     const uint32_t num_threads = (num_entries < THRESHOLD_FOR_PARALLEL_SEARCH || query->wants_single_threaded_search)
                                    ? 1
                                    : g_thread_pool_get_num_threads(pool);
-    const uint32_t clamped_num_threads = MIN(num_threads, num_entries);
-    const uint32_t num_items_per_thread = num_entries / clamped_num_threads;
-    g_autoptr(DynamicArray) pool_data_array = darray_new_full(clamped_num_threads, (GDestroyNotify)g_free);
+    const uint32_t num_workers = MAX(1, MIN(num_threads, num_chunks));
 
-    uint32_t start_pos = 0;
-    uint32_t end_pos = sub_or_zero_u32(num_items_per_thread, 1);
-    const uint32_t last_end_pos = sub_or_zero_u32(num_entries, 1);
+    g_autofree DynamicArray **results = g_new0(DynamicArray *, MAX(1, num_chunks));
+    IndexStoreSearchContext ctx = {
+        .query = query,
+        .cancellable = cancellable,
+        .chunks = chunks,
+        .results = results,
+        .next_chunk_idx = 0,
+    };
 
-    for (uint32_t i = 0; i < clamped_num_threads; ++i) {
+    for (uint32_t i = 0; i < num_workers; ++i) {
         IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
         pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_SEARCH;
-        pool_data->search.in = in;
-        pool_data->search.query = query;
-        pool_data->search.cancellable = cancellable;
+        pool_data->search.ctx = &ctx;
         pool_data->search.thread_id = (int32_t)i;
-        pool_data->search.in_start_idx = start_pos;
-        pool_data->search.in_end_idx = i == clamped_num_threads - 1 ? last_end_pos : end_pos;
-        pool_data->search.out = darray_new(end_pos - start_pos + 1);
-
-        darray_add_item(pool_data_array, pool_data);
         g_thread_pool_push(pool, pool_data, NULL);
-
-        start_pos = end_pos + 1;
-        end_pos += num_items_per_thread;
+    }
+    for (uint32_t i = 0; i < num_workers; ++i) {
+        g_free(g_async_queue_pop(collect_queue));
     }
 
-    uint32_t num_threads_collected = 0;
-    while (num_threads_collected < darray_get_num_items(pool_data_array)) {
-        g_async_queue_pop(collect_queue);
-        num_threads_collected++;
+    // Chunks skipped because of cancellation have no results
+    g_autoptr(DynamicArray) result_arrays = darray_new_full(num_chunks, (GDestroyNotify)darray_unref);
+    for (uint32_t i = 0; i < num_chunks; ++i) {
+        if (results[i]) {
+            darray_add_item(result_arrays, results[i]);
+        }
     }
-
-    return collect_search_results(pool_data_array);
+    return fsearch_database_chunked_array_new_from_arrays(result_arrays, chain, entry_type);
 }
 
 bool
@@ -1425,31 +1403,35 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
         return false;
     }
 
-    // TODO: Search performance increase
-    // Avoid joining chunks together for searching. It's most certainly more efficient to search in the chunks directly.
-    // We just need to make sure that the search threads get a roughly equally sized range to search in.
-    g_autoptr(DynamicArray) files = file_chunks ? fsearch_database_chunked_array_get_joined(file_chunks) : NULL;
-    g_autoptr(DynamicArray) folders = folder_chunks ? fsearch_database_chunked_array_get_joined(folder_chunks) : NULL;
+    const uint32_t num_searched = (file_chunks ? fsearch_database_chunked_array_get_num_entries(file_chunks) : 0)
+                                + (folder_chunks ? fsearch_database_chunked_array_get_num_entries(folder_chunks) : 0);
 
-    const uint32_t num_searched = (files ? darray_get_num_items(files) : 0)
-                                + (folders ? darray_get_num_items(folders) : 0);
+    const FsearchDatabaseSortOrderChain chain = fsearch_database_sort_order_chain_for_property(sort_order);
 
     const bool matches_everything = fsearch_query_matches_everything(query);
-    g_autoptr(DynamicArray) found_files = NULL;
-    if (files) {
-        found_files = matches_everything
-                        ? g_steal_pointer(&files)
-                        : search_entries(query, files, store->worker_pool, store->worker_pool_collect_queue, cancellable);
+    g_autoptr(FsearchDatabaseChunkedArray) found_files = NULL;
+    if (file_chunks) {
+        found_files = search_entries(query,
+                                     file_chunks,
+                                     chain,
+                                     DATABASE_ENTRY_TYPE_FILE,
+                                     store->worker_pool,
+                                     store->worker_pool_collect_queue,
+                                     cancellable);
     }
-    g_autoptr(DynamicArray) found_folders = NULL;
-    if (folders) {
-        found_folders = matches_everything
-                          ? g_steal_pointer(&folders)
-                          : search_entries(query, folders, store->worker_pool, store->worker_pool_collect_queue, cancellable);
+    g_autoptr(FsearchDatabaseChunkedArray) found_folders = NULL;
+    if (folder_chunks) {
+        found_folders = search_entries(query,
+                                       folder_chunks,
+                                       chain,
+                                       DATABASE_ENTRY_TYPE_FOLDER,
+                                       store->worker_pool,
+                                       store->worker_pool_collect_queue,
+                                       cancellable);
     }
 
-    const uint32_t num_found_files = found_files ? darray_get_num_items(found_files) : 0;
-    const uint32_t num_found_folders = found_folders ? darray_get_num_items(found_folders) : 0;
+    const uint32_t num_found_files = found_files ? fsearch_database_chunked_array_get_num_entries(found_files) : 0;
+    const uint32_t num_found_folders = found_folders ? fsearch_database_chunked_array_get_num_entries(found_folders) : 0;
     const double search_time = g_timer_elapsed(timer, NULL);
 
     g_debug("[index_store] search \"%s\": %u of %u matched (%u folder%s, %u file%s) in %.3f ms%s%s",
@@ -1471,15 +1453,12 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
         // result set apart from a genuinely finished search.
         const bool is_complete = !g_cancellable_is_cancelled(cancellable);
 
-        // We only ever search in pre-sorted (fast-indexed) arrays, so the canonical chain for
-        // `sort_order` alone already fully describes the result order.
         FsearchDatabaseSearchView *view = fsearch_database_search_view_new(id,
                                                                            query,
-                                                                           found_files,
-                                                                           found_folders,
+                                                                           g_steal_pointer(&found_files),
+                                                                           g_steal_pointer(&found_folders),
                                                                            NULL,
-                                                                           fsearch_database_sort_order_chain_for_property(
-                                                                               sort_order),
+                                                                           chain,
                                                                            sort_direction,
                                                                            is_complete);
         g_hash_table_insert(store->search_results, GUINT_TO_POINTER(id), view);
