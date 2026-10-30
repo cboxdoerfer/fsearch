@@ -140,6 +140,7 @@ libfsearch_dep = declare_dependency(
 fsearch = executable('fsearch', 'main.c',
     include_directories: fsearch_include_dirs,
     dependencies: libfsearch_dep,
+    win_subsystem: 'windows',
     install: true,
 )
 
