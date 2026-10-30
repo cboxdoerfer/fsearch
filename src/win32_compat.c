@@ -306,8 +306,7 @@ DIR *win32_opendir_unicode(const char *dirname) {
     // Convert UTF-8 dirname to wide string
     wchar_t *wdirname = win32_utf8_to_wchar(dirname);
     if (!wdirname) {
-        // Fallback to ANSI version
-        return win32_opendir(dirname);
+        return NULL;
     }
     
     // Check if dirname is too long to safely append L"\\*" and null terminator
@@ -367,56 +366,6 @@ struct dirent *win32_readdir_unicode(DIR *dirp) {
             dirp->entry.d_name[len] = '\0';
         }
     }
-    
-    return &dirp->entry;
-}
-
-// Windows directory reading implementations (ANSI versions for backward compatibility)
-DIR *win32_opendir(const char *dirname) {
-    if (!dirname) {
-        return NULL;
-    }
-    
-    // Check if dirname is too long to safely append "\\*" and null terminator
-    // We need: strlen(dirname) + strlen("\\*") + 1 (null terminator) <= MAX_PATH
-    if (strlen(dirname) + 3 > MAX_PATH) {
-        // Handle error: dirname too long
-        return NULL;
-    }
-    
-    DIR *dirp = malloc(sizeof(DIR));
-    if (!dirp) {
-        return NULL;
-    }
-    
-    char search_path[MAX_PATH];
-    snprintf(search_path, sizeof(search_path), "%s\\*", dirname);
-    
-    dirp->handle = FindFirstFileA(search_path, (LPWIN32_FIND_DATAA)&dirp->find_data);
-    if (dirp->handle == INVALID_HANDLE_VALUE) {
-        free(dirp);
-        return NULL;
-    }
-    
-    dirp->first = 1;
-    return dirp;
-}
-
-struct dirent *win32_readdir(DIR *dirp) {
-    if (!dirp || dirp->handle == INVALID_HANDLE_VALUE) {
-        return NULL;
-    }
-    
-    if (dirp->first) {
-        dirp->first = 0;
-    } else {
-        if (!FindNextFileA(dirp->handle, (LPWIN32_FIND_DATAA)&dirp->find_data)) {
-            return NULL;
-        }
-    }
-    
-    strncpy(dirp->entry.d_name, ((LPWIN32_FIND_DATAA)&dirp->find_data)->cFileName, sizeof(dirp->entry.d_name) - 1);
-    dirp->entry.d_name[sizeof(dirp->entry.d_name) - 1] = '\0';
     
     return &dirp->entry;
 }

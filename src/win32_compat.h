@@ -77,8 +77,6 @@ typedef struct {
     int first;
 } DIR;
 
-DIR *win32_opendir(const char *dirname);
-struct dirent *win32_readdir(DIR *dirp);
 int win32_closedir(DIR *dirp);
 int win32_dirfd(DIR *dirp);
 
@@ -103,16 +101,6 @@ wchar_t *win32_utf8_to_wchar(const char *utf8_str);
 char *win32_wchar_to_utf8(const wchar_t *wchar_str);
 void win32_free_wchar(wchar_t *wchar_str);
 void win32_free_utf8(char *utf8_str);
-
-// Enhanced DIR structure with Unicode support
-typedef struct {
-    HANDLE handle;
-    WIN32_FIND_DATAW find_data_w;  // Unicode version
-    WIN32_FIND_DATAA find_data_a;  // ANSI version (for backward compatibility)
-    struct dirent entry;
-    int first;
-    int use_unicode;
-} DIR_UNICODE;
 
 // Unicode-aware directory functions
 DIR *win32_opendir_unicode(const char *dirname);
