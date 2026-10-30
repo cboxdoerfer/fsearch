@@ -53,6 +53,16 @@ struct _FsearchDatabaseIndex {
 
     bool needs_root_reappear_poll;
 
+    // Entries found so far by a running fsearch_database_index_scan(). Only valid on the scanning
+    // thread, while the scan is running.
+    DynamicArray *scan_folders;
+    DynamicArray *scan_files;
+    // Set once the partial scan result was handed out (see fsearch_database_index_get_scan_progress).
+    // A failed scan then keeps its entries alive in partial_folders/partial_files until the index is freed.
+    bool scan_published;
+    DynamicArray *partial_folders;
+    DynamicArray *partial_files;
+
     volatile gint monitor;
     volatile gint initialized;
 
@@ -590,6 +600,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                            fsearch_database_include_get_one_file_system(self->include),
                            NULL,
                            NULL,
+                           NULL,
                            NULL)) {
             fsearch_database_chunked_array_insert_array(self->folder_chunks, folders);
             fsearch_database_chunked_array_insert_array(self->file_chunks, files);
@@ -912,6 +923,16 @@ index_free(FsearchDatabaseIndex *self) {
     g_clear_pointer(&self->file_chunks, fsearch_database_chunked_array_unref);
     g_clear_pointer(&self->folder_chunks, fsearch_database_chunked_array_unref);
 
+    // Entries of a failed scan whose partial result was published. They only reference each other.
+    for (uint32_t i = 0; self->partial_folders && i < darray_get_num_items(self->partial_folders); ++i) {
+        db_entry_free_no_unparent(darray_get_item(self->partial_folders, i));
+    }
+    for (uint32_t i = 0; self->partial_files && i < darray_get_num_items(self->partial_files); ++i) {
+        db_entry_free_no_unparent(darray_get_item(self->partial_files, i));
+    }
+    g_clear_pointer(&self->partial_folders, darray_unref);
+    g_clear_pointer(&self->partial_files, darray_unref);
+
     g_mutex_clear(&self->mutex);
 
     g_clear_pointer(&self, free);
@@ -1083,6 +1104,20 @@ fsearch_database_index_unlock(FsearchDatabaseIndex *self) {
     g_mutex_unlock(&self->mutex);
 }
 
+bool
+fsearch_database_index_get_scan_progress(FsearchDatabaseIndex *self, DynamicArray **folders, DynamicArray **files) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(folders, false);
+    g_return_val_if_fail(files, false);
+    if (!self->scan_folders || !self->scan_files) {
+        return false;
+    }
+    *folders = self->scan_folders;
+    *files = self->scan_files;
+    self->scan_published = true;
+    return true;
+}
+
 static void
 scan_status_cb(const char *path, gpointer user_data) {
     FsearchDatabaseIndex *self = user_data;
@@ -1117,17 +1152,30 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     g_autoptr(GTimer) scan_timer = g_timer_new();
 
-    if (!db_scan_folder(fsearch_database_include_get_path(self->include),
-                        NULL,
-                        folders,
-                        files,
-                        self->exclude_manager,
-                        self->fanotify_monitor,
-                        self->inotify_monitor,
-                        fsearch_database_include_get_one_file_system(self->include),
-                        cancellable,
-                        scan_status_cb,
-                        self)) {
+    self->scan_folders = folders;
+    self->scan_files = files;
+    self->scan_published = false;
+    const bool scanned = db_scan_folder(fsearch_database_include_get_path(self->include),
+                                        NULL,
+                                        folders,
+                                        files,
+                                        self->exclude_manager,
+                                        self->fanotify_monitor,
+                                        self->inotify_monitor,
+                                        fsearch_database_include_get_one_file_system(self->include),
+                                        cancellable,
+                                        scan_status_cb,
+                                        self,
+                                        &self->scan_published);
+    self->scan_folders = NULL;
+    self->scan_files = NULL;
+
+    if (!scanned) {
+        if (self->scan_published) {
+            // The partial result may still be searched: keep its entries until the index is freed
+            self->partial_folders = darray_ref(folders);
+            self->partial_files = darray_ref(files);
+        }
         // A cancelled scan isn't a sign the root went away -- don't schedule reappear polling for it.
         if (!g_cancellable_is_cancelled(cancellable)) {
             self->needs_root_reappear_poll = true;

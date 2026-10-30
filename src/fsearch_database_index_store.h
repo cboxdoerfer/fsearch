@@ -31,6 +31,8 @@ typedef enum {
     FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED,
     FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_STARTED,
     FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_FINISHED,
+    // A searchable snapshot of a running scan (a new FsearchDatabaseIndexStore owned by the receiver)
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_SNAPSHOT,
     NUM_FSEARCH_DATABASE_STORE_EVENTS,
 } FsearchDatabaseIndexStoreEventKind;
 
@@ -73,6 +75,10 @@ fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store);
 // False if it was never called, is still in progress, or was aborted via `cancellable`.
 bool
 fsearch_database_index_store_is_running(FsearchDatabaseIndexStore *store);
+
+// True for a store holding a partial snapshot of a running scan
+bool
+fsearch_database_index_store_is_snapshot(FsearchDatabaseIndexStore *store);
 
 FsearchDatabaseIndex *
 fsearch_database_index_store_create_index_for_rescan(FsearchDatabaseIndexStore *store, const char *path);

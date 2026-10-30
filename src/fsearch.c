@@ -417,6 +417,15 @@ on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoi
 }
 
 static void
+on_database_scan_snapshot(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchApplication *self = (FsearchApplication *)user_data;
+    g_assert(FSEARCH_IS_APPLICATION(self));
+    // Still scanning, but the entries found so far can be searched
+    self->num_files = fsearch_database_info_get_num_files(info);
+    self->num_folders = fsearch_database_info_get_num_folders(info);
+}
+
+static void
 on_database_load_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
@@ -467,6 +476,7 @@ fsearch_application_startup(GApplication *app) {
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_load_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "scan-snapshot", G_CALLBACK(on_database_scan_snapshot), self, G_CONNECT_AFTER);
 
     g_autoptr(FsearchDatabaseWork) work_load = fsearch_database_work_new_load();
     fsearch_database_queue_work(self->db, work_load);

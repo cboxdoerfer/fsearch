@@ -26,11 +26,13 @@ struct FsearchDatabaseWork {
             FsearchDatabaseIndexPropertyFlags index_flags;
         };
 
-        // FSEARCH_DATABASE_WORK_SCAN_FINISHED
+        // FSEARCH_DATABASE_WORK_SCAN_FINISHED, FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT
         struct {
             void *index_store;
             void *(*index_store_ref_func)(void *);
             void (*index_store_free_func)(void *);
+            // FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT: the store whose scan produced `index_store`
+            void *origin_store;
         };
 
         // FSEARCH_DATABASE_WORK_SEARCH
@@ -106,6 +108,10 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_SCAN:
         g_clear_object(&work->include_manager);
         g_clear_object(&work->exclude_manager);
+        break;
+    case FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT:
+        g_clear_pointer(&work->origin_store, work->index_store_free_func);
+        g_clear_pointer(&work->index_store, work->index_store_free_func);
         break;
     case FSEARCH_DATABASE_WORK_SCAN_FINISHED:
         g_clear_pointer(&work->index_store, work->index_store_free_func);
@@ -204,6 +210,20 @@ fsearch_database_work_new_scan_finished(void *index_store,
     if (cancellable) {
         g_set_object(&work->cancellable, cancellable);
     }
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_scan_snapshot(void *snapshot,
+                                        void *origin_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *)) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT;
+    work->index_store = index_ref_func(snapshot);
+    work->origin_store = index_ref_func(origin_store);
+    work->index_store_ref_func = index_ref_func;
+    work->index_store_free_func = index_free_func;
     return work;
 }
 
@@ -353,6 +373,20 @@ fsearch_database_work_scan_finished_get_index_store(FsearchDatabaseWork *work) {
     return work->index_store_ref_func(work->index_store);
 }
 
+void *
+fsearch_database_work_scan_snapshot_get_snapshot(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT, NULL);
+    return work->index_store_ref_func(work->index_store);
+}
+
+void *
+fsearch_database_work_scan_snapshot_get_origin_store(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT, NULL);
+    return work->index_store_ref_func(work->origin_store);
+}
+
 FsearchDatabaseIncludeManager *
 fsearch_database_work_scan_get_include_manager(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NULL);
@@ -449,6 +483,8 @@ fsearch_database_work_to_string(FsearchDatabaseWork *work) {
         return "SCAN";
     case FSEARCH_DATABASE_WORK_SCAN_FINISHED:
         return "SCAN_FINISHED";
+    case FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT:
+        return "SCAN_SNAPSHOT";
     case FSEARCH_DATABASE_WORK_SEARCH:
         return "SEARCH";
     case FSEARCH_DATABASE_WORK_SORT:

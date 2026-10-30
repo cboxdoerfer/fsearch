@@ -264,7 +264,8 @@ db_scan_folder(const char *path,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *, gpointer),
-               gpointer status_cb_data) {
+               gpointer status_cb_data,
+               const bool *keep_partial) {
     g_assert(g_path_is_absolute(path));
     g_debug("[db_scan] scan path: %s", path);
 
@@ -324,6 +325,15 @@ db_scan_folder(const char *path,
     }
     else {
         g_warning("[db_scan] walk error: %d", res);
+    }
+
+    if (keep_partial && *keep_partial) {
+        // Searches already reference the partial result: leave the entries alive in
+        // `folders`/`files`, the caller takes ownership of them.
+        if (top_has_external_parent) {
+            db_entry_set_parent(parent, NULL);
+        }
+        return false;
     }
 
     discard_scanned_entries(&walk_context, parent, top_has_external_parent);

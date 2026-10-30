@@ -323,6 +323,7 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
     g_signal_connect_object(db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(db, "database-changed", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "scan-snapshot", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
     g_signal_connect_object(db, "database-progress", G_CALLBACK(on_database_progress), self, G_CONNECT_AFTER);
 }
 
