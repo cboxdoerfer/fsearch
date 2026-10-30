@@ -77,6 +77,12 @@ fsearch_database_index_lock(FsearchDatabaseIndex *self);
 void
 fsearch_database_index_unlock(FsearchDatabaseIndex *self);
 
+// Only callable on the scanning thread while fsearch_database_index_scan() is running, e.g. from its
+// SCANNING event. Returns the entries found so far (borrowed, still growing). Their entries are
+// guaranteed to stay alive for as long as the index exists, even if the scan fails later on.
+bool
+fsearch_database_index_get_scan_progress(FsearchDatabaseIndex *self, DynamicArray **folders, DynamicArray **files);
+
 bool
 fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
 

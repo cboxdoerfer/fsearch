@@ -958,6 +958,23 @@ on_database_update_finished(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpo
 }
 
 static void
+on_database_scan_snapshot(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    // The searched store was replaced by a newer partial scan result: search it again
+    fsearch_window_listview_set_empty(win);
+    fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), 0);
+
+    const uint32_t num_items = fsearch_database_info_get_num_entries(info);
+    if (num_items > 0) {
+        show_overlay(win, OVERLAY_RESULTS);
+    }
+
+    perform_search(win);
+}
+
+static void
 on_database_load_started(FsearchDatabase *db2, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
@@ -997,6 +1014,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_signal_connect_object(self->db, "sort-finished", G_CALLBACK(on_sort_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "scan-snapshot", G_CALLBACK(on_database_scan_snapshot), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "database-changed", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);

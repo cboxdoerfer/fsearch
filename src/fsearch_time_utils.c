@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <time.h>
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
+
 typedef enum FsearchDateTimeType {
     FSEARCH_DATE_TIME_TYPE_SECOND,
     FSEARCH_DATE_TIME_TYPE_MINUTE,

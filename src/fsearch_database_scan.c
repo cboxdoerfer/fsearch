@@ -5,10 +5,16 @@
 #include "fsearch_database_entry.h"
 
 #include <config.h>
+#ifndef _WIN32
 #include <dirent.h>
+#endif
 #include <fcntl.h>
 #include <glib/gi18n.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
 
 enum {
     WALK_OK = 0,
@@ -182,7 +188,14 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 #ifdef AT_NO_AUTOMOUNT
         stat_flags |= AT_NO_AUTOMOUNT;
 #endif
+#ifdef _WIN32
+        // Windows has no directory file descriptors, so stat the full path
+        (void)dir_fd;
+        (void)stat_flags;
+        if (lstat(path->str, &st)) {
+#else
         if (fstatat(dir_fd, dent->d_name, &st, stat_flags)) {
+#endif
             g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }
@@ -251,7 +264,8 @@ db_scan_folder(const char *path,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *, gpointer),
-               gpointer status_cb_data) {
+               gpointer status_cb_data,
+               const bool *keep_partial) {
     g_assert(g_path_is_absolute(path));
     g_debug("[db_scan] scan path: %s", path);
 
@@ -311,6 +325,15 @@ db_scan_folder(const char *path,
     }
     else {
         g_warning("[db_scan] walk error: %d", res);
+    }
+
+    if (keep_partial && *keep_partial) {
+        // Searches already reference the partial result: leave the entries alive in
+        // `folders`/`files`, the caller takes ownership of them.
+        if (top_has_external_parent) {
+            db_entry_set_parent(parent, NULL);
+        }
+        return false;
     }
 
     discard_scanned_entries(&walk_context, parent, top_has_external_parent);

@@ -20,6 +20,7 @@
 
 #include <gio/gio.h>
 #include <stdbool.h>
+#include <sys/types.h>
 
 typedef void
 (*FsearchFileUtilsOpenCallback)(gboolean result, const char *error_message, gpointer user_data);

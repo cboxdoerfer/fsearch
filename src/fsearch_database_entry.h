@@ -3,6 +3,7 @@
 #include <glib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 #include "fsearch_array.h"
 #include "fsearch_database_entry_flags.h"

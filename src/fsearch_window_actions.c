@@ -42,7 +42,7 @@
 #include <config.h>
 #endif
 
-#ifndef __MACH__
+#if !defined(__MACH__) && !defined(_WIN32)
 #include <gio/gdesktopappinfo.h>
 #endif
 
@@ -612,8 +612,20 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     if (!app_id) {
         return;
     }
-#ifdef __MACH__
+#if defined(__MACH__)
     g_autoptr(GAppInfo) app_info = NULL;
+#elif defined(_WIN32)
+    // GIO can only look up applications by id on freedesktop systems
+    g_autoptr(GAppInfo) app_info = NULL;
+    GList *apps = g_app_info_get_all();
+    for (GList *a = apps; a != NULL; a = a->next) {
+        const char *id = g_app_info_get_id(a->data);
+        if (!g_strcmp0(id, app_id)) {
+            app_info = g_object_ref(a->data);
+            break;
+        }
+    }
+    g_list_free_full(apps, g_object_unref);
 #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
 #endif
@@ -828,8 +840,8 @@ fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer
         return;
     }
 
-    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
 #ifdef GDK_WINDOWING_X11
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
     GdkWindow *window = gtk_widget_get_window(toplevel);
     if (GDK_IS_X11_WINDOW(window)) {
         xid = gdk_x11_window_get_xid(gtk_widget_get_window(toplevel));
