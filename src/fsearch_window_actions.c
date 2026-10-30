@@ -840,8 +840,8 @@ fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer
         return;
     }
 
-    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
 #ifdef GDK_WINDOWING_X11
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
     GdkWindow *window = gtk_widget_get_window(toplevel);
     if (GDK_IS_X11_WINDOW(window)) {
         xid = gdk_x11_window_get_xid(gtk_widget_get_window(toplevel));
