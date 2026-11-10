@@ -105,6 +105,7 @@ static const FsearchKeyData APPLICATIONS_SECTION[] = {
 
 static const FsearchKeyData INTERFACE_SECTION[] = {
     CONF_BOOL(show_base_2_units, false),
+    CONF_INT(date_format, FSEARCH_DATE_FORMAT_YYYY_MM_DD),
     CONF_BOOL(highlight_search_terms, true),
     CONF_BOOL(single_click_open, false),
     CONF_BOOL(launch_desktop_files, true),
@@ -835,7 +836,8 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         result.search_config_changed = true;
     }
     if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
-        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
+        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips
+        || c1->date_format != c2->date_format) {
         result.listview_config_changed = true;
     }
 

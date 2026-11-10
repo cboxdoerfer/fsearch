@@ -61,9 +61,37 @@ test_parse_time_interval(void) {
     }
 }
 
+static void
+test_date_formatting(void) {
+    struct tm tm_val = {
+        .tm_year = 126, // 2026
+        .tm_mon = 10,   // November (0-based)
+        .tm_mday = 10,
+        .tm_hour = 14,
+        .tm_min = 35,
+        .tm_sec = 0,
+        .tm_isdst = -1,
+    };
+    time_t t = mktime(&tm_val);
+
+    char buf[100];
+    fsearch_time_utils_format_time(t, FSEARCH_DATE_FORMAT_YYYY_MM_DD, buf, sizeof(buf));
+    g_assert_cmpstr(buf, ==, "2026-11-10 14:35");
+
+    fsearch_time_utils_format_time(t, FSEARCH_DATE_FORMAT_MM_DD_YYYY, buf, sizeof(buf));
+    g_assert_cmpstr(buf, ==, "11/10/2026 14:35");
+
+    fsearch_time_utils_format_time(t, FSEARCH_DATE_FORMAT_DD_MM_YYYY_SLASH, buf, sizeof(buf));
+    g_assert_cmpstr(buf, ==, "10/11/2026 14:35");
+
+    fsearch_time_utils_format_time(t, FSEARCH_DATE_FORMAT_DD_MM_YYYY_DOT, buf, sizeof(buf));
+    g_assert_cmpstr(buf, ==, "10.11.2026 14:35");
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
     g_test_add_func("/FSearch/time_utils/parse_time_interval", test_parse_time_interval);
+    g_test_add_func("/FSearch/time_utils/date_formatting", test_date_formatting);
     return g_test_run();
 }
