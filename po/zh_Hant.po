@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-18 13:55+0200\n"
-"PO-Revision-Date: 2026-09-22 09:51+0000\n"
+"PO-Revision-Date: 2026-11-13 20:51+0000\n"
 "Last-Translator: 那個呆萌在山外 "
 "<5h1n38r16h7.d14m0nd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.10.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -188,10 +188,8 @@ msgid "Add contextual help for all preferences"
 msgstr "為所有偏好設定新增情境說明"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
-#, fuzzy
-#| msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgid "Numerous bug fixes and stability and performance improvements"
-msgstr "包含大量的錯誤修正、翻譯更新與其他細微改善"
+msgstr "包含大量的錯誤修正、穩定性與效能改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "New search engine"
@@ -305,10 +303,8 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "一款專注於效能與進階功能的搜尋工具"
 
 #: src/fsearch.c:330
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Saving database and config…"
-msgstr "正在載入資料庫…"
+msgstr "正在儲存資料庫與設定…"
 
 #: src/fsearch.c:807
 msgid "Open a new application window"
@@ -524,12 +520,9 @@ msgid "Failed to get application information"
 msgstr "獲取應用程式資訊時發生錯誤"
 
 #: src/fsearch_file_utils.c:384 src/fsearch_file_utils.c:515
-#, fuzzy
-#| msgctxt "Will be followed by the path of the folder."
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the file path."
 msgid "Error when opening file"
-msgstr "開啟資料夾時發生錯誤"
+msgstr "開啟檔案時發生錯誤"
 
 #: src/fsearch_file_utils.c:386 src/fsearch_file_utils.c:517
 msgid "No default application registered"
