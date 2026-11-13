@@ -100,7 +100,12 @@ static const FsearchKeyData WINDOW_SECTION[] = {
 };
 
 static const FsearchKeyData APPLICATIONS_SECTION[] = {
+#ifdef _WIN32
+    // No file manager on D-Bus: open the parent folder in Explorer with the file selected
+    CONF_STR(folder_open_cmd, "explorer.exe /select,\"{path_full_raw}\""),
+#else
     CONF_STR(folder_open_cmd, NULL),
+#endif
 };
 
 static const FsearchKeyData INTERFACE_SECTION[] = {

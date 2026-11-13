@@ -3,6 +3,10 @@
 #include "fsearch_query_node.h"
 #include <string.h>
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
+
 uint32_t
 fsearch_query_matcher_false(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     return 0;

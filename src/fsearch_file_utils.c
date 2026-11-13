@@ -21,7 +21,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"
 
-#ifndef __MACH__
+#if !defined(__MACH__) && !defined(_WIN32)
 #include <gio/gdesktopappinfo.h>
 #endif
 
@@ -34,6 +34,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
 
 const char *data_folder_name = "fsearch";
 
@@ -241,6 +245,7 @@ launch_context_free(FsearchFileUtilsLaunchContext *ctx) {
     g_clear_pointer(&ctx, g_free);
 }
 
+#ifndef _WIN32
 // Adds a desktop file that should be launched as its associated application (no URIs passed),
 // rather than opened with a handler derived from its content type.
 static void
@@ -261,6 +266,7 @@ add_desktop_launch_for_uri_to_launch_context(FsearchFileUtilsLaunchContext *laun
     uris_ctx->app_info = app_info;
     g_queue_push_tail(launch_ctx->launch_uris_ctx_queue, uris_ctx);
 }
+#endif
 
 static void
 add_app_info_for_uri_to_launch_context(FsearchFileUtilsLaunchContext *launch_ctx, GAppInfo *app_info, char *uri) {
@@ -470,10 +476,13 @@ fsearch_file_utils_open_path_list(GList *paths,
     launch_ctx->pending_resolves = 0;
     for (GList *p = paths; p != NULL; p = p->next) {
         const char *path = p->data;
+#ifndef _WIN32
+        // .desktop launchers only exist on freedesktop systems
         if (launch_desktop_files && fsearch_file_utils_is_desktop_file(path)) {
             add_desktop_launch_for_uri_to_launch_context(launch_ctx, path);
             continue;
         }
+#endif
         // Let GIO figure out the default handler for a file
         launch_ctx->pending_resolves++;
         g_autoptr(GFile) file = g_file_new_for_path(path);
@@ -599,7 +608,7 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
-#ifdef __MACH__
+#if defined(__MACH__) || defined(_WIN32)
     g_autoptr(GAppInfo) info = NULL;
 #else
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);

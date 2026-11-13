@@ -70,6 +70,18 @@ struct FsearchDatabaseIndexStore {
     bool is_sorted;
     bool running;
 
+    // Indices of a running fsearch_database_index_store_start(), which partial snapshots are taken
+    // from. Only accessed by the scanning thread.
+    GPtrArray *scanning_indices;
+    GTimer *snapshot_timer;
+    double snapshot_interval;
+    uint32_t snapshot_num_entries;
+
+    // A snapshot store holds a partial scan result for searching. It has no indices of its own (so
+    // it's never modified or monitored), it only keeps the ones its entries belong to alive.
+    bool is_snapshot;
+    GPtrArray *snapshot_indices;
+
     GMutex mutex;
 
     volatile gint ref_count;
@@ -541,6 +553,108 @@ index_store_update_all_search_views_locked(FsearchDatabaseIndexStore *store) {
     g_hash_table_foreach(store->search_results, index_store_view_changed_cb, &ctx);
 }
 
+// Snapshots are taken at a growing interval, so sorting them never takes more than ~10% of the scan time
+#define SNAPSHOT_INTERVAL_MIN 1.0
+#define SNAPSHOT_INTERVAL_MAX 120.0
+#define SNAPSHOT_SORT_TIME_FACTOR 10.0
+
+static FsearchDatabaseIndexStore *
+index_store_new_snapshot(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders) {
+    FsearchDatabaseIndexStore *snapshot = fsearch_database_index_store_new(store->include_manager,
+                                                                           store->exclude_manager,
+                                                                           store->flags,
+                                                                           store->event_func,
+                                                                           store->event_func_data);
+    snapshot->is_snapshot = true;
+    snapshot->snapshot_indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
+    for (uint32_t i = 0; i < store->scanning_indices->len; ++i) {
+        g_ptr_array_add(snapshot->snapshot_indices,
+                        fsearch_database_index_ref(g_ptr_array_index(store->scanning_indices, i)));
+    }
+
+    // Only sorted by name: searches and sorting work without the other fast sort indices
+    snapshot->folder_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(
+        folders,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_NAME),
+        DATABASE_ENTRY_TYPE_FOLDER,
+        NULL,
+        NULL);
+    snapshot->file_chunks[DATABASE_INDEX_PROPERTY_NAME] = fsearch_database_chunked_array_new(
+        files,
+        FALSE,
+        fsearch_database_sort_order_chain_for_property(DATABASE_INDEX_PROPERTY_NAME),
+        DATABASE_ENTRY_TYPE_FILE,
+        NULL,
+        NULL);
+    snapshot->is_sorted = true;
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&snapshot->mutex);
+    g_assert_nonnull(locker);
+    snapshot->running = true;
+
+    return snapshot;
+}
+
+// Called on the scanning thread: hands a sorted copy of everything found so far to the event func, so
+// it can already be searched while the scan continues.
+static void
+index_store_maybe_publish_snapshot(FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *scanning_index) {
+    if (!store->event_func || g_timer_elapsed(store->snapshot_timer, NULL) < store->snapshot_interval) {
+        return;
+    }
+
+    g_autoptr(GTimer) build_timer = g_timer_new();
+    g_autoptr(DynamicArray) files = darray_new(1024);
+    g_autoptr(DynamicArray) folders = darray_new(1024);
+    for (uint32_t i = 0; i < store->scanning_indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->scanning_indices, i);
+        if (index == scanning_index) {
+            DynamicArray *index_folders = NULL;
+            DynamicArray *index_files = NULL;
+            if (fsearch_database_index_get_scan_progress(index, &index_folders, &index_files)) {
+                darray_add_array(folders, index_folders);
+                darray_add_array(files, index_files);
+            }
+        }
+        else {
+            // A completely scanned index
+            fsearch_database_index_lock(index);
+            g_autoptr(DynamicArray) index_folders = fsearch_database_index_get_folders(index);
+            g_autoptr(DynamicArray) index_files = fsearch_database_index_get_files(index);
+            fsearch_database_index_unlock(index);
+            if (index_folders) {
+                darray_add_array(folders, index_folders);
+            }
+            if (index_files) {
+                darray_add_array(files, index_files);
+            }
+        }
+    }
+
+    const uint32_t num_entries = darray_get_num_items(files) + darray_get_num_items(folders);
+    if (num_entries == 0 || num_entries == store->snapshot_num_entries) {
+        g_timer_start(store->snapshot_timer);
+        return;
+    }
+
+    FsearchDatabaseIndexStore *snapshot = index_store_new_snapshot(store, files, folders);
+    store->snapshot_num_entries = num_entries;
+
+    const double build_time = g_timer_elapsed(build_timer, NULL);
+    store->snapshot_interval = CLAMP(MAX(store->snapshot_interval * 2, build_time * SNAPSHOT_SORT_TIME_FACTOR),
+                                     SNAPSHOT_INTERVAL_MIN,
+                                     SNAPSHOT_INTERVAL_MAX);
+    g_debug("[index_store] published snapshot with %u entries in %.3fs, next in %.0fs",
+            num_entries,
+            build_time,
+            store->snapshot_interval);
+    g_timer_start(store->snapshot_timer);
+
+    // The event func takes ownership of the snapshot
+    store->event_func(store, FSEARCH_DATABASE_INDEX_STORE_EVENT_SNAPSHOT, snapshot, store->event_func_data);
+}
+
 static void
 index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabaseIndexStore *store = user_data;
@@ -566,6 +680,9 @@ index_store_index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEven
                               FSEARCH_DATABASE_INDEX_STORE_EVENT_PROGRESS,
                               g_steal_pointer(&event->path),
                               store->event_func_data);
+        }
+        if (store->scanning_indices) {
+            index_store_maybe_publish_snapshot(store, index);
         }
         break;
     default:
@@ -699,6 +816,9 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     g_clear_pointer(&store->indices, g_ptr_array_unref);
     g_clear_pointer(&store->search_results, g_hash_table_unref);
     index_store_sorted_entries_free(store);
+    g_clear_pointer(&store->snapshot_indices, g_ptr_array_unref);
+    g_clear_pointer(&store->scanning_indices, g_ptr_array_unref);
+    g_clear_pointer(&store->snapshot_timer, g_timer_destroy);
     g_clear_object(&store->include_manager);
     g_clear_object(&store->exclude_manager);
 
@@ -857,6 +977,13 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
     // Initialize the working array so that in case the scan was canceled, the indices are destroyed
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(store->include_manager);
+
+    // Searchable snapshots of the scan so far are published while scanning
+    store->scanning_indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
+    store->snapshot_timer = g_timer_new();
+    // The first snapshot is taken right away, at the scan's first progress report
+    store->snapshot_interval = 0;
+    store->snapshot_num_entries = 0;
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
         if (!fsearch_database_include_get_active(include)) {
@@ -868,9 +995,21 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                                            store->monitor.ctx,
                                                                            index_store_index_event_cb,
                                                                            store);
-        fsearch_database_index_scan(index, cancellable);
+        g_ptr_array_add(store->scanning_indices, fsearch_database_index_ref(index));
+        if (!fsearch_database_index_scan(index, cancellable)) {
+            // Snapshots only take entries from successfully scanned indices
+            g_ptr_array_remove(store->scanning_indices, index);
+        }
         g_ptr_array_add(indices, g_steal_pointer(&index));
     }
+    if (store->snapshot_num_entries > 0 && !g_cancellable_is_cancelled(cancellable)) {
+        // Everything is scanned, but building the final sort orders still takes a while: make all
+        // entries searchable already
+        store->snapshot_interval = 0;
+        index_store_maybe_publish_snapshot(store, NULL);
+    }
+    g_clear_pointer(&store->scanning_indices, g_ptr_array_unref);
+    g_clear_pointer(&store->snapshot_timer, g_timer_destroy);
     if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
@@ -1011,6 +1150,12 @@ bool
 fsearch_database_index_store_is_running(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store, false);
     return store->running;
+}
+
+bool
+fsearch_database_index_store_is_snapshot(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, false);
+    return store->is_snapshot;
 }
 
 void

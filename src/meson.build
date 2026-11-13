@@ -73,13 +73,17 @@ if have_inotify
     libfsearch_core_sources += 'fsearch_folder_monitor_inotify.c'
 endif
 
+if host_machine.system() == 'windows'
+    libfsearch_core_sources += 'win32_compat.c'
+endif
+
 if have_fanotify
     libfsearch_core_sources += 'fsearch_folder_monitor_fanotify.c'
 endif
 
 fsearch_core_deps = [
     cc.find_library('m', required: true),
-    dependency('gio-unix-2.0', version: '>= 2.72'),
+    dependency(host_machine.system() == 'windows' ? 'gio-windows-2.0' : 'gio-unix-2.0', version: '>= 2.72'),
     dependency('pango', version: '>= 1.0'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 4.4'),
@@ -136,6 +140,7 @@ libfsearch_dep = declare_dependency(
 fsearch = executable('fsearch', 'main.c',
     include_directories: fsearch_include_dirs,
     dependencies: libfsearch_dep,
+    win_subsystem: 'windows',
     install: true,
 )
 
