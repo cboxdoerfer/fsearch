@@ -491,7 +491,7 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
 // Detects a finished signal from a sort that was already superseded by a newer one.
 static bool
 sort_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
-    if (!win->work_sort) {
+    if (!win->work_sort || !info) {
         return false;
     }
     return fsearch_database_work_sort_get_sort_order(win->work_sort) == fsearch_database_search_info_get_sort_order(info)
@@ -503,6 +503,10 @@ on_sort_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info,
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!info) {
+            g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
+            return;
+        }
         if (!sort_info_matches_tracked_work(win, info)) {
             return;
         }
@@ -533,11 +537,14 @@ on_selection_changed(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *i
 // Detects a finished signal from a search that was already superseded by a newer one.
 static bool
 search_info_matches_tracked_work(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
-    if (!win->work_search) {
+    if (!win->work_search || !info) {
         return false;
     }
     g_autoptr(FsearchQuery) tracked_query = fsearch_database_work_search_get_query(win->work_search);
     g_autoptr(FsearchQuery) info_query = fsearch_database_search_info_get_query(info);
+    if (!tracked_query || !info_query) {
+        return false;
+    }
     return tracked_query == info_query;
 }
 
@@ -546,6 +553,10 @@ on_search_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *inf
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        if (!info) {
+            g_clear_pointer(&win->work_search, fsearch_database_work_unref);
+            return;
+        }
         if (!search_info_matches_tracked_work(win, info)) {
             return;
         }
