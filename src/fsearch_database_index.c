@@ -963,6 +963,8 @@ fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
     FsearchDatabaseIndex *self = g_new0(FsearchDatabaseIndex, 1);
     g_assert(self);
 
+    g_mutex_init(&self->mutex);
+    
     self->ref_count = 1;
 
     self->include = fsearch_database_include_ref(include);
