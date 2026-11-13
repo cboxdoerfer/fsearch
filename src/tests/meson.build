@@ -10,6 +10,7 @@ test_database_chunked_array = executable('test_database_chunked_array', 'test_da
 test_database_index_store = executable('test_database_index_store', 'test_database_index_store.c', dependencies : libfsearch_core_dep)
 test_database = executable('test_database', 'test_database.c', dependencies : libfsearch_core_dep)
 test_database_file = executable('test_database_file', 'test_database_file.c', dependencies : libfsearch_core_dep)
+test_config = executable('test_config', 'test_config.c', dependencies : libfsearch_core_dep)
 
 test('test_database',
      test_database,
@@ -49,6 +50,13 @@ test('test_database_include',
 )
 test('test_database_exclude',
      test_database_exclude,
+     env : [
+         'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
+         'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
+     ],
+)
+test('test_config',
+     test_config,
      env : [
          'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
          'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
