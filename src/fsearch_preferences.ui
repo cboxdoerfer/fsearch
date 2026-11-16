@@ -265,6 +265,54 @@
                             <property name="position">5</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="spacing">12</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Date format:</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBoxText" id="date_format">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">False</property>
+                                <property name="active">0</property>
+                                <items>
+                                  <item id="FSEARCH_DATE_FORMAT_YYYY_MM_DD" translatable="yes">YYYY-MM-DD HH:MM (ISO 8601)</item>
+                                  <item id="FSEARCH_DATE_FORMAT_MM_DD_YYYY" translatable="yes">MM/DD/YYYY HH:MM (Month/Day/Year)</item>
+                                  <item id="FSEARCH_DATE_FORMAT_DD_MM_YYYY_SLASH" translatable="yes">DD/MM/YYYY HH:MM (Day/Month/Year)</item>
+                                  <item id="FSEARCH_DATE_FORMAT_DD_MM_YYYY_DOT" translatable="yes">DD.MM.YYYY HH:MM (Day.Month.Year)</item>
+                                </items>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_date_format" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">6</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                     <child type="label">
@@ -852,6 +900,27 @@ You can configure if those actions should be triggered when the file was opened 
                     <property name="name">page4</property>
                     <property name="title">page4</property>
                     <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_date_format">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Date format:&lt;/b&gt;
+
+This setting controls how dates are displayed in the Modification Time column.
+
+	• &lt;b&gt;YYYY-MM-DD HH:MM:&lt;/b&gt; Standard ISO 8601 date format &lt;i&gt;(Year-Month-Day)&lt;/i&gt;
+	• &lt;b&gt;MM/DD/YYYY HH:MM:&lt;/b&gt; US date format &lt;i&gt;(Month/Day/Year)&lt;/i&gt;
+	• &lt;b&gt;DD/MM/YYYY HH:MM:&lt;/b&gt; Day/Month/Year format
+	• &lt;b&gt;DD.MM.YYYY HH:MM:&lt;/b&gt; Day.Month.Year format</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page_date_format</property>
+                    <property name="title">page_date_format</property>
                   </packing>
                 </child>
                 <child>

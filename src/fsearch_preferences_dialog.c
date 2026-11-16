@@ -44,6 +44,7 @@ struct _FsearchPreferencesDialog {
     GtkToggleButton *show_icons_button;
     GtkToggleButton *highlight_search_terms;
     GtkToggleButton *show_base_2_units;
+    GtkComboBox *date_format;
     GtkComboBox *action_after_file_open;
     GtkToggleButton *action_after_file_open_keyboard;
     GtkToggleButton *action_after_file_open_mouse;
@@ -149,6 +150,7 @@ update_config(FsearchPreferencesDialog *self) {
     self->config->hide_results_on_empty_search = gtk_toggle_button_get_active(self->hide_results_button);
     self->config->show_dialog_failed_opening = gtk_toggle_button_get_active(self->show_dialog_failed_opening);
 
+    self->config->date_format = gtk_combo_box_get_active(self->date_format);
     self->config->action_after_file_open = gtk_combo_box_get_active(self->action_after_file_open);
 
     g_clear_pointer(&self->config->filters, fsearch_filter_manager_unref);
@@ -262,6 +264,7 @@ fsearch_preferences_dialog_constructed(GObject *object) {
     gtk_toggle_button_set_active(self->hide_results_button, self->config_old->hide_results_on_empty_search);
     gtk_toggle_button_set_active(self->show_dialog_failed_opening, self->config_old->show_dialog_failed_opening);
 
+    gtk_combo_box_set_active(self->date_format, self->config_old->date_format);
     gtk_combo_box_set_active(self->action_after_file_open, self->config_old->action_after_file_open);
 }
 
@@ -306,6 +309,7 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_icons_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, highlight_search_terms);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_base_2_units);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, date_format);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_keyboard);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_mouse);

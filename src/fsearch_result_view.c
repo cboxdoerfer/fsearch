@@ -6,6 +6,7 @@
 #include "fsearch_config.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_file_utils.h"
+#include "fsearch_time_utils.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -175,11 +176,7 @@ fsearch_result_view_query_tooltip(FsearchResultView *view,
     case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME: {
         const time_t mtime = fsearch_database_entry_info_get_mtime(info);
         char mtime_formatted[100] = "";
-        strftime(mtime_formatted,
-                 sizeof(mtime_formatted),
-                 "%Y-%m-%d %H:%M",
-                 //"%Y-%m-%d %H:%M",
-                 localtime(&mtime));
+        fsearch_time_utils_format_time(mtime, config->date_format, mtime_formatted, sizeof(mtime_formatted));
         text = g_strdup(mtime_formatted);
         break;
     }
@@ -466,11 +463,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                 break;
             case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME: {
                 const time_t mtime = fsearch_database_entry_info_get_mtime(info);
-                strftime(text_time,
-                         100,
-                         "%Y-%m-%d %H:%M",
-                         //"%Y-%m-%d %H:%M",
-                         localtime(&mtime));
+                fsearch_time_utils_format_time(mtime, config->date_format, text_time, sizeof(text_time));
                 text = text_time;
                 break;
             }

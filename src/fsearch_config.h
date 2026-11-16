@@ -25,6 +25,7 @@
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_filter_manager.h"
+#include "fsearch_time_utils.h"
 
 typedef struct _FsearchConfig FsearchConfig;
 
@@ -64,6 +65,7 @@ struct _FsearchConfig {
 
     // Interface
     bool show_base_2_units;
+    FsearchDateFormat date_format;
     bool highlight_search_terms;
     bool single_click_open;
     bool launch_desktop_files;

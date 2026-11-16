@@ -554,3 +554,34 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
 
     return false;
 }
+
+
+const char *
+fsearch_time_utils_get_date_format_pattern(FsearchDateFormat format) {
+    switch (format) {
+    case FSEARCH_DATE_FORMAT_MM_DD_YYYY:
+        return "%m/%d/%Y %H:%M";
+    case FSEARCH_DATE_FORMAT_DD_MM_YYYY_SLASH:
+        return "%d/%m/%Y %H:%M";
+    case FSEARCH_DATE_FORMAT_DD_MM_YYYY_DOT:
+        return "%d.%m.%Y %H:%M";
+    case FSEARCH_DATE_FORMAT_YYYY_MM_DD:
+    default:
+        return "%Y-%m-%d %H:%M";
+    }
+}
+
+void
+fsearch_time_utils_format_time(time_t mtime, FsearchDateFormat format, char *buf, size_t buf_len) {
+    if (!buf || buf_len == 0) {
+        return;
+    }
+
+    const char *pattern = fsearch_time_utils_get_date_format_pattern(format);
+    struct tm *tm_val = localtime(&mtime);
+    if (!tm_val) {
+        buf[0] = '\0';
+        return;
+    }
+    strftime(buf, buf_len, pattern, tm_val);
+}
