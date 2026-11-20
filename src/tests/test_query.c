@@ -19,7 +19,17 @@ static void
 test_query(QueryTest *t) {
     FsearchFilterManager *manager = fsearch_filter_manager_new_with_defaults();
 
-    FsearchQuery *q = fsearch_query_new(t->needle, NULL, manager, t->flags, "debug_query");
+    // Entries built from a "/"-separated haystack use the platform's directory separator,
+    // so path needles have to use it as well (a backslash must be escaped in queries).
+    g_autofree char *needle = NULL;
+    if (G_DIR_SEPARATOR != '/' && g_str_has_prefix(t->haystack, "/")) {
+        g_auto(GStrv) parts = g_strsplit(t->needle, "/", -1);
+        needle = g_strjoinv("\\\\", parts);
+    }
+    else {
+        needle = g_strdup(t->needle);
+    }
+    FsearchQuery *q = fsearch_query_new(needle, NULL, manager, t->flags, "debug_query");
 
     FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE;
     FsearchDatabaseEntry *entry = NULL;
@@ -299,6 +309,11 @@ test_main(void) {
 
 static void
 test_turkic_case_mapping(void) {
+#ifdef G_OS_WIN32
+    // GLib takes the Turkic casing rules from the Windows thread locale, not from setlocale()
+    g_test_skip("Turkic case mapping follows the Windows thread locale");
+    return;
+#endif
     if (set_locale("tr_TR.UTF-8")) {
         QueryTest tr_tests[] = {
             // Mismatches

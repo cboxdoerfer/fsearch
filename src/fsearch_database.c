@@ -54,6 +54,9 @@ struct _FsearchDatabase {
 
     FsearchDatabaseIndexStore *store;
     FsearchDatabaseIndexStore *pending_store;
+    // While `store` is a snapshot of the scan building `pending_store`: the store it replaced, which is
+    // restored if that scan doesn't finish
+    FsearchDatabaseIndexStore *store_before_snapshot;
     FsearchDatabaseRescanManager *rescan_manager;
 
     GMutex mutex;
@@ -84,6 +87,7 @@ typedef enum FsearchDatabaseSignalType {
     SIGNAL_DATABASE_PROGRESS,
     SIGNAL_APPLY_STARTED,
     SIGNAL_APPLY_FINISHED,
+    SIGNAL_SCAN_SNAPSHOT,
     NUM_DATABASE_SIGNALS,
 } FsearchDatabaseSignalType;
 
@@ -186,6 +190,8 @@ signal_type_to_name(FsearchDatabaseSignalType type) {
         return "SIGNAL_APPLY_STARTED";
     case SIGNAL_APPLY_FINISHED:
         return "SIGNAL_APPLY_FINISHED";
+    case SIGNAL_SCAN_SNAPSHOT:
+        return "SIGNAL_SCAN_SNAPSHOT";
     case NUM_DATABASE_SIGNALS:
         return "UNKNOWN";
     default:
@@ -481,6 +487,19 @@ index_store_event_cb(FsearchDatabaseIndexStore *store,
     case FSEARCH_DATABASE_INDEX_STORE_EVENT_APPLY_FINISHED:
         signal_emit_apply_finished(self);
         break;
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_SNAPSHOT: {
+        // Called on the scanning thread: let the worker thread decide whether to search the snapshot
+        g_autoptr(FsearchDatabaseIndexStore) snapshot = data;
+        if (!g_cancellable_is_cancelled(self->cancellable)) {
+            g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_scan_snapshot(
+                snapshot,
+                store,
+                (void *(*)(void *))fsearch_database_index_store_ref,
+                (GDestroyNotify)fsearch_database_index_store_unref);
+            fsearch_database_queue_work(self, work);
+        }
+        break;
+    }
     default:
         g_assert_not_reached();
     }
@@ -523,9 +542,15 @@ database_save(FsearchDatabase *self, gboolean notify) {
 
     g_autofree char *file_path = g_file_get_path(self->file);
 
-    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
-    g_assert_nonnull(locker);
-    fsearch_database_file_save(self->store, file_path);
+    // Never persist a partial scan, keep what was there before it
+    FsearchDatabaseIndexStore *store = fsearch_database_index_store_is_snapshot(self->store)
+                                         ? self->store_before_snapshot
+                                         : self->store;
+    if (store) {
+        g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(store);
+        g_assert_nonnull(locker);
+        fsearch_database_file_save(store, file_path);
+    }
 
     if (notify) {
         signal_emit0(self, SIGNAL_SAVE_FINISHED);
@@ -595,6 +620,7 @@ static void
 database_set_store(FsearchDatabase *self, FsearchDatabaseIndexStore *store) {
     g_return_if_fail(self);
 
+    g_clear_pointer(&self->store_before_snapshot, fsearch_database_index_store_unref);
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = store ? fsearch_database_index_store_ref(store) : NULL;
 
@@ -662,11 +688,52 @@ database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
         malloc_trim(0);
 #endif
     }
+    else if (self->store_before_snapshot && !self->pending_store) {
+        // The scan we searched snapshots of didn't finish: go back to the store from before it
+        g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+        self->store = g_steal_pointer(&self->store_before_snapshot);
+    }
 
     database_clear_scan_cancellable_if_current(self, work);
 
     signal_emit(self,
                 SIGNAL_SCAN_FINISHED,
+                database_get_info(self),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
+}
+
+static void
+database_scan_snapshot(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
+    g_return_if_fail(self);
+    g_return_if_fail(work);
+
+    g_autoptr(FsearchDatabaseIndexStore) snapshot = fsearch_database_work_scan_snapshot_get_snapshot(work);
+    g_autoptr(FsearchDatabaseIndexStore) origin = fsearch_database_work_scan_snapshot_get_origin_store(work);
+
+    if (origin != self->pending_store) {
+        // That scan already finished or was replaced by another one
+        return;
+    }
+    if (self->store && !fsearch_database_index_store_is_snapshot(self->store)) {
+        if (database_get_num_files(self) + database_get_num_folders(self) > 0) {
+            // A complete (if outdated) index is better to search than a partial one
+            return;
+        }
+        g_clear_pointer(&self->store_before_snapshot, fsearch_database_index_store_unref);
+        self->store_before_snapshot = g_steal_pointer(&self->store);
+    }
+
+    // Only the searched store changes: the include/exclude configuration stays the one of the
+    // complete index until the scan finishes
+    g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+    self->store = g_steal_pointer(&snapshot);
+
+    signal_emit(self,
+                SIGNAL_SCAN_SNAPSHOT,
                 database_get_info(self),
                 NULL,
                 1,
@@ -755,6 +822,13 @@ database_rescan_index(FsearchDatabase *self, FsearchDatabaseWork *work) {
     }
 
     const char *path = fsearch_database_work_rescan_index_get_path(work);
+
+    if (fsearch_database_index_store_is_snapshot(self->store)) {
+        // A full scan is running and covers this path as well
+        g_debug("[db] rescan_index: full scan in progress, skipping: %s", path);
+        database_clear_scan_cancellable_if_current(self, work);
+        return;
+    }
 
     g_autoptr(FsearchDatabaseIndex) new_index = fsearch_database_index_store_create_index_for_rescan(self->store, path);
 
@@ -991,6 +1065,9 @@ handle_work_in_worker_thread_cb(gpointer user_data) {
     case FSEARCH_DATABASE_WORK_SCAN_FINISHED:
         database_scan_finished(self, work);
         break;
+    case FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT:
+        database_scan_snapshot(self, work);
+        break;
     case FSEARCH_DATABASE_WORK_NOTIFY_ITEMS_REMOVED:
         database_remove_items(self, work);
         break;
@@ -1094,6 +1171,7 @@ fsearch_database_dispose(GObject *object) {
         fsearch_database_index_store_unref(self->pending_store);
         self->pending_store = NULL;
     }
+    g_clear_pointer(&self->store_before_snapshot, fsearch_database_index_store_unref);
 
     G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
 }
@@ -1266,6 +1344,16 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                      G_TYPE_NONE,
                                                      1,
                                                      G_TYPE_STRING);
+    signals[SIGNAL_SCAN_SNAPSHOT] = g_signal_new("scan-snapshot",
+                                                 G_TYPE_FROM_CLASS(klass),
+                                                 G_SIGNAL_RUN_LAST,
+                                                 0,
+                                                 NULL,
+                                                 NULL,
+                                                 NULL,
+                                                 G_TYPE_NONE,
+                                                 1,
+                                                 FSEARCH_TYPE_DATABASE_INFO);
     signals[SIGNAL_DATABASE_CHANGED] = g_signal_new("database-changed",
                                                     G_TYPE_FROM_CLASS(klass),
                                                     G_SIGNAL_RUN_LAST,

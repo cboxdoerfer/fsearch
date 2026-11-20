@@ -23,6 +23,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SAVE_TO_FILE,
     FSEARCH_DATABASE_WORK_SCAN,
     FSEARCH_DATABASE_WORK_SCAN_FINISHED,
+    FSEARCH_DATABASE_WORK_SCAN_SNAPSHOT,
     FSEARCH_DATABASE_WORK_SEARCH,
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
@@ -69,6 +70,13 @@ fsearch_database_work_new_scan_finished(void *index_store,
                                         void *(*index_ref_func)(void *),
                                         void (*index_free_func)(void *),
                                         GCancellable *cancellable);
+
+// `snapshot` is a searchable partial result of the scan building `origin_store`
+FsearchDatabaseWork *
+fsearch_database_work_new_scan_snapshot(void *snapshot,
+                                        void *origin_store,
+                                        void *(*index_ref_func)(void *),
+                                        void (*index_free_func)(void *));
 
 FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id,
@@ -135,6 +143,12 @@ fsearch_database_work_sort_get_sort_direction(FsearchDatabaseWork *work);
 
 void *
 fsearch_database_work_scan_finished_get_index_store(FsearchDatabaseWork *work);
+
+void *
+fsearch_database_work_scan_snapshot_get_snapshot(FsearchDatabaseWork *work);
+
+void *
+fsearch_database_work_scan_snapshot_get_origin_store(FsearchDatabaseWork *work);
 
 FsearchDatabaseIncludeManager *
 fsearch_database_work_scan_get_include_manager(FsearchDatabaseWork *work);

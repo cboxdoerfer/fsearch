@@ -96,3 +96,14 @@ test('test_time_utils',
        'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
      ],
 )
+
+if host_machine.system() == 'windows'
+    test_win32_compat = executable('test_win32_compat', 'test_win32_compat.c', dependencies : libfsearch_core_dep)
+    test('test_win32_compat',
+         test_win32_compat,
+         env : [
+             'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
+             'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
+         ],
+    )
+endif

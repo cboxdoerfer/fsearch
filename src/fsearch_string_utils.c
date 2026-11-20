@@ -23,6 +23,10 @@
 #include <glib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
+
 bool
 fsearch_string_is_empty(const char *str) {
     // query is considered empty if:
