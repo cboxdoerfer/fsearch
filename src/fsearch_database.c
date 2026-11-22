@@ -623,7 +623,7 @@ database_remove_items(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
-    fsearch_database_index_store_remove_paths(self->store, item_paths, self->rescan_manager);
+    fsearch_database_index_store_remove_paths_locked(self->store, item_paths, self->rescan_manager);
 }
 
 // Clears self->scan_cancellable, unless a newer scan has already replaced it.

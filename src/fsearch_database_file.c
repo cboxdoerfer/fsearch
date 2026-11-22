@@ -9,7 +9,6 @@
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
 #include "fsearch_database_include_manager.h"
-#include "fsearch_database_index.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_index_store.h"
 
@@ -266,18 +265,6 @@ database_file_load_header(FILE *fp, GChecksum *checksum) {
         return false;
     }
     return true;
-}
-
-static void
-database_file_load_add_to_index_array(GHashTable *index_table, FsearchDatabaseEntry *entry) {
-    const char *root_path = db_entry_get_root_path(entry);
-    DynamicArray *index_array = g_hash_table_lookup(index_table, root_path);
-
-    if (!index_array) {
-        index_array = darray_new(1024);
-        g_hash_table_insert(index_table, (gpointer)root_path, index_array);
-    }
-    darray_add_item(index_array, entry);
 }
 
 static bool
@@ -1248,17 +1235,6 @@ fsearch_database_file_load(const char *file_path,
     DynamicArray *sorted_files[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
-    g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GHashTable) folder_index_arrays = g_hash_table_new_full(g_str_hash,
-                                                                      g_str_equal,
-                                                                      NULL,
-                                                                      (GDestroyNotify)darray_unref);
-    g_autoptr(GHashTable) file_index_arrays = g_hash_table_new_full(g_str_hash,
-                                                                    g_str_equal,
-                                                                    NULL,
-                                                                    (GDestroyNotify)darray_unref);
-
     g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
 
     if (!database_file_load_header(fp, checksum)) {
@@ -1371,41 +1347,7 @@ fsearch_database_file_load(const char *file_path,
     darray_set_free_func(folders, NULL);
     darray_set_free_func(files, NULL);
 
-    DynamicArray *folders_sorted_by_path = sorted_folders[DATABASE_INDEX_PROPERTY_PATH];
-    for (uint32_t i = 0; i < darray_get_num_items(folders_sorted_by_path); i++) {
-        FsearchDatabaseEntry *folder = darray_get_item(folders_sorted_by_path, i);
-        database_file_load_add_to_index_array(folder_index_arrays, folder);
-    }
-    DynamicArray *files_sorted_by_path = sorted_files[DATABASE_INDEX_PROPERTY_PATH];
-    for (uint32_t i = 0; i < darray_get_num_items(files_sorted_by_path); i++) {
-        FsearchDatabaseEntry *file = darray_get_item(files_sorted_by_path, i);
-        database_file_load_add_to_index_array(file_index_arrays, file);
-    }
-
-    g_ptr_array_sort(includes, fsearch_database_include_compare);
-
-    for (uint32_t i = 0; i < includes->len; i++) {
-        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        const char *root_path = fsearch_database_include_get_path(include);
-        DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, root_path);
-        DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, root_path);
-        if (!folder_array_index) {
-            folder_array_index = darray_new(0);
-            g_hash_table_insert(folder_index_arrays, (gpointer)root_path, folder_array_index);
-        }
-        if (!file_array_index) {
-            file_array_index = darray_new(0);
-            g_hash_table_insert(file_index_arrays, (gpointer)root_path, file_array_index);
-        }
-        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(include,
-                                                                              exclude_manager,
-                                                                              folder_array_index,
-                                                                              file_array_index,
-                                                                              index_flags);
-        g_ptr_array_add(indices, index);
-    }
-    *store_out = fsearch_database_index_store_new_with_content(indices,
-                                                               sorted_files,
+    *store_out = fsearch_database_index_store_new_with_content(sorted_files,
                                                                sorted_folders,
                                                                include_manager,
                                                                exclude_manager,

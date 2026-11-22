@@ -48,8 +48,7 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  gpointer event_func_data);
 
 FsearchDatabaseIndexStore *
-fsearch_database_index_store_new_with_content(GPtrArray *indices,
-                                              DynamicArray **files,
+fsearch_database_index_store_new_with_content(DynamicArray **files,
                                               DynamicArray **folders,
                                               FsearchDatabaseIncludeManager *include_manager,
                                               FsearchDatabaseExcludeManager *exclude_manager,
@@ -81,9 +80,9 @@ bool
 fsearch_database_index_store_replace_index(FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *new_index);
 
 void
-fsearch_database_index_store_remove_paths(FsearchDatabaseIndexStore *store,
-                                          DynamicArray *item_paths,
-                                          FsearchDatabaseRescanManager *rescan_manager);
+fsearch_database_index_store_remove_paths_locked(FsearchDatabaseIndexStore *store,
+                                                 DynamicArray *item_paths,
+                                                 FsearchDatabaseRescanManager *rescan_manager);
 
 // Getters
 FsearchDatabaseChunkedArray *
@@ -164,6 +163,26 @@ fsearch_database_index_store_selection_foreach(FsearchDatabaseIndexStore *store,
                                                uint32_t view_id,
                                                GHFunc func,
                                                gpointer user_data);
+
+void
+fsearch_database_index_store_add_entries_locked(FsearchDatabaseIndexStore *store,
+                                                DynamicArray *files,
+                                                DynamicArray *folders,
+                                                FsearchDatabaseIndexPropertyFlags affected_sort_orders);
+
+void
+fsearch_database_index_store_remove_entries_locked(FsearchDatabaseIndexStore *store,
+                                                   DynamicArray *files,
+                                                   DynamicArray *folders,
+                                                   FsearchDatabaseIndexPropertyFlags affected_sort_orders,
+                                                   bool marked);
+
+// Borrowed, NULL before the store is sorted
+FsearchDatabaseChunkedArray *
+fsearch_database_index_store_peek_path_sorted_locked(FsearchDatabaseIndexStore *store, FsearchDatabaseEntryType type);
+
+void
+fsearch_database_index_store_report_progress(FsearchDatabaseIndexStore *store, const char *path);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 

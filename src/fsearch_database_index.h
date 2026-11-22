@@ -3,7 +3,6 @@
 #include "fsearch_array.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include.h"
-#include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
 
 #include <gio/gio.h>
@@ -18,8 +17,7 @@ G_BEGIN_DECLS
 #define FSEARCH_DATABASE_INDEX (fsearch_database_index_get_type())
 
 typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
-
-typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *, FsearchDatabaseIndexEvent *event, gpointer);
+typedef struct FsearchDatabaseIndexStore FsearchDatabaseIndexStore;
 
 GType
 fsearch_database_index_get_type(void);
@@ -35,20 +33,7 @@ fsearch_database_index_new(FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GMainContext *monitor_ctx,
-                           FsearchDatabaseIndexEventFunc event_func,
-                           gpointer event_func_data);
-
-FsearchDatabaseIndex *
-fsearch_database_index_new_with_content(FsearchDatabaseInclude *include,
-                                        FsearchDatabaseExcludeManager *exclude_manager,
-                                        DynamicArray *folders,
-                                        DynamicArray *files,
-                                        FsearchDatabaseIndexPropertyFlags flags);
-
-void
-fsearch_database_index_set_event_func(FsearchDatabaseIndex *self,
-                                      FsearchDatabaseIndexEventFunc event_func,
-                                      gpointer event_func_data);
+                           FsearchDatabaseIndexStore *store);
 
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self);
@@ -62,6 +47,12 @@ fsearch_database_index_get_files(FsearchDatabaseIndex *self);
 DynamicArray *
 fsearch_database_index_get_folders(FsearchDatabaseIndex *self);
 
+void
+fsearch_database_index_attach(FsearchDatabaseIndex *self, FsearchDatabaseIndexStore *store);
+
+void
+fsearch_database_index_detach(FsearchDatabaseIndex *self);
+
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
 
@@ -70,12 +61,6 @@ fsearch_database_index_get_path(FsearchDatabaseIndex *self);
 
 bool
 fsearch_database_index_wants_root_reappear_poll(FsearchDatabaseIndex *self);
-
-void
-fsearch_database_index_lock(FsearchDatabaseIndex *self);
-
-void
-fsearch_database_index_unlock(FsearchDatabaseIndex *self);
 
 bool
 fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
@@ -89,7 +74,8 @@ fsearch_database_index_process_events(FsearchDatabaseIndex *self);
 bool
 fsearch_database_index_has_pending_events(FsearchDatabaseIndex *self);
 
+// Store must be locked
 bool
-fsearch_database_index_remove_path(FsearchDatabaseIndex *self, const char *path, bool *root_removed);
+fsearch_database_index_remove_path_locked(FsearchDatabaseIndex *self, const char *path, bool *root_removed);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

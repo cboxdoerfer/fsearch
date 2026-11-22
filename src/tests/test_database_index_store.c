@@ -43,15 +43,6 @@ make_named_files(const char *prefix, uint32_t count) {
     return array;
 }
 
-static void
-free_entries(DynamicArray *array) {
-    const uint32_t n = darray_get_num_items(array);
-    for (uint32_t i = 0; i < n; i++) {
-        db_entry_free(darray_get_item(array, i));
-    }
-    darray_unref(array);
-}
-
 static FsearchQuery *
 make_query(FsearchFilterManager *filters, const char *search_term) {
     return fsearch_query_new(search_term, NULL, filters, 0, "test");
@@ -71,9 +62,7 @@ test_cancelled_search_keeps_partial_results_marked_incomplete(void) {
     files_by_property[DATABASE_INDEX_PROPERTY_NAME] = files;
     folders_by_property[DATABASE_INDEX_PROPERTY_NAME] = folders;
 
-    g_autoptr(GPtrArray) indices = g_ptr_array_new();
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new_with_content(
-        indices,
         files_by_property,
         folders_by_property,
         include_manager,
@@ -127,7 +116,8 @@ test_cancelled_search_keeps_partial_results_marked_incomplete(void) {
     g_autoptr(FsearchQuery) active_query = fsearch_database_search_view_get_query(view);
     g_assert_cmpstr(active_query->search_term, ==, "banana");
 
-    free_entries(files);
+    // The store owns the entries now, only the array is ours
+    darray_unref(files);
     fsearch_filter_manager_unref(filters);
 }
 

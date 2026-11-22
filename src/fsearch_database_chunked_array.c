@@ -562,10 +562,11 @@ block_is_descendant_of(DynamicArray *chunk, uint32_t start_idx, uint32_t n_eleme
         && db_entry_is_descendant(darray_get_item(chunk, last_idx), folder);
 }
 
-DynamicArray *
-fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
-                                                 FsearchDatabaseEntry *folder,
-                                                 int32_t num_known_descendants) {
+static DynamicArray *
+collect_descendants(FsearchDatabaseChunkedArray *self,
+                    FsearchDatabaseEntry *folder,
+                    int32_t num_known_descendants,
+                    bool steal) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(folder, NULL);
 
@@ -622,7 +623,14 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
                 entry_start_idx = 0;
                 continue;
             }
-            num_known_descendants_stolen += darray_steal(chunk, entry_start_idx, n_wanted, descendants);
+            if (steal) {
+                num_known_descendants_stolen += darray_steal(chunk, entry_start_idx, n_wanted, descendants);
+            }
+            else if (entry_start_idx < darray_get_num_items(chunk)) {
+                const uint32_t n_taken = MIN(n_wanted, darray_get_num_items(chunk) - entry_start_idx);
+                darray_add_array_range(descendants, chunk, entry_start_idx, n_taken);
+                num_known_descendants_stolen += n_taken;
+            }
         }
         else {
             // Steal/remove descendants one by one.
@@ -630,7 +638,12 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
                 FsearchDatabaseEntry *maybe_descendant = darray_get_item(chunk, entry_idx);
                 if (db_entry_is_descendant(maybe_descendant, folder)) {
                     darray_add_item(descendants, maybe_descendant);
-                    darray_drop(chunk, entry_idx, 1);
+                    if (steal) {
+                        darray_drop(chunk, entry_idx, 1);
+                    }
+                    else {
+                        entry_idx++;
+                    }
                     continue;
                 }
                 if (trust_order) {
@@ -646,7 +659,7 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
         entry_start_idx = 0;
 
         // Remove the chunk if it became empty (unless it's the last one left).
-        chunk_idx = advance_past_chunk(self, chunk, chunk_idx);
+        chunk_idx = steal ? advance_past_chunk(self, chunk, chunk_idx) : chunk_idx + 1;
 
         if (descendant_run_ended) {
             break;
@@ -654,12 +667,28 @@ fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *se
     }
 
     if (count_known && darray_get_num_items(descendants) != num_expected) {
-        g_warning("[chunked_array] expected %u descendants, stole %u", num_expected, darray_get_num_items(descendants));
+        g_warning("[chunked_array] expected %u descendants, found %u", num_expected, darray_get_num_items(descendants));
     }
 
-    self->num_entries -= darray_get_num_items(descendants);
+    if (steal) {
+        self->num_entries -= darray_get_num_items(descendants);
+    }
 
     return descendants;
+}
+
+DynamicArray *
+fsearch_database_chunked_array_steal_descendants(FsearchDatabaseChunkedArray *self,
+                                                 FsearchDatabaseEntry *folder,
+                                                 int32_t num_known_descendants) {
+    return collect_descendants(self, folder, num_known_descendants, true);
+}
+
+DynamicArray *
+fsearch_database_chunked_array_get_descendants(FsearchDatabaseChunkedArray *self,
+                                               FsearchDatabaseEntry *folder,
+                                               int32_t num_known_descendants) {
+    return collect_descendants(self, folder, num_known_descendants, false);
 }
 
 FsearchDatabaseEntry *
